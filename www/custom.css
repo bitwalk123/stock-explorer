@@ -1,0 +1,12 @@
+.main-header .logo {
+  font-family: "Georgia", serif;
+  font-weight: bold;
+}
+
+.box_srcollbar {
+  overflow: auto;
+  height: 200px;
+  margin-top: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
