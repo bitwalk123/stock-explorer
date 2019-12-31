@@ -63,4 +63,4 @@ Source of stock prices are from Yahoo Japan Finance (yahooj).
 
 ### Note
 
-At this moment, this application does not run properly on Windows OS due to UTF-8 encoding issue.
+At this moment, this application does not run properly with R/Shiny on Windows OS due to UTF-8 encoding issue.
