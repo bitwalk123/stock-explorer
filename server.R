@@ -53,20 +53,26 @@ function(input, output, session) {
         output$prediction <- renderPlot({
             #par(mar=c(5, 4, 4, 2) + 0.1)
             par(mar=c(7, 4, 4, 0.5) + 0.1)
+            
+            idx.date <- grep("deal_date", colnames(tbl.pred))
+            idx.open <- grep("Open$", colnames(tbl.pred))
+            idx.pred <- grep("Next$", colnames(tbl.pred))
+
+            y.range <- c(min(c(tbl.pred[, idx.open], tbl.pred[, idx.pred]), na.rm = TRUE),
+                         max(c(tbl.pred[, idx.open], tbl.pred[, idx.pred]), na.rm = TRUE))
+
             plot(tbl.pred[, 1], tbl.pred[, 2],
                  main = paste0("始値 (", input$pred, ")"),
                  sub = paste0("method = ", name.method,
                               " : adj R-squared = ", format(round(rsquare, 3), nsmall = 3),
                               ", RMSE = ", format(round(rmse, 1), nsmall = 1)),
-                 xlab = NA, ylab = NA,
+                 xlab = NA, ylab = NA, ylim = y.range,
                  las = 1, type = "n")
+            
             grid(NA, NULL, lty = 2, col = "darkgray")
             grid.x <- getXDateGrid(tbl.pred)
             abline(v = grid.x, lty = 2, col = "darkgray")
             
-            idx.date <- grep("deal_date", colnames(tbl.pred))
-            idx.open <- grep("Open$", colnames(tbl.pred))
-            idx.pred <- grep("Next$", colnames(tbl.pred))
             for (r in 2:(nrow(tbl.pred) - 1)) {
                 lines(c(tbl.pred[r, idx.date], tbl.pred[r, idx.date]),
                       c(tbl.pred[r, idx.open], tbl.pred[r, idx.pred]),
