@@ -45,10 +45,12 @@ getUpdatedStockTbl <- function(tbl, code_list) {
     if (length(grep("\\.X$", code)) > 0) {
       code <- gsub("\\.", "=", code)
     }
-    
+    if (code == "998407.O") {
+      code = "^N225"
+    }
     print(paste(code, date.latest))
     tryCatch(
-      tmp <- getSymbols(code, src = "yahooj", from = date.latest, auto.assign = FALSE),
+      tmp <- getSymbols(code, src = "yahoo", from = date.latest, auto.assign = FALSE),
       error = function(e) {
         tmp <- data.frame()
         names(tmp) <- names(tbl)
@@ -58,7 +60,7 @@ getUpdatedStockTbl <- function(tbl, code_list) {
       if (nrow(tbl) > 0) {
         tbl <- merge(tbl, tmp)
       } else {
-        tbl <- tmp
+        tbl <- tmp[, 1:4]
       }
     }
   }
