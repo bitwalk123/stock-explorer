@@ -11,6 +11,8 @@ from PySide6.QtWidgets import (
 
 from functions.get_standard_ison import get_standard_icon
 
+db = 'stock-explorer.sqlite3'
+
 
 class StockExplorer(QMainWindow):
     def __init__(self):
