@@ -3,18 +3,18 @@ import os
 import pandas as pd
 import wget
 
+from functions.handle_file import delete_file
 from functions.resources import get_info
 
 
 def update_tse():
     url = get_info('tse')
     basename = os.path.basename(url)
-    if os.path.exists(basename):
-        os.remove(basename)
+    delete_file(basename)
     filename = wget.download(url)
     print(filename)
     df = pd.read_excel(filename)
-    os.remove(filename)
+    delete_file(filename)
     print(df.columns)
     """
     Index(['日付', 'コード', '銘柄名', '市場・商品区分', '33業種コード', '33業種区分', '17業種コード', '17業種区分', '規模コード', '規模区分'], dtype='object')
