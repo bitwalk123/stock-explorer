@@ -1,0 +1,6 @@
+pip-chill
+pip-review
+pyside6
+seaborn
+wget
+xlrd

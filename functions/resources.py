@@ -2,6 +2,15 @@ from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QStyle
 
+res = {
+    'db': 'stock-explorer.sqlite3',
+    'tse': 'https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xls',
+}
+
+
+def get_info(key: str) -> str:
+    return res[key]
+
 
 def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
     """
@@ -10,7 +19,7 @@ def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
     Args:
         parent(QObject): Parent instance inheriting from the QObject.
         name_pixmap(str): name of standard picmap
-    
+
     Returns:
         QIcon: instance of QIcon of specified pixmap
     """

@@ -4,8 +4,8 @@ from PySide6.QtWidgets import (
     QTabWidget, QVBoxLayout, QDialogButtonBox,
 )
 
-from functions.get_standard_ison import get_standard_icon
-from modules.panel_db import PanelDB
+from functions.resources import get_standard_icon
+from ui_modules.panel_db import PanelDB
 
 
 class DlgConfig(QDialog):

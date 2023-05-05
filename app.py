@@ -12,12 +12,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from modules.config_dialog import DlgConfig
-from functions.get_standard_ison import get_standard_icon
+from ui_modules.config_dialog import DlgConfig
+from functions.resources import get_standard_icon
 
 
 class StockExplorer(QMainWindow):
-    db = 'stock-explorer.sqlite3'
 
     def __init__(self):
         super().__init__()
