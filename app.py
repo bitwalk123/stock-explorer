@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from dialogs.config_dialog import DlgConfig
+from modules.config_dialog import DlgConfig
 from functions.get_standard_ison import get_standard_icon
 
 
