@@ -1,11 +1,25 @@
-from PySide6.QtCore import QObject
+from PySide6.QtCore import QObject, QThreadPool
 from PySide6.QtGui import QIcon
+from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QStyle
+from functions.handle_file import delete_file
+
+con = QSqlDatabase.addDatabase('QSQLITE')
+threadpool = QThreadPool()
 
 res = {
     'db': 'stock-explorer.sqlite3',
     'tse': 'https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xls',
 }
+
+
+def get_connection(flag_delete=False) -> QSqlDatabase:
+    dbname = get_info('db')
+    if flag_delete:
+        delete_file(dbname)
+
+    con.setDatabaseName(dbname)
+    return con
 
 
 def get_info(key: str) -> str:
@@ -27,3 +41,6 @@ def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
     icon = parent.style().standardIcon(pixmap)
 
     return icon
+
+def get_threadpool() -> QThreadPool:
+    return threadpool
