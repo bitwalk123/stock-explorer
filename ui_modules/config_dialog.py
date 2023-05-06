@@ -1,7 +1,9 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
-    QTabWidget, QVBoxLayout, QDialogButtonBox,
+    QDialogButtonBox,
+    QTabWidget,
+    QVBoxLayout,
 )
 
 from functions.resources import get_standard_icon

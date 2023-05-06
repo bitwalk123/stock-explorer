@@ -1,4 +1,5 @@
 import os
+import sqlite3
 
 import pandas as pd
 import wget
@@ -13,12 +14,9 @@ def update_tse():
     delete_file(basename)
     filename = wget.download(url)
     print(filename)
-    df = pd.read_excel(filename)
+    df_all = pd.read_excel(filename)
     delete_file(filename)
-    print(df.columns)
-    """
-    Index(['日付', 'コード', '銘柄名', '市場・商品区分', '33業種コード', '33業種区分', '17業種コード', '17業種区分', '規模コード', '規模区分'], dtype='object')
-    """
+
     list_market = [
         'グロース（内国株式）',
         'グロース（外国株式）',
@@ -27,6 +25,27 @@ def update_tse():
         'プライム（内国株式）',
         'プライム（外国株式）',
     ]
+    df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
 
-    df_stock = df[df['市場・商品区分'].isin(list_market)]
-    print(df_stock.head())
+    dbname = get_info('db')
+    conn = sqlite3.connect(dbname)
+    cur = conn.cursor()
+
+    for r in df_stock.index:
+        series = df_stock.loc[r]
+        sql = 'INSERT INTO ticker values(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
+            series['日付'],
+            series['コード'],
+            series['銘柄名'],
+            series['市場・商品区分'],
+            series['33業種コード'],
+            series['33業種区分'],
+            series['17業種コード'],
+            series['17業種区分'],
+            series['規模コード'],
+            series['規模区分']
+        )
+        cur.execute(sql)
+        conn.commit()
+
+    conn.close()

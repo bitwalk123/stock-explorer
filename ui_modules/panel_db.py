@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from database.schema import initialize_db
 from database.ticker import update_tse
 from functions.resources import get_standard_icon
 
@@ -29,6 +30,7 @@ class PanelDB(QWidget):
         layout.addWidget(lab_init, row, 0)
         but_init = QPushButton()
         but_init.setIcon(icon_apply)
+        but_init.clicked.connect(initialize_db)
         layout.addWidget(but_init, row, 1)
 
         row += 1
