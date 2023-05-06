@@ -5,8 +5,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from database.schema import initialize_db
-from database.ticker import update_tse
+from database.schema import initialize_db, update_tse
 from functions.resources import get_standard_icon
 
 
