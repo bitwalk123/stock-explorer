@@ -2,25 +2,19 @@ import os
 
 import pandas as pd
 import wget
-from PySide6.QtSql import QSqlDatabase, QSqlQuery
+from PySide6.QtSql import QSqlQuery
 
+from functions.connection import get_connection
 from functions.handle_file import delete_file
 from functions.resources import get_info
 
-con = QSqlDatabase.addDatabase('QSQLITE')
-
 
 def initialize_db():
-    dbname = get_info('db')
-    delete_file(dbname)
-
-    con.setDatabaseName(dbname)
+    con = get_connection(flag_delete=True)
     if not con.open():
         return
 
-    query = QSqlQuery()
-    query.exec(
-        """
+    sql = """
         CREATE TABLE ticker(
             id_ticker INTEGER PRIMARY KEY AUTOINCREMENT,
             '日付' INTEGER,
@@ -34,9 +28,9 @@ def initialize_db():
             '規模コード' STRING,
             '規模区分' STRING
         )
-        """
-    )
-
+    """
+    query = QSqlQuery()
+    query.exec(sql)
     con.close()
 
 
@@ -65,15 +59,14 @@ def update_tse():
     ]
     df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
 
-    dbname = get_info('db')
-    con.setDatabaseName(dbname)
+    con = get_connection()
     if not con.open():
         return
 
     query = QSqlQuery()
 
-    for r in df_stock.index:
-        series = df_stock.loc[r]
+    for row in df_stock.index:
+        series = df_stock.loc[row]
         sql = 'INSERT INTO ticker values(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
             series['日付'],
             series['コード'],
