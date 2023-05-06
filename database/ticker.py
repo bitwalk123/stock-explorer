@@ -1,8 +1,8 @@
 import os
-import sqlite3
 
 import pandas as pd
 import wget
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 from functions.handle_file import delete_file
 from functions.resources import get_info
@@ -28,8 +28,12 @@ def update_tse():
     df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
 
     dbname = get_info('db')
-    conn = sqlite3.connect(dbname)
-    cur = conn.cursor()
+    con = QSqlDatabase.addDatabase('QSQLITE')
+    con.setDatabaseName(dbname)
+    if not con.open():
+        return
+
+    query = QSqlQuery()
 
     for r in df_stock.index:
         series = df_stock.loc[r]
@@ -45,7 +49,6 @@ def update_tse():
             series['規模コード'],
             series['規模区分']
         )
-        cur.execute(sql)
-        conn.commit()
+        query.exec(sql)
 
-    conn.close()
+    con.close()
