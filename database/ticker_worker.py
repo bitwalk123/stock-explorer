@@ -48,9 +48,27 @@ class DBTblTickerWorker(QRunnable):
         df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
         record_total = len(df_stock.index)
 
+        self.query.exec('DROP TABLE IF EXISTS ticker')
+        sql = """
+            CREATE TABLE ticker(
+                id_ticker INTEGER PRIMARY KEY AUTOINCREMENT,
+                '日付' INTEGER,
+                'コード' INTEGER,
+                '銘柄名' STRING,
+                '市場・商品区分' STRING,
+                '33業種コード' INTEGER,
+                '33業種区分' STRING,
+                '17業種コード' INTEGER,
+                '17業種区分' STRING,
+                '規模コード' STRING,
+                '規模区分' STRING
+            )
+        """
+        self.query.exec(sql)
+
         for count, row in enumerate(df_stock.index):
             series = df_stock.loc[row]
-            sql = 'INSERT INTO ticker values(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
+            sql = 'INSERT INTO ticker VALUES(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
                 series['日付'],
                 series['コード'],
                 series['銘柄名'],
