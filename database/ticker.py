@@ -1,58 +1,57 @@
-import os
-
-import pandas as pd
-import wget
+from PySide6.QtCore import (
+    QObject,
+    QThreadPool,
+    Signal,
+)
 from PySide6.QtSql import QSqlQuery
 
-from functions.handle_file import delete_file
-from functions.resources import get_info, get_connection
+from database.ticker_worker import DBTblTickerWorker
+from functions.resources import (
+    get_connection,
+    get_info,
+    get_threadpool,
+)
 
 
-def update_tse():
-    url = get_info('tse')
-    basename = os.path.basename(url)
-    delete_file(basename)
-    filename = wget.download(url)
-    print(filename)
-    df_all = pd.read_excel(filename)
-    delete_file(filename)
+class DBTblTicker(QObject):
+    finished = Signal()
+    logMessage = Signal(str)
+    updateProgress = Signal(int)
 
-    """
-    list_market = [
-        'グロース（内国株式）',
-        'グロース（外国株式）',
-        'スタンダード（内国株式）',
-        'スタンダード（外国株式）',
-        'プライム（内国株式）',
-        'プライム（外国株式）',
-    ]
-    """
-    list_market = [
-        'プライム（内国株式）',
-        'プライム（外国株式）',
-    ]
-    df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
+    def __init__(self):
+        super().__init__()
+        self.threadpool: QThreadPool = get_threadpool()
+        self.con = None
 
-    con = get_connection()
-    if not con.open():
-        return
+    def update(self):
+        self.con = get_connection()
+        dbname = get_info('db')
+        self.con.setDatabaseName(dbname)
+        if not self.con.open():
+            print('database can not be opened!')
+            return
+        query = QSqlQuery()
+        # _____________________________________________________________________
+        # Threading
+        worker = DBTblTickerWorker(query)
+        worker.signals.finished.connect(self.thread_completed)
+        worker.signals.logMessage.connect(self.show_log)
+        worker.signals.updateProgress.connect(self.update_progress)
+        self.threadpool.start(worker)
 
-    query = QSqlQuery()
+    def show_log(self, msg: str):
+        self.logMessage.emit(msg)
 
-    for row in df_stock.index:
-        series = df_stock.loc[row]
-        sql = 'INSERT INTO ticker values(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
-            series['日付'],
-            series['コード'],
-            series['銘柄名'],
-            series['市場・商品区分'],
-            series['33業種コード'],
-            series['33業種区分'],
-            series['17業種コード'],
-            series['17業種区分'],
-            series['規模コード'],
-            series['規模区分']
-        )
-        query.exec(sql)
+    def thread_completed(self):
+        print('[main] finished updating!')
+        self.con.close()
 
-    con.close()
+        if self.threadpool.activeThreadCount() > 0:
+            print('current thread count:', self.threadpool.activeThreadCount())
+            self.threadpool.waitForDone(-1)
+
+        self.logMessage.emit('finished updating!')
+        self.finished.emit()
+
+    def update_progress(self, progress: int):
+        self.updateProgress.emit(progress)

@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 )
 
 from database.schema import initialize_db
-from database.ticker import update_tse
+from database.ticker import DBTblTicker
 from functions.resources import get_standard_icon
 
 
@@ -39,7 +39,7 @@ class PanelDB(QWidget):
         layout.addWidget(lab_tse, row, 0)
         but_tse = QPushButton()
         but_tse.setIcon(icon_apply)
-        but_tse.clicked.connect(update_tse)
+        but_tse.clicked.connect(self.update_tse)
         layout.addWidget(but_tse, row, 1)
 
         row += 1
@@ -50,6 +50,13 @@ class PanelDB(QWidget):
         but_past3y.setIcon(icon_apply)
         layout.addWidget(but_past3y, row, 1)
 
-
     def getTabLabel(self) -> str:
         return self.tab_label
+
+    def update_progress(self, progress: int):
+        print(progress)
+
+    def update_tse(self):
+        obj = DBTblTicker()
+        obj.updateProgress.connect(self.update_progress)
+        obj.update()
