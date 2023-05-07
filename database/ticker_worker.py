@@ -4,7 +4,6 @@ from PySide6.QtCore import (
     QObject,
     QRunnable,
     Signal,
-    Slot,
 )
 from PySide6.QtSql import QSqlQuery
 
@@ -26,7 +25,6 @@ class DBTblTickerWorker(QRunnable):
         self.signals = WorkerSignals()
         self.query = query
 
-    @Slot()
     def run(self):
         self.time_start = time.time()
         df_all = get_tse_data()
