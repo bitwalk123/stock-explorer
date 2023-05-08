@@ -1,8 +1,9 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QGridLayout,
     QLabel,
     QPushButton,
-    QWidget,
+    QWidget, QProgressDialog,
 )
 
 from database.schema import initialize_db
@@ -15,6 +16,7 @@ class PanelDB(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.progressbar = None
         self.init_ui()
 
     def init_ui(self):
@@ -35,7 +37,7 @@ class PanelDB(QWidget):
 
         row += 1
         # 東証から上場企業の一覧を取得
-        lab_tse = QLabel('東証から上場企業の一覧を取得・更新')
+        lab_tse = QLabel('東証上場企業一覧を取得・更新')
         layout.addWidget(lab_tse, row, 0)
         but_tse = QPushButton()
         but_tse.setIcon(icon_apply)
@@ -44,7 +46,7 @@ class PanelDB(QWidget):
 
         row += 1
         # 過去三年分の株価データを取得・更新
-        lab_past3y = QLabel('過去三年分の株価データを取得・更新')
+        lab_past3y = QLabel('過去三年分株価データを取得・更新')
         layout.addWidget(lab_past3y, row, 0)
         but_past3y = QPushButton()
         but_past3y.setIcon(icon_apply)
@@ -54,9 +56,17 @@ class PanelDB(QWidget):
         return self.tab_label
 
     def update_progress(self, progress: int):
-        print(progress)
+        self.progressbar.setValue(progress)
 
     def update_tse(self):
-        obj = DBTblTicker()
+        obj = DBTblTicker(self)
         obj.updateProgress.connect(self.update_progress)
         obj.update()
+
+        # QProgressDialog
+        self.progressbar = QProgressDialog(parent=self)
+        self.progressbar.setWindowModality(Qt.WindowModal)
+        self.progressbar.setCancelButton(None)
+        self.progressbar.setWindowTitle('進捗')
+        self.progressbar.setLabelText('東証上場企業一覧を取得・更新中')
+        self.progressbar.show()

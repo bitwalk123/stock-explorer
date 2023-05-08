@@ -14,12 +14,12 @@ from functions.resources import (
 
 
 class DBTblTicker(QObject):
-    finished = Signal()
+    finished = Signal(float)
     logMessage = Signal(str)
     updateProgress = Signal(int)
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
         self.threadpool: QThreadPool = get_threadpool()
         self.con = None
 
@@ -42,16 +42,15 @@ class DBTblTicker(QObject):
     def show_log(self, msg: str):
         self.logMessage.emit(msg)
 
-    def thread_completed(self):
-        print('[main] finished updating!')
-        self.con.close()
-
+    def thread_completed(self, elapsed):
         if self.threadpool.activeThreadCount() > 0:
             print('current thread count:', self.threadpool.activeThreadCount())
             self.threadpool.waitForDone(-1)
 
+        self.con.close()
+        print('[main] finished updating! (%.3f sec)' % elapsed)
         self.logMessage.emit('finished updating!')
-        self.finished.emit()
+        self.finished.emit(float)
 
     def update_progress(self, progress: int):
         self.updateProgress.emit(progress)

@@ -12,9 +12,7 @@ from functions.resources import get_tse_data
 
 
 class WorkerSignals(QObject):
-    """Defines the signals available from a running worker thread.
-    """
-    finished = Signal()
+    finished = Signal(float)
     logMessage = Signal(str)
     updateProgress = Signal(int)
 
@@ -23,13 +21,13 @@ class DBTblTickerWorker(QRunnable):
     def __init__(self, query: QSqlQuery):
         super().__init__()
         self.signals = WorkerSignals()
+        self.time_start = 0
         self.query = query
 
     def run(self):
         self.time_start = time.time()
         df_all = get_tse_data()
 
-        """
         list_market = [
             'グロース（内国株式）',
             'グロース（外国株式）',
@@ -43,6 +41,7 @@ class DBTblTickerWorker(QRunnable):
             'プライム（内国株式）',
             'プライム（外国株式）',
         ]
+        """
         df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
         record_total = len(df_stock.index)
 
@@ -79,10 +78,11 @@ class DBTblTickerWorker(QRunnable):
                 series['規模区分']
             )
             self.query.exec(sql)
+
             # update progress
-            progress = int(count * 100 / record_total)
+            progress = int((count + 1) * 100 / record_total)
             self.signals.updateProgress.emit(progress)
 
         elapsed = get_elapsed(self.time_start)
         print('[thread] finished updating! (%.3f sec)' % elapsed)
-        self.signals.finished.emit()
+        self.signals.finished.emit(elapsed)
