@@ -1,7 +1,4 @@
-import os
-import platform
 import sys
-from os.path import expanduser
 
 from PySide6.QtWidgets import (
     QApplication,
@@ -13,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from ui_modules.config_dialog import DlgConfig
-from functions.resources import get_standard_icon
+from functions.resources import get_standard_icon, get_ini_file
 
 
 class StockExplorer(QMainWindow):
@@ -22,14 +19,7 @@ class StockExplorer(QMainWindow):
         super().__init__()
         self.setWindowTitle('Stock Explorer')
 
-        # OS 別に ini ファイルを設定
-        if platform.system() == 'Windows':
-            file_config = 'stock_explorer.ini'
-        else:
-            file_config = '.stock_explorer'
-
-        # ini ファイル（フルパス）
-        self.file_ini = os.path.join(expanduser('~'), file_config)
+        self.file_ini = get_ini_file()
         print(self.file_ini)
 
         self.init_ui()

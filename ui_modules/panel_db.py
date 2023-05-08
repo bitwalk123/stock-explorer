@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
 from database.schema import initialize_db
 from database.ticker import DBTblTicker
 from functions.resources import get_standard_icon
+from widgets.buttons import ApplyButton
 
 
 class PanelDB(QWidget):
@@ -23,15 +24,11 @@ class PanelDB(QWidget):
         layout = QGridLayout()
         self.setLayout(layout)
 
-        name_apply = 'SP_DialogApplyButton'
-        icon_apply = get_standard_icon(self, name_apply)
-
         row = 0
         # データベースの初期化
         lab_init = QLabel('データベースの初期化')
         layout.addWidget(lab_init, row, 0)
-        but_init = QPushButton()
-        but_init.setIcon(icon_apply)
+        but_init = ApplyButton()
         but_init.clicked.connect(initialize_db)
         layout.addWidget(but_init, row, 1)
 
@@ -39,17 +36,15 @@ class PanelDB(QWidget):
         # 東証から上場企業の一覧を取得
         lab_tse = QLabel('東証上場企業一覧を取得・更新')
         layout.addWidget(lab_tse, row, 0)
-        but_tse = QPushButton()
-        but_tse.setIcon(icon_apply)
+        but_tse = ApplyButton()
         but_tse.clicked.connect(self.update_tse)
         layout.addWidget(but_tse, row, 1)
 
         row += 1
         # 過去三年分の株価データを取得・更新
-        lab_past3y = QLabel('過去三年分株価データを取得・更新')
+        lab_past3y = QLabel('過去三年分の株価データを取得・更新')
         layout.addWidget(lab_past3y, row, 0)
-        but_past3y = QPushButton()
-        but_past3y.setIcon(icon_apply)
+        but_past3y = ApplyButton()
         layout.addWidget(but_past3y, row, 1)
 
     def getTabLabel(self) -> str:

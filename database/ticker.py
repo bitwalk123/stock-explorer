@@ -25,8 +25,6 @@ class DBTblTicker(QObject):
 
     def update(self):
         self.con = get_connection()
-        dbname = get_info('db')
-        self.con.setDatabaseName(dbname)
         if not self.con.open():
             print('database can not be opened!')
             return

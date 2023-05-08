@@ -1,4 +1,6 @@
 import os
+import platform
+from os.path import expanduser
 
 import pandas as pd
 import wget
@@ -20,6 +22,7 @@ res = {
 def get_con() -> QSqlDatabase:
     return con
 
+
 def get_connection(flag_delete=False) -> QSqlDatabase:
     dbname = get_info('db')
     if flag_delete:
@@ -31,6 +34,16 @@ def get_connection(flag_delete=False) -> QSqlDatabase:
 
 def get_info(key: str) -> str:
     return res[key]
+
+
+def get_ini_file() -> str:
+    # OS 別に ini ファイルを設定
+    if platform.system() == 'Windows':
+        file_config = 'stock_explorer.ini'
+    else:
+        file_config = '.stock_explorer'
+    # ini ファイル（フルパス）
+    return os.path.join(expanduser('~'), file_config)
 
 
 def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
@@ -48,6 +61,7 @@ def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
     icon = parent.style().standardIcon(pixmap)
 
     return icon
+
 
 def get_threadpool() -> QThreadPool:
     return threadpool
