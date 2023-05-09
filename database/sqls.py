@@ -21,6 +21,9 @@ def get_sql_create_table_ticker() -> str:
 
 
 def get_sql_drop_table_ticker() -> str:
+    """
+    drop table ticker if exists
+    """
     sql = 'DROP TABLE IF EXISTS ticker'
     return sql
 

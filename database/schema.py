@@ -5,6 +5,9 @@ from functions.resources import get_connection
 
 
 def initialize_db():
+    """
+    initializa database
+    """
     con = get_connection(flag_delete=True)
     if not con.open():
         return

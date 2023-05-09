@@ -23,6 +23,9 @@ class WorkerSignals(QObject):
 
 
 class DBTblTickerWorker(QRunnable):
+    """
+    Database table ticker creation
+    """
     def __init__(self, query: QSqlQuery):
         super().__init__()
         self.signals = WorkerSignals()
