@@ -1,3 +1,6 @@
+# Reference:
+# https://toukei-lab.com/python_stock
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
