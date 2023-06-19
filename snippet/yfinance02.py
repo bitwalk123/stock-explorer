@@ -6,4 +6,4 @@ import yfinance as yf
 ticker_info = yf.Ticker('9984.T')
 
 # 会社概要(info)を出力
-ticker_info.info
+print(ticker_info.info)
