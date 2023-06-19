@@ -1,4 +1,9 @@
-from PySide6.QtWidgets import QToolBar, QWidget, QSizePolicy, QToolButton
+from PySide6.QtWidgets import (
+    QSizePolicy,
+    QToolBar,
+    QToolButton,
+    QWidget,
+)
 
 from functions.resources import get_standard_icon
 from ui_modules.config_dialog import DlgConfig
