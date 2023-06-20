@@ -1,3 +1,4 @@
+mplfinance
 pandas-datareader
 pip-chill
 pip-review
