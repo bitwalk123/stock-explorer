@@ -7,7 +7,7 @@ if con.open():
     sql = 'select コード, 銘柄名 from ticker;'
     query = QSqlQuery(sql)
     while query.next():
-        code = str(query.value(0))
+        code = '%d.T' % query.value(0)
         desc = str(query.value(1))
         print(code, desc)
     con.close()
