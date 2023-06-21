@@ -8,7 +8,6 @@ from PySide6.QtSql import QSqlQuery
 from database.ticker_worker import DBTblTickerWorker
 from functions.resources import (
     get_connection,
-    get_info,
     get_threadpool,
 )
 
