@@ -6,7 +6,8 @@ from PySide6.QtSql import QSqlQuery
 
 from functions.resources import get_connection
 
-start = dt.date(2010, 1, 1)
+#start = dt.date(2010, 1, 1)
+start = dt.date(2022, 1, 1)
 end = dt.date.today()
 
 con = get_connection()
@@ -16,6 +17,7 @@ if con.open():
     while query.next():
         id = query.value(0)
         code = '%d.T' % query.value(1)
+        print(code)
         desc = str(query.value(2))
         df = yf.download(code, start, end)
         filename = '%s.csv' % os.path.join('data', code)
