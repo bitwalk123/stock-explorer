@@ -68,4 +68,5 @@ for code_target in list_code[0:2]:
     df_result.log[code_target] = series_target
     print(df_result)
 
+# save result
 df.to_csv('result_pls.csv')
