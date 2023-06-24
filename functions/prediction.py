@@ -56,11 +56,13 @@ def minimal_scores(X, y, n_comp):
     mse_c = mean_squared_error(y, y_c)
     mse_cv = mean_squared_error(y, y_train_cv)
 
-    print('for Training data')
-    print('R2 calib: %5.3f' % score_c)
-    print('R2 CV: %5.3f' % score_cv)
-    print('MSE calib: %5.3f' % mse_c)
-    print('MSE CV: %5.3f' % mse_cv)
+    result = {
+        'R2 calib': score_c,
+        'R2 CV': score_cv,
+        'MSE calib': mse_c,
+        'MSE CV': mse_cv,
+    }
+    return result
 
 
 def search_optimal_components(X, y):

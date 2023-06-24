@@ -17,9 +17,10 @@ if con.open():
     con.close()
 
     list_close = list()
-    ticker_target = list_ticker[500]
     df_open_0 = None
     label_ticker_target = None
+
+    ticker_target = list_ticker[2000]
     for ticker in list_ticker:
         filename = '%s.csv' % os.path.join('data', '%d.T' % ticker)
         df = pd.read_csv(filename, index_col=0)
@@ -50,14 +51,9 @@ if con.open():
     n_comp = mse_min + 1
     print('Suggested number of components: ', n_comp)
 
-    # x_drop = mse_min_y[0]
-    # result = optimal_scores(X, y, n_comp, x_drop)
-    minimal_scores(X, y, n_comp)
-    # print(sorted_ind, len(sorted_ind))
-    # print(sorted_ind[x_drop:], len(sorted_ind[x_drop:]))
-    # print(list_head[sorted_ind[x_drop:]])
-    # print(ticker_target)
-    # print('R2 calib: %5.3f' % result['R2 calib'])
-    # print('R2 CV: %5.3f' % result['R2 CV'])
-    # print('MSE calib: %5.3f' % result['MSE calib'])
-    # rint('MSE CV: %5.3f' % result['MSE CV'])
+    result = minimal_scores(X, y, n_comp)
+    print('%d.T' % ticker_target)
+    print('R2 calib: %5.3f' % result['R2 calib'])
+    print('R2 CV: %5.3f' % result['R2 CV'])
+    print('MSE calib: %5.3f' % result['MSE calib'])
+    print('MSE CV: %5.3f' % result['MSE CV'])
