@@ -9,6 +9,60 @@ from sklearn.model_selection import cross_val_predict
 warnings.simplefilter("ignore")
 
 
+def search_minimal_component_number(X, y):
+    list_mse = []
+    n_comp = int(X.shape[1] / 10)
+    component = np.arange(1, n_comp + 1)
+
+    for i in component:
+        pls = PLSRegression(n_components=i)
+
+        # Cross-validation
+        y_cv = cross_val_predict(pls, X, y, cv=10)
+        # Root Mean Square Error of Precision
+        mse = mean_squared_error(y, y_cv, squared=True)
+        list_mse.append(mse)
+
+        comp = 100 * (i + 1) / n_comp
+        # Trick to update status on the same line
+        stdout.write("\r%d%% completed" % comp)
+        stdout.flush()
+
+    stdout.write("\n")
+
+    # Calculate and print the position of minimum in MSE
+    mse_min = np.argmin(list_mse)
+    # print('Suggested number of components: ', mse_min + 1)
+    # stdout.write("\n")
+    return mse_min
+
+
+def minimal_scores(X, y, n_comp):
+    # Define PLS object with optimal number of components
+    pls_opt = PLSRegression(n_components=n_comp)
+
+    # Fit to the entire dataset
+    pls_opt.fit(X, y)
+    y_c = pls_opt.predict(X)
+
+    # Cross-validation
+    y_train_cv = cross_val_predict(pls_opt, X, y, cv=10)
+
+    # Calculate scores for calibration and cross-validation
+    score_c = r2_score(y, y_c)
+    score_cv = r2_score(y, y_train_cv)
+
+    # Calculate mean squared error for calibration and cross validation
+    mse_c = mean_squared_error(y, y_c)
+    mse_cv = mean_squared_error(y, y_train_cv)
+
+    print('for Training data')
+    print('R2 calib: %5.3f' % score_c)
+    print('R2 CV: %5.3f' % score_cv)
+    print('MSE calib: %5.3f' % mse_c)
+    print('MSE CV: %5.3f' % mse_cv)
+
+
 def search_optimal_components(X, y):
     max_comp = int(X.shape[1] / 10)
 
