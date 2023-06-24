@@ -4,7 +4,7 @@ import warnings
 from sys import stdout
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import cross_val_predict, train_test_split
+from sklearn.model_selection import cross_val_predict
 
 warnings.simplefilter("ignore")
 
@@ -38,7 +38,7 @@ def search_optimal_components(X, y):
 
             mse[i, j] = mean_squared_error(y, y_cv)
 
-        comp = 100 * (i + 1) / (max_comp)
+        comp = 100 * (i + 1) / max_comp
         stdout.write('\r%d%% completed' % comp)
         stdout.flush()
 
@@ -60,14 +60,9 @@ def optimal_scores(X, y, n_comp, x_drop):
     pls = PLSRegression(n_components=n_comp)
 
     pls.fit(X, y)
-    sorted_ind = np.argsort(np.abs(pls.coef_[:, 0]))
-    Xc = X[:, sorted_ind]
+    index_sorted = np.argsort(np.abs(pls.coef_[:, 0]))
+    Xc = X[:, index_sorted]
     Xc_opt = Xc[:, x_drop:]
-
-    print('y', y.shape)
-    print('X', X.shape)
-    print('Xc', Xc.shape)
-    print('Xc_opt', Xc_opt.shape)
 
     pls.fit(Xc_opt, y)
     y_c = pls.predict(Xc_opt)
@@ -83,9 +78,11 @@ def optimal_scores(X, y, n_comp, x_drop):
     mse_c = mean_squared_error(y, y_c)
     mse_cv = mean_squared_error(y, y_cv)
 
-    print('R2 calib: %5.3f' % score_c)
-    print('R2 CV: %5.3f' % score_cv)
-    print('MSE calib: %5.3f' % mse_c)
-    print('MSE CV: %5.3f' % mse_cv)
-
-    return sorted_ind
+    result = {
+        'R2 calib': score_c,
+        'R2 CV': score_cv,
+        'MSE calib': mse_c,
+        'MSE CV': mse_cv,
+        'index_sorted': index_sorted,
+    }
+    return result
