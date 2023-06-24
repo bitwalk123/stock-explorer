@@ -1,59 +1,71 @@
 import os
+import sys
 
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from functions.prediction import search_optimal_components, optimal_scores, search_minimal_component_number, \
-    minimal_scores
+from functions.get_csv_name import get_csv_name
+from functions.prediction import (
+    search_minimal_component_number,
+    minimal_scores,
+)
 from functions.resources import get_connection
 
 con = get_connection()
-if con.open():
-    list_ticker = list()
-    sql = 'select コード from ticker;'
-    query = QSqlQuery(sql)
-    while query.next():
-        list_ticker.append(query.value(0))
-    con.close()
+if not con.open():
+    sys.exit()
 
-    list_close = list()
-    df_open_0 = None
-    label_ticker_target = None
+list_code = list()
+sql = 'select コード from ticker;'
+query = QSqlQuery(sql)
+while query.next():
+    list_code.append(query.value(0))
+con.close()
 
-    ticker_target = list_ticker[2000]
-    for ticker in list_ticker:
-        filename = '%s.csv' % os.path.join('data', '%d.T' % ticker)
-        df = pd.read_csv(filename, index_col=0)
-        if ticker == ticker_target:
-            label_ticker_target = '%d Open' % ticker
-            df_open_0 = df['Open'].rename(label_ticker_target)
+list_close = list()
+for code in list_code:
+    filename = get_csv_name(code)
+    df = pd.read_csv(filename, index_col=0)
+    list_close.append(df['Close'].rename(code))
 
-        list_close.append(df['Close'].rename(ticker))
+df_close = pd.concat(list_close, axis=1)
+columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
+# empty dataframe
+df_result = pd.DataFrame(columns=columns_result)
+# loop for each ticker
+for code_target in list_code[0:2]:
+    filename = '%s.csv' % os.path.join('data', '%d.T' % code_target)
+    series_open_target = pd.read_csv(filename, index_col=0)['Open']
+    label_code_target = '%d Open' % code_target
 
-    df_close = pd.concat(list_close, axis=1)
-    list_head = df_close.columns
-
-    df_all = df_close.iloc[0:len(df_close) - 1, ]
-    df_open = df_open_0[1:len(df_open_0)]
-    df_all[label_ticker_target] = df_open.values
+    df_all = df_close.iloc[0:len(df_close) - 1, :].copy()
+    df_open = series_open_target[1:len(series_open_target)]
+    df_all[label_code_target] = df_open.values
     df_all.dropna(how='any', axis=1, inplace=True)
     print(df_all)
 
     X = df_all.iloc[:, 0:len(df_all.columns) - 1].values
-    y = df_all[label_ticker_target].values
+    y = df_all[label_code_target].values
     print(X.shape)
     print(y.shape)
 
     mse_min = search_minimal_component_number(X, y)
-    # mse_min_x, mse_min_y = search_optimal_components(X, y)
-    # print(mse_min_x[0], mse_min_y[0])
 
     n_comp = mse_min + 1
-    print('Suggested number of components: ', n_comp)
+    # print('Suggested number of components: ', n_comp)
 
     result = minimal_scores(X, y, n_comp)
-    print('%d.T' % ticker_target)
-    print('R2 calib: %5.3f' % result['R2 calib'])
-    print('R2 CV: %5.3f' % result['R2 CV'])
-    print('MSE calib: %5.3f' % result['MSE calib'])
-    print('MSE CV: %5.3f' % result['MSE CV'])
+    # print('%d.T' % code_target)
+    # print('R2 calib: %5.3f' % result['R2 calib'])
+    # print('R2 CV: %5.3f' % result['R2 CV'])
+    # print('MSE calib: %5.3f' % result['MSE calib'])
+    # print('MSE CV: %5.3f' % result['MSE CV'])
+    series_target = pd.Series(
+        data=[n_comp, result['R2 calib'], result['R2 CV'], result['MSE calib'], result['MSE CV']],
+        index=columns_result,
+        name=code_target
+    )
+    df_result.log[code_target] = series_target
+    print(df_result)
+
+df.to_csv('result_pls.csv')
