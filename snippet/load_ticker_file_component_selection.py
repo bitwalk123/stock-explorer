@@ -65,7 +65,7 @@ for code_target in list_code[0:2]:
         index=columns_result,
         name=code_target
     )
-    df_result.log[code_target] = series_target
+    df_result.loc[code_target] = series_target
     print(df_result)
 
 # save result
