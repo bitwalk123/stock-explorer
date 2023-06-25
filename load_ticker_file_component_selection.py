@@ -37,7 +37,7 @@ df_result = pd.DataFrame(columns=columns_result)
 
 # loop for each ticker
 for code_target in list_code:
-    filename = '%s.csv' % os.path.join('snippet/data', '%d.T' % code_target)
+    filename = '%s.csv' % os.path.join('data', '%d.T' % code_target)
     series_open_target = pd.read_csv(filename, index_col=0)['Open']
     label_code_target = '%d Open' % code_target
 

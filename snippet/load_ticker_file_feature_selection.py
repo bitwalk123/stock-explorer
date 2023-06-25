@@ -20,7 +20,7 @@ if con.open():
     df_open_0 = None
     label_ticker_target = None
     for ticker in list_ticker:
-        filename = '%s.csv' % os.path.join('data', '%d.T' % ticker)
+        filename = '%s.csv' % os.path.join('../data', '%d.T' % ticker)
         df = pd.read_csv(filename, index_col=0)
         if ticker == ticker_target:
             label_ticker_target = '%d Open' % ticker

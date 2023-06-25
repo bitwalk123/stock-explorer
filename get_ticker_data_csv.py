@@ -20,6 +20,6 @@ if con.open():
         print(code)
         desc = str(query.value(2))
         df = yf.download(code, start, end)
-        filename = '%s.csv' % os.path.join('snippet/data', code)
+        filename = '%s.csv' % os.path.join('data', code)
         df.to_csv(filename)
     con.close()
