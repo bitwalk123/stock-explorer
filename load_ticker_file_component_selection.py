@@ -19,7 +19,9 @@ list_code = list()
 sql = 'select コード from ticker;'
 query = QSqlQuery(sql)
 while query.next():
-    list_code.append(query.value(0))
+    code = query.value(0)
+    if code != 1438:
+        list_code.append(code)
 con.close()
 
 list_close = list()
