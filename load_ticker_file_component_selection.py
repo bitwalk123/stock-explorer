@@ -20,7 +20,9 @@ sql = 'select コード from ticker;'
 query = QSqlQuery(sql)
 while query.next():
     code = query.value(0)
-    if code != 1438:
+    filename = '%s.csv' % os.path.join('data', '%d.T' % code)
+    df = pd.read_csv(filename, index_col=0)
+    if len(df) > 360:
         list_code.append(code)
 con.close()
 
