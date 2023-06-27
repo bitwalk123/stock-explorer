@@ -20,6 +20,23 @@ def get_sql_create_table_ticker() -> str:
     return sql
 
 
+def get_sql_create_table_trade() -> str:
+    sql = """
+        CREATE TABLE trade(
+            id_trade INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_code INTEGER,
+            date INTEGER,
+            open REAL,
+            high REAL,
+            low REAL,
+            close REAL,
+            close_adj REAL,
+            volume INTEGER
+        )
+    """
+    return sql
+
+
 def get_sql_drop_table_ticker() -> str:
     """
     drop table ticker if exists
