@@ -2,13 +2,12 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QGridLayout,
     QLabel,
-    QPushButton,
-    QWidget, QProgressDialog,
+    QProgressDialog,
+    QWidget,
 )
 
 from database.schema import initialize_db
 from database.ticker import DBTblTicker
-from functions.resources import get_standard_icon
 from widgets.buttons import ApplyButton
 
 

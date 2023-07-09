@@ -59,3 +59,17 @@ def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
         series['規模区分']
     )
     return sql
+
+
+def get_sql_insert_into_trade_values(id_code: int, series: pd.Series) -> str:
+    sql = 'INSERT INTO trade VALUES(NULL, %d, %d, %f, %f, %f, %f, %f, %d)' % (
+        id_code,
+        int(series['Date']),
+        series['Open'],
+        series['High'],
+        series['Low'],
+        series['Close'],
+        series['Adj Close'],
+        int(series['Volume'])
+    )
+    return sql
