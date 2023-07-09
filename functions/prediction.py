@@ -47,17 +47,18 @@ def minimal_scores(X, y, n_comp):
     y_c = pls_opt.predict(X)
 
     # Cross-validation
-    y_train_cv = cross_val_predict(pls_opt, X, y, cv=10)
+    y_cv = cross_val_predict(pls_opt, X, y, cv=10)
 
     # Calculate scores for calibration and cross-validation
     score_c = r2_score(y, y_c)
-    score_cv = r2_score(y, y_train_cv)
+    score_cv = r2_score(y, y_cv)
 
     # Calculate mean squared error for calibration and cross validation
     mse_c = mean_squared_error(y, y_c)
-    mse_cv = mean_squared_error(y, y_train_cv)
+    mse_cv = mean_squared_error(y, y_cv)
 
     result = {
+        'pls': pls_opt,
         'R2 calib': score_c,
         'R2 CV': score_cv,
         'MSE calib': mse_c,
@@ -136,6 +137,7 @@ def optimal_scores(X, y, n_comp, x_drop):
     mse_cv = mean_squared_error(y, y_cv)
 
     result = {
+        'pls': pls,
         'R2 calib': score_c,
         'R2 CV': score_cv,
         'MSE calib': mse_c,
