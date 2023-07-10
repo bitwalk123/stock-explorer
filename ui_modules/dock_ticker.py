@@ -24,8 +24,8 @@ class DockTicker(QDockWidget):
         base = QWidget()
         base.setContentsMargins(0, 0, 0, 0)
         base.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.Fixed
+            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Expanding
         )
         area.setWidget(base)
 
@@ -40,7 +40,7 @@ class DockTicker(QDockWidget):
             but.setToolTip(dict_ticker[key])
             but.setContentsMargins(0, 0, 0, 0)
             but.setSizePolicy(
-                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Preferred,
                 QSizePolicy.Policy.Expanding
             )
             layout.addWidget(but)
