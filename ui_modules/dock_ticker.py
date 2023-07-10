@@ -1,4 +1,11 @@
-from PySide6.QtWidgets import QDockWidget, QVBoxLayout, QPushButton, QScrollArea, QWidget, QSizePolicy, QLabel
+from PySide6.QtWidgets import (
+    QDockWidget,
+    QPushButton,
+    QScrollArea,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
 from database.get_list_ticker import get_list_ticker
 
