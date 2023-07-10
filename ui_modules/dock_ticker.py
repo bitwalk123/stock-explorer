@@ -1,5 +1,7 @@
 from PySide6.QtWidgets import QDockWidget, QVBoxLayout, QPushButton, QScrollArea, QWidget, QSizePolicy, QLabel
 
+from database.get_list_ticker import get_list_ticker
+
 
 class DockTicker(QDockWidget):
     def __init__(self):
@@ -23,8 +25,10 @@ class DockTicker(QDockWidget):
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         base.setLayout(layout)
-        for i in range(1000):
-            but = QPushButton(str(i))
+        dict_ticker = get_list_ticker()
+        for key in dict_ticker.keys():
+            but = QPushButton(str(key))
+            but.setToolTip(dict_ticker[key])
             but.setContentsMargins(0, 0, 0, 0)
             but.setSizePolicy(
                 QSizePolicy.Policy.Expanding,
