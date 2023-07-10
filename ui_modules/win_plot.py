@@ -1,14 +1,10 @@
 # Reference
 # https://www.pythonguis.com/tutorials/pyside6-plotting-matplotlib/
-import matplotlib
-
-matplotlib.use('Qt5Agg')
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-class WinPlot(FigureCanvasQTAgg):
+class MplPlot(FigureCanvas):
 
     def __init__(self):
         # fig = Figure(figsize=(width, height), dpi=dpi)
