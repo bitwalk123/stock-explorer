@@ -3,12 +3,14 @@
 
 import sys
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
 )
 
 from functions.resources import get_ini_file
+from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
 
 
@@ -28,6 +30,8 @@ class StockExplorer(QMainWindow):
         # ツールバー
         toolbar = ToolBarMain()
         self.addToolBar(toolbar)
+        dock_left = DockTicker()
+        self.addDockWidget(Qt.LeftDockWidgetArea, dock_left)
 
 
     def closeEvent(self, event):
