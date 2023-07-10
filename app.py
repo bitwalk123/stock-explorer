@@ -25,6 +25,7 @@ class StockExplorer(QMainWindow):
         self.file_ini = get_ini_file()
         print(self.file_ini)
 
+        self.resize(1000, 800)
         self.init_ui()
 
     def init_ui(self):
