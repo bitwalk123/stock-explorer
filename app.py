@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 from functions.resources import get_ini_file
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
+from ui_modules.win_plot import WinPlot
 
 
 class StockExplorer(QMainWindow):
@@ -30,9 +31,12 @@ class StockExplorer(QMainWindow):
         # ツールバー
         toolbar = ToolBarMain()
         self.addToolBar(toolbar)
+        # コードドック
         dock_left = DockTicker()
         self.addDockWidget(Qt.LeftDockWidgetArea, dock_left)
 
+        plot = WinPlot()
+        self.setCentralWidget(plot)
 
     def closeEvent(self, event):
         """Close event when user click X button.
