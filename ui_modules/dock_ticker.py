@@ -21,10 +21,12 @@ class DockTicker(QDockWidget):
             QSizePolicy.Policy.Fixed
         )
         area.setWidget(base)
+
         layout = QVBoxLayout()
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         base.setLayout(layout)
+
         dict_ticker = get_list_ticker()
         for key in dict_ticker.keys():
             but = QPushButton(str(key))
