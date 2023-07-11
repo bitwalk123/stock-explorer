@@ -43,7 +43,7 @@ class MplCanvas(FigureCanvas):
         self.fig.canvas.draw()
 
 
-class MainWindow(QMainWindow):
+class Example(QMainWindow):
     count = 1
 
     def __init__(self):
@@ -78,10 +78,12 @@ class MainWindow(QMainWindow):
         self.plot.refreshDraw()
 
     def draw_plot(self):
+        # TEST PLOTS
         n_data = 100
         list_x = [x for x in range(n_data)]
         list_y = [(random.random() - 0.5) * 100 for i in range(n_data)]
         self.plot.axes.plot(list_x, list_y)
+        #
         self.plot.axes.set_title('テスト %d' % self.count)
         self.plot.axes.set_xlabel('X軸')
         self.plot.axes.set_ylabel('Y軸')
@@ -89,6 +91,12 @@ class MainWindow(QMainWindow):
         self.count += 1
 
 
-app = QApplication(sys.argv)
-w = MainWindow()
-app.exec()
+def main():
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()
