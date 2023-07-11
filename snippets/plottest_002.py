@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         toolbar = QToolBar()
         self.addToolBar(Qt.TopToolBarArea, toolbar)
         toolbutton = QToolButton()
-        toolbutton.setText('TEST')
+        toolbutton.setText('New')
         toolbutton.clicked.connect(self.toolButtonClicked)
         toolbar.addWidget(toolbutton)
 
