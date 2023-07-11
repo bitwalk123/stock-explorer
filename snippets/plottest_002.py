@@ -7,6 +7,7 @@ import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFontDatabase, QFont
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -21,7 +22,7 @@ from matplotlib.figure import Figure
 class MplCanvas(FigureCanvas):
 
     def __init__(self):
-        FONT_PATH = "../fonts/RictyDiminishedDiscord-Regular.ttf"
+        FONT_PATH = '../fonts/RictyDiminishedDiscord-Regular.ttf'
         fm.fontManager.addfont(FONT_PATH)
 
         # FontPropertiesオブジェクト生成（名前の取得のため）
@@ -46,11 +47,22 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        # Reference:
+        # https://coderslegacy.com/python/pyqt6-adding-custom-fonts/
+        FONT_PATH = '../fonts/RictyDiminishedDiscord-Regular.ttf'
+        id = QFontDatabase.addApplicationFont(FONT_PATH)
+        if id < 0:
+            print("Error")
+            sys.exit()
+
+        families = QFontDatabase.applicationFontFamilies(id)
+        print(families)
 
         toolbar = QToolBar()
         self.addToolBar(Qt.TopToolBarArea, toolbar)
         toolbutton = QToolButton()
-        toolbutton.setText('New')
+        toolbutton.setText('更新')
+        toolbutton.setFont(QFont(families[0], 10))
         toolbutton.clicked.connect(self.toolButtonClicked)
         toolbar.addWidget(toolbutton)
 
@@ -66,8 +78,9 @@ class MainWindow(QMainWindow):
         self.plot.refresh_draw()
 
     def draw_plot(self):
-        list_x = [x for x in range(100)]
-        list_y = [(random.random() - 0.5) * 100 for i in range(100)]
+        n_data = 100
+        list_x = [x for x in range(n_data)]
+        list_y = [(random.random() - 0.5) * 100 for i in range(n_data)]
         self.plot.axes.plot(list_x, list_y)
         self.plot.axes.set_title('テスト %d' % self.count)
         self.plot.axes.set_xlabel('X軸')
