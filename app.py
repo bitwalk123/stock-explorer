@@ -52,12 +52,15 @@ class StockExplorer(QMainWindow):
             code (int): ticker code
         """
         cname, list_x, list_y = get_open_with_code(code)
-        self.plot.axes.plot(list_x, list_y)
+        self.plot.clearAxes()
         #
+        self.plot.axes.plot(list_x, list_y)
         self.plot.axes.set_title('%s (%d.T)' % (cname, code))
         self.plot.axes.set_xlabel('日付')
         self.plot.axes.set_ylabel('株価')
         self.plot.axes.grid()
+        #
+        self.plot.refreshDraw()
 
     def on_ticker_selected(self, code):
         """Signal handler for ticker code button click
