@@ -1,6 +1,7 @@
 # Reference
 # https://stackoverflow.com/questions/8213522/when-to-use-cla-clf-or-close-for-clearing-a-plot
 # https://www.tutorialspoint.com/how-to-clear-the-memory-completely-of-all-matplotlib-plots
+import os
 import random
 import sys
 import matplotlib.font_manager as fm
@@ -18,11 +19,13 @@ from PySide6.QtWidgets import (
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+os.chdir('../')
+FONT_PATH = 'fonts/RictyDiminishedDiscord-Regular.ttf'
+
 
 class MplCanvas(FigureCanvas):
 
     def __init__(self):
-        FONT_PATH = '../fonts/RictyDiminishedDiscord-Regular.ttf'
         fm.fontManager.addfont(FONT_PATH)
 
         # FontPropertiesオブジェクト生成（名前の取得のため）
@@ -49,7 +52,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         # Reference:
         # https://coderslegacy.com/python/pyqt6-adding-custom-fonts/
-        FONT_PATH = '../fonts/RictyDiminishedDiscord-Regular.ttf'
         id = QFontDatabase.addApplicationFont(FONT_PATH)
         if id < 0:
             print("Error")
