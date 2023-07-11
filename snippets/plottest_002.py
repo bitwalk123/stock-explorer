@@ -20,19 +20,17 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 os.chdir('../')
-FONT_PATH = 'fonts/RictyDiminishedDiscord-Regular.ttf'
+FONT_PATH = 'fonts/RictyDiminished-Regular.ttf'
 
 
 class MplCanvas(FigureCanvas):
 
     def __init__(self):
         fm.fontManager.addfont(FONT_PATH)
-
-        # FontPropertiesオブジェクト生成（名前の取得のため）
         font_prop = fm.FontProperties(fname=FONT_PATH)
-        font_prop.get_name()
 
         plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 16
 
         self.fig = Figure()
         self.axes = self.fig.add_subplot(111)
@@ -64,7 +62,7 @@ class MainWindow(QMainWindow):
         self.addToolBar(Qt.TopToolBarArea, toolbar)
         toolbutton = QToolButton()
         toolbutton.setText('更新')
-        toolbutton.setFont(QFont(families[0], 10))
+        toolbutton.setFont(QFont(families[0], 12))
         toolbutton.clicked.connect(self.toolButtonClicked)
         toolbar.addWidget(toolbutton)
 
