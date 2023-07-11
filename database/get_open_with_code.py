@@ -7,7 +7,7 @@ def get_open_with_code(code: int) -> tuple:
     """Get Date and Open data specified with code
 
     Args:
-        code (int): tocler number
+        code (int): ticker number
 
     Returns:
         cname (str): Company name
