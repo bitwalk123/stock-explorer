@@ -17,14 +17,15 @@ from functions.resources import get_tse_data
 
 
 class WorkerSignals(QObject):
+    """Signals for DBTblTickerWorker class
+    """
     finished = Signal(float)
     logMessage = Signal(str)
     updateProgress = Signal(int)
 
 
 class DBTblTickerWorker(QRunnable):
-    """
-    Database table ticker creation
+    """thread worker class for table ticker creation in database
     """
     def __init__(self, query: QSqlQuery):
         super().__init__()

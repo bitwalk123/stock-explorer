@@ -13,6 +13,8 @@ from functions.resources import (
 
 
 class DBTblTicker(QObject):
+    """class for managing ticker table in the database
+    """
     finished = Signal(float)
     logMessage = Signal(str)
     updateProgress = Signal(int)
@@ -23,6 +25,8 @@ class DBTblTicker(QObject):
         self.con = None
 
     def update(self):
+        """Update ticker table in database
+        """
         self.con = get_connection()
         if not self.con.open():
             print('database can not be opened!')
@@ -37,9 +41,13 @@ class DBTblTicker(QObject):
         self.threadpool.start(worker)
 
     def show_log(self, msg: str):
+        """Show message
+        """
         self.logMessage.emit(msg)
 
     def thread_completed(self, elapsed):
+        """Process for thread completed
+        """
         if self.threadpool.activeThreadCount() > 0:
             print('current thread count:', self.threadpool.activeThreadCount())
             self.threadpool.waitForDone(-1)
@@ -50,4 +58,6 @@ class DBTblTicker(QObject):
         self.finished.emit(float)
 
     def update_progress(self, progress: int):
+        """Emit for updating progress
+        """
         self.updateProgress.emit(progress)
