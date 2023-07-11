@@ -36,10 +36,10 @@ class MplCanvas(FigureCanvas):
         self.axes = self.fig.add_subplot(111)
         super().__init__(self.fig)
 
-    def clear_axes(self):
+    def clearAxes(self):
         self.axes.cla()
 
-    def refresh_draw(self):
+    def refreshDraw(self):
         self.fig.canvas.draw()
 
 
@@ -73,9 +73,9 @@ class MainWindow(QMainWindow):
         self.show()
 
     def toolButtonClicked(self):
-        self.plot.clear_axes()
+        self.plot.clearAxes()
         self.draw_plot()
-        self.plot.refresh_draw()
+        self.plot.refreshDraw()
 
     def draw_plot(self):
         n_data = 100
