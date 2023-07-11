@@ -16,6 +16,8 @@ from ui_modules.win_canvas import MplCanvas
 
 
 class StockExplorer(QMainWindow):
+    """Main class for this application
+    """
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Stock Explorer')
@@ -35,18 +37,20 @@ class StockExplorer(QMainWindow):
         self.addToolBar(toolbar)
         # コードドック
         dock_left = DockTicker()
+        dock_left.clicked.connect(self.on_ticker_selected)
         self.addDockWidget(Qt.LeftDockWidgetArea, dock_left)
 
         self.plot = MplCanvas()
-        self.draw_plot()
+        code = 5217
+        self.draw_plot(code)
         self.setCentralWidget(self.plot)
 
-    def draw_plot(self):
-        # TEST PLOTS
-        # n_data = 100
-        # list_x = [x for x in range(n_data)]
-        # list_y = [(random.random() - 0.5) * 100 for i in range(n_data)]
-        code = 5217
+    def draw_plot(self, code: int):
+        """Draw plot with specified ticker code
+
+        Args:
+            code (int): ticker code
+        """
         cname, list_x, list_y = get_open_with_code(code)
         self.plot.axes.plot(list_x, list_y)
         #
@@ -54,6 +58,14 @@ class StockExplorer(QMainWindow):
         self.plot.axes.set_xlabel('日付')
         self.plot.axes.set_ylabel('株価')
         self.plot.axes.grid()
+
+    def on_ticker_selected(self, code):
+        """Signal handler for ticker code button click
+
+        Args:
+            code (int): ticker code
+        """
+        print(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.

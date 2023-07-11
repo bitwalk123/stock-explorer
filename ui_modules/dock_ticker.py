@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QDockWidget,
     QPushButton,
@@ -12,6 +12,10 @@ from database.get_list_ticker import get_list_ticker
 
 
 class DockTicker(QDockWidget):
+    """Dock for listing all tickers
+    """
+    clicked = Signal(int)
+
     def __init__(self):
         super().__init__()
         # self.setWindowTitle('コード')
@@ -19,6 +23,8 @@ class DockTicker(QDockWidget):
         self.init_ui()
 
     def init_ui(self):
+        """Initialize UI
+        """
         area = QScrollArea()
         area.setContentsMargins(0, 0, 0, 0)
         area.setWidgetResizable(True)
@@ -52,4 +58,12 @@ class DockTicker(QDockWidget):
             #    QSizePolicy.Policy.Expanding,
             #    QSizePolicy.Policy.Fixed
             # )
+            but.clicked.connect(self.on_button_clicked)
             layout.addWidget(but)
+
+    def on_button_clicked(self):
+        """handling for button click
+        """
+        but: QPushButton = self.sender()
+        code = int(but.text())
+        self.clicked.emit(code)
