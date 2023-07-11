@@ -4,7 +4,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-class MplPlot(FigureCanvas):
+class MplCanvas(FigureCanvas):
 
     def __init__(self):
         # fig = Figure(figsize=(width, height), dpi=dpi)
