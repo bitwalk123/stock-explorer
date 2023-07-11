@@ -23,7 +23,7 @@ os.chdir('../')
 FONT_PATH = 'fonts/RictyDiminished-Regular.ttf'
 
 
-class MplCanvas(FigureCanvas):
+class MyCanvas(FigureCanvas):
 
     def __init__(self):
         fm.fontManager.addfont(FONT_PATH)
@@ -66,7 +66,7 @@ class Example(QMainWindow):
         toolbutton.clicked.connect(self.toolButtonClicked)
         toolbar.addWidget(toolbutton)
 
-        self.plot = MplCanvas()
+        self.plot = MyCanvas()
         self.draw_plot()
         self.setCentralWidget(self.plot)
 
