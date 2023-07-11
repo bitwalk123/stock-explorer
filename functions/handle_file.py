@@ -1,7 +1,7 @@
 import os
 
 
-def delete_file(filename:str)->bool:
+def delete_file(filename: str) -> bool:
     if os.path.exists(filename):
         os.remove(filename)
         return True

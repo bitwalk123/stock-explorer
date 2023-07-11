@@ -37,12 +37,14 @@ def get_info(key: str) -> str:
 
 
 def get_ini_file() -> str:
-    # OS 別に ini ファイルを設定
+    """Get name of ini file
+    """
+    # Name of ini file depends on OS.
     if platform.system() == 'Windows':
         file_config = 'stock_explorer.ini'
     else:
         file_config = '.stock_explorer'
-    # ini ファイル（フルパス）
+    # ini file in full path
     return os.path.join(expanduser('~'), file_config)
 
 
@@ -64,10 +66,14 @@ def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
 
 
 def get_threadpool() -> QThreadPool:
+    """Get thread pool instance
+    """
     return threadpool
 
 
 def get_tse_data():
+    """Get TSE data in Excel format from specified URL
+    """
     url = get_info('tse')
     basename = os.path.basename(url)
     delete_file(basename)
