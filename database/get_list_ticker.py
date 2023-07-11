@@ -4,6 +4,11 @@ from functions.resources import get_connection
 
 
 def get_list_ticker() -> dict:
+    """Get ticker list
+
+    Returns:
+        dict_ticker (dict): ticker code is a key and company name is a value.
+    """
     dict_ticker = dict()
     con = get_connection()
     if con.open():
