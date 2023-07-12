@@ -9,7 +9,7 @@ from matplotlib.figure import Figure
 FONT_PATH = 'fonts/RictyDiminished-Regular.ttf'
 
 
-class MplCanvas(FigureCanvas):
+class Trend(FigureCanvas):
 
     def __init__(self):
         fm.fontManager.addfont(FONT_PATH)
