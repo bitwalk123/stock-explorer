@@ -2,12 +2,16 @@ import os
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_insert_into_trade_values
+from database.sqls import (
+    get_sql_insert_into_trade_values,
+    get_sql_select_id_code_code_cname_from_ticker,
+)
 from functions.resources import get_connection
 
 con = get_connection()
+
 if con.open():
-    sql1 = 'SELECT id_ticker, コード, 銘柄名 FROM ticker;'
+    sql1 = get_sql_select_id_code_code_cname_from_ticker()
     query1 = QSqlQuery(sql1)
     while query1.next():
         id = query1.value(0)

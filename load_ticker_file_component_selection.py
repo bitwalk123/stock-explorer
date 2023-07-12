@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from functions.get_csv_name import get_csv_name
+from database.sqls import get_sql_select_code_from_ticker
 from functions.prediction import (
     search_minimal_component_number,
     minimal_scores,
@@ -16,7 +16,8 @@ if not con.open():
     sys.exit()
 
 list_code = list()
-sql = 'select コード from ticker;'
+
+sql = get_sql_select_code_from_ticker()
 query = QSqlQuery(sql)
 while query.next():
     code = query.value(0)

@@ -75,16 +75,26 @@ def get_sql_insert_into_trade_values(id_code: int, series: pd.Series) -> str:
     return sql
 
 
-def get_sql_select_code_cname_from_ticker():
+def get_sql_select_code_cname_from_ticker() -> str:
     sql = 'select コード, 銘柄名 from ticker;'
     return sql
 
 
-def get_sql_select_id_code_cname_from_ticker_with_code(code):
+def get_sql_select_code_from_ticker() -> str:
+    sql = 'select コード from ticker;'
+    return sql
+
+
+def get_sql_select_id_code_code_cname_from_ticker() -> str:
+    sql = 'SELECT id_ticker, コード, 銘柄名 FROM ticker;'
+    return sql
+
+
+def get_sql_select_id_code_cname_from_ticker_with_code(code) -> str:
     sql = 'SELECT id_ticker, 銘柄名 FROM ticker WHERE コード=%d;' % code
     return sql
 
 
-def get_sql_select_date_open_from_trade_with_id_code(id_ticker):
-    sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_ticker
+def get_sql_select_date_open_from_trade_with_id_code(id_code) -> str:
+    sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_code
     return sql
