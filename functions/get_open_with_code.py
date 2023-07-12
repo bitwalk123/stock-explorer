@@ -1,5 +1,9 @@
 from PySide6.QtSql import QSqlQuery
 
+from database.sqls import (
+    get_sql_select_id_code_cname_from_ticker_with_code,
+    get_sql_select_date_open_from_trade_with_id_code,
+)
 from functions.resources import get_connection
 
 
@@ -21,7 +25,7 @@ def get_open_with_code(code: int) -> tuple:
     if con.open():
         # get id_code == id_ticker
         id_ticker = 0
-        sql = 'SELECT id_ticker, 銘柄名 FROM ticker WHERE コード=%d;' % code
+        sql = get_sql_select_id_code_cname_from_ticker_with_code(code)
         query = QSqlQuery(sql)
         while query.next():
             id_ticker = query.value(0)
@@ -29,7 +33,7 @@ def get_open_with_code(code: int) -> tuple:
             # print(id_ticker)
             break
         # get list of Date & Open specified with id_code
-        sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_ticker
+        sql = get_sql_select_date_open_from_trade_with_id_code(id_ticker)
         query = QSqlQuery(sql)
         while query.next():
             list_x.append(query.value(0))

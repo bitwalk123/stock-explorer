@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
-from database.get_open_with_code import get_open_with_code
+from functions.get_open_with_code import get_open_with_code
 from functions.resources import get_ini_file
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain

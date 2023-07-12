@@ -3,12 +3,11 @@ from PySide6.QtWidgets import (
     QDockWidget,
     QPushButton,
     QScrollArea,
-    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
 
-from database.get_list_ticker import get_list_ticker
+from functions.get_list_ticker import get_list_ticker
 
 
 class DockTicker(QDockWidget):

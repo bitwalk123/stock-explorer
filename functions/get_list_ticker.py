@@ -1,5 +1,6 @@
 from PySide6.QtSql import QSqlQuery
 
+from database.sqls import get_sql_select_code_cname_from_ticker
 from functions.resources import get_connection
 
 
@@ -12,7 +13,7 @@ def get_list_ticker() -> dict:
     dict_ticker = dict()
     con = get_connection()
     if con.open():
-        sql = 'select コード, 銘柄名 from ticker;'
+        sql = get_sql_select_code_cname_from_ticker()
         query = QSqlQuery(sql)
         while query.next():
             code = query.value(0)
