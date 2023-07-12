@@ -26,7 +26,7 @@ def get_open_with_code(code: int) -> tuple:
         while query.next():
             id_ticker = query.value(0)
             cname = query.value(1)
-            print(id_ticker)
+            # print(id_ticker)
             break
         # get list of Date & Open specified with id_code
         sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_ticker
