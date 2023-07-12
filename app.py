@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
-from functions.get_open_with_code import get_open_with_code
+from functions.draw_trend import draw_trend
 from functions.resources import get_ini_file
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
@@ -18,16 +18,16 @@ from ui_modules.charts import Trend
 class StockExplorer(QMainWindow):
     """Main class for this application
     """
+
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Stock Explorer')
-
         self.chart = None
 
         # ini ファイル（フルパス）
         self.file_ini = get_ini_file()
         print(self.file_ini)
 
+        self.setWindowTitle('Stock Explorer')
         # self.resize(1200, 800)
         self.init_ui()
 
@@ -44,25 +44,8 @@ class StockExplorer(QMainWindow):
 
         self.chart = Trend()
         code = 5217
-        self.draw_trend(code)
+        draw_trend(self.chart, code)
         self.setCentralWidget(self.chart)
-
-    def draw_trend(self, code: int):
-        """Draw chart with specified ticker code
-
-        Args:
-            code (int): ticker code
-        """
-        cname, list_x, list_y = get_open_with_code(code)
-        self.chart.clearAxes()
-        #
-        self.chart.axes.plot(list_x, list_y)
-        self.chart.axes.set_title('%s (%d.T)' % (cname, code))
-        self.chart.axes.set_xlabel('日付')
-        self.chart.axes.set_ylabel('株価')
-        self.chart.axes.grid()
-        #
-        self.chart.refreshDraw()
 
     def on_ticker_selected(self, code):
         """Signal handler for ticker code button click
@@ -71,7 +54,7 @@ class StockExplorer(QMainWindow):
             code (int): ticker code
         """
         print(code)
-        self.draw_trend(code)
+        draw_trend(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.
