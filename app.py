@@ -69,6 +69,7 @@ class StockExplorer(QMainWindow):
             code (int): ticker code
         """
         print(code)
+        # self.draw_plot(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.
