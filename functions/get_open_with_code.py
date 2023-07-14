@@ -23,17 +23,17 @@ def get_open_with_code(code: int) -> tuple:
     list_y = list()
     con = get_connection()
     if con.open():
-        # get id_code == id_ticker
-        id_ticker = 0
+        # get id_code == id_code
+        id_code = 0
         sql = get_sql_select_id_code_cname_from_ticker_with_code(code)
         query = QSqlQuery(sql)
         while query.next():
-            id_ticker = query.value(0)
+            id_code = query.value(0)
             cname = query.value(1)
-            # print(id_ticker)
+            # print(id_code)
             break
         # get list of Date & Open specified with id_code
-        sql = get_sql_select_date_open_from_trade_with_id_code(id_ticker)
+        sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
         query = QSqlQuery(sql)
         while query.next():
             list_x.append(query.value(0))

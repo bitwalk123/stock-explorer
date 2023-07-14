@@ -4,7 +4,7 @@ import pandas as pd
 def get_sql_create_table_ticker() -> str:
     sql = """
         CREATE TABLE ticker(
-            id_ticker INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_code INTEGER PRIMARY KEY AUTOINCREMENT,
             '日付' INTEGER,
             'コード' INTEGER,
             '銘柄名' STRING,
@@ -86,12 +86,12 @@ def get_sql_select_code_from_ticker() -> str:
 
 
 def get_sql_select_id_code_code_cname_from_ticker() -> str:
-    sql = 'SELECT id_ticker, コード, 銘柄名 FROM ticker;'
+    sql = 'SELECT id_code, コード, 銘柄名 FROM ticker;'
     return sql
 
 
 def get_sql_select_id_code_cname_from_ticker_with_code(code) -> str:
-    sql = 'SELECT id_ticker, 銘柄名 FROM ticker WHERE コード=%d;' % code
+    sql = 'SELECT id_code, 銘柄名 FROM ticker WHERE コード=%d;' % code
     return sql
 
 
