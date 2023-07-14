@@ -23,7 +23,7 @@ class StockExplorer(QMainWindow):
         super().__init__()
         self.chart = None
 
-        # ini ファイル（フルパス）
+        # ini file location
         self.file_ini = get_ini_file()
         print(self.file_ini)
 
@@ -34,10 +34,10 @@ class StockExplorer(QMainWindow):
     def init_ui(self):
         """Initialize UI
         """
-        # ツールバー
+        # Toolbar
         toolbar = ToolBarMain()
         self.addToolBar(toolbar)
-        # コードドック
+        # Doc for sticker codes
         dock_left = DockTicker()
         dock_left.clicked.connect(self.on_ticker_selected)
         self.addDockWidget(Qt.LeftDockWidgetArea, dock_left)
