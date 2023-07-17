@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
+import os
 import sys
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -29,6 +31,7 @@ class StockExplorer(QMainWindow):
 
         self.setWindowTitle('Stock Explorer')
         # self.resize(1200, 800)
+        self.setWindowIcon(QIcon(os.path.join('images', 'stock.png')))
         self.init_ui()
 
     def init_ui(self):
