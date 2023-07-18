@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 
 from functions.draw_trend import draw_trend
 from functions.resources import get_ini_file
+from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
 from ui_modules.charts import Trend
@@ -30,7 +31,7 @@ class StockExplorer(QMainWindow):
         print(self.file_ini)
 
         self.setWindowTitle('Stock Explorer')
-        # self.resize(1200, 800)
+        self.resize(1200, 800)
         self.setWindowIcon(QIcon(os.path.join('images', 'stock.png')))
         self.init_ui()
 
@@ -40,10 +41,15 @@ class StockExplorer(QMainWindow):
         # Toolbar
         toolbar = ToolBarMain()
         self.addToolBar(toolbar)
-        # Doc for sticker codes
+
+        # Dock for sticker codes
         dock_left = DockTicker()
         dock_left.clicked.connect(self.on_ticker_selected)
-        self.addDockWidget(Qt.LeftDockWidgetArea, dock_left)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock_left)
+
+        # Dock for controller
+        dock_bottom = DockController()
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock_bottom)
 
         self.chart = Trend()
         code = 5217
