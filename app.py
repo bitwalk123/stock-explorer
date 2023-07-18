@@ -52,7 +52,8 @@ class StockExplorer(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock_bottom)
 
         self.chart = Trend()
-        code = 5217
+        code = 1301
+        # code = 5217
         draw_trend(self.chart, code)
         self.setCentralWidget(self.chart)
 
