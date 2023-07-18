@@ -54,7 +54,8 @@ class StockExplorer(QMainWindow):
         self.chart = Trend()
         code = 1301
         # code = 5217
-        draw_trend(self.chart, code)
+        # draw_trend(self.chart, code)
+        draw_trend(self.chart)
         self.setCentralWidget(self.chart)
 
     def on_ticker_selected(self, code):

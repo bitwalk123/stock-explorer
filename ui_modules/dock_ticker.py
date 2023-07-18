@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QVBoxLayout,
-    QWidget,
+    QWidget, QButtonGroup, QRadioButton,
 )
 
 from functions.get_list_ticker import get_list_ticker
@@ -19,6 +19,7 @@ class DockTicker(QDockWidget):
         super().__init__()
         # self.setWindowTitle('コード')
         self.setContentsMargins(0, 0, 0, 0)
+        self.rb_group = QButtonGroup()
         self.init_ui()
 
     def init_ui(self):
@@ -49,20 +50,22 @@ class DockTicker(QDockWidget):
 
         dict_ticker = get_list_ticker()
         for key in dict_ticker.keys():
-            but = QPushButton(str(key))
-            but.setContentsMargins(0, 0, 0, 0)
-            but.setStyleSheet('text-align:left;padding-left:5px;')
-            but.setToolTip(dict_ticker[key])
+            rb = QRadioButton(str(key))
+            self.rb_group.addButton(rb)
+            rb.setContentsMargins(0, 0, 0, 0)
+            #rb.setStyleSheet('padding-left:5px;')
+            rb.setToolTip(dict_ticker[key])
             # but.setSizePolicy(
             #    QSizePolicy.Policy.Expanding,
             #    QSizePolicy.Policy.Fixed
             # )
-            but.clicked.connect(self.on_button_clicked)
-            layout.addWidget(but)
+            rb.toggled.connect(self.on_button_clicked)
+            layout.addWidget(rb)
 
     def on_button_clicked(self):
         """handling for button click
         """
-        but: QPushButton = self.sender()
-        code = int(but.text())
-        self.clicked.emit(code)
+        rb: QRadioButton = self.sender()
+        if rb.isChecked():
+            code = int(rb.text())
+            self.clicked.emit(code)
