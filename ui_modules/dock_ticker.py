@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QVBoxLayout,
-    QWidget, QButtonGroup, QRadioButton,
+    QWidget, QButtonGroup, QRadioButton, QAbstractButton,
 )
 
 from functions.get_list_ticker import get_list_ticker
@@ -53,7 +53,7 @@ class DockTicker(QDockWidget):
             rb = QRadioButton(str(key))
             self.rb_group.addButton(rb)
             rb.setContentsMargins(0, 0, 0, 0)
-            #rb.setStyleSheet('padding-left:5px;')
+            # rb.setStyleSheet('padding-left:5px;')
             rb.setToolTip(dict_ticker[key])
             # but.setSizePolicy(
             #    QSizePolicy.Policy.Expanding,
@@ -69,3 +69,6 @@ class DockTicker(QDockWidget):
         if rb.isChecked():
             code = int(rb.text())
             self.clicked.emit(code)
+
+    def get_first_button(self) -> QAbstractButton:
+        return self.rb_group.buttons()[0]

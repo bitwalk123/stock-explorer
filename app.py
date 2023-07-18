@@ -52,11 +52,11 @@ class StockExplorer(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock_bottom)
 
         self.chart = Trend()
-        code = 1301
-        # code = 5217
-        # draw_trend(self.chart, code)
-        draw_trend(self.chart)
         self.setCentralWidget(self.chart)
+
+        # set the first radio button selected
+        rb = dock_left.get_first_button()
+        rb.setChecked(True)
 
     def on_ticker_selected(self, code):
         """Signal handler for ticker code button click
