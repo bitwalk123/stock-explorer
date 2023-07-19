@@ -1,3 +1,5 @@
+from typing import Union
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -65,7 +67,7 @@ class DockTicker(QDockWidget):
             code = int(rb.text())
             self.clicked.emit(code)
 
-    def get_first_button(self) -> QAbstractButton | None:
+    def get_first_button(self) -> Union[QAbstractButton, None]:
         """Get first radio button
         """
         if len(self.rb_group.buttons()) > 0:
@@ -73,7 +75,7 @@ class DockTicker(QDockWidget):
         else:
             return None
 
-    def get_current_ticker(self) -> str | None:
+    def get_current_ticker(self) -> Union[str, None]:
         """Get current ticler selected
         """
         rb = self.rb_group.checkedButton()
