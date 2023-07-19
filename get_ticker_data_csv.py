@@ -13,11 +13,9 @@ end = dt.date.today()
 
 con = get_connection()
 if con.open():
-    # sql = 'select コード, 銘柄名 from ticker;'
     sql = get_sql_select_code_cname_from_ticker()
     query = QSqlQuery(sql)
     while query.next():
-        # id = query.value(0)
         code = '%d.T' % query.value(0)
         print(code)
         desc = str(query.value(1))
