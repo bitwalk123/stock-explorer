@@ -31,7 +31,7 @@ class StockExplorer(QMainWindow):
         print(self.file_ini)
 
         self.setWindowTitle('Stock Explorer')
-        #self.resize(1200, 800)
+        # self.resize(1200, 800)
         self.setWindowIcon(
             QIcon(os.path.join('images', 'stock.png'))
         )
@@ -65,7 +65,8 @@ class StockExplorer(QMainWindow):
 
         # set the first radio button selected
         rb = self.dock_left.get_first_button()
-        rb.setChecked(True)
+        if rb is not None:
+            rb.setChecked(True)
 
     def on_ticker_selected(self, code):
         """Signal handler for ticker code button click
