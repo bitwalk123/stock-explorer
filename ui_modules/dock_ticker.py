@@ -19,6 +19,8 @@ class DockTicker(QDockWidget):
         super().__init__()
         # self.setWindowTitle('コード')
         self.setContentsMargins(0, 0, 0, 0)
+
+        self.id_max = 0
         self.rb_group = QButtonGroup()
         self.init_ui()
 
@@ -49,9 +51,12 @@ class DockTicker(QDockWidget):
         base.setLayout(layout)
 
         dict_ticker = get_list_ticker()
+        id = 0
         for key in dict_ticker.keys():
             rb = QRadioButton(str(key))
             self.rb_group.addButton(rb)
+            self.rb_group.setId(rb, id)
+            id += 1
             rb.setContentsMargins(0, 0, 0, 0)
             # rb.setStyleSheet('padding-left:5px;')
             rb.setToolTip(dict_ticker[key])
@@ -61,6 +66,7 @@ class DockTicker(QDockWidget):
             # )
             rb.toggled.connect(self.on_button_clicked)
             layout.addWidget(rb)
+        self.id_max = id
 
     def on_button_clicked(self):
         """handling for button click
@@ -72,3 +78,8 @@ class DockTicker(QDockWidget):
 
     def get_first_button(self) -> QAbstractButton:
         return self.rb_group.buttons()[0]
+
+    def get_current_ticker(self):
+        rb = self.rb_group.checkedButton()
+        print(self.rb_group.id(rb))
+        return (rb.text())

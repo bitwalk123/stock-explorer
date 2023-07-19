@@ -31,8 +31,13 @@ class StockExplorer(QMainWindow):
         print(self.file_ini)
 
         self.setWindowTitle('Stock Explorer')
-        self.resize(1200, 800)
-        self.setWindowIcon(QIcon(os.path.join('images', 'stock.png')))
+        #self.resize(1200, 800)
+        self.setWindowIcon(
+            QIcon(os.path.join('images', 'stock.png'))
+        )
+
+        self.dock_left = DockTicker()
+        self.dock_bottom = DockController(self.dock_left)
         self.init_ui()
 
     def init_ui(self):
@@ -43,19 +48,23 @@ class StockExplorer(QMainWindow):
         self.addToolBar(toolbar)
 
         # Dock for sticker codes
-        dock_left = DockTicker()
-        dock_left.clicked.connect(self.on_ticker_selected)
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock_left)
+        self.dock_left.clicked.connect(self.on_ticker_selected)
+        self.addDockWidget(
+            Qt.DockWidgetArea.LeftDockWidgetArea,
+            self.dock_left
+        )
 
         # Dock for controller
-        dock_bottom = DockController()
-        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock_bottom)
+        self.addDockWidget(
+            Qt.DockWidgetArea.BottomDockWidgetArea,
+            self.dock_bottom
+        )
 
         self.chart = Trend()
         self.setCentralWidget(self.chart)
 
         # set the first radio button selected
-        rb = dock_left.get_first_button()
+        rb = self.dock_left.get_first_button()
         rb.setChecked(True)
 
     def on_ticker_selected(self, code):
