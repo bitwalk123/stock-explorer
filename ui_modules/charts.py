@@ -25,7 +25,11 @@ class Trend(FigureCanvas):
         # self.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
 
     def clearAxes(self):
+        """Clear Axes
+        """
         self.axes.cla()
 
     def refreshDraw(self):
+        """Refresh drawn area
+        """
         self.fig.canvas.draw()

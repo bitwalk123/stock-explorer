@@ -85,6 +85,8 @@ class StockExplorer(QMainWindow):
 
 
 def main():
+    """Main event loop
+    """
     app = QApplication(sys.argv)
     obj = StockExplorer()
     obj.show()

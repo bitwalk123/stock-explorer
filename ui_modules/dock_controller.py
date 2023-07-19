@@ -27,6 +27,7 @@ class DockController(QDockWidget):
         self.setWidget(base)
 
         layout = QHBoxLayout()
+        layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         base.setLayout(layout)
 
@@ -38,12 +39,15 @@ class DockController(QDockWidget):
         )
         layout.addWidget(but)
 
-        pad = QWidget()
-        pad.setSizePolicy(
+        # padding horizontally
+        hpad = QWidget()
+        hpad.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Preferred
         )
-        layout.addWidget(pad)
+        layout.addWidget(hpad)
 
     def on_click_button(self):
+        """Handle buttonclick event
+        """
         print(self.dock_ticker.get_current_ticker())
