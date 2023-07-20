@@ -43,7 +43,7 @@ class DockTicker(QDockWidget):
 
         layout = QVBoxLayout()
         layout.setSpacing(0)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(5, 0, 5, 0)
         base.setLayout(layout)
 
         id = 0
