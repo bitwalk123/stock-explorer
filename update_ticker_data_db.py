@@ -5,7 +5,8 @@ import yfinance as yf
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_code_from_ticker, get_sql_select_max_date_from_trade_with_id_code
+from database.sqls import get_sql_select_id_code_code_from_ticker, get_sql_select_max_date_from_trade_with_id_code, \
+    get_sql_insert_into_trade_values
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.resources import get_connection
 
@@ -25,6 +26,13 @@ if con.open():
             date_max = query2.value(0)
             start = conv_timestamp2date(date_max)
             print('\n', code)
+
             df = yf.download(code, start, end)
-            print(df)
-    con.close()
+            for row in df.index:
+                timestamp = row.timestamp()
+                series = df.loc[row].copy()
+                series['Date'] = timestamp
+                sql3 = get_sql_insert_into_trade_values(id_code, series)
+                query3 = QSqlQuery()
+                query3.exec(sql3)
+        con.close()

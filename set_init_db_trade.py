@@ -23,7 +23,7 @@ if con.open():
                 continue
             print(id, filename)
             df['Date'] = pd.to_datetime(df['Date'])
-            df['Date'] = [int(df['Date'][r].timestamp()) for r in range(len(df))]
+            df['Date'] = [df['Date'][r].timestamp() for r in range(len(df))]
 
             for r in range(len(df)):
                 series = df.iloc[r]
