@@ -4,6 +4,7 @@ from database.sqls import (
     get_sql_select_id_code_cname_from_ticker_with_code,
     get_sql_select_date_open_from_trade_with_id_code,
 )
+from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
 
 
@@ -36,7 +37,9 @@ def get_open_with_code(code: int) -> tuple:
         sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
         query = QSqlQuery(sql)
         while query.next():
-            list_x.append(query.value(0))
+            x = query.value(0)
+            dt = conv_timestamp(x)
+            list_x.append(dt)
             list_y.append(query.value(1))
 
         con.close()

@@ -20,6 +20,9 @@ def draw_trend(chart: Trend, code: int = 0):
     chart.axes.plot(list_x, list_y)
     if code > 0:
         chart.axes.set_title('%s (%d.T)' % (cname, code))
+    # chart.axes.xticks(rotation=90)
+    # print(chart.axes.get_xticks())
+    # chart.axes.set_xticklabels(chart.axes.get_xticks(), rotation=45)
     chart.axes.set_xlabel('DATE')
     chart.axes.set_ylabel('PRICE')
     chart.axes.grid()
