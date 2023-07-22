@@ -24,10 +24,14 @@ if con.open():
         query2 = QSqlQuery(sql2)
         while query2.next():
             date_max = query2.value(0)
+            if type(date_max) is not int:
+                continue
             start = conv_timestamp2date(date_max)
             print('\n', code)
 
             df = yf.download(code, start, end)
+            if len(df) == 0:
+                continue
             for row in df.index:
                 timestamp = row.timestamp()
                 series = df.loc[row].copy()
@@ -35,4 +39,4 @@ if con.open():
                 sql3 = get_sql_insert_into_trade_values(id_code, series)
                 query3 = QSqlQuery()
                 query3.exec(sql3)
-        con.close()
+    con.close()
