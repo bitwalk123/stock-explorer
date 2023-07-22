@@ -81,7 +81,12 @@ def get_sql_select_code_cname_from_ticker() -> str:
 
 
 def get_sql_select_code_from_ticker() -> str:
-    sql = 'select コード from ticker;'
+    sql = 'SELECT コード FROM ticker;'
+    return sql
+
+
+def get_sql_select_id_code_code_from_ticker() -> str:
+    sql = 'SELECT id_code, コード FROM ticker;'
     return sql
 
 
@@ -97,4 +102,9 @@ def get_sql_select_id_code_cname_from_ticker_with_code(code) -> str:
 
 def get_sql_select_date_open_from_trade_with_id_code(id_code) -> str:
     sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+    return sql
+
+
+def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
+    sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d;' % id_code
     return sql
