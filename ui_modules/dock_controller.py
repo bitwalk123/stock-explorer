@@ -16,7 +16,6 @@ class DockController(QDockWidget):
     def __init__(self, dock_ticker: DockTicker):
         super().__init__()
         self.dock_ticker = dock_ticker
-        self.setContentsMargins(0, 0, 0, 0)
         self.setTitleBarWidget(QWidget(None))
         self.init_ui()
 
@@ -28,7 +27,7 @@ class DockController(QDockWidget):
 
         layout = QHBoxLayout()
         layout.setSpacing(0)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(5, 0, 5, 5)
         base.setLayout(layout)
 
         but = QPushButton('TEST')

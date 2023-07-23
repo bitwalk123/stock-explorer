@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget,
+    QWidget, QLabel, QComboBox,
 )
 
 from functions.resources import get_standard_icon
@@ -13,13 +13,20 @@ class ToolBarMain(QToolBar):
     def __init__(self):
         super().__init__()
 
+        lab_range = QLabel('期間')
+        lab_range.setContentsMargins(0, 0, 5, 0)
+        self.addWidget(lab_range)
+
+        combo_range = QComboBox()
+        self.addWidget(combo_range)
+
         # 余白のスペーサ
-        spacer = QWidget()
-        spacer.setSizePolicy(
+        hpad = QWidget()
+        hpad.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding
         )
-        self.addWidget(spacer)
+        self.addWidget(hpad)
 
         # Application config.
         but_conf = QToolButton()
