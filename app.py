@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
 )
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from functions.draw_trend import draw_trend
 from functions.resources import get_ini_file
@@ -66,6 +67,9 @@ class StockExplorer(QMainWindow):
         self.chart = Trend()
         self.setCentralWidget(self.chart)
 
+        # navtoolbar = NavigationToolbar(self.chart, self)
+        # self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navtoolbar)
+
         # Set the first radio button selected
         rb = self.dock_left.get_first_button()
         if rb is not None:
@@ -89,11 +93,11 @@ class StockExplorer(QMainWindow):
 
     def on_ticker_down(self):
         self.dock_left.get_ticker_down()
-        #self.on_chart_update(code)
+        # self.on_chart_update(code)
 
     def on_ticker_up(self):
         self.dock_left.get_ticker_up()
-        #self.on_chart_update(code)
+        # self.on_chart_update(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.

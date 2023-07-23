@@ -2,15 +2,17 @@ from functions.get_open_with_code import get_open_with_code
 from ui_modules.charts import Trend
 
 
-def draw_trend(chart: Trend, code: int = 0, start: int = -1):
+def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'open'):
     """Draw trend chart with specified ticker code
 
     Args:
         chart (Trend): instance of Trend
         start (int): start date in UNIX epoch sec
         code (int): ticker code
+        gtype (str): graph type
     """
-    draw_trend_open(chart, code, start)
+    if gtype == 'open':
+        draw_trend_open(chart, code, start)
 
 
 def draw_trend_open(chart: Trend, code: int, start: int):
