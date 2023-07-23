@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
-from functions.draw_trend import draw_trend_open
+from functions.draw_trend import draw_trend
 from functions.resources import get_ini_file
 from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
@@ -79,7 +79,7 @@ class StockExplorer(QMainWindow):
         """
         print(code)
         start = self.toolbar.get_start_date()
-        draw_trend_open(self.chart, start, code)
+        draw_trend(self.chart, code, start)
 
     def on_period_update(self):
         """Signal handler for period range combobox changed
