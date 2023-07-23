@@ -2,7 +2,7 @@ from functions.get_open_with_code import get_open_with_code
 from ui_modules.charts import Trend
 
 
-def draw_trend(chart: Trend, start: int, code: int = 0):
+def draw_trend_open(chart: Trend, start: int, code: int = 0):
     """Draw chart with specified ticker code
 
     Args:
@@ -20,7 +20,7 @@ def draw_trend(chart: Trend, start: int, code: int = 0):
     #
     chart.axes.plot(list_x, list_y)
     if code > 0:
-        chart.axes.set_title('%s (%d.T)' % (cname, code))
+        chart.axes.set_title('%s (%d.T) Open' % (cname, code))
     # chart.axes.xticks(rotation=90)
     # print(chart.axes.get_xticks())
     # chart.axes.set_xticklabels(chart.axes.get_xticks(), rotation=45)

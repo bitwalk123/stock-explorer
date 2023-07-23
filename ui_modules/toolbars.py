@@ -16,6 +16,8 @@ from ui_modules.config_dialog import DlgConfig
 
 class ToolBarMain(QToolBar):
     periodUpdate = Signal()
+    tickerUp = Signal()
+    tickerDown = Signal()
 
     def __init__(self):
         super().__init__()
@@ -32,6 +34,22 @@ class ToolBarMain(QToolBar):
         self.combo_range.currentIndexChanged.connect(self.selected_range_changed)
         self.addWidget(self.combo_range)
 
+        self.addSeparator()
+
+        # Go up ticker
+        but_up = QToolButton()
+        icon_up = get_standard_icon(self, 'SP_ArrowUp')
+        but_up.setIcon(icon_up)
+        but_up.clicked.connect(self.on_ticker_up)
+        self.addWidget(but_up)
+
+        # Go down ticker
+        but_down = QToolButton()
+        icon_down = get_standard_icon(self, 'SP_ArrowDown')
+        but_down.setIcon(icon_down)
+        but_down.clicked.connect(self.on_ticker_down)
+        self.addWidget(but_down)
+
         # 余白のスペーサ
         hpad = QWidget()
         hpad.setSizePolicy(
@@ -44,8 +62,7 @@ class ToolBarMain(QToolBar):
         but_conf = QToolButton()
         but_conf.setText('Configuration')
         but_conf.setToolTip('このアプリケーションの設定')
-        name = 'SP_FileDialogDetailedView'
-        icon_conf = get_standard_icon(self, name)
+        icon_conf = get_standard_icon(self, 'SP_FileDialogDetailedView')
         but_conf.setIcon(icon_conf)
         but_conf.clicked.connect(self.show_conf_dialog)
         self.addWidget(but_conf)
@@ -60,6 +77,12 @@ class ToolBarMain(QToolBar):
             return today - 2 * year
         else:
             return -1
+
+    def on_ticker_down(self):
+        self.tickerDown.emit()
+
+    def on_ticker_up(self):
+        self.tickerUp.emit()
 
     def selected_range_changed(self, i):
         # print(self.combo_range.itemText(i))

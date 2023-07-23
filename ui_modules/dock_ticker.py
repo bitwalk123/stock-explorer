@@ -22,28 +22,28 @@ class DockTicker(QDockWidget):
     def __init__(self):
         super().__init__()
         self.setTitleBarWidget(QWidget(None))
-        self.setContentsMargins(0, 0, 0, 0)
+        # self.setContentsMargins(0, 0, 0, 0)
 
         self.id_max = 0
+        self.area = QScrollArea()
         self.rb_group = QButtonGroup()
         self.init_ui()
 
     def init_ui(self):
         """Initialize UI
         """
-        area = QScrollArea()
-        area.setContentsMargins(0, 0, 0, 0)
-        area.setWidgetResizable(True)
-        area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setWidget(area)
+        #self.area.setContentsMargins(0, 0, 0, 0)
+        self.area.setWidgetResizable(True)
+        self.area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setWidget(self.area)
 
         base = QWidget()
         base.setContentsMargins(0, 0, 0, 0)
-        area.setWidget(base)
+        self.area.setWidget(base)
 
         layout = QVBoxLayout()
         layout.setSpacing(0)
-        layout.setContentsMargins(5, 0, 5, 0)
+        # layout.setContentsMargins(5, 0, 5, 0)
         base.setLayout(layout)
 
         id = 0
@@ -53,7 +53,7 @@ class DockTicker(QDockWidget):
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
             id += 1
-            rb.setContentsMargins(0, 0, 0, 0)
+            # rb.setContentsMargins(0, 0, 0, 0)
             rb.setToolTip(dict_ticker[key])
             rb.toggled.connect(self.on_button_clicked)
             layout.addWidget(rb)
@@ -64,6 +64,7 @@ class DockTicker(QDockWidget):
         """
         rb: QRadioButton = self.sender()
         if rb.isChecked():
+            self.area.ensureWidgetVisible(rb)
             code = int(rb.text())
             self.clicked.emit(code)
 
@@ -83,3 +84,21 @@ class DockTicker(QDockWidget):
             return int(rb.text())
         else:
             return None
+
+    def get_ticker_down(self):
+        id = self.rb_group.checkedId()
+        if id < len(self.rb_group.buttons()) - 1:
+            id_new = id + 1
+        else:
+            id_new = id
+        rb = self.rb_group.button(id_new)
+        rb.setChecked(True)
+
+    def get_ticker_up(self):
+        id = self.rb_group.checkedId()
+        if id > 0:
+            id_new = id - 1
+        else:
+            id_new = id
+        rb = self.rb_group.button(id_new)
+        rb.setChecked(True)

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
-from functions.draw_trend import draw_trend
+from functions.draw_trend import draw_trend_open
 from functions.resources import get_ini_file
 from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
@@ -45,8 +45,10 @@ class StockExplorer(QMainWindow):
         """Initialize UI
         """
         # Toolbar
-        self.addToolBar(self.toolbar)
         self.toolbar.periodUpdate.connect(self.on_period_update)
+        self.toolbar.tickerDown.connect(self.on_ticker_down)
+        self.toolbar.tickerUp.connect(self.on_ticker_up)
+        self.addToolBar(self.toolbar)
 
         # Dock for sticker codes
         self.dock_left.clicked.connect(self.on_chart_update)
@@ -77,13 +79,21 @@ class StockExplorer(QMainWindow):
         """
         print(code)
         start = self.toolbar.get_start_date()
-        draw_trend(self.chart, start, code)
+        draw_trend_open(self.chart, start, code)
 
     def on_period_update(self):
         """Signal handler for period range combobox changed
         """
         code = self.dock_left.get_current_ticker()
         self.on_chart_update(code)
+
+    def on_ticker_down(self):
+        self.dock_left.get_ticker_down()
+        #self.on_chart_update(code)
+
+    def on_ticker_up(self):
+        self.dock_left.get_ticker_up()
+        #self.on_chart_update(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.
