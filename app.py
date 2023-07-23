@@ -64,7 +64,7 @@ class StockExplorer(QMainWindow):
         self.chart = Trend()
         self.setCentralWidget(self.chart)
 
-        # set the first radio button selected
+        # Set the first radio button selected
         rb = self.dock_left.get_first_button()
         if rb is not None:
             rb.setChecked(True)
