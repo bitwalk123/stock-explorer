@@ -3,16 +3,18 @@ from PySide6.QtSql import QSqlQuery
 from database.sqls import (
     get_sql_select_id_code_cname_from_ticker_with_code,
     get_sql_select_date_open_from_trade_with_id_code,
+    get_sql_select_date_open_from_trade_with_id_code_start,
 )
 from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
 
 
-def get_open_with_code(code: int) -> tuple:
+def get_open_with_code(code: int, start: int) -> tuple:
     """Get Date and Open data specified with code
 
     Args:
         code (int): ticker number
+        start (int): start date in UNIX epoch sec
 
     Returns:
         cname (str): Company name
@@ -34,7 +36,10 @@ def get_open_with_code(code: int) -> tuple:
             # print(id_code)
             break
         # get list of Date & Open specified with id_code
-        sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
+        if start > 0:
+            sql = get_sql_select_date_open_from_trade_with_id_code_start(id_code, start)
+        else:
+            sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
         query = QSqlQuery(sql)
         while query.next():
             x = query.value(0)

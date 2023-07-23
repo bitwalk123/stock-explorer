@@ -36,6 +36,7 @@ class StockExplorer(QMainWindow):
             QIcon(os.path.join('images', 'stock.png'))
         )
 
+        self.toolbar = ToolBarMain()
         self.dock_left = DockTicker()
         self.dock_bottom = DockController(self.dock_left)
         self.init_ui()
@@ -44,11 +45,11 @@ class StockExplorer(QMainWindow):
         """Initialize UI
         """
         # Toolbar
-        toolbar = ToolBarMain()
-        self.addToolBar(toolbar)
+        self.addToolBar(self.toolbar)
+        self.toolbar.periodUpdate.connect(self.on_period_update)
 
         # Dock for sticker codes
-        self.dock_left.clicked.connect(self.on_ticker_selected)
+        self.dock_left.clicked.connect(self.on_chart_update)
         self.addDockWidget(
             Qt.DockWidgetArea.LeftDockWidgetArea,
             self.dock_left
@@ -68,14 +69,21 @@ class StockExplorer(QMainWindow):
         if rb is not None:
             rb.setChecked(True)
 
-    def on_ticker_selected(self, code):
+    def on_chart_update(self, code):
         """Signal handler for ticker code button click
 
         Args:
             code (int): ticker code
         """
         print(code)
-        draw_trend(self.chart, code)
+        start = self.toolbar.get_start_date()
+        draw_trend(self.chart, start, code)
+
+    def on_period_update(self):
+        """Signal handler for period range combobox changed
+        """
+        code = self.dock_left.get_current_ticker()
+        self.on_chart_update(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.

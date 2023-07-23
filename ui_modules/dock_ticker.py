@@ -75,12 +75,11 @@ class DockTicker(QDockWidget):
         else:
             return None
 
-    def get_current_ticker(self) -> Union[str, None]:
+    def get_current_ticker(self) -> Union[int, None]:
         """Get current ticler selected
         """
         rb = self.rb_group.checkedButton()
         if rb is not None:
-            print(self.rb_group.id(rb))
-            return rb.text()
+            return int(rb.text())
         else:
             return None
