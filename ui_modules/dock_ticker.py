@@ -32,18 +32,16 @@ class DockTicker(QDockWidget):
     def init_ui(self):
         """Initialize UI
         """
-        #self.area.setContentsMargins(0, 0, 0, 0)
         self.area.setWidgetResizable(True)
         self.area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWidget(self.area)
 
         base = QWidget()
-        base.setContentsMargins(0, 0, 0, 0)
+        base.setContentsMargins(5, 0, 0, 0)
         self.area.setWidget(base)
 
         layout = QVBoxLayout()
         layout.setSpacing(0)
-        # layout.setContentsMargins(5, 0, 5, 0)
         base.setLayout(layout)
 
         id = 0
@@ -53,7 +51,6 @@ class DockTicker(QDockWidget):
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
             id += 1
-            # rb.setContentsMargins(0, 0, 0, 0)
             rb.setToolTip(dict_ticker[key])
             rb.toggled.connect(self.on_button_clicked)
             layout.addWidget(rb)
@@ -87,12 +84,11 @@ class DockTicker(QDockWidget):
 
     def get_ticker_down(self):
         id = self.rb_group.checkedId()
-        if id < len(self.rb_group.buttons()) - 1:
+        if id < self.id_max - 1:
             id_new = id + 1
         else:
             id_new = id
-        rb = self.rb_group.button(id_new)
-        rb.setChecked(True)
+        self.set_rb_checked_with_id(id_new)
 
     def get_ticker_up(self):
         id = self.rb_group.checkedId()
@@ -100,5 +96,8 @@ class DockTicker(QDockWidget):
             id_new = id - 1
         else:
             id_new = id
-        rb = self.rb_group.button(id_new)
+        self.set_rb_checked_with_id(id_new)
+
+    def set_rb_checked_with_id(self, id):
+        rb = self.rb_group.button(id)
         rb.setChecked(True)
