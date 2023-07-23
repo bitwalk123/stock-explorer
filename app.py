@@ -67,8 +67,8 @@ class StockExplorer(QMainWindow):
         self.chart = Trend()
         self.setCentralWidget(self.chart)
 
-        # navtoolbar = NavigationToolbar(self.chart, self)
-        # self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navtoolbar)
+        navtoolbar = NavigationToolbar(self.chart, self)
+        self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navtoolbar)
 
         # Set the first radio button selected
         rb = self.dock_left.get_first_button()
