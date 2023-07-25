@@ -1,0 +1,11 @@
+import datetime as dt
+import pandas as pd
+
+from functions.get_open_with_code import get_open_with_code
+
+code = 1301
+today = int(pd.to_datetime(str(dt.date.today())).timestamp())
+year = 365 * 24 * 60 * 60
+start = today - year
+cname, list_x, list_y = get_open_with_code(code, start)
+print(list_x)
