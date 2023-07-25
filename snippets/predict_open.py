@@ -12,4 +12,5 @@ today = int(pd.to_datetime(str(dt.date.today())).timestamp())
 year = 365 * 24 * 60 * 60
 start = today - year
 cname, list_x, list_y = get_open_with_code(code, start)
-print(list_x)
+series = pd.Series(data=list_y, index=list_x, name=cname)
+print(series)

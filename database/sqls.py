@@ -37,6 +37,11 @@ def get_sql_create_table_trade() -> str:
     return sql
 
 
+def get_sql_delete_trade_with_id_trade(id_trade) -> str:
+    sql = 'DELETE FROM trade WHERE id_trade = %d' % id_trade
+    return sql
+
+
 def get_sql_drop_table_ticker() -> str:
     """
     drop table ticker if exists
@@ -85,6 +90,11 @@ def get_sql_select_code_from_ticker() -> str:
     return sql
 
 
+def get_sql_select_id_code_from_ticker() -> str:
+    sql = 'SELECT id_code FROM ticker;'
+    return sql
+
+
 def get_sql_select_id_code_code_from_ticker() -> str:
     sql = 'SELECT id_code, コード FROM ticker;'
     return sql
@@ -112,4 +122,14 @@ def get_sql_select_date_open_from_trade_with_id_code_start(id_code, start) -> st
 
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d;' % id_code
+    return sql
+
+
+def get_sql_select_id_trade_date_open_from_trade_with_id_code(id_code) -> str:
+    sql = 'SELECT id_trade, date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+    return sql
+
+
+def get_sql_select_id_trade_date_open_from_trade_with_id_code_start(id_code, start) -> str:
+    sql = 'SELECT id_trade, date, open FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
     return sql
