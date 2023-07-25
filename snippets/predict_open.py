@@ -1,7 +1,11 @@
 import datetime as dt
+import os
 import pandas as pd
 
 from functions.get_open_with_code import get_open_with_code
+
+os.chdir('../')
+os.getcwd()
 
 code = 1301
 today = int(pd.to_datetime(str(dt.date.today())).timestamp())
