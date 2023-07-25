@@ -38,6 +38,10 @@ def get_sql_create_table_trade() -> str:
 
 
 def get_sql_delete_trade_with_id_trade(id_trade) -> str:
+    """Delete record of trade table with specified id_trade
+    Args:
+        id_trade(int): id_trade
+    """
     sql = 'DELETE FROM trade WHERE id_trade = %d' % id_trade
     return sql
 

@@ -29,6 +29,8 @@ if con.open():
             if date in list_date:
                 print('duplicate', id_trade, date, open)
                 sql3 = get_sql_delete_trade_with_id_trade(id_trade)
+                query3 = QSqlQuery()
+                query3.exec(sql3)
             else:
                 list_date.append(date)
 
