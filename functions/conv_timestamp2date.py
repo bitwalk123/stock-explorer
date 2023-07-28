@@ -6,7 +6,16 @@ import pandas as pd
 day1 = 86400
 
 
+def conv_timestamp(timestamp: int):
+    """Convert timestamp to date
+    """
+    date = pd.to_datetime(timestamp, unit='s')
+    return date
+
+
 def conv_timestamp2date_next(timestamp: int):
+    """Convert timestamp to date of 1 day advance
+    """
     # print('timestamp =', timestamp, type(timestamp))
     date = str(pd.to_datetime(timestamp + day1, unit='s'))
     pattern = re.compile(r'(\d{4})-(\d{2})-(\d{2})\s\d{2}:\d{2}:\d{2}')
@@ -18,8 +27,3 @@ def conv_timestamp2date_next(timestamp: int):
         return dt.date(yyyy, mm, dd)
     else:
         return None
-
-
-def conv_timestamp(timestamp: int):
-    date = pd.to_datetime(timestamp, unit='s')
-    return date

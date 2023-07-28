@@ -20,10 +20,14 @@ res = {
 
 
 def get_con() -> QSqlDatabase:
+    """Get instance of database connection
+    """
     return con
 
 
 def get_connection(flag_delete=False) -> QSqlDatabase:
+    """Get new database connection
+    """
     dbname = get_info('db')
     if flag_delete:
         delete_file(dbname)
@@ -33,6 +37,8 @@ def get_connection(flag_delete=False) -> QSqlDatabase:
 
 
 def get_info(key: str) -> str:
+    """Get key value of resource dictionary
+    """
     return res[key]
 
 
@@ -49,8 +55,7 @@ def get_ini_file() -> str:
 
 
 def get_standard_icon(parent: QObject, name_pixmap: str) -> QIcon:
-    """
-    get Standard Pixmap and convert QIcon instance
+    """Get Standard Pixmap and convert QIcon instance
 
     Args:
         parent(QObject): Parent instance inheriting from the QObject.

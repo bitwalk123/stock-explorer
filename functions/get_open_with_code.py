@@ -1,9 +1,9 @@
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_select_id_code_cname_from_ticker_with_code,
     get_sql_select_date_open_from_trade_with_id_code,
     get_sql_select_date_open_from_trade_with_id_code_start,
+    get_sql_select_id_code_cname_from_ticker_with_code,
 )
 from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
