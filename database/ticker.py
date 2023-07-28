@@ -49,7 +49,10 @@ class DBTblTicker(QObject):
         """Process for thread completed
         """
         if self.threadpool.activeThreadCount() > 0:
-            print('current thread count:', self.threadpool.activeThreadCount())
+            print(
+                'current thread count:',
+                self.threadpool.activeThreadCount()
+            )
             self.threadpool.waitForDone(-1)
 
         self.con.close()

@@ -45,12 +45,6 @@ class DBTblTickerWorker(QRunnable):
             'プライム（内国株式）',
             'プライム（外国株式）',
         ]
-        """
-        list_market = [
-            'プライム（内国株式）',
-            'プライム（外国株式）',
-        ]
-        """
         df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
         record_total = len(df_stock.index)
 
