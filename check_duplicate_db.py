@@ -8,9 +8,6 @@ from database.sqls import (
 )
 from functions.resources import get_connection
 
-os.chdir('../')
-os.getcwd()
-
 con = get_connection()
 if con.open():
     sql1 = get_sql_select_id_code_from_ticker()
