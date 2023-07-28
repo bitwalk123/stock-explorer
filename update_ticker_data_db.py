@@ -1,12 +1,13 @@
-import os
 import datetime as dt
-import pandas as pd
 import yfinance as yf
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_code_from_ticker, get_sql_select_max_date_from_trade_with_id_code, \
-    get_sql_insert_into_trade_values
+from database.sqls import (
+    get_sql_insert_into_trade_values,
+    get_sql_select_id_code_code_from_ticker,
+    get_sql_select_max_date_from_trade_with_id_code,
+)
 from functions.conv_timestamp2date import conv_timestamp2date_next
 from functions.resources import get_connection
 

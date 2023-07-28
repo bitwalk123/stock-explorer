@@ -3,8 +3,9 @@ import os
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_select_id_code_from_ticker, get_sql_select_id_trade_date_open_from_trade_with_id_code,
     get_sql_delete_trade_with_id_trade,
+    get_sql_select_id_code_from_ticker,
+    get_sql_select_id_trade_date_open_from_trade_with_id_code,
 )
 from functions.resources import get_connection
 
