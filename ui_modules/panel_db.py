@@ -40,11 +40,11 @@ class PanelDB(QWidget):
         layout.addWidget(but_tse, row, 1)
 
         row += 1
-        # 過去三年分の株価データを取得・更新
-        lab_past3y = QLabel('過去三年分の株価データを取得・更新')
-        layout.addWidget(lab_past3y, row, 0)
-        but_past3y = ApplyButton()
-        layout.addWidget(but_past3y, row, 1)
+        # 重複した株価データを削除
+        lab_dup = QLabel('重複した株価データを削除')
+        layout.addWidget(lab_dup, row, 0)
+        but_dup = ApplyButton()
+        layout.addWidget(but_dup, row, 1)
 
     def getTabLabel(self) -> str:
         return self.tab_label
