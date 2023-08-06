@@ -3,16 +3,12 @@ from PySide6.QtCore import (
     QThreadPool,
     Signal,
 )
-from PySide6.QtSql import QSqlQuery
 
-from database.ticker_worker import DBTblTickerWorker
-from functions.resources import (
-    get_connection,
-    get_threadpool,
-)
+from database.trade_worker import DBTblTradeCheckDuplicateWorker
+from functions.resources import get_threadpool, get_connection
 
 
-class DBTblTicker(QObject):
+class DBTblTrade(QObject):
     """class for managing ticker table in the database
     """
     finished = Signal(float)
@@ -24,17 +20,17 @@ class DBTblTicker(QObject):
         self.threadpool: QThreadPool = get_threadpool()
         self.con = None
 
-    def update(self):
+    def check_duplicate(self):
         """Update ticker table in database
         """
         self.con = get_connection()
         if not self.con.open():
             print('database can not be opened!')
             return
-        query = QSqlQuery()
+
         # _____________________________________________________________________
         # Threading
-        worker = DBTblTickerWorker(query)
+        worker = DBTblTradeCheckDuplicateWorker()
         worker.signals.finished.connect(self.thread_completed)
         worker.signals.logMessage.connect(self.show_log)
         worker.signals.updateProgress.connect(self.update_progress)

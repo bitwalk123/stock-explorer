@@ -1,9 +1,7 @@
 import time
 
 from PySide6.QtCore import (
-    QObject,
     QRunnable,
-    Signal,
 )
 from PySide6.QtSql import QSqlQuery
 
@@ -12,16 +10,9 @@ from database.sqls import (
     get_sql_drop_table_ticker,
     get_sql_insert_into_ticker_values,
 )
+from database.worker_signals import WorkerSignals
 from functions.get_elapsed import get_elapsed
 from functions.resources import get_tse_data
-
-
-class WorkerSignals(QObject):
-    """Signals for DBTblTickerWorker class
-    """
-    finished = Signal(float)
-    logMessage = Signal(str)
-    updateProgress = Signal(int)
 
 
 class DBTblTickerWorker(QRunnable):
