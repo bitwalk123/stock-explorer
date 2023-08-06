@@ -16,19 +16,18 @@ class DBTblTradeCheckDuplicateWorker(QRunnable):
     """thread worker class for table ticker creation in database
     """
 
-    def __init__(self):
+    def __init__(self, query: QSqlQuery):
         super().__init__()
         self.signals = WorkerSignals()
         self.time_start = 0
+        self.query = query
 
     def run(self):
         self.time_start = time.time()
         # record_total = len(df_stock.index)
 
-        sql1 = get_sql_select_id_code_from_ticker()
-        query1 = QSqlQuery(sql1)
-        while query1.next():
-            id_code = query1.value(0)
+        while self.query.next():
+            id_code = self.query.value(0)
             print(id_code)
 
             list_date = list()

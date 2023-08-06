@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
 
 from database.schema import initialize_db
 from database.ticker import DBTblTicker
+from database.trade import DBTblTrade
 from widgets.buttons import ApplyButton
 
 
@@ -44,6 +45,7 @@ class PanelDB(QWidget):
         lab_dup = QLabel('重複した株価データを削除')
         layout.addWidget(lab_dup, row, 0)
         but_dup = ApplyButton()
+        but_dup.clicked.connect(self.check_duplicate)
         layout.addWidget(but_dup, row, 1)
 
     def getTabLabel(self) -> str:
@@ -63,4 +65,17 @@ class PanelDB(QWidget):
         self.progressbar.setCancelButton(None)
         self.progressbar.setWindowTitle('進捗')
         self.progressbar.setLabelText('東証上場企業一覧を取得・更新中')
+        self.progressbar.show()
+
+    def check_duplicate(self):
+        obj = DBTblTrade(self)
+        obj.updateProgress.connect(self.update_progress)
+        obj.check_duplicate()
+
+        # QProgressDialog
+        self.progressbar = QProgressDialog(parent=self)
+        self.progressbar.setWindowModality(Qt.WindowModal)
+        self.progressbar.setCancelButton(None)
+        self.progressbar.setWindowTitle('進捗')
+        self.progressbar.setLabelText('重複した株価データを確認・削除中')
         self.progressbar.show()
