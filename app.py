@@ -37,9 +37,11 @@ class StockExplorer(QMainWindow):
             QIcon(os.path.join('images', 'stock.png'))
         )
 
+        # Initialize instances of UI components
         self.toolbar = ToolBarMain()
         self.dock_left = DockTicker()
         self.dock_bottom = DockController(self.dock_left)
+
         self.init_ui()
 
     def init_ui(self):
