@@ -92,12 +92,14 @@ class StockExplorer(QMainWindow):
         self.on_chart_update(code)
 
     def on_ticker_down(self):
+        """Move ticker down
+        """
         self.dock_left.get_ticker_down()
-        # self.on_chart_update(code)
 
     def on_ticker_up(self):
+        """Move ticker up
+        """
         self.dock_left.get_ticker_up()
-        # self.on_chart_update(code)
 
     def closeEvent(self, event):
         """Close event when user click X button.
