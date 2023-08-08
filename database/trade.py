@@ -29,12 +29,10 @@ class DBTblTrade(QObject):
         if not self.con.open():
             print('database can not be opened!')
             return
-        sql = get_sql_select_id_code_from_ticker()
-        query = QSqlQuery(sql)
 
         # _____________________________________________________________________
         # Threading
-        worker = DBTblTradeCheckDuplicateWorker(query)
+        worker = DBTblTradeCheckDuplicateWorker()
         worker.signals.finished.connect(self.thread_completed)
         worker.signals.logMessage.connect(self.show_log)
         worker.signals.updateProgress.connect(self.update_progress)
