@@ -94,6 +94,11 @@ def get_sql_select_code_from_ticker() -> str:
     return sql
 
 
+def get_sql_select_count_from_ticker() -> str:
+    sql = 'SELECT COUNT(*) FROM ticker;'
+    return sql
+
+
 def get_sql_select_id_code_from_ticker() -> str:
     sql = 'SELECT id_code FROM ticker;'
     return sql

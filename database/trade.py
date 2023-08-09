@@ -30,9 +30,13 @@ class DBTblTrade(QObject):
             print('database can not be opened!')
             return
 
+        query1 = QSqlQuery()
+        query2 = QSqlQuery()
+        query3 = QSqlQuery()
+
         # _____________________________________________________________________
         # Threading
-        worker = DBTblTradeCheckDuplicateWorker()
+        worker = DBTblTradeCheckDuplicateWorker(query1, query2, query3)
         worker.signals.finished.connect(self.thread_completed)
         worker.signals.logMessage.connect(self.show_log)
         worker.signals.updateProgress.connect(self.update_progress)
