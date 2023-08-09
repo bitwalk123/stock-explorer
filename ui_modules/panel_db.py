@@ -41,6 +41,13 @@ class PanelDB(QWidget):
         layout.addWidget(but_tse, row, 1)
 
         row += 1
+        lab_update = QLabel('最新の株価データに更新')
+        layout.addWidget(lab_update, row, 0)
+        but_update = ApplyButton()
+        # but_update.clicked.connect()
+        layout.addWidget(but_update, row, 1)
+
+        row += 1
         # 重複した株価データを削除
         lab_dup = QLabel('重複した株価データを削除')
         layout.addWidget(lab_dup, row, 0)
