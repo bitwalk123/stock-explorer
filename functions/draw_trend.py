@@ -29,6 +29,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
         cname = None
         list_x = list()
         list_y = list()
+
     chart.clearAxes()
     #
     chart.axes.plot(list_x, list_y)

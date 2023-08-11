@@ -40,6 +40,7 @@ def get_open_with_code(code: int, start: int) -> tuple:
             sql = get_sql_select_date_open_from_trade_with_id_code_start(id_code, start)
         else:
             sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
+
         query = QSqlQuery(sql)
         while query.next():
             x = query.value(0)
