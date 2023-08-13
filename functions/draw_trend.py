@@ -2,7 +2,7 @@ from functions.get_open_with_code import get_open_with_code
 from ui_modules.charts import Trend
 
 
-def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'open'):
+def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'Open'):
     """Draw trend chart with specified ticker code
 
     Args:
@@ -11,8 +11,10 @@ def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'open'
         code (int): ticker code
         gtype (str): graph type
     """
-    if gtype == 'open':
+    if gtype == 'Open':
         draw_trend_open(chart, code, start)
+    else:
+        print('not support plot type: %s' % gtype)
 
 
 def draw_trend_open(chart: Trend, code: int, start: int):

@@ -18,6 +18,7 @@ class ToolBarMain(QToolBar):
     periodUpdate = Signal()
     tickerUp = Signal()
     tickerDown = Signal()
+    plotTypeUpdated = Signal()
 
     def __init__(self):
         super().__init__()
@@ -32,7 +33,7 @@ class ToolBarMain(QToolBar):
         lab_range.setContentsMargins(0, 0, 5, 0)
         self.addWidget(lab_range)
         self.combo_range.addItems(['１年', '２年', '全て'])
-        self.combo_range.currentIndexChanged.connect(self.selected_range_changed)
+        self.combo_range.currentIndexChanged.connect(self.on_selected_range_changed)
         self.addWidget(self.combo_range)
 
         self.addSeparator()
@@ -66,13 +67,15 @@ class ToolBarMain(QToolBar):
         #
         rb_open = QRadioButton('Open')
         rb_open.setChecked(True)
+        rb_open.clicked.connect(self.on_plot_tyoe_changed)
         self.addWidget(rb_open)
         rb_candle = QRadioButton('Candle')
+        rb_candle.clicked.connect(self.on_plot_tyoe_changed)
         self.addWidget(rb_candle)
         #
         self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
-        #
+
         # Application config.
         but_conf = QToolButton()
         but_conf.setText('Configuration')
@@ -94,8 +97,8 @@ class ToolBarMain(QToolBar):
             return -1
 
     def get_plot_type(self):
-        obj = self.rb_group.checkedButton()
-        return obj.text()
+        rb = self.rb_group.checkedButton()
+        return rb.text()
 
     def on_ticker_down(self):
         self.tickerDown.emit()
@@ -103,9 +106,13 @@ class ToolBarMain(QToolBar):
     def on_ticker_up(self):
         self.tickerUp.emit()
 
-    def selected_range_changed(self, i):
-        # print(self.combo_range.itemText(i))
+    def on_selected_range_changed(self, i):
         self.periodUpdate.emit()
+
+    def on_plot_tyoe_changed(self):
+        rb:QRadioButton = self.sender()
+        if rb.isChecked():
+            self.plotTypeUpdated.emit()
 
     def show_conf_dialog(self):
         dlg = DlgConfig(parent=self)

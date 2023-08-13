@@ -50,6 +50,7 @@ class StockExplorer(QMainWindow):
         self.toolbar.periodUpdate.connect(self.on_period_update)
         self.toolbar.tickerDown.connect(self.on_ticker_down)
         self.toolbar.tickerUp.connect(self.on_ticker_up)
+        self.toolbar.plotTypeUpdated.connect(self.on_chart_type_update)
         self.addToolBar(self.toolbar)
 
         # Dock for sticker codes
@@ -79,6 +80,10 @@ class StockExplorer(QMainWindow):
         if rb is not None:
             rb.setChecked(True)
 
+    def on_chart_type_update(self):
+        code = self.dock_left.get_current_ticker()
+        self.on_chart_update(code)
+
     def on_chart_update(self, code):
         """Signal handler for ticker code button click
 
@@ -87,10 +92,8 @@ class StockExplorer(QMainWindow):
         """
         print(code)
         start = self.toolbar.get_start_date()
-        plot_type = self.toolbar.get_plot_type()
-        print(plot_type)
-        if plot_type == 'Open':
-            draw_trend(self.chart, code, start)
+        gtype = self.toolbar.get_plot_type()
+        draw_trend(self.chart, code, start, gtype)
 
     def on_period_update(self):
         """Signal handler for period range combobox changed
