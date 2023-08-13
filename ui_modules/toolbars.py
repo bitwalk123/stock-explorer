@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget,
+    QWidget, QRadioButton, QButtonGroup,
 )
 
 from functions.resources import get_standard_icon
@@ -21,8 +21,9 @@ class ToolBarMain(QToolBar):
 
     def __init__(self):
         super().__init__()
-        self.combo_range = QComboBox()
 
+        self.combo_range = QComboBox()
+        self.rb_group = QButtonGroup()
         self.init_ui()
 
     def init_ui(self):
@@ -58,6 +59,20 @@ class ToolBarMain(QToolBar):
         )
         self.addWidget(hpad)
 
+        # Type of plot
+        lab_plottype = QLabel('プロット')
+        lab_plottype.setContentsMargins(0, 0, 10, 0)
+        self.addWidget(lab_plottype)
+        #
+        rb_open = QRadioButton('Open')
+        rb_open.setChecked(True)
+        self.addWidget(rb_open)
+        rb_candle = QRadioButton('Candle')
+        self.addWidget(rb_candle)
+        #
+        self.rb_group.addButton(rb_open)
+        self.rb_group.addButton(rb_candle)
+        #
         # Application config.
         but_conf = QToolButton()
         but_conf.setText('Configuration')
@@ -77,6 +92,10 @@ class ToolBarMain(QToolBar):
             return today - 2 * year
         else:
             return -1
+
+    def get_plot_type(self):
+        obj = self.rb_group.checkedButton()
+        return obj.text()
 
     def on_ticker_down(self):
         self.tickerDown.emit()

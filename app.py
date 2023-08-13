@@ -87,7 +87,10 @@ class StockExplorer(QMainWindow):
         """
         print(code)
         start = self.toolbar.get_start_date()
-        draw_trend(self.chart, code, start)
+        plot_type = self.toolbar.get_plot_type()
+        print(plot_type)
+        if plot_type == 'Open':
+            draw_trend(self.chart, code, start)
 
     def on_period_update(self):
         """Signal handler for period range combobox changed
