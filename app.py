@@ -33,9 +33,8 @@ class StockExplorer(QMainWindow):
 
         self.setWindowTitle('Stock Explorer')
         self.resize(1200, 800)
-        self.setWindowIcon(
-            QIcon(os.path.join('images', 'stock.png'))
-        )
+        icon = QIcon(os.path.join('images', 'stock.png'))
+        self.setWindowIcon(icon)
 
         # Initialize instances of UI components
         self.toolbar = ToolBarMain()
