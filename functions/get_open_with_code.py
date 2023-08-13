@@ -35,7 +35,7 @@ def get_open_with_code(code: int, start: int) -> tuple:
             cname = query.value(1)
             # print(id_code)
             break
-        # get list of Date & Open specified with id_code
+        # Get list of Date & Open specified with id_code
         if start > 0:
             sql = get_sql_select_date_open_from_trade_with_id_code_start(id_code, start)
         else:

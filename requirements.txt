@@ -2,7 +2,6 @@ fqdn
 isoduration
 jsonpointer
 jupyterlab
-mpl-finance
 mplfinance
 pandas-datareader
 pip-chill

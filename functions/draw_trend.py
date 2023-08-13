@@ -1,4 +1,7 @@
+import mplfinance as mpf
+
 from functions.get_open_with_code import get_open_with_code
+from functions.get_trade_with_code import get_trade_with_code
 from ui_modules.charts import Trend
 
 
@@ -48,6 +51,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     #
     chart.refreshDraw()
 
+
 def draw_trend_candle(chart: Trend, code: int, start: int):
     """Draw trend chart for Open with specified ticker code
 
@@ -56,21 +60,14 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
         code (int): ticker code
         start (int): start date in UNIX epoch sec
     """
-    if code > 0:
-        cname, list_x, list_y = get_open_with_code(code, start)
-    else:
-        cname = None
-        list_x = list()
-        list_y = list()
-
+    cname, df = get_trade_with_code(code, start)
     chart.clearAxes()
-    #
-    chart.axes.plot(list_x, list_y)
-    if code > 0:
-        chart.axes.set_title('%s (%d.T)' % (cname, code))
+    # title
+    chart.axes.set_title('%s (%d.T)' % (cname, code))
 
-    chart.axes.set_xlabel('DATE')
-    chart.axes.set_ylabel('PRICE')
-    chart.axes.grid()
+    # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
+    mc = mpf.make_marketcolors(up='b', down='r')
+    s = mpf.make_mpf_style(marketcolors=mc)
+    mpf.plot(df, type='candle', style=s, ax=chart.axes)
     #
     chart.refreshDraw()
