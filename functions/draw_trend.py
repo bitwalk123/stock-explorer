@@ -65,7 +65,11 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     chart.ax.set_title('%s (%d.T)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
-    mc = mpf.make_marketcolors(up='b', down='r')
+    mc = mpf.make_marketcolors(
+        up='cyan',
+        down='orange',
+        wick={'up': 'blue', 'down': 'red'},
+    )
     s = mpf.make_mpf_style(marketcolors=mc)
     mpf.plot(
         df,
