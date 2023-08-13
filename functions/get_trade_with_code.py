@@ -70,5 +70,5 @@ def get_trade_with_code(code: int, start: int) -> tuple:
         )
         df.set_index('Date', inplace=True)
         # df.insert(0, 'index', date2num(df.index))
-        print(df.head())
+        # print(df.head())
         return cname, df
