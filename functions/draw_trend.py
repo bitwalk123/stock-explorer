@@ -39,15 +39,14 @@ def draw_trend_open(chart: Trend, code: int, start: int):
 
     chart.clearAxes()
     #
-    chart.axes.plot(list_x, list_y)
+    chart.ax.plot(list_x, list_y)
     if code > 0:
-        chart.axes.set_title('%s (%d.T) Open' % (cname, code))
-    # chart.axes.xticks(rotation=90)
-    # print(chart.axes.get_xticks())
-    # chart.axes.set_xticklabels(chart.axes.get_xticks(), rotation=45)
+        chart.ax.set_title('%s (%d.T) Open' % (cname, code))
     # chart.axes.set_xlabel('DATE')
-    chart.axes.set_ylabel('PRICE')
-    chart.axes.grid()
+    chart.ax.set_ylabel('Price')
+    chart.ax.grid()
+    for tick in chart.ax.get_xticklabels():
+        tick.set_rotation(45)
     #
     chart.refreshDraw()
 
@@ -63,12 +62,20 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     cname, df = get_trade_with_code(code, start)
     chart.clearAxes()
     # title
-    chart.axes.set_title('%s (%d.T)' % (cname, code))
+    chart.ax.set_title('%s (%d.T)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
-    # mc = mpf.make_marketcolors(up='b', down='r')
-    # s = mpf.make_mpf_style(marketcolors=mc)
-    mpf.plot(df, type='candle', datetime_format='%Y/%m/%d', tight_layout=True, style='binance', ax=chart.axes)
+    mc = mpf.make_marketcolors(up='b', down='r')
+    s = mpf.make_mpf_style(marketcolors=mc)
+    mpf.plot(
+        df,
+        type='candle',
+        datetime_format='%Y/%m/%d',
+        tight_layout=False,
+        style=s,
+        mav=(21, 42),
+        ax=chart.ax
+    )
     #
-    chart.axes.grid()
+    chart.ax.grid()
     chart.refreshDraw()
