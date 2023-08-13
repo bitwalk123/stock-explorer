@@ -13,6 +13,8 @@ def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'Open'
     """
     if gtype == 'Open':
         draw_trend_open(chart, code, start)
+    elif gtype == 'Candle':
+        draw_trend_candle(chart, code, start)
     else:
         print('not support plot type: %s' % gtype)
 
@@ -40,6 +42,33 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     # chart.axes.xticks(rotation=90)
     # print(chart.axes.get_xticks())
     # chart.axes.set_xticklabels(chart.axes.get_xticks(), rotation=45)
+    chart.axes.set_xlabel('DATE')
+    chart.axes.set_ylabel('PRICE')
+    chart.axes.grid()
+    #
+    chart.refreshDraw()
+
+def draw_trend_candle(chart: Trend, code: int, start: int):
+    """Draw trend chart for Open with specified ticker code
+
+    Args:
+        chart (Trend): instance of Trend
+        code (int): ticker code
+        start (int): start date in UNIX epoch sec
+    """
+    if code > 0:
+        cname, list_x, list_y = get_open_with_code(code, start)
+    else:
+        cname = None
+        list_x = list()
+        list_y = list()
+
+    chart.clearAxes()
+    #
+    chart.axes.plot(list_x, list_y)
+    if code > 0:
+        chart.axes.set_title('%s (%d.T)' % (cname, code))
+
     chart.axes.set_xlabel('DATE')
     chart.axes.set_ylabel('PRICE')
     chart.axes.grid()
