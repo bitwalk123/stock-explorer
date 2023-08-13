@@ -32,7 +32,8 @@ class ToolBarMain(QToolBar):
         lab_range = QLabel('期間')
         lab_range.setContentsMargins(0, 0, 5, 0)
         self.addWidget(lab_range)
-        self.combo_range.addItems(['１年', '２年', '全て'])
+        self.combo_range.addItems(['３ヵ月', '６ヵ月', '１年', '２年', '全て'])
+        self.combo_range.setCurrentText('１年')
         self.combo_range.currentIndexChanged.connect(self.on_selected_range_changed)
         self.addWidget(self.combo_range)
 
@@ -89,7 +90,11 @@ class ToolBarMain(QToolBar):
         sel = self.combo_range.currentText()
         today = int(pd.to_datetime(str(dt.date.today())).timestamp())
         year = 365 * 24 * 60 * 60
-        if sel == '１年':
+        if sel == '３ヵ月':
+            return today - year / 4
+        elif sel == '６ヵ月':
+            return today - year / 2
+        elif sel == '１年':
             return today - year
         elif sel == '２年':
             return today - 2 * year
