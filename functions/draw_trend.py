@@ -45,7 +45,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     # chart.axes.xticks(rotation=90)
     # print(chart.axes.get_xticks())
     # chart.axes.set_xticklabels(chart.axes.get_xticks(), rotation=45)
-    chart.axes.set_xlabel('DATE')
+    # chart.axes.set_xlabel('DATE')
     chart.axes.set_ylabel('PRICE')
     chart.axes.grid()
     #
@@ -66,8 +66,9 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     chart.axes.set_title('%s (%d.T)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
-    mc = mpf.make_marketcolors(up='b', down='r')
-    s = mpf.make_mpf_style(marketcolors=mc)
-    mpf.plot(df, type='candle', style=s, ax=chart.axes)
+    # mc = mpf.make_marketcolors(up='b', down='r')
+    # s = mpf.make_mpf_style(marketcolors=mc)
+    mpf.plot(df, type='candle', datetime_format='%Y/%m/%d', tight_layout=True, style='binance', ax=chart.axes)
     #
+    chart.axes.grid()
     chart.refreshDraw()
