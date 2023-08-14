@@ -21,7 +21,6 @@ class DlgInfoTicker(QDialog):
         self.init_ui(info)
         self.resize(600, 600)
 
-
     def init_ui(self, info: dict):
         """Initialize UI
         """
@@ -55,6 +54,7 @@ class DlgInfoTicker(QDialog):
             if key == 'website':
                 lab_right = QLabel()
                 lab_right.setText('<a href="%s">%s</a>' % (info[key], info[key]))
+                lab_right.setOpenExternalLinks(True)
                 lab_right.setContentsMargins(0, 0, 0, 0)
                 lab_right.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
                 lab_right.setStyleSheet('QLabel {padding:0 2px;}')
@@ -64,10 +64,7 @@ class DlgInfoTicker(QDialog):
             elif key == 'companyOfficers':
                 lab_right = QLabel()
             else:
-                lab_right = QLabel(str(info[key]))
-                lab_right.setContentsMargins(0, 0, 0, 0)
-                lab_right.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-                lab_right.setStyleSheet('QLabel {padding:0 2px;}')
+                lab_right = self.handle_general(str(info[key]))
 
             layout2.addWidget(lab_left, row, 0)
             layout2.addWidget(lab_right, row, 1)
@@ -78,3 +75,10 @@ class DlgInfoTicker(QDialog):
         bbox.setContentsMargins(0, 0, 0, 0)
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
+
+    def handle_general(self, value: str) -> QLabel:
+        lab_right = QLabel(value)
+        lab_right.setContentsMargins(0, 0, 0, 0)
+        lab_right.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        lab_right.setStyleSheet('QLabel {padding:0 2px;}')
+        return lab_right
