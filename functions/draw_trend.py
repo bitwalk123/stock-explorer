@@ -2,7 +2,7 @@ import mplfinance as mpf
 
 from functions.get_open_with_code import get_open_with_code
 from functions.get_trade_with_code import get_trade_with_code
-from ui_modules.charts import Trend
+from widgets.charts import Trend
 
 
 def draw_trend(chart: Trend, code: int = 0, start: int = -1, gtype: str = 'Open'):

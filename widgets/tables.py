@@ -41,6 +41,10 @@ class CellOfficers(QScrollArea):
         self.setContentsMargins(0, 0, 0, 0)
         self.setWidgetResizable(True)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        #if len(list_dict) > 1:
+        #    self.setFixedHeight(200)
+        #else:
+        #    self.setFixedHeight(120)
         self.setFixedHeight(200)
 
         base = QWidget()
@@ -64,6 +68,10 @@ class CellOfficerSingle(QFrame):
         self.setLineWidth(2)
         self.setStyleSheet('QFrame {background-color:#ccc;}')
         self.setContentsMargins(2, 2, 2, 2)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
+        )
 
         layout = QGridLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -76,7 +84,7 @@ class CellOfficerSingle(QFrame):
             lab_right = CellGeneral(info[key])
             lab_right.setSizePolicy(
                 QSizePolicy.Policy.Expanding,
-                QSizePolicy.Policy.Expanding
+                QSizePolicy.Policy.Preferred,
             )
             layout.addWidget(lab_left, row, 0)
             layout.addWidget(lab_right, row, 1)

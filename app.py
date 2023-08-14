@@ -16,7 +16,7 @@ from functions.resources import get_ini_file
 from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
-from ui_modules.charts import Trend
+from widgets.charts import Trend
 
 
 class StockExplorer(QMainWindow):
