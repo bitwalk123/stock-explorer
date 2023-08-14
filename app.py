@@ -37,7 +37,7 @@ class StockExplorer(QMainWindow):
         self.setWindowIcon(icon)
 
         # Initialize instances of UI components
-        self.toolbar = ToolBarMain()
+        self.toolbar = ToolBarMain(self)
         self.dock_left = DockTicker()
         self.dock_bottom = DockController(self.dock_left)
 

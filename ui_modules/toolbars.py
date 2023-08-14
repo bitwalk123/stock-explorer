@@ -2,16 +2,19 @@ import datetime as dt
 import pandas as pd
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
+    QButtonGroup,
     QComboBox,
     QLabel,
+    QRadioButton,
     QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget, QRadioButton, QButtonGroup,
+    QWidget,
 )
 
 from functions.resources import get_standard_icon
-from ui_modules.config_dialog import DlgConfig
+from ui_modules.dlg_config import DlgConfig
+from ui_modules.dlg_info_ticker import DlgInfoTicker
 
 
 class ToolBarMain(QToolBar):
@@ -20,8 +23,9 @@ class ToolBarMain(QToolBar):
     tickerDown = Signal()
     plotTypeUpdated = Signal()
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
+        self.parent=parent
 
         self.combo_range = QComboBox()
         self.rb_group = QButtonGroup()
@@ -52,6 +56,13 @@ class ToolBarMain(QToolBar):
         but_down.setIcon(icon_down)
         but_down.clicked.connect(self.on_ticker_down)
         self.addWidget(but_down)
+
+        # Ticker Information
+        but_info = QToolButton()
+        icon_info = get_standard_icon(self, 'SP_MessageBoxInformation')
+        but_info.setIcon(icon_info)
+        but_info.clicked.connect(self.on_ticker_info)
+        self.addWidget(but_info)
 
         # 余白のスペーサ
         hpad = QWidget()
@@ -105,19 +116,24 @@ class ToolBarMain(QToolBar):
         rb = self.rb_group.checkedButton()
         return rb.text()
 
+    def on_plot_tyoe_changed(self):
+        rb: QRadioButton = self.sender()
+        if rb.isChecked():
+            self.plotTypeUpdated.emit()
+
+    def on_selected_range_changed(self, i):
+        self.periodUpdate.emit()
+
+    def on_ticker_info(self):
+        code = self.parent.dock_left.get_current_ticker()
+        dlg = DlgInfoTicker(code, parent=self)
+        dlg.show()
+
     def on_ticker_down(self):
         self.tickerDown.emit()
 
     def on_ticker_up(self):
         self.tickerUp.emit()
-
-    def on_selected_range_changed(self, i):
-        self.periodUpdate.emit()
-
-    def on_plot_tyoe_changed(self):
-        rb:QRadioButton = self.sender()
-        if rb.isChecked():
-            self.plotTypeUpdated.emit()
 
     def show_conf_dialog(self):
         dlg = DlgConfig(parent=self)
