@@ -23,7 +23,7 @@ class DlgInfoTicker(QDialog):
 
         info = get_info_ticker(code)
         self.init_ui(info)
-        self.resize(600, 600)
+        self.resize(800, 600)
 
     def init_ui(self, info: dict):
         """Initialize UI
