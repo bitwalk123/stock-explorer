@@ -33,42 +33,8 @@ class DlgInfoTicker(QDialog):
         area.setContentsMargins(0, 0, 0, 0)
         area.setWidgetResizable(True)
         layout.addWidget(area)
-
-        base = QWidget()
-        base.setContentsMargins(0, 0, 0, 0)
+        base = self.panel_ticker_info(info)
         area.setWidget(base)
-
-        layout2 = QGridLayout()
-        layout2.setContentsMargins(0, 0, 0, 0)
-        layout2.setSpacing(0)
-        base.setLayout(layout2)
-
-        row = 0
-        for key in info.keys():
-            lab_left = QLabel(key)
-            lab_left.setContentsMargins(0, 0, 0, 0)
-            lab_left.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-            lab_left.setAlignment(Qt.AlignmentFlag.AlignTop)
-            lab_left.setStyleSheet('QLabel {padding:0 2px;}')
-
-            if key == 'website':
-                lab_right = QLabel()
-                lab_right.setText('<a href="%s">%s</a>' % (info[key], info[key]))
-                lab_right.setOpenExternalLinks(True)
-                lab_right.setContentsMargins(0, 0, 0, 0)
-                lab_right.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-                lab_right.setStyleSheet('QLabel {padding:0 2px;}')
-            elif key == 'longBusinessSummary':
-                lab_right = QPlainTextEdit(str(info[key]))
-                lab_right.setStyleSheet('QPlainTextEdit {padding:0 2px;}')
-            elif key == 'companyOfficers':
-                lab_right = QLabel()
-            else:
-                lab_right = self.handle_general(str(info[key]))
-
-            layout2.addWidget(lab_left, row, 0)
-            layout2.addWidget(lab_right, row, 1)
-            row += 1
 
         dlg_button = QDialogButtonBox.StandardButton.Ok
         bbox = QDialogButtonBox(dlg_button)
@@ -76,9 +42,60 @@ class DlgInfoTicker(QDialog):
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
 
-    def handle_general(self, value: str) -> QLabel:
-        lab_right = QLabel(value)
-        lab_right.setContentsMargins(0, 0, 0, 0)
-        lab_right.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        lab_right.setStyleSheet('QLabel {padding:0 2px;}')
-        return lab_right
+    def panel_ticker_info(self, info):
+        base = QWidget()
+        base.setContentsMargins(0, 0, 0, 0)
+        layout2 = QGridLayout()
+        layout2.setContentsMargins(0, 0, 0, 0)
+        layout2.setSpacing(0)
+        base.setLayout(layout2)
+        row = 0
+        for key in info.keys():
+            lab_left = self.handle_header(key)
+
+            if key == 'website':
+                lab_right = self.handle_website(info[key])
+            elif key == 'longBusinessSummary':
+                lab_right = self.handle_long_business_summary(info[key])
+            elif key == 'companyOfficers':
+                lab_right = self.handle_company_officers(info[key])
+            else:
+                lab_right = self.handle_general(info[key])
+
+            layout2.addWidget(lab_left, row, 0)
+            layout2.addWidget(lab_right, row, 1)
+            row += 1
+        return base
+
+    def handle_header(self, value_str) -> QLabel:
+        lab = QLabel(value_str)
+        lab.setContentsMargins(0, 0, 0, 0)
+        lab.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
+        lab.setAlignment(Qt.AlignmentFlag.AlignTop)
+        lab.setStyleSheet('QLabel {padding:0 2px;}')
+        return lab
+
+    def handle_website(self, value) -> QLabel:
+        lab = QLabel()
+        lab.setText('<a href="%s">%s</a>' % (value, value))
+        lab.setOpenExternalLinks(True)
+        lab.setContentsMargins(0, 0, 0, 0)
+        lab.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        lab.setStyleSheet('QLabel {padding:0 2px;}')
+        return lab
+
+    def handle_long_business_summary(self, value) -> QPlainTextEdit:
+        tedit = QPlainTextEdit(str(value))
+        tedit.setStyleSheet('QPlainTextEdit {padding:0 2px;}')
+        return tedit
+
+    def handle_company_officers(self, value):
+        lab = QLabel()
+        return lab
+
+    def handle_general(self, value) -> QLabel:
+        lab = QLabel(str(value))
+        lab.setContentsMargins(0, 0, 0, 0)
+        lab.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        lab.setStyleSheet('QLabel {padding:0 2px;}')
+        return lab
