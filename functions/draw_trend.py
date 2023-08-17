@@ -40,17 +40,19 @@ def draw_trend_open(chart: Trend, code: int, start: int):
 
     chart.clearAxes()
     #
-    chart.ax1.plot(list_x, list_y)
-    chart.ax2.bar(list_x, list_z)
     if code > 0:
         chart.ax1.set_title('%s (%d.T) Open' % (cname, code))
-    # chart.axes.set_xlabel('DATE')
+
+    chart.ax1.plot(list_x, list_y)
+    chart.ax2.bar(list_x, list_z)
+
     chart.ax1.set_ylabel('Price')
     chart.ax2.set_ylabel('Volume')
+
     chart.ax1.grid()
     chart.ax2.grid()
     for tick1, tick2 in zip(chart.ax1.get_xticklabels(), chart.ax2.get_xticklabels()):
-        tick1.set_rotation(45)
+        tick1.set_rotation(90)
         tick2.set_rotation(45)
     #
     chart.refreshDraw()
