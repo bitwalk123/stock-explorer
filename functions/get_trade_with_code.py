@@ -72,3 +72,5 @@ def get_trade_with_code(code: int, start: int) -> tuple:
         # df.insert(0, 'index', date2num(df.index))
         # print(df.head())
         return cname, df
+    else:
+        print('database cannot be opened!')

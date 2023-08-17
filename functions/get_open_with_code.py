@@ -49,5 +49,7 @@ def get_open_with_code(code: int, start: int) -> tuple:
             list_y.append(query.value(1))
 
         con.close()
+    else:
+        print('database cannot be opened!')
 
     return cname, list_x, list_y

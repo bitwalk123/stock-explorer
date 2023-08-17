@@ -22,4 +22,5 @@ def get_list_ticker() -> dict:
         con.close()
         return dict_ticker
     else:
+        print('database cannot be opened!')
         return dict()

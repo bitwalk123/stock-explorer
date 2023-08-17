@@ -29,3 +29,5 @@ def check_duplicate_trade():
                     list_date.append(date)
 
         con.close()
+    else:
+        print('database cannot be opened!')
