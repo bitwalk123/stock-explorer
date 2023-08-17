@@ -49,10 +49,6 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     chart.ax2.set_ylabel('Volume')
     chart.ax1.grid()
     chart.ax2.grid()
-    #for tick in chart.ax1.get_xticklabels():
-    #    tick.set_rotation(45)
-    #for tick in chart.ax2.get_xticklabels():
-    #    tick.set_rotation(45)
     for tick1, tick2 in zip(chart.ax1.get_xticklabels(), chart.ax2.get_xticklabels()):
         tick1.set_rotation(45)
         tick2.set_rotation(45)
@@ -74,12 +70,6 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     chart.ax1.set_title('%s (%d.T)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
-    mc = mpf.make_marketcolors(
-        up='cyan',
-        down='orange',
-        wick={'up': 'blue', 'down': 'red'},
-    )
-    s = mpf.make_mpf_style(marketcolors=mc)
     mpf.plot(
         df,
         type='candle',
