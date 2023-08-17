@@ -1,8 +1,8 @@
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_select_date_open_from_trade_with_id_code,
-    get_sql_select_date_open_from_trade_with_id_code_start,
+    get_sql_select_date_open_volume_from_trade_with_id_code,
+    get_sql_select_date_open_volume_from_trade_with_id_code_start,
     get_sql_select_id_code_cname_from_ticker_with_code,
 )
 from functions.conv_timestamp2date import conv_timestamp
@@ -24,6 +24,7 @@ def get_open_with_code(code: int, start: int) -> tuple:
     cname = None
     list_x = list()
     list_y = list()
+    list_z = list()
     con = get_connection()
     if con.open():
         # get id_code == id_code
@@ -37,9 +38,9 @@ def get_open_with_code(code: int, start: int) -> tuple:
             break
         # Get list of Date & Open specified with id_code
         if start > 0:
-            sql = get_sql_select_date_open_from_trade_with_id_code_start(id_code, start)
+            sql = get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code, start)
         else:
-            sql = get_sql_select_date_open_from_trade_with_id_code(id_code)
+            sql = get_sql_select_date_open_volume_from_trade_with_id_code(id_code)
 
         query = QSqlQuery(sql)
         while query.next():
@@ -47,9 +48,10 @@ def get_open_with_code(code: int, start: int) -> tuple:
             dt = conv_timestamp(x)
             list_x.append(dt)
             list_y.append(query.value(1))
+            list_z.append(query.value(2))
 
         con.close()
     else:
         print('database cannot be opened!')
 
-    return cname, list_x, list_y
+    return cname, list_x, list_y, list_z

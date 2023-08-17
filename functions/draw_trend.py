@@ -31,21 +31,24 @@ def draw_trend_open(chart: Trend, code: int, start: int):
         start (int): start date in UNIX epoch sec
     """
     if code > 0:
-        cname, list_x, list_y = get_open_with_code(code, start)
+        cname, list_x, list_y, list_z = get_open_with_code(code, start)
     else:
         cname = None
         list_x = list()
         list_y = list()
+        list_z = list()
 
     chart.clearAxes()
     #
-    chart.ax.plot(list_x, list_y)
+    chart.ax1.plot(list_x, list_y)
+    chart.ax2.plot(list_x, list_z)
     if code > 0:
-        chart.ax.set_title('%s (%d.T) Open' % (cname, code))
+        chart.ax1.set_title('%s (%d.T) Open' % (cname, code))
     # chart.axes.set_xlabel('DATE')
-    chart.ax.set_ylabel('Price')
-    chart.ax.grid()
-    for tick in chart.ax.get_xticklabels():
+    chart.ax1.set_ylabel('Price')
+    chart.ax2.set_ylabel('Volume')
+    chart.ax1.grid()
+    for tick in chart.ax1.get_xticklabels():
         tick.set_rotation(45)
     #
     chart.refreshDraw()
@@ -62,7 +65,7 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     cname, df = get_trade_with_code(code, start)
     chart.clearAxes()
     # title
-    chart.ax.set_title('%s (%d.T)' % (cname, code))
+    chart.ax1.set_title('%s (%d.T)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
     mc = mpf.make_marketcolors(
@@ -76,10 +79,12 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
         type='candle',
         datetime_format='%Y/%m/%d',
         tight_layout=False,
-        style=s,
+        style='binance',
         mav=(21, 42),
-        ax=chart.ax
+        ax=chart.ax1,
+        volume=chart.ax2
     )
     #
-    chart.ax.grid()
+    chart.ax1.grid()
+    chart.ax2.grid()
     chart.refreshDraw()

@@ -20,14 +20,22 @@ class Trend(FigureCanvas):
 
         # fig = Figure(figsize=(width, height), dpi=dpi)
         self.fig = Figure()
-        self.ax = self.fig.add_subplot(111)
-        self.ax.tick_params(axis='x', labelsize=12)
+        #self.ax = self.fig.add_subplot(111)
+        grid = plt.GridSpec(3, 1, wspace=0, hspace=0.0)
+        self.ax1 = self.fig.add_subplot(grid[0:2, 0])
+        self.ax2 = self.fig.add_subplot(grid[2, 0], sharex=self.ax1)
+
+        self.ax1.tick_params(axis='x', labelsize=12)
+        self.ax2.tick_params(axis='x', labelsize=12)
+
         super().__init__(self.fig)
 
     def clearAxes(self):
         """Clear Axes
         """
-        self.ax.cla()
+        #self.ax.cla()
+        self.ax1.cla()
+        self.ax2.cla()
 
     def refreshDraw(self):
         """Refresh drawn area

@@ -128,13 +128,13 @@ def get_sql_select_all_from_trade_with_id_code_start(id_code, start) -> str:
     return sql
 
 
-def get_sql_select_date_open_from_trade_with_id_code(id_code) -> str:
-    sql = 'SELECT date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+def get_sql_select_date_open_volume_from_trade_with_id_code(id_code) -> str:
+    sql = 'SELECT date, open, volume FROM trade WHERE id_code=%d ORDER BY date;' % id_code
     return sql
 
 
-def get_sql_select_date_open_from_trade_with_id_code_start(id_code, start) -> str:
-    sql = 'SELECT date, open FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
+def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code, start) -> str:
+    sql = 'SELECT date, open, volume FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
     return sql
 
 
