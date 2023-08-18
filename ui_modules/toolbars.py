@@ -77,13 +77,14 @@ class ToolBarMain(QToolBar):
         lab_plottype.setContentsMargins(0, 0, 10, 0)
         self.addWidget(lab_plottype)
         #
-        rb_open = QRadioButton('Open')
-        rb_open.setChecked(True)
-        rb_open.clicked.connect(self.on_plot_tyoe_changed)
-        self.addWidget(rb_open)
         rb_candle = QRadioButton('Candle')
+        rb_candle.setChecked(True)
         rb_candle.clicked.connect(self.on_plot_tyoe_changed)
         self.addWidget(rb_candle)
+        #
+        rb_open = QRadioButton('Open')
+        rb_open.clicked.connect(self.on_plot_tyoe_changed)
+        self.addWidget(rb_open)
         #
         self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
