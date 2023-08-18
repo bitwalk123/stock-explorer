@@ -41,19 +41,19 @@ class PanelDB(QWidget):
         layout.addWidget(but_tse, row, 1)
 
         row += 1
-        lab_update = QLabel('最新の株価データに更新')
-        layout.addWidget(lab_update, row, 0)
-        but_update = ApplyButton()
-        # but_update.clicked.connect()
-        layout.addWidget(but_update, row, 1)
-
-        row += 1
         # 重複した株価データを削除
         lab_dup = QLabel('重複した株価データを削除')
         layout.addWidget(lab_dup, row, 0)
         but_dup = ApplyButton()
         but_dup.clicked.connect(self.check_duplicate)
         layout.addWidget(but_dup, row, 1)
+
+        row += 1
+        lab_update = QLabel('最新の株価データに更新')
+        layout.addWidget(lab_update, row, 0)
+        but_update = ApplyButton()
+        but_update.clicked.connect(self.update_trade)
+        layout.addWidget(but_update, row, 1)
 
     def getTabLabel(self) -> str:
         return self.tab_label
@@ -85,4 +85,17 @@ class PanelDB(QWidget):
         self.progressbar.setCancelButton(None)
         self.progressbar.setWindowTitle('進捗')
         self.progressbar.setLabelText('重複した株価データを確認・削除中')
+        self.progressbar.show()
+
+    def update_trade(self):
+        obj = DBTblTrade(self)
+        obj.updateProgress.connect(self.update_progress)
+        obj.update_trade()
+
+        # QProgressDialog
+        self.progressbar = QProgressDialog(parent=self)
+        self.progressbar.setWindowModality(Qt.WindowModal)
+        self.progressbar.setCancelButton(None)
+        self.progressbar.setWindowTitle('進捗')
+        self.progressbar.setLabelText('最新の株価データに更新中')
         self.progressbar.show()

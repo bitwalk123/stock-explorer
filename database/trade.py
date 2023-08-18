@@ -6,7 +6,7 @@ from PySide6.QtCore import (
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import get_sql_select_id_code_from_ticker
-from database.trade_worker import DBTblTradeCheckDuplicateWorker
+from database.trade_worker import DBTblTradeCheckDuplicateWorker, DBTblTradeUpdateTradeWorker
 from functions.resources import get_threadpool, get_connection
 
 
@@ -37,6 +37,26 @@ class DBTblTrade(QObject):
         # _____________________________________________________________________
         # Threading
         worker = DBTblTradeCheckDuplicateWorker(query1, query2, query3)
+        worker.signals.finished.connect(self.thread_completed)
+        worker.signals.logMessage.connect(self.show_log)
+        worker.signals.updateProgress.connect(self.update_progress)
+        self.threadpool.start(worker)
+
+    def update_trade(self):
+        """Update ticker table in database
+        """
+        self.con = get_connection()
+        if not self.con.open():
+            print('database can not be opened!')
+            return
+
+        query1 = QSqlQuery()
+        query2 = QSqlQuery()
+        query3 = QSqlQuery()
+
+        # _____________________________________________________________________
+        # Threading
+        worker = DBTblTradeUpdateTradeWorker(query1, query2, query3)
         worker.signals.finished.connect(self.thread_completed)
         worker.signals.logMessage.connect(self.show_log)
         worker.signals.updateProgress.connect(self.update_progress)
