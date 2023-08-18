@@ -9,12 +9,14 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget,
+    QWidget, QLineEdit,
 )
 
 from functions.resources import get_standard_icon
 from ui_modules.dlg_config import DlgConfig
 from ui_modules.dlg_info_ticker import DlgInfoTicker
+from widgets.combos import ComboTradeRange
+from widgets.entries import EntryTicker
 
 
 class ToolBarMain(QToolBar):
@@ -23,21 +25,30 @@ class ToolBarMain(QToolBar):
     tickerDown = Signal()
     plotTypeUpdated = Signal()
 
+    le_ticker = None
+    combo_range = None
+    rb_group = None
+
     def __init__(self, parent):
         super().__init__()
-        self.parent=parent
+        self.parent = parent
 
-        self.combo_range = QComboBox()
-        self.rb_group = QButtonGroup()
         self.init_ui()
 
     def init_ui(self):
+        # Ticker
+        lab_ticker = QLabel('銘柄')
+        lab_ticker.setContentsMargins(0, 0, 5, 0)
+        self.addWidget(lab_ticker)
+        self.le_ticker = EntryTicker()
+        self.addWidget(self.le_ticker)
+
         # 期間
         lab_range = QLabel('期間')
-        lab_range.setContentsMargins(0, 0, 5, 0)
+        lab_range.setContentsMargins(10, 0, 5, 0)
         self.addWidget(lab_range)
-        self.combo_range.addItems(['３ヵ月', '６ヵ月', '１年', '２年', '全て'])
-        self.combo_range.setCurrentText('１年')
+
+        self.combo_range = ComboTradeRange()
         self.combo_range.currentIndexChanged.connect(self.on_selected_range_changed)
         self.addWidget(self.combo_range)
 
@@ -86,6 +97,7 @@ class ToolBarMain(QToolBar):
         rb_open.clicked.connect(self.on_plot_tyoe_changed)
         self.addWidget(rb_open)
         #
+        self.rb_group = QButtonGroup()
         self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
 
@@ -139,3 +151,7 @@ class ToolBarMain(QToolBar):
     def show_conf_dialog(self):
         dlg = DlgConfig(parent=self)
         dlg.show()
+
+    def update_ticker(self, code):
+        ticker = '%d.T' % code
+        self.le_ticker.setText(ticker)

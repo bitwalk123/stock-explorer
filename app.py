@@ -90,7 +90,8 @@ class StockExplorer(QMainWindow):
         Args:
             code (int): ticker code
         """
-        print(code)
+        #print(code, type(code))
+        self.toolbar.update_ticker(code)
         start = self.toolbar.get_start_date()
         gtype = self.toolbar.get_plot_type()
         draw_trend(self.chart, code, start, gtype)
