@@ -115,9 +115,9 @@ class ToolBarMain(QToolBar):
         today = int(pd.to_datetime(str(dt.date.today())).timestamp())
         year = 365 * 24 * 60 * 60
         if sel == '３ヵ月':
-            return today - year / 4
+            return int(today - year / 4)
         elif sel == '６ヵ月':
-            return today - year / 2
+            return int(today - year / 2)
         elif sel == '１年':
             return today - year
         elif sel == '２年':
