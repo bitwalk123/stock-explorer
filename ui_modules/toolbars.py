@@ -1,15 +1,15 @@
 import datetime as dt
 import pandas as pd
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import (
     QButtonGroup,
-    QComboBox,
     QLabel,
     QRadioButton,
     QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget, QLineEdit,
+    QWidget,
 )
 
 from functions.resources import get_standard_icon
@@ -60,6 +60,9 @@ class ToolBarMain(QToolBar):
         but_up.setIcon(icon_up)
         but_up.clicked.connect(self.on_ticker_up)
         self.addWidget(but_up)
+        # Shortcut
+        key_up = QShortcut(QKeySequence(Qt.Key.Key_Up), self)
+        key_up.activated.connect(self.on_ticker_up)
 
         # Go down ticker
         but_down = QToolButton()
@@ -67,6 +70,9 @@ class ToolBarMain(QToolBar):
         but_down.setIcon(icon_down)
         but_down.clicked.connect(self.on_ticker_down)
         self.addWidget(but_down)
+        # Shortcut
+        key_down = QShortcut(QKeySequence(Qt.Key.Key_Down), self)
+        key_down.activated.connect(self.on_ticker_down)
 
         # Ticker Information
         but_info = QToolButton()
