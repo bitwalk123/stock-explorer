@@ -1,19 +1,22 @@
 from PySide6.QtWidgets import (
     QDockWidget,
-    QHBoxLayout,
     QPushButton,
     QSizePolicy,
+    QVBoxLayout,
     QWidget,
 )
 
 from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
 from ui_modules.dock_ticker import DockTicker
+from ui_modules.panel_info import PanelInfo
 from ui_modules.toolbars import ToolBarMain
 
 
 class DockController(QDockWidget):
     """Dock for controller
     """
+
+    info = None
 
     def __init__(self, toolbar: ToolBarMain, dock_ticker: DockTicker):
         super().__init__()
@@ -28,10 +31,13 @@ class DockController(QDockWidget):
         base = QWidget()
         self.setWidget(base)
 
-        layout = QHBoxLayout()
+        layout = QVBoxLayout()
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         base.setLayout(layout)
+
+        self.info = PanelInfo()
+        layout.addWidget(self.info)
 
         but = QPushButton('TEST')
         but.clicked.connect(self.on_click_button)
@@ -48,6 +54,10 @@ class DockController(QDockWidget):
             QSizePolicy.Policy.Preferred
         )
         layout.addWidget(hpad)
+
+    def update_ticker(self, code: int):
+        start = self.toolbar.get_start_date()
+        self.info.update_ticker(code, start)
 
     def on_click_button(self):
         """Handle buttonclick event

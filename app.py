@@ -54,7 +54,7 @@ class StockExplorer(QMainWindow):
         self.addToolBar(self.toolbar)
 
         # Dock for sticker codes
-        self.dock_left.clicked.connect(self.on_chart_update)
+        self.dock_left.clicked.connect(self.on_disp_update)
         self.addDockWidget(
             Qt.DockWidgetArea.LeftDockWidgetArea,
             self.dock_left
@@ -82,9 +82,9 @@ class StockExplorer(QMainWindow):
 
     def on_chart_type_update(self):
         code = self.dock_left.get_current_ticker()
-        self.on_chart_update(code)
+        self.on_disp_update(code)
 
-    def on_chart_update(self, code):
+    def on_disp_update(self, code):
         """Signal handler for ticker code button click
 
         Args:
@@ -92,6 +92,7 @@ class StockExplorer(QMainWindow):
         """
         #print(code, type(code))
         self.toolbar.update_ticker(code)
+        self.dock_bottom.update_ticker(code)
         start = self.toolbar.get_start_date()
         gtype = self.toolbar.get_plot_type()
         draw_trend(self.chart, code, start, gtype)
@@ -100,7 +101,7 @@ class StockExplorer(QMainWindow):
         """Signal handler for period range combobox changed
         """
         code = self.dock_left.get_current_ticker()
-        self.on_chart_update(code)
+        self.on_disp_update(code)
 
     def on_ticker_down(self):
         """Move ticker down
