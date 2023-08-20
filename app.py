@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from functions.draw_trend import draw_trend
-from functions.resources import get_ini_file
+from functions.get_ini_file import get_ini_file
 from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain

@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_info_ticker import get_info_ticker
-from functions.resources import get_standard_icon
+from functions.get_standard_icon import get_standard_icon
 from ui_modules.panel_ticker_info import PanelTickerInfo
 
 

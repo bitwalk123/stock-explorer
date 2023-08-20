@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from functions.resources import get_standard_icon
+from functions.get_standard_icon import get_standard_icon
 from ui_modules.dlg_config import DlgConfig
 from ui_modules.dlg_info_ticker import DlgInfoTicker
 from widgets.combos import ComboTradeRange

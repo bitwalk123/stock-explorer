@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QPushButton
 
-from functions.resources import get_standard_icon
+from functions.get_standard_icon import get_standard_icon
 
 
 class ApplyButton(QPushButton):
