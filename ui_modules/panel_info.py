@@ -1,6 +1,15 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QFrame, QSizePolicy
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QSizePolicy,
+    QWidget,
+)
 
 from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
+from widgets.labels import (
+    LabelFlat,
+    LabelTitle,
+    LabelValue,
+)
 
 
 class PanelInfo(QWidget):
@@ -12,28 +21,19 @@ class PanelInfo(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
 
-        title_code = QLabel('Code')
-        title_code.setContentsMargins(0, 0, 0, 0)
-        title_code.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        title_code.setLineWidth(2)
+        title_index = LabelFlat('Indices')
+        layout.addWidget(title_index)
+
+        title_code = LabelTitle('Code')
         layout.addWidget(title_code)
 
-        self.disp_code = QLabel()
-        self.disp_code.setContentsMargins(0, 0, 0, 0)
-        self.disp_code.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        self.disp_code.setLineWidth(2)
+        self.disp_code = LabelValue()
         layout.addWidget(self.disp_code)
 
-        title_volume = QLabel('Volume(median)')
-        title_volume.setContentsMargins(0, 0, 0, 0)
-        title_volume.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        title_volume.setLineWidth(2)
+        title_volume = LabelTitle('Volume(median)')
         layout.addWidget(title_volume)
 
-        self.disp_volume = QLabel()
-        self.disp_volume.setContentsMargins(0, 0, 0, 0)
-        self.disp_volume.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        self.disp_volume.setLineWidth(2)
+        self.disp_volume = LabelValue()
         layout.addWidget(self.disp_volume)
 
         # 余白のスペーサ
