@@ -9,7 +9,7 @@ from database.sqls import (
 from functions.resources import get_connection
 
 
-def get_volume_median_with_code_start(code: int, start: int):
+def get_volume_median_with_code_start(code: int, start: int) -> int:
     volume_median = 0
     con = get_connection()
     if con.open():
@@ -26,7 +26,8 @@ def get_volume_median_with_code_start(code: int, start: int):
             while query.next():
                 volume = query.value(0)
                 list_volume.append(volume)
-            volume_median = statistics.median(list_volume)
+
+            volume_median = int(statistics.median(list_volume))
 
         con.close()
 

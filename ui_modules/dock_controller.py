@@ -55,4 +55,4 @@ class DockController(QDockWidget):
         code: int = self.dock_ticker.get_current_ticker()
         start = self.toolbar.get_start_date()
         volume_median = get_volume_median_with_code_start(code, start)
-        print('code', code, 'volume(median)', volume_median)
+        print('code:', code, ', volume(median):', volume_median)
