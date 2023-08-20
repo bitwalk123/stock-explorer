@@ -6,15 +6,18 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
 from ui_modules.dock_ticker import DockTicker
+from ui_modules.toolbars import ToolBarMain
 
 
 class DockController(QDockWidget):
     """Dock for controller
     """
 
-    def __init__(self, dock_ticker: DockTicker):
+    def __init__(self, toolbar: ToolBarMain, dock_ticker: DockTicker):
         super().__init__()
+        self.toolbar = toolbar
         self.dock_ticker = dock_ticker
         self.setTitleBarWidget(QWidget(None))
         self.init_ui()
@@ -49,4 +52,7 @@ class DockController(QDockWidget):
     def on_click_button(self):
         """Handle buttonclick event
         """
-        print(self.dock_ticker.get_current_ticker())
+        code: int = self.dock_ticker.get_current_ticker()
+        start = self.toolbar.get_start_date()
+        volume_median = get_volume_median_with_code_start(code, start)
+        print('code', code, 'volume(median)', volume_median)

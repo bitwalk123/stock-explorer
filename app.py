@@ -39,7 +39,7 @@ class StockExplorer(QMainWindow):
         # Initialize instances of UI components
         self.toolbar = ToolBarMain(self)
         self.dock_left = DockTicker()
-        self.dock_bottom = DockController(self.dock_left)
+        self.dock_bottom = DockController(self.toolbar, self.dock_left)
 
         self.init_ui()
 
