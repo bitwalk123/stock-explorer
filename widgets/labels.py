@@ -6,8 +6,8 @@ class LabelFlat(QLabel):
     def __init__(self, title: str):
         super().__init__(title)
         self.setContentsMargins(0, 0, 5, 0)
-        self.setFrameStyle(QFrame.Shape.NoFrame | QFrame.Shadow.Plain)
-        self.setLineWidth(2)
+        self.setFrameStyle(QFrame.Shape.Box | QFrame.Shadow.Plain)
+        self.setLineWidth(1)
         self.setStyleSheet("""
         QLabel {
             color: black;
