@@ -30,6 +30,18 @@ class PanelInfo(QWidget):
         self.disp_code = LabelValue()
         layout.addWidget(self.disp_code)
 
+        title_from = LabelTitle('From')
+        layout.addWidget(title_from)
+
+        self.disp_from = LabelValue()
+        layout.addWidget(self.disp_from)
+
+        title_to = LabelTitle('To')
+        layout.addWidget(title_to)
+
+        self.disp_to = LabelValue()
+        layout.addWidget(self.disp_to)
+
         title_volume = LabelTitle('Volume(median)')
         layout.addWidget(title_volume)
 
