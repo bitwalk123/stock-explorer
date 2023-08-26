@@ -11,7 +11,7 @@ from functions.resources import get_connection
 
 def get_volume_median_with_code_start(code: int, start: int) -> tuple:
     volume_median = 0
-    n = 0
+    num = 0
     con = get_connection()
     if con.open():
         query = QSqlQuery()
@@ -29,7 +29,7 @@ def get_volume_median_with_code_start(code: int, start: int) -> tuple:
                 list_volume.append(volume)
 
             volume_median = int(statistics.median(list_volume))
-            n = len(list_volume)
+            num = len(list_volume)
         con.close()
 
-    return volume_median, n
+    return volume_median, num
