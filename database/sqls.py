@@ -160,5 +160,5 @@ def get_sql_select_id_trade_date_open_from_trade_with_id_code_start(id_code: int
 
 
 def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
+    sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
     return sql

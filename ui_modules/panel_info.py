@@ -42,6 +42,12 @@ class PanelInfo(QWidget):
         self.disp_to = LabelValue()
         layout.addWidget(self.disp_to)
 
+        title_num = LabelTitle('N')
+        layout.addWidget(title_num)
+
+        self.disp_num = LabelValue()
+        layout.addWidget(self.disp_num)
+
         title_volume = LabelTitle('Volume(median)')
         layout.addWidget(title_volume)
 
@@ -58,5 +64,6 @@ class PanelInfo(QWidget):
 
     def update_ticker(self, code: int, start: int):
         self.disp_code.setText('%d.T' % code)
-        volume_median = get_volume_median_with_code_start(code, start)
+        volume_median, num = get_volume_median_with_code_start(code, start)
         self.disp_volume.setText('%d' % volume_median)
+        self.disp_num.setText('%d' % num)
