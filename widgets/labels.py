@@ -1,5 +1,26 @@
 from PySide6.QtWidgets import QLabel, QFrame
 
+from functions.conv_timestamp2date import conv_timestamp2date
+
+
+class LabelDate(QLabel):
+
+    def __init__(self):
+        super().__init__()
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        self.setLineWidth(2)
+        self.setStyleSheet("""
+        QLabel {
+            color: #222;
+            background-color: white;
+            font-family: monospace;
+        }
+        """)
+
+    def setDate(self, timestamp):
+        dt = conv_timestamp2date(timestamp)
+        self.setText(str(dt))
 
 class LabelFlat(QLabel):
 
@@ -15,6 +36,8 @@ class LabelFlat(QLabel):
             font-family: monospace;
         }
         """)
+
+
 class LabelTitle(QLabel):
 
     def __init__(self, title: str):

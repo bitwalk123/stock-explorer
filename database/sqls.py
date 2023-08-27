@@ -129,6 +129,7 @@ def get_sql_select_id_code_cname_from_ticker_with_code(code: int) -> str:
     sql = 'SELECT id_code, 銘柄名 FROM ticker WHERE コード=%d;' % code
     return sql
 
+
 def get_sql_select_id_code_from_ticker_with_code(code: int) -> str:
     sql = 'SELECT id_code FROM ticker WHERE コード=%d;' % code
     return sql
@@ -144,6 +145,11 @@ def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code: int, 
     return sql
 
 
+def get_sql_select_date_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
+    sql = 'SELECT date, volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
+    return sql
+
+
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d;' % id_code
     return sql
@@ -156,9 +162,4 @@ def get_sql_select_id_trade_date_open_from_trade_with_id_code(id_code: int) -> s
 
 def get_sql_select_id_trade_date_open_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     sql = 'SELECT id_trade, date, open FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
-    return sql
-
-
-def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
     return sql

@@ -8,7 +8,7 @@ from functions.get_volume_median_with_code_start import get_volume_median_with_c
 from widgets.labels import (
     LabelFlat,
     LabelTitle,
-    LabelValue,
+    LabelValue, LabelDate,
 )
 
 
@@ -33,13 +33,13 @@ class PanelInfo(QWidget):
         title_from = LabelTitle('From')
         layout.addWidget(title_from)
 
-        self.disp_from = LabelValue()
+        self.disp_from = LabelDate()
         layout.addWidget(self.disp_from)
 
         title_to = LabelTitle('To')
         layout.addWidget(title_to)
 
-        self.disp_to = LabelValue()
+        self.disp_to = LabelDate()
         layout.addWidget(self.disp_to)
 
         title_num = LabelTitle('N')
@@ -64,6 +64,9 @@ class PanelInfo(QWidget):
 
     def update_ticker(self, code: int, start: int):
         self.disp_code.setText('%d.T' % code)
-        volume_median, num = get_volume_median_with_code_start(code, start)
+        date_min, date_max, volume_median, num = get_volume_median_with_code_start(code, start)
+        self.disp_from.setDate(date_min)
+        self.disp_to.setDate(date_max)
         self.disp_volume.setText('%d' % volume_median)
         self.disp_num.setText('%d' % num)
+        print(date_min, date_max)
