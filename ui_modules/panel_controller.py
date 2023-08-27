@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
+from functions.get_volume_median import get_volume_median_with_code_start
 from widgets.labels import (
     LabelFlat,
     LabelTitle,

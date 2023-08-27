@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
+from functions.get_volume_median import get_volume_median_with_code_start
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.panel_controller import PanelInfo
 from ui_modules.toolbars import ToolBarMain

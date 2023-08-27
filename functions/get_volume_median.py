@@ -14,6 +14,7 @@ def get_volume_median_with_code_start(code: int, start: int) -> tuple:
     date_max = 0
     volume_median = 0
     num = 0
+
     con = get_connection()
     if con.open():
         query = QSqlQuery()
@@ -32,6 +33,7 @@ def get_volume_median_with_code_start(code: int, start: int) -> tuple:
                 volume = query.value(1)
                 list_date.append(date)
                 list_volume.append(volume)
+
         con.close()
 
         date_min = min(list_date)
