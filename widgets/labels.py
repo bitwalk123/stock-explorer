@@ -7,6 +7,7 @@ class LabelDate(QLabel):
 
     def __init__(self):
         super().__init__()
+        self.timestamp = 0
         self.setContentsMargins(0, 0, 0, 0)
         self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
         self.setLineWidth(2)
@@ -19,6 +20,7 @@ class LabelDate(QLabel):
         """)
 
     def setDate(self, timestamp):
+        self.timestamp = timestamp
         dt = conv_timestamp2date(timestamp)
         self.setText(str(dt))
 
