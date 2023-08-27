@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 
 from functions.get_volume_median_with_code_start import get_volume_median_with_code_start
 from ui_modules.dock_ticker import DockTicker
-from ui_modules.panel_info import PanelInfo
+from ui_modules.panel_controller import PanelInfo
 from ui_modules.toolbars import ToolBarMain
 
 
@@ -65,4 +65,3 @@ class DockController(QDockWidget):
         code: int = self.dock_ticker.get_current_ticker()
         start = self.toolbar.get_start_date()
         volume_median = get_volume_median_with_code_start(code, start)
-        print('code:', code, ', volume(median):', volume_median)

@@ -69,4 +69,3 @@ class PanelInfo(QWidget):
         self.disp_to.setDate(date_max)
         self.disp_volume.setText('%d' % volume_median)
         self.disp_num.setText('%d' % num)
-        print(date_min, date_max)
