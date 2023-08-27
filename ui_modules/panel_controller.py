@@ -1,15 +1,16 @@
 from PySide6.QtWidgets import (
     QHBoxLayout,
-    QSizePolicy,
     QWidget,
 )
 
 from functions.get_volume_median import get_volume_median_with_code_start
 from widgets.labels import (
+    LabelDate,
     LabelFlat,
     LabelTitle,
-    LabelValue, LabelDate,
+    LabelValue,
 )
+from widgets.widgets import HPad
 
 
 class PanelInfo(QWidget):
@@ -54,12 +55,7 @@ class PanelInfo(QWidget):
         self.disp_volume = LabelValue()
         layout.addWidget(self.disp_volume)
 
-        # 余白のスペーサ
-        hpad = QWidget()
-        hpad.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.Expanding
-        )
+        hpad = HPad()
         layout.addWidget(hpad)
 
     def update_ticker(self, code: int, start: int):

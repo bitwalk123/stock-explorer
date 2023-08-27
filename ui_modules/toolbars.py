@@ -6,10 +6,8 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QLabel,
     QRadioButton,
-    QSizePolicy,
     QToolBar,
     QToolButton,
-    QWidget,
 )
 
 from functions.get_standard_icon import get_standard_icon
@@ -17,6 +15,7 @@ from ui_modules.dlg_config import DlgConfig
 from ui_modules.dlg_info_ticker import DlgInfoTicker
 from widgets.combos import ComboTradeRange
 from widgets.entries import EntryTicker
+from widgets.widgets import HPad
 
 
 class ToolBarMain(QToolBar):
@@ -82,11 +81,7 @@ class ToolBarMain(QToolBar):
         self.addWidget(but_info)
 
         # 余白のスペーサ
-        hpad = QWidget()
-        hpad.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.Expanding
-        )
+        hpad = HPad()
         self.addWidget(hpad)
 
         # Type of plot

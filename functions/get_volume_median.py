@@ -34,11 +34,11 @@ def get_volume_median_with_code_start(code: int, start: int) -> tuple:
                 list_date.append(date)
                 list_volume.append(volume)
 
-        con.close()
+            date_min = min(list_date)
+            date_max = max(list_date)
+            volume_median = int(statistics.median(list_volume))
+            num = len(list_volume)
 
-        date_min = min(list_date)
-        date_max = max(list_date)
-        volume_median = int(statistics.median(list_volume))
-        num = len(list_volume)
+        con.close()
 
     return date_min, date_max, volume_median, num
