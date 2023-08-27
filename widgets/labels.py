@@ -24,6 +24,7 @@ class LabelDate(QLabel):
         dt = conv_timestamp2date(timestamp)
         self.setText(str(dt))
 
+
 class LabelFlat(QLabel):
 
     def __init__(self, title: str):
