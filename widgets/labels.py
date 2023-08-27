@@ -7,8 +7,7 @@ class LabelFlat(QLabel):
 
     def __init__(self, title: str):
         super().__init__(title)
-        self.setContentsMargins(0, 0, 5, 0)
-        # self.setFrameStyle(QFrame.Shape.Box | QFrame.Shadow.Plain)
+        self.setContentsMargins(0, 0, 0, 0)
         self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
         self.setLineWidth(1)
         self.setStyleSheet("""
@@ -25,7 +24,6 @@ class LabelTitle(QLabel):
     def __init__(self, title: str):
         super().__init__(title)
         self.setContentsMargins(0, 0, 0, 0)
-        # self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
         self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Raised)
         self.setLineWidth(2)
         self.setStyleSheet("""
@@ -33,6 +31,7 @@ class LabelTitle(QLabel):
             color: #444;
             background-color: #eee;
             font-family: monospace;
+            padding-left: 0.5em;
         }
         """)
 

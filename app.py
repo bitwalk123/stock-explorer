@@ -90,7 +90,6 @@ class StockExplorer(QMainWindow):
         Args:
             code (int): ticker code
         """
-        #print(code, type(code))
         self.toolbar.update_ticker(code)
         self.dock_bottom.update_ticker(code)
         start = self.toolbar.get_start_date()
