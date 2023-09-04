@@ -25,7 +25,6 @@ def main():
     if con.open():
         sql1 = get_sql_select_id_code_from_ticker()
         query1 = QSqlQuery(sql1)
-        total = 0
         list_id_code = list()
         while query1.next():
             id_code = query1.value(0)
@@ -41,10 +40,9 @@ def main():
             volume_median = statistics.median(list_volume)
             if volume_median < volume_min:
                 continue
-            print(id_code)
-            #print(list_volume)
-            total += 1
-        print('total :', total)
+            list_id_code.append(id_code)
+
+        print('total :', len(list_id_code))
 
 
 if __name__ == "__main__":
