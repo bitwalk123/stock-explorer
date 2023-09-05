@@ -2,6 +2,8 @@ import pandas as pd
 
 
 def get_sql_create_table_ticker() -> str:
+    """Create ticker table
+    """
     sql = """
         CREATE TABLE ticker(
             id_code INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,6 +23,8 @@ def get_sql_create_table_ticker() -> str:
 
 
 def get_sql_create_table_trade() -> str:
+    """Create trade table
+    """
     sql = """
         CREATE TABLE trade(
             id_trade INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,6 +43,7 @@ def get_sql_create_table_trade() -> str:
 
 def get_sql_delete_trade_with_id_trade(id_trade: int) -> str:
     """Delete record of trade table with specified id_trade
+
     Args:
         id_trade(int): id_trade
     """
@@ -47,8 +52,7 @@ def get_sql_delete_trade_with_id_trade(id_trade: int) -> str:
 
 
 def get_sql_drop_table_ticker() -> str:
-    """
-    drop table ticker if exists
+    """Drop table ticker if exists
     """
     sql = 'DROP TABLE IF EXISTS ticker'
     return sql
