@@ -1,5 +1,7 @@
 import datetime as dt
+import os
 import statistics
+import time
 
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
@@ -8,12 +10,14 @@ from database.sqls import (
     get_sql_select_id_code_from_ticker,
     get_sql_select_volume_from_trade_with_id_code_start,
 )
+from functions.get_elapsed import get_elapsed
 from functions.resources import get_connection
 
 
 def main():
     """Main
     """
+    time_start = time.time()
     today = int(pd.to_datetime(str(dt.date.today())).timestamp())
     year = 365 * 24 * 60 * 60
     start = today - year
@@ -44,6 +48,8 @@ def main():
 
         print('total :', len(list_id_code))
 
+    print('elapsed', get_elapsed(time_start), 'sec')
 
 if __name__ == "__main__":
+    os.chdir('../')
     main()
