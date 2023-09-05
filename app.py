@@ -22,6 +22,8 @@ from widgets.charts import Trend
 class StockExplorer(QMainWindow):
     """Main class for this application
     """
+    __version__ = '0.1.0'
+    __build__ = '20230906'
 
     def __init__(self):
         super().__init__()
