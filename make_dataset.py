@@ -24,6 +24,7 @@ def main():
     print(start)
     count_min = 200
     volume_min = 10000
+    price_min = 500
     price_max = 1000
 
     # List valid id_code
@@ -54,7 +55,7 @@ def main():
                 query2 = QSqlQuery(sql2)
                 while query2.next():
                     price_open = query2.value(0)
-                    if price_open < price_max:
+                    if price_min < price_open < price_max:
                         list_id_code_target.append(id_code)
 
         con.close()
