@@ -18,7 +18,6 @@ from functions.resources import get_connection
 def main():
     """Main
     """
-    time_start = time.time()
     today = int(pd.to_datetime(str(dt.date.today())).timestamp())
     year = 365 * 24 * 60 * 60
     start = today - year
@@ -28,6 +27,7 @@ def main():
     price_max = 1000
 
     # List valid id_code
+    time_start = time.time()
     pkl_list_id_code = 'pool/list_id_code.pkl'
     if os.path.isfile(pkl_list_id_code):
         with open(pkl_list_id_code, 'rb') as f:
@@ -40,7 +40,9 @@ def main():
     print('total :', len(list_id_code))
     print('elapsed', get_elapsed(time_start), 'sec')
 
-    # pick target ticker
+    # pick target id_code
+    time_start = time.time()
+    list_id_code_target = list()
     con = get_connection()
     if con.open():
         for id_code in list_id_code:
@@ -53,9 +55,12 @@ def main():
                 while query2.next():
                     price_open = query2.value(0)
                     if price_open < price_max:
-                        print(id_code)
+                        list_id_code_target.append(id_code)
 
         con.close()
+
+    print('total :', len(list_id_code_target))
+    print('elapsed', get_elapsed(time_start), 'sec')
 
 if __name__ == "__main__":
     main()
