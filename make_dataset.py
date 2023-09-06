@@ -4,15 +4,9 @@ import pickle
 import time
 
 import pandas as pd
-from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
-    get_sql_select_max_date_from_trade_with_id_code,
-    get_sql_select_open_from_trade_with_id_code_date,
-)
-from functions.get_dataset import get_valid_list_id_code
+from functions.get_dataset import get_valid_list_id_code, get_target_list_id_code
 from functions.get_elapsed import get_elapsed
-from functions.resources import get_connection
 
 
 def main():
@@ -43,22 +37,7 @@ def main():
 
     # pick target id_code
     time_start = time.time()
-    list_id_code_target = list()
-    con = get_connection()
-    if con.open():
-        for id_code in list_id_code:
-            sql1 = get_sql_select_max_date_from_trade_with_id_code(id_code)
-            query1 = QSqlQuery(sql1)
-            while query1.next():
-                date = query1.value(0)
-                sql2 = get_sql_select_open_from_trade_with_id_code_date(id_code, date)
-                query2 = QSqlQuery(sql2)
-                while query2.next():
-                    price_open = query2.value(0)
-                    if price_min < price_open < price_max:
-                        list_id_code_target.append(id_code)
-
-        con.close()
+    list_id_code_target = get_target_list_id_code(list_id_code, price_min, price_max)
 
     print('total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')

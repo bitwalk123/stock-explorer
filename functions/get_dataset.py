@@ -2,7 +2,7 @@ import statistics
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_from_ticker, get_sql_select_volume_from_trade_with_id_code_start
+from database.sqls import get_sql_select_id_code_from_ticker, get_sql_select_volume_from_trade_with_id_code_start, get_sql_select_max_date_from_trade_with_id_code, get_sql_select_open_from_trade_with_id_code_date
 from functions.resources import get_connection
 
 
@@ -41,3 +41,23 @@ def get_valid_list_id_code(start: int, count_min: int, volume_min: int) -> list:
 
         con.close()
         return list_id_code
+
+
+def get_target_list_id_code(list_id_code:list, price_min:int, price_max:int) -> list:
+    list_id_code_target = list()
+    con = get_connection()
+    if con.open():
+        for id_code in list_id_code:
+            sql1 = get_sql_select_max_date_from_trade_with_id_code(id_code)
+            query1 = QSqlQuery(sql1)
+            while query1.next():
+                date = query1.value(0)
+                sql2 = get_sql_select_open_from_trade_with_id_code_date(id_code, date)
+                query2 = QSqlQuery(sql2)
+                while query2.next():
+                    price_open = query2.value(0)
+                    if price_min < price_open < price_max:
+                        list_id_code_target.append(id_code)
+
+        con.close()
+        return list_id_code_target
