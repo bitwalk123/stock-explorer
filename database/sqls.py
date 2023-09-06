@@ -169,6 +169,11 @@ def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     return sql
 
 
+def get_sql_select_open_from_trade_with_id_code_date(id_code: int, date: int) -> str:
+    sql = 'SELECT open FROM trade WHERE id_code=%d AND date = %d;' % (id_code, date)
+    return sql
+
+
 def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
     return sql

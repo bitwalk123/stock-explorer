@@ -39,4 +39,5 @@ def get_valid_list_id_code(start: int, count_min: int, volume_min: int) -> list:
                 continue
             list_id_code.append(id_code)
 
+        con.close()
         return list_id_code
