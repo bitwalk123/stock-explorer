@@ -35,6 +35,7 @@ def get_basic_dataset(list_id_code: list, start: int, end: int):
 
             print(list_id_date)
 
+
 def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int) -> list:
     """Get valid set of id_code with specified conditions
 
