@@ -5,7 +5,10 @@ import time
 
 import pandas as pd
 
-from functions.get_dataset import get_valid_list_id_code, get_target_list_id_code
+from functions.get_dataset import (
+    get_valid_list_id_code,
+    get_target_list_id_code, get_basic_dataset,
+)
 from functions.get_elapsed import get_elapsed
 
 
@@ -40,7 +43,7 @@ def main():
     print('total :', len(list_id_code))
     print('elapsed', get_elapsed(time_start), 'sec')
 
-    # pick target id_code
+    # Pick target id_code
     time_start = time.time()
     pkl_list_id_code_target = 'pool/list_id_code_target.pkl'
     if os.path.isfile(pkl_list_id_code_target):
@@ -54,6 +57,9 @@ def main():
     print('total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')
 
+    # Base dataset
+    get_basic_dataset(list_id_code, start, end)
+    #print(df)
 
 if __name__ == "__main__":
     main()
