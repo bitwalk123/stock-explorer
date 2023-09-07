@@ -12,10 +12,13 @@ from functions.get_elapsed import get_elapsed
 def main():
     """Main
     """
-    today = int(pd.to_datetime(str(dt.date.today())).timestamp())
     year = 365 * 24 * 60 * 60
-    start = today - year
-    print(start)
+    start_str = '2022-01-04'
+    start_dt = dt.datetime.strptime(start_str, "%Y-%m-%d")
+    start = int(dt.datetime.timestamp(start_dt))
+    end = start + year
+    print(start, end)
+
     count_min = 200
     volume_min = 10000
     price_min = 500
@@ -30,7 +33,7 @@ def main():
     else:
         if not os.path.isdir('pool'):
             os.mkdir('pool')
-        list_id_code = get_valid_list_id_code(start, count_min, volume_min)
+        list_id_code = get_valid_list_id_code(start, end, count_min, volume_min)
         with open(pkl_list_id_code, 'wb') as f:
             pickle.dump(list_id_code, f)
 
@@ -39,7 +42,7 @@ def main():
 
     # pick target id_code
     time_start = time.time()
-    list_id_code_target = get_target_list_id_code(list_id_code, price_min, price_max)
+    list_id_code_target = get_target_list_id_code(list_id_code, price_min, price_max, start, end)
 
     print('total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')

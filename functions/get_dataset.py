@@ -2,11 +2,16 @@ import statistics
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_from_ticker, get_sql_select_volume_from_trade_with_id_code_start, get_sql_select_max_date_from_trade_with_id_code, get_sql_select_open_from_trade_with_id_code_date
+from database.sqls import (
+    get_sql_select_id_code_from_ticker,
+    get_sql_select_max_date_from_trade_with_id_code_start_end,
+    get_sql_select_open_from_trade_with_id_code_date,
+    get_sql_select_volume_from_trade_with_id_code_start_end,
+)
 from functions.resources import get_connection
 
 
-def get_valid_list_id_code(start: int, count_min: int, volume_min: int) -> list:
+def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int) -> list:
     """Get valid set of id_code with specified conditions
 
     Args:
@@ -26,7 +31,7 @@ def get_valid_list_id_code(start: int, count_min: int, volume_min: int) -> list:
         while query1.next():
             id_code = query1.value(0)
 
-            sql2 = get_sql_select_volume_from_trade_with_id_code_start(id_code, start)
+            sql2 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
             query2 = QSqlQuery(sql2)
             list_volume = list()
             while query2.next():
@@ -43,12 +48,12 @@ def get_valid_list_id_code(start: int, count_min: int, volume_min: int) -> list:
         return list_id_code
 
 
-def get_target_list_id_code(list_id_code:list, price_min:int, price_max:int) -> list:
+def get_target_list_id_code(list_id_code:list, price_min:int, price_max:int, start: int, end: int) -> list:
     list_id_code_target = list()
     con = get_connection()
     if con.open():
         for id_code in list_id_code:
-            sql1 = get_sql_select_max_date_from_trade_with_id_code(id_code)
+            sql1 = get_sql_select_max_date_from_trade_with_id_code_start_end(id_code, start, end)
             query1 = QSqlQuery(sql1)
             while query1.next():
                 date = query1.value(0)
