@@ -19,7 +19,7 @@ def main():
     count_min = 200
     volume_min = 10000
     price_min = 500
-    price_max = 1000
+    price_max = 600
 
     # List valid id_code
     time_start = time.time()
@@ -28,6 +28,8 @@ def main():
         with open(pkl_list_id_code, 'rb') as f:
             list_id_code = pickle.load(f)
     else:
+        if not os.path.isdir('pool'):
+            os.mkdir('pool')
         list_id_code = get_valid_list_id_code(start, count_min, volume_min)
         with open(pkl_list_id_code, 'wb') as f:
             pickle.dump(list_id_code, f)
