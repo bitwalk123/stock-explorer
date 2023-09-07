@@ -42,10 +42,18 @@ def main():
 
     # pick target id_code
     time_start = time.time()
-    list_id_code_target = get_target_list_id_code(list_id_code, price_min, price_max, start, end)
+    pkl_list_id_code_target = 'pool/list_id_code_target.pkl'
+    if os.path.isfile(pkl_list_id_code_target):
+        with open(pkl_list_id_code_target, 'rb') as f:
+            list_id_code_target = pickle.load(f)
+    else:
+        list_id_code_target = get_target_list_id_code(list_id_code, price_min, price_max, start, end)
+        with open(pkl_list_id_code_target, 'wb') as f:
+            pickle.dump(list_id_code_target, f)
 
     print('total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')
+
 
 if __name__ == "__main__":
     main()
