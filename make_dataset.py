@@ -76,7 +76,7 @@ def main():
     # Prediction
     for id_code_target in list_id_code_target[0:1]:
         name = '%d_open' % id_code_target
-        series_y = df_base[name].iloc[1:]
+        series_y = df_base[name].iloc[1:3]
         print(series_y)
         df_X = df_base.iloc[0:len(df_base) - 1, :]
         print(df_X)
@@ -101,6 +101,9 @@ def main():
         )
         df_result.loc[id_code_target] = series_target
         print(df_result)
+        # save result every time
+        df_result.to_csv('pool/result_pls.csv')
+
 
 if __name__ == "__main__":
     main()
