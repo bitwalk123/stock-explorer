@@ -4,6 +4,7 @@ import pickle
 import time
 
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 from functions.get_dataset import (
     get_valid_list_id_code,
@@ -70,6 +71,20 @@ def main():
 
     print(df_base)
     print('elapsed', get_elapsed(time_start), 'sec')
+
+    # Prediction
+    for id_cide_target in list_id_code_target[0:1]:
+        name = '%d_open' % id_cide_target
+        series_y = df_base[name].iloc[1:]
+        print(series_y)
+        df_X = df_base.iloc[0:len(df_base) - 1, :]
+        print(df_X)
+
+        scaler = StandardScaler()
+        scaler.fit(df_X)
+        X = scaler.transform(df_X)
+        y = series_y.values
+
 
 
 if __name__ == "__main__":
