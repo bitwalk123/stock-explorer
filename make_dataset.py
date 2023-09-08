@@ -76,7 +76,7 @@ def main():
     # Prediction
     for id_code_target in list_id_code_target[0:1]:
         name = '%d_open' % id_code_target
-        series_y = df_base[name].iloc[1:3]
+        series_y = df_base[name].iloc[1:]
         print(series_y)
         df_X = df_base.iloc[0:len(df_base) - 1, :]
         print(df_X)
@@ -84,7 +84,8 @@ def main():
         scaler = StandardScaler()
         scaler.fit(df_X)
         X = scaler.transform(df_X)
-        y = series_y.values
+        #y = series_y.values
+        y = series_y
 
         mse_min = search_minimal_component_number(X, y)
 
