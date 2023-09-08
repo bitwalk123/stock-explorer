@@ -73,13 +73,16 @@ def main():
     print(df_base)
     print('elapsed', get_elapsed(time_start), 'sec')
 
+    # empty dataframe
+    columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
+    df_result = pd.DataFrame(columns=columns_result)
     # Prediction
-    for id_code_target in list_id_code_target[0:1]:
+    for id_code_target in list_id_code_target:
         name = '%d_open' % id_code_target
         series_y = df_base[name].iloc[1:]
-        print(series_y)
+        #print(series_y)
         df_X = df_base.iloc[0:len(df_base) - 1, :]
-        print(df_X)
+        #print(df_X)
 
         scaler = StandardScaler()
         scaler.fit(df_X)
@@ -88,10 +91,6 @@ def main():
         y = series_y
 
         mse_min = search_minimal_component_number(X, y)
-
-        # empty dataframe
-        columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
-        df_result = pd.DataFrame(columns=columns_result)
 
         n_comp = mse_min + 1
         result = minimal_scores(X, y, n_comp)
