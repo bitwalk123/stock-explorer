@@ -59,7 +59,10 @@ def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
             list_series.append(series_low)
             list_series.append(series_close)
 
-    return pd.concat(list_series, axis=1)
+    df = pd.concat(list_series, axis=1)
+    df.dropna(how='any', axis=0, inplace=True)
+    return df
+
 
 def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int) -> list:
     """Get valid set of id_code with specified conditions

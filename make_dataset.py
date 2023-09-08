@@ -59,8 +59,16 @@ def main():
 
     # Base dataset
     time_start = time.time()
-    df = get_basic_dataset(list_id_code, start, end)
-    print(df)
+    pkl_df_base = 'pool/list_df_base.pkl'
+    if os.path.isfile(pkl_df_base):
+        with open(pkl_df_base, 'rb') as f:
+            df_base = pickle.load(f)
+    else:
+        df_base = get_target_list_id_code(list_id_code, price_min, price_max, start, end)
+        with open(pkl_df_base, 'wb') as f:
+            pickle.dump(df_base, f)
+
+    print(df_base)
     print('elapsed', get_elapsed(time_start), 'sec')
 
 
