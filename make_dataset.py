@@ -11,6 +11,7 @@ from functions.get_dataset import (
     get_target_list_id_code, get_basic_dataset,
 )
 from functions.get_elapsed import get_elapsed
+from functions.prediction import search_optimal_components
 
 
 def main():
@@ -85,7 +86,7 @@ def main():
         X = scaler.transform(df_X)
         y = series_y.values
 
-
+        mse_min_x, mse_min_y = search_optimal_components(X, y)
 
 if __name__ == "__main__":
     main()
