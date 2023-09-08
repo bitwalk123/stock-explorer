@@ -1,3 +1,4 @@
+import pandas as pd
 import statistics
 
 from PySide6.QtSql import QSqlQuery
@@ -12,9 +13,9 @@ from database.sqls import (
 from functions.resources import get_connection
 
 
-def get_basic_dataset(list_id_code: list, start: int, end: int):
+def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
     list_series = list()
-    for id_code in list_id_code[0:1]:
+    for id_code in list_id_code:
         con = get_connection()
         if con.open():
             sql = get_sql_select_dataset_from_trade_with_id_code_start_end(id_code, start, end)
@@ -30,11 +31,35 @@ def get_basic_dataset(list_id_code: list, start: int, end: int):
                 list_id_high.append(query.value(2))
                 list_id_low.append(query.value(3))
                 list_id_close.append(query.value(4))
-
             con.close()
 
-            print(list_id_date)
+            series_open = pd.Series(
+                data=list_id_open,
+                index=list_id_date,
+                name='%d_open' % id_code
+            )
+            series_high = pd.Series(
+                data=list_id_high,
+                index=list_id_date,
+                name='%d_high' % id_code
+            )
+            series_low = pd.Series(
+                data=list_id_low,
+                index=list_id_date,
+                name='%d_low' % id_code
+            )
+            series_close = pd.Series(
+                data=list_id_low,
+                index=list_id_date,
+                name='%d_close' % id_code
+            )
 
+            list_series.append(series_open)
+            list_series.append(series_high)
+            list_series.append(series_low)
+            list_series.append(series_close)
+
+    return pd.concat(list_series, axis=1)
 
 def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int) -> list:
     """Get valid set of id_code with specified conditions

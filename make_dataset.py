@@ -58,8 +58,11 @@ def main():
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Base dataset
-    get_basic_dataset(list_id_code, start, end)
-    #print(df)
+    time_start = time.time()
+    df = get_basic_dataset(list_id_code, start, end)
+    print(df)
+    print('elapsed', get_elapsed(time_start), 'sec')
+
 
 if __name__ == "__main__":
     main()
