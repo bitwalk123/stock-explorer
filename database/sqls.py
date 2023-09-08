@@ -41,6 +41,19 @@ def get_sql_create_table_trade() -> str:
     return sql
 
 
+def get_sql_create_table_split() -> str:
+    """Create trade table
+    """
+    sql = """
+        CREATE TABLE split(
+            id_split INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_code INTEGER,
+            lastSplitDate INTEGER
+        )
+    """
+    return sql
+
+
 def get_sql_delete_trade_with_id_trade(id_trade: int) -> str:
     """Delete record of trade table with specified id_trade
 
@@ -71,6 +84,11 @@ def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
         series['規模コード'],
         series['規模区分']
     )
+    return sql
+
+
+def get_sql_insert_into_split_values(id_code: int, date_split: int) -> str:
+    sql = 'INSERT INTO trade VALUES(NULL, %d, %d)' % (id_code, date_split)
     return sql
 
 
@@ -168,9 +186,11 @@ def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d;' % id_code
     return sql
 
+
 def get_sql_select_max_date_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (id_code, start, end)
     return sql
+
 
 def get_sql_select_open_from_trade_with_id_code_date(id_code: int, date: int) -> str:
     sql = 'SELECT open FROM trade WHERE id_code=%d AND date = %d;' % (id_code, date)
@@ -181,10 +201,13 @@ def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int
     sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
     return sql
 
+
 def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (id_code, start, end)
     return sql
 
+
 def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = 'SELECT date, open, high, low, close FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (id_code, start, end)
+    sql = 'SELECT date, open, high, low, close FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (
+        id_code, start, end)
     return sql
