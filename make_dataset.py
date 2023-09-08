@@ -11,7 +11,7 @@ from functions.get_dataset import (
     get_target_list_id_code, get_basic_dataset,
 )
 from functions.get_elapsed import get_elapsed
-from functions.prediction import search_optimal_components
+from functions.prediction import search_minimal_component_number, minimal_scores
 
 
 def main():
@@ -74,8 +74,8 @@ def main():
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Prediction
-    for id_cide_target in list_id_code_target[0:1]:
-        name = '%d_open' % id_cide_target
+    for id_code_target in list_id_code_target[0:1]:
+        name = '%d_open' % id_code_target
         series_y = df_base[name].iloc[1:]
         print(series_y)
         df_X = df_base.iloc[0:len(df_base) - 1, :]
@@ -86,7 +86,21 @@ def main():
         X = scaler.transform(df_X)
         y = series_y.values
 
-        mse_min_x, mse_min_y = search_optimal_components(X, y)
+        mse_min = search_minimal_component_number(X, y)
+
+        # empty dataframe
+        columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
+        df_result = pd.DataFrame(columns=columns_result)
+
+        n_comp = mse_min + 1
+        result = minimal_scores(X, y, n_comp)
+        series_target = pd.Series(
+            data=[n_comp, result['R2 calib'], result['R2 CV'], result['MSE calib'], result['MSE CV']],
+            index=columns_result,
+            name=id_code_target
+        )
+        df_result.loc[id_code_target] = series_target
+        print(df_result)
 
 if __name__ == "__main__":
     main()
