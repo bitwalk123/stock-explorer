@@ -73,21 +73,17 @@ def main():
     print(df_base)
     print('elapsed', get_elapsed(time_start), 'sec')
 
-    # empty dataframe
+    # Prediction
     columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
     df_result = pd.DataFrame(columns=columns_result)
-    # Prediction
     for id_code_target in list_id_code_target:
         name = '%d_open' % id_code_target
         series_y = df_base[name].iloc[1:]
-        #print(series_y)
         df_X = df_base.iloc[0:len(df_base) - 1, :]
-        #print(df_X)
 
         scaler = StandardScaler()
         scaler.fit(df_X)
         X = scaler.transform(df_X)
-        #y = series_y.values
         y = series_y
 
         mse_min = search_minimal_component_number(X, y)
@@ -100,9 +96,10 @@ def main():
             name=id_code_target
         )
         df_result.loc[id_code_target] = series_target
-        print(df_result)
         # save result every time
         df_result.to_csv('pool/result_pls.csv')
+
+    print(df_result)
 
 
 if __name__ == "__main__":
