@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")
 
 def search_minimal_component_number(X, y):
     list_mse = []
-    n_comp = 60
+    n_comp = 50
     component = np.arange(1, n_comp + 1)
 
     for i in component:
