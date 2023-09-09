@@ -133,6 +133,11 @@ def get_sql_select_count_from_ticker() -> str:
     return sql
 
 
+def get_sql_select_date_from_split_with_id_code(id_code: int) -> str:
+    sql = 'SELECT lastSplitDate FROM split WHERE id_code=%d;' % id_code
+    return sql
+
+
 def get_sql_select_id_code_from_ticker() -> str:
     sql = 'SELECT id_code FROM ticker;'
     return sql

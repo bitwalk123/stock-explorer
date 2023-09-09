@@ -26,8 +26,8 @@ def main():
 
     count_min = 200
     volume_min = 10000
-    price_min = 500
-    price_max = 600
+    price_min = 950
+    price_max = 1050
 
     # List valid id_code
     time_start = time.time()
@@ -42,7 +42,7 @@ def main():
         with open(pkl_list_id_code, 'wb') as f:
             pickle.dump(list_id_code, f)
 
-    print('total :', len(list_id_code))
+    print('valid total :', len(list_id_code))
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Pick target id_code
@@ -56,7 +56,7 @@ def main():
         with open(pkl_list_id_code_target, 'wb') as f:
             pickle.dump(list_id_code_target, f)
 
-    print('total :', len(list_id_code_target))
+    print('target total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Base dataset

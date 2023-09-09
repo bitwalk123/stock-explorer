@@ -8,7 +8,7 @@ from database.sqls import (
     get_sql_select_id_code_from_ticker,
     get_sql_select_max_date_from_trade_with_id_code_start_end,
     get_sql_select_open_from_trade_with_id_code_date,
-    get_sql_select_volume_from_trade_with_id_code_start_end,
+    get_sql_select_volume_from_trade_with_id_code_start_end, get_sql_select_date_from_split_with_id_code,
 )
 from functions.resources import get_connection
 
@@ -83,12 +83,26 @@ def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int
         list_id_code = list()
         while query1.next():
             id_code = query1.value(0)
-
-            sql2 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
+            # split check
+            sql2 = get_sql_select_date_from_split_with_id_code(id_code)
             query2 = QSqlQuery(sql2)
-            list_volume = list()
+            split_flag = False
             while query2.next():
-                list_volume.append(query2.value(0))
+                date_split = query2.value(0)
+                if type(date_split) is int:
+                    if start <= date_split <= end:
+                        split_flag = True
+
+            if split_flag is True:
+                print('split flag!', id_code)
+                continue
+
+            # volume check
+            sql3 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
+            query3 = QSqlQuery(sql3)
+            list_volume = list()
+            while query3.next():
+                list_volume.append(query3.value(0))
 
             if len(list_volume) < count_min:
                 continue
