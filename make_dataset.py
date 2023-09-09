@@ -86,9 +86,8 @@ def main():
         X = scaler.transform(df_X)
         y = series_y
 
-        mse_min = search_minimal_component_number(X, y)
-
-        n_comp = mse_min + 1
+        index_mse_min = search_minimal_component_number(X, y)
+        n_comp = index_mse_min + 1
         result = minimal_scores(X, y, n_comp)
         series_target = pd.Series(
             data=[n_comp, result['R2 calib'], result['R2 CV'], result['MSE calib'], result['MSE CV']],
@@ -96,9 +95,9 @@ def main():
             name=id_code_target
         )
         df_result.loc[id_code_target] = series_target
-        # save result every time
-        df_result.to_csv('pool/result_pls.csv')
 
+    # save result
+    df_result.to_csv('pool/result_pls.csv')
     print(df_result)
 
 

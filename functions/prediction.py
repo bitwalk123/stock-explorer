@@ -11,8 +11,7 @@ warnings.simplefilter("ignore")
 
 def search_minimal_component_number(X, y):
     list_mse = []
-    # n_comp = int(X.shape[1] / 10)
-    n_comp = 40
+    n_comp = 100
     component = np.arange(1, n_comp + 1)
 
     for i in component:
@@ -20,7 +19,7 @@ def search_minimal_component_number(X, y):
 
         # Cross-validation
         y_cv = cross_val_predict(pls, X, y, cv=10)
-        # Root Mean Square Error of Precision
+        # Mean Square Error of Precision
         mse = mean_squared_error(y, y_cv, squared=True)
         list_mse.append(mse)
 
@@ -31,11 +30,9 @@ def search_minimal_component_number(X, y):
 
     stdout.write("\n")
 
-    # Calculate and print the position of minimum in MSE
-    mse_min = np.argmin(list_mse)
-    # print('Suggested number of components: ', mse_min + 1)
-    # stdout.write("\n")
-    return mse_min
+    # Index of the minimum in MSE
+    index_mse_min = np.argmin(list_mse)
+    return index_mse_min
 
 
 def minimal_scores(X, y, n_comp):
