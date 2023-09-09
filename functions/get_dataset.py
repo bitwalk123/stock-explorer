@@ -49,7 +49,7 @@ def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
                 name='%d_low' % id_code
             )
             series_close = pd.Series(
-                data=list_id_low,
+                data=list_id_close,
                 index=list_id_date,
                 name='%d_close' % id_code
             )

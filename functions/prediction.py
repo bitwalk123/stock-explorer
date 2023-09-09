@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")
 
 def search_minimal_component_number(X, y):
     list_mse = []
-    n_comp = 100
+    n_comp = 60
     component = np.arange(1, n_comp + 1)
 
     for i in component:
@@ -23,7 +23,7 @@ def search_minimal_component_number(X, y):
         mse = mean_squared_error(y, y_cv, squared=True)
         list_mse.append(mse)
 
-        comp = 100 * (i + 1) / n_comp
+        comp = 100 * i / n_comp
         # Trick to update status on the same line
         stdout.write("\r%d%% completed" % comp)
         stdout.flush()
