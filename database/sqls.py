@@ -87,8 +87,8 @@ def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
     return sql
 
 
-def get_sql_insert_into_split_values(id_code: int, date_split: int) -> str:
-    sql = 'INSERT INTO trade VALUES(NULL, %d, %d)' % (id_code, date_split)
+def get_sql_insert_into_split_values() -> str:
+    sql = 'INSERT INTO split VALUES(NULL, ?, ?)'
     return sql
 
 

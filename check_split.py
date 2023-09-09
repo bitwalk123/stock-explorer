@@ -5,7 +5,7 @@ import time
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_code_from_ticker
+from database.sqls import get_sql_select_id_code_code_from_ticker, get_sql_insert_into_split_values
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import get_valid_list_id_code
 from functions.get_elapsed import get_elapsed
@@ -44,24 +44,6 @@ def main():
     print('total :', len(list_id_code))
     print('elapsed', get_elapsed(time_start), 'sec')
 
-    # generate dict for code with id_code
-    dict_code = dict()
-    con = get_connection()
-    if con.open():
-        sql = get_sql_select_id_code_code_from_ticker()
-        query = QSqlQuery(sql)
-        while query.next():
-            id_code = query.value(0)
-            code = query.value(1)
-            dict_code[id_code] = code
-        con.close()
-
-    key_split = 'lastSplitDate'
-    for id_code in list_id_code:
-        code = dict_code[id_code]
-        dict_info = get_info_ticker(code)
-        if key_split in dict_info.keys():
-            print(code, dict_info[key_split], conv_timestamp2date(dict_info[key_split]))
 
 if __name__ == "__main__":
     main()
