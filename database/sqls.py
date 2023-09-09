@@ -48,7 +48,8 @@ def get_sql_create_table_split() -> str:
         CREATE TABLE split(
             id_split INTEGER PRIMARY KEY AUTOINCREMENT,
             id_code INTEGER,
-            lastSplitDate INTEGER
+            lastSplitDate INTEGER,
+            lastSplitFactor STRING
         )
     """
     return sql
@@ -88,7 +89,7 @@ def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
 
 
 def get_sql_insert_into_split_values() -> str:
-    sql = 'INSERT INTO split VALUES(NULL, ?, ?)'
+    sql = 'INSERT INTO split VALUES(NULL, ?, ?, ?)'
     return sql
 
 

@@ -1,6 +1,9 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_code_from_ticker, get_sql_insert_into_split_values
+from database.sqls import (
+    get_sql_select_id_code_code_from_ticker,
+    get_sql_insert_into_split_values,
+)
 from functions.get_info_ticker import get_info_ticker
 from functions.resources import get_connection
 
@@ -24,15 +27,17 @@ def main():
         query2 = QSqlQuery()
         sql2 = get_sql_insert_into_split_values()
         query2.prepare(sql2)
-        key_split = 'lastSplitDate'
+        key_split_date = 'lastSplitDate'
+        key_split_factor = 'lastSplitFactor'
         for id_code in list_id_code:
             code = dict_code[id_code]
             dict_info = get_info_ticker(code)
-            if key_split in dict_info.keys():
+            if key_split_date in dict_info.keys():
                 query2.bindValue(0, id_code)
-                query2.bindValue(1, dict_info[key_split])
+                query2.bindValue(1, dict_info[key_split_date])
+                query2.bindValue(2, dict_info[key_split_factor])
                 query2.exec()
-                print(id_code, dict_info[key_split])
+                print(id_code, dict_info[key_split_date], dict_info[key_split_factor])
 
         con.close()
 
