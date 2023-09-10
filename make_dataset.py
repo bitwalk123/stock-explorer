@@ -50,7 +50,7 @@ def main():
         with open(pkl_list_id_code, 'wb') as f:
             pickle.dump(list_id_code, f)
 
-    print('valid total :', len(list_id_code))
+    print('\nvalid total :', len(list_id_code))
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Pick target id_code
@@ -64,7 +64,7 @@ def main():
         with open(pkl_list_id_code_target, 'wb') as f:
             pickle.dump(list_id_code_target, f)
 
-    print('target total :', len(list_id_code_target))
+    print('\ntarget total :', len(list_id_code_target))
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Base dataset
@@ -90,10 +90,13 @@ def main():
         df_result = get_candidate_tickers(list_id_code_target, df_base)
 
     print(df_result)
-    print('elapsed', get_elapsed(time_start), 'sec')
+    print('\nelapsed', get_elapsed(time_start), 'sec')
 
     # ticker selection and performance
+    pkl_df_sel = 'pool/df_sel-%d.csv' % end
     df_sel = df_result.sort_values('R2 CV', ascending=False).iloc[0:10, :]
+    with open(pkl_df_sel, 'wb') as f:
+        pickle.dump(df_sel, f)
     print(df_sel)
 
     dict_code = dict()
