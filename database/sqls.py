@@ -198,6 +198,12 @@ def get_sql_select_max_date_from_trade_with_id_code_start_end(id_code: int, star
     return sql
 
 
+def get_sql_select_min_date_from_trade_with_id_code_end(id_code: int, end: int) -> str:
+    """This SQL searches next trade day from end date specified"""
+    sql = 'SELECT MIN(date) FROM trade WHERE id_code=%d AND date > %d;' % (id_code, end)
+    return sql
+
+
 def get_sql_select_open_from_trade_with_id_code_date(id_code: int, date: int) -> str:
     sql = 'SELECT open FROM trade WHERE id_code=%d AND date = %d;' % (id_code, date)
     return sql

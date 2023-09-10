@@ -4,14 +4,21 @@ import pickle
 import time
 
 import pandas as pd
+from PySide6.QtSql import QSqlQuery
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.preprocessing import StandardScaler
 
+from database.sqls import get_sql_select_open_from_trade_with_id_code_date, \
+    get_sql_select_min_date_from_trade_with_id_code_end
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import (
     get_basic_dataset,
     get_valid_list_id_code,
     get_target_list_id_code, get_candidate_tickers,
 )
+from functions.get_dict_code import get_dict_code
 from functions.get_elapsed import get_elapsed
+from functions.resources import get_connection
 
 
 def main():
@@ -84,6 +91,74 @@ def main():
 
     print(df_result)
     print('elapsed', get_elapsed(time_start), 'sec')
+
+    # ticker selection and performance
+    df_sel = df_result.sort_values('R2 CV', ascending=False).iloc[0:10, :]
+    print(df_sel)
+
+    dict_code = dict()
+    con = get_connection()
+    if con.open():
+        dict_code = get_dict_code()
+    con.close()
+
+    # Create empty table
+    columns_summary = ['Code', 'Components', 'R2 CV', 'Date', 'Open(pred)', 'Open', 'delta']
+    df_summary = pd.DataFrame(columns=columns_summary)
+
+    for id_code in df_sel.index:
+        code = dict_code[id_code]
+        n_comp = int(df_sel.loc[id_code, 'Components'])
+        r2_cv = '{:.3f}'.format(df_sel.loc[id_code, 'R2 CV'])
+
+        # Open
+        end_next = None
+        price_open = None
+        con = get_connection()
+        if con.open():
+            # Get next trade day
+            sql1 = get_sql_select_min_date_from_trade_with_id_code_end(id_code, end)
+            query1 = QSqlQuery(sql1)
+            while query1.next():
+                end_next = query1.value(0)
+            # Get open price in next trade day
+            sql2 = get_sql_select_open_from_trade_with_id_code_date(id_code, end_next)
+            query2 = QSqlQuery(sql2)
+            while query2.next():
+                price_open = query2.value(0)
+        con.close()
+
+        # Prediction for end
+        name = '%d_open' % id_code
+        df_X_train = df_base.iloc[0:len(df_base) - 1, :]
+        df_X_test = df_base.tail(1)
+
+        scaler = StandardScaler()
+        scaler.fit(df_X_train)
+        X_train = scaler.transform(df_X_train)
+        X_test = scaler.transform(df_X_test)
+
+        y_train = df_base[name].iloc[1:]
+
+        pls = PLSRegression(n_components=n_comp)
+        pls.fit(X_train, y_train)
+        price_open_pred = pls.predict(X_test)[0][0]
+
+        # create 1 row in series
+        series_id_code = pd.Series(
+            data=[code, n_comp, r2_cv,
+                  conv_timestamp2date(end_next),
+                  '{:.1f}'.format(price_open_pred),
+                  price_open,
+                  '{:.1f}'.format(price_open_pred - price_open)],
+            index=columns_summary,
+            name=id_code
+        )
+        # add row
+        df_summary.loc[id_code] = series_id_code
+
+    print('\n### PREDICTION SUMMARY ###')
+    print(df_summary)
 
 
 if __name__ == "__main__":
