@@ -36,7 +36,7 @@ def main():
     end_str = '2023-01-04'
     end_dt = dt.datetime.strptime(end_str, '%Y-%m-%d')
 
-    duration = 100 * 24 * 60 * 60
+    duration = 120 * 24 * 60 * 60
     origin = end = int(dt.datetime.timestamp(end_dt)) + tz_delta
 
     while end < origin + duration:
@@ -94,7 +94,6 @@ def main():
         for id_code in df_sel.index:
             code = dict_code[id_code]
             n_comp = int(df_sel.loc[id_code, 'Components'])
-            r2_cv = '{:.3f}'.format(df_sel.loc[id_code, 'R2 CV'])
 
             # Open
             price_open = None
