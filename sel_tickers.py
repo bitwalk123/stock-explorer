@@ -22,7 +22,7 @@ from functions.resources import get_connection
 
 
 def main():
-    """Main
+    """Make ticker selection with specified condition
     """
     year = 365 * 24 * 60 * 60
     end_str = '2023-01-04'
@@ -32,6 +32,7 @@ def main():
     start = end - year
     print(conv_timestamp2date(start), conv_timestamp2date(end))
 
+    n_best = 10 # This number of codes will be selected for prediction
     count_min = 200
     volume_min = 10000
     price_min = 950
@@ -94,7 +95,7 @@ def main():
 
     # ticker selection and performance
     pkl_df_sel = 'pool/df_sel-%d.csv' % end
-    df_sel = df_result.sort_values('R2 CV', ascending=False).iloc[0:10, :]
+    df_sel = df_result.sort_values('R2 CV', ascending=False).iloc[0:n_best, :]
     with open(pkl_df_sel, 'wb') as f:
         pickle.dump(df_sel, f)
     print(df_sel)
