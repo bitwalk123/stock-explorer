@@ -40,7 +40,9 @@ def main():
 
     while end < origin + duration:
         start = end - year
+        print()
         print(conv_timestamp2date(start), conv_timestamp2date(end))
+        end_next = 0
 
         # List valid id_code
         time_start = time.time()
@@ -94,7 +96,6 @@ def main():
             r2_cv = '{:.3f}'.format(df_sel.loc[id_code, 'R2 CV'])
 
             # Open
-            end_next = None
             price_open = None
             con = get_connection()
             if con.open():
@@ -149,11 +150,10 @@ def main():
             print('\n%d.T' % code)
             print(df_summary_code)
 
-        while True:
+        if end < end_next:
+            end = end_next
+        else:
             end += day
-            weekday = conv_timestamp2date(end).weekday()
-            if weekday < 5:
-                break
 
 
 if __name__ == "__main__":
