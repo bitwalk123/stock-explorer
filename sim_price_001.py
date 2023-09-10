@@ -126,7 +126,7 @@ def main():
 
             pls = PLSRegression(n_components=n_comp)
             pls.fit(X_train, y_train)
-            y_c = pls.predict(X_train, y_train)
+            y_c = pls.predict(X_train)
             r2 = r2_score(y_train, y_c)
             price_open_pred = pls.predict(X_test)[0][0]
 
@@ -140,7 +140,8 @@ def main():
                 df_summary_code = pd.DataFrame(columns=columns_summary_code)
 
             series_code = pd.Series(
-                data=[n_comp, r2,
+                data=[n_comp,
+                      '{:.3f}'.format(r2),
                       '{:.1f}'.format(price_open_pred),
                       price_open,
                       '{:.1f}'.format(price_open_pred - price_open)],
