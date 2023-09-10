@@ -11,8 +11,10 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
-from database.sqls import get_sql_select_min_date_from_trade_with_id_code_end, \
-    get_sql_select_open_from_trade_with_id_code_date
+from database.sqls import (
+    get_sql_select_min_date_from_trade_with_id_code_end,
+    get_sql_select_open_from_trade_with_id_code_date,
+)
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import (
     get_valid_list_id_code,
@@ -24,19 +26,21 @@ from functions.resources import get_connection
 
 
 def main():
-    """Main
+    """Simulate prediction performance using past data
     """
+    # Constants
     count_min = 200
     volume_min = 10000
 
     tz_delta = 9 * 60 * 60  # Asia/Tokyo timezone
-    year = 365 * 24 * 60 * 60
     day = 24 * 60 * 60
+    year = 365 * day
 
     end_str = '2023-01-04'
     end_dt = dt.datetime.strptime(end_str, '%Y-%m-%d')
 
-    duration = 120 * 24 * 60 * 60
+    # Loop condition
+    duration = 120 * day
     origin = end = int(dt.datetime.timestamp(end_dt)) + tz_delta
 
     while end < origin + duration:
@@ -94,8 +98,8 @@ def main():
         for id_code in df_sel.index:
             code = dict_code[id_code]
             n_comp = int(df_sel.loc[id_code, 'Components'])
-
-            # Open
+            # _________________________________________________________________
+            # Open price
             price_open = None
             con = get_connection()
             if con.open():
@@ -110,25 +114,28 @@ def main():
                 while query2.next():
                     price_open = query2.value(0)
             con.close()
-
+            # _________________________________________________________________
             # Prediction for end
             name = '%d_open' % id_code
+            # Preparing Training & Test datasets
             df_X_train = df_base.iloc[0:len(df_base) - 1, :]
             df_X_test = df_base.tail(1)
-
+            # Standardization
             scaler = StandardScaler()
             scaler.fit(df_X_train)
             X_train = scaler.transform(df_X_train)
             X_test = scaler.transform(df_X_test)
-
+            # Pas data for Training
             y_train = df_base[name].iloc[1:]
-
+            # PLS model
             pls = PLSRegression(n_components=n_comp)
             pls.fit(X_train, y_train)
-            y_c = pls.predict(X_train)
-            r2 = r2_score(y_train, y_c)
+            # Prediction and Correlation score (R square)
+            y_pred = pls.predict(X_train)
+            r2 = r2_score(y_train, y_pred)
+            # Predict Open price for tomorrow
             price_open_pred = pls.predict(X_test)[0][0]
-
+            # _________________________________________________________________
             # Summary for code
             pkl_df_summary_code = 'pool/df_summary-%d.pkl' % code
             columns_summary_code = ['Components', 'R2', 'Open(pred)', 'Open', 'delta']
@@ -137,7 +144,7 @@ def main():
                     df_summary_code = pickle.load(f)
             else:
                 df_summary_code = pd.DataFrame(columns=columns_summary_code)
-
+            # Prepare 1 row in series
             series_code = pd.Series(
                 data=[n_comp,
                       '{:.3f}'.format(r2),
@@ -147,12 +154,13 @@ def main():
                 index=columns_summary_code,
                 name=conv_timestamp2date(end_next)
             )
+            # Write results
             df_summary_code.loc[conv_timestamp2date(end_next)] = series_code
             with open(pkl_df_summary_code, 'wb') as f:
                 pickle.dump(df_summary_code, f)
             print('\n%d.T' % code)
             print(df_summary_code)
-
+        # update end day
         if end < end_next:
             end = end_next
         else:
