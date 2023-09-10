@@ -8,6 +8,7 @@ import time
 
 from PySide6.QtSql import QSqlQuery
 from sklearn.cross_decomposition import PLSRegression
+from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
 from database.sqls import get_sql_select_min_date_from_trade_with_id_code_end, \
@@ -35,7 +36,7 @@ def main():
     end_str = '2023-01-04'
     end_dt = dt.datetime.strptime(end_str, '%Y-%m-%d')
 
-    duration = 30 * 24 * 60 * 60
+    duration = 100 * 24 * 60 * 60
     origin = end = int(dt.datetime.timestamp(end_dt)) + tz_delta
 
     while end < origin + duration:
@@ -125,11 +126,13 @@ def main():
 
             pls = PLSRegression(n_components=n_comp)
             pls.fit(X_train, y_train)
+            y_c = pls.predict(X_train, y_train)
+            r2 = r2_score(y_train, y_c)
             price_open_pred = pls.predict(X_test)[0][0]
 
             # Summary for code
             pkl_df_summary_code = 'pool/df_summary-%d.pkl' % code
-            columns_summary_code = ['Components', 'R2 CV', 'Open(pred)', 'Open', 'delta']
+            columns_summary_code = ['Components', 'R2', 'Open(pred)', 'Open', 'delta']
             if os.path.isfile(pkl_df_summary_code):
                 with open(pkl_df_summary_code, 'rb') as f:
                     df_summary_code = pickle.load(f)
@@ -137,7 +140,7 @@ def main():
                 df_summary_code = pd.DataFrame(columns=columns_summary_code)
 
             series_code = pd.Series(
-                data=[n_comp, r2_cv,
+                data=[n_comp, r2,
                       '{:.1f}'.format(price_open_pred),
                       price_open,
                       '{:.1f}'.format(price_open_pred - price_open)],
