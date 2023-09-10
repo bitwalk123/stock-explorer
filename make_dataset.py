@@ -4,25 +4,26 @@ import pickle
 import time
 
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 
+from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import (
+    get_basic_dataset,
     get_valid_list_id_code,
-    get_target_list_id_code, get_basic_dataset,
+    get_target_list_id_code, get_candidate_tickers,
 )
 from functions.get_elapsed import get_elapsed
-from functions.prediction import search_minimal_component_number, minimal_scores
 
 
 def main():
     """Main
     """
     year = 365 * 24 * 60 * 60
-    start_str = '2022-01-04'
-    start_dt = dt.datetime.strptime(start_str, "%Y-%m-%d")
-    start = int(dt.datetime.timestamp(start_dt))
-    end = start + year
-    print(start, end)
+    end_str = '2023-01-04'
+    end_dt = dt.datetime.strptime(end_str, '%Y-%m-%d')
+    tz_delta = 9 * 60 * 60  # Asia/Tokyo timezone
+    end = int(dt.datetime.timestamp(end_dt)) + tz_delta
+    start = end - year
+    print(conv_timestamp2date(start), conv_timestamp2date(end))
 
     count_min = 200
     volume_min = 10000
@@ -74,31 +75,15 @@ def main():
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Prediction
-    columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
-    df_result = pd.DataFrame(columns=columns_result)
-    for id_code_target in list_id_code_target:
-        name = '%d_open' % id_code_target
-        series_y = df_base[name].iloc[1:]
-        df_X = df_base.iloc[0:len(df_base) - 1, :]
+    time_start = time.time()
+    pkl_result_pls = 'pool/result_pls.csv'
+    if os.path.isfile(pkl_result_pls):
+        df_result = pd.read_csv(pkl_result_pls, index_col=0)
+    else:
+        df_result = get_candidate_tickers(list_id_code_target, df_base)
 
-        scaler = StandardScaler()
-        scaler.fit(df_X)
-        X = scaler.transform(df_X)
-        y = series_y
-
-        index_mse_min = search_minimal_component_number(X, y)
-        n_comp = index_mse_min + 1
-        result = minimal_scores(X, y, n_comp)
-        series_target = pd.Series(
-            data=[n_comp, result['R2 calib'], result['R2 CV'], result['MSE calib'], result['MSE CV']],
-            index=columns_result,
-            name=id_code_target
-        )
-        df_result.loc[id_code_target] = series_target
-
-    # save result
-    df_result.to_csv('pool/result_pls.csv')
     print(df_result)
+    print('elapsed', get_elapsed(time_start), 'sec')
 
 
 if __name__ == "__main__":

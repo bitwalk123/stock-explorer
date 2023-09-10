@@ -2,6 +2,7 @@ import pandas as pd
 import statistics
 
 from PySide6.QtSql import QSqlQuery
+from sklearn.preprocessing import StandardScaler
 
 from database.sqls import (
     get_sql_select_dataset_from_trade_with_id_code_start_end,
@@ -10,6 +11,7 @@ from database.sqls import (
     get_sql_select_open_from_trade_with_id_code_date,
     get_sql_select_volume_from_trade_with_id_code_start_end, get_sql_select_date_from_split_with_id_code,
 )
+from functions.prediction import search_minimal_component_number, minimal_scores
 from functions.resources import get_connection
 
 
@@ -133,3 +135,32 @@ def get_target_list_id_code(list_id_code: list, price_min: int, price_max: int, 
 
         con.close()
         return list_id_code_target
+
+
+def get_candidate_tickers(list_id_code_target: list, df_base: pd.DataFrame) -> pd.DataFrame:
+    columns_result = ['Components', 'R2 calib', 'R2 CV', 'MSE calib', 'MSE CV']
+    df_result = pd.DataFrame(columns=columns_result)
+
+    for id_code_target in list_id_code_target:
+        name = '%d_open' % id_code_target
+        series_y = df_base[name].iloc[1:]
+        df_X = df_base.iloc[0:len(df_base) - 1, :]
+
+        scaler = StandardScaler()
+        scaler.fit(df_X)
+        X = scaler.transform(df_X)
+        y = series_y
+
+        index_mse_min = search_minimal_component_number(X, y)
+        n_comp = index_mse_min + 1
+        result = minimal_scores(X, y, n_comp)
+        series_target = pd.Series(
+            data=[n_comp, result['R2 calib'], result['R2 CV'], result['MSE calib'], result['MSE CV']],
+            index=columns_result,
+            name=id_code_target
+        )
+        df_result.loc[id_code_target] = series_target
+
+    # save result
+    df_result.to_csv('pool/result_pls.csv')
+    return df_result
