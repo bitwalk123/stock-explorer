@@ -113,7 +113,7 @@ def main():
     for id_code in df_sel.index:
         code = dict_code[id_code]
         n_comp = int(df_sel.loc[id_code, 'Components'])
-        r2_cv = '{:.3f}'.format(df_sel.loc[id_code, 'R2 CV'])
+        r2_cv = df_sel.loc[id_code, 'R2 CV']
 
         # Open
         end_next = None
