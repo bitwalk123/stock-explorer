@@ -148,7 +148,7 @@ def main():
         X_train = scaler.transform(df_X_train)
         X_test = scaler.transform(df_X_test)
 
-        y_train = df_base_2[name_open].iloc[1:]
+        y_train = df_base[name_open].iloc[1:]
 
         pls = PLSRegression(n_components=n_comp)
         pls.fit(X_train, y_train)
