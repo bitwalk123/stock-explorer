@@ -1,6 +1,7 @@
 import datetime as dt
 import os
 import pickle
+import sys
 import time
 
 import pandas as pd
@@ -17,7 +18,7 @@ from functions.get_dataset import (
     get_basic_dataset,
     get_candidate_tickers,
     get_target_list_id_code,
-    get_valid_list_id_code,
+    get_valid_list_id_code_wo_split,
 )
 from functions.get_dict_code import get_dict_code
 from functions.get_elapsed import get_elapsed
@@ -50,7 +51,7 @@ def main():
     else:
         if not os.path.isdir('pool'):
             os.mkdir('pool')
-        list_id_code = get_valid_list_id_code(start, end, count_min, volume_min)
+        list_id_code = get_valid_list_id_code_wo_split(start, end, count_min, volume_min)
         with open(pkl_list_id_code, 'wb') as f:
             pickle.dump(list_id_code, f)
 
@@ -82,7 +83,7 @@ def main():
         with open(pkl_df_base, 'wb') as f:
             pickle.dump(df_base, f)
 
-    print(df_base)
+    print('df_base', df_base.shape)
     print('elapsed', get_elapsed(time_start), 'sec')
 
     # Prediction
@@ -138,6 +139,7 @@ def main():
         # Prediction for end
         name_open = '%d_open' % id_code
         df_base_2 = df_base.drop(name_open, axis=1)
+        print('df_base_2', df_base_2.shape)
         # Preparing Training & Test datasets
         df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
         df_X_test = df_base_2.tail(1)
@@ -145,9 +147,12 @@ def main():
         scaler = StandardScaler()
         scaler.fit(df_X_train)
         X_train = scaler.transform(df_X_train)
+        print('X_train', X_train.shape)
         X_test = scaler.transform(df_X_test)
+        print('X_test', X_test.shape)
 
         y_train = df_base[name_open].iloc[1:]
+        print('y_train', y_train.shape)
 
         pls = PLSRegression(n_components=n_comp)
         pls.fit(X_train, y_train)

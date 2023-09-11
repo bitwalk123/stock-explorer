@@ -120,6 +120,41 @@ def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int
         con.close()
         return list_id_code
 
+def get_valid_list_id_code_wo_split(start: int, end: int, count_min: int, volume_min: int) -> list:
+    """Get valid set of id_code with specified conditions
+
+    Args:
+        start (int): start time
+        count_min (int): minimum count of data
+        volume_min (int): minimum volume in median
+
+    Returns:
+        list: list of valid id_code
+
+    """
+    con = get_connection()
+    if con.open():
+        sql1 = get_sql_select_id_code_from_ticker()
+        query1 = QSqlQuery(sql1)
+        list_id_code = list()
+        while query1.next():
+            id_code = query1.value(0)
+            # volume check
+            sql3 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
+            query3 = QSqlQuery(sql3)
+            list_volume = list()
+            while query3.next():
+                list_volume.append(query3.value(0))
+
+            if len(list_volume) < count_min:
+                continue
+            volume_median = statistics.median(list_volume)
+            if volume_median < volume_min:
+                continue
+            list_id_code.append(id_code)
+
+        con.close()
+        return list_id_code
 
 def get_target_list_id_code(list_id_code: list, price_min: int, price_max: int, start: int, end: int) -> list:
     list_id_code_target = list()
