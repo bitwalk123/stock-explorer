@@ -156,7 +156,8 @@ def main():
 
         # create 1 row in series
         series_id_code = pd.Series(
-            data=[code, n_comp, r2_cv,
+            data=[code, n_comp,
+                  '{:.3f}'.format(r2_cv),
                   conv_timestamp2date(end_next),
                   '{:.1f}'.format(price_open_pred),
                   price_open,
