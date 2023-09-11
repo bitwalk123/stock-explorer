@@ -116,17 +116,21 @@ def main():
             con.close()
             # _________________________________________________________________
             # Prediction for end
-            name = '%d_open' % id_code
+            name_open = '%d_open' % id_code
+            name_high = '%d_high' % id_code
+            name_low = '%d_low' % id_code
+            name_close = '%d_close' % id_code
+            df_base_2 = df_base.drop([name_open, name_high, name_low, name_close], axis=1)
             # Preparing Training & Test datasets
-            df_X_train = df_base.iloc[0:len(df_base) - 1, :]
-            df_X_test = df_base.tail(1)
+            df_X_train = df_base_2.iloc[0:len(df_base) - 1, :]
+            df_X_test = df_base_2.tail(1)
             # Standardization
             scaler = StandardScaler()
             scaler.fit(df_X_train)
             X_train = scaler.transform(df_X_train)
             X_test = scaler.transform(df_X_test)
             # Pas data for Training
-            y_train = df_base[name].iloc[1:]
+            y_train = df_base_2[name_open].iloc[1:]
             # PLS model
             pls = PLSRegression(n_components=n_comp)
             pls.fit(X_train, y_train)
