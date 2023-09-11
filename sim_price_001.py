@@ -117,10 +117,11 @@ def main():
             # _________________________________________________________________
             # Prediction for end
             name_open = '%d_open' % id_code
-            name_high = '%d_high' % id_code
-            name_low = '%d_low' % id_code
-            name_close = '%d_close' % id_code
-            df_base_2 = df_base.drop([name_open, name_high, name_low, name_close], axis=1)
+            # name_high = '%d_high' % id_code
+            # name_low = '%d_low' % id_code
+            # name_close = '%d_close' % id_code
+            # df_base_2 = df_base.drop([name_open, name_high, name_low, name_close], axis=1)
+            df_base_2 = df_base.drop(name_open, axis=1)
             # Preparing Training & Test datasets
             df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
             df_X_test = df_base_2.tail(1)
