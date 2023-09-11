@@ -122,7 +122,7 @@ def main():
             name_close = '%d_close' % id_code
             df_base_2 = df_base.drop([name_open, name_high, name_low, name_close], axis=1)
             # Preparing Training & Test datasets
-            df_X_train = df_base_2.iloc[0:len(df_base) - 1, :]
+            df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
             df_X_test = df_base_2.tail(1)
             # Standardization
             scaler = StandardScaler()
