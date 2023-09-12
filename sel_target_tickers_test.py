@@ -139,7 +139,7 @@ def main():
         # Prediction for end
         name_open = '%d_open' % id_code
         df_base_2 = df_base.drop(name_open, axis=1)
-        print('df_base_2', df_base_2.shape)
+        # print('df_base_2', df_base_2.shape)
         # Preparing Training & Test datasets
         df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
         df_X_test = df_base_2.tail(1)
@@ -147,12 +147,12 @@ def main():
         scaler = StandardScaler()
         scaler.fit(df_X_train)
         X_train = scaler.transform(df_X_train)
-        print('X_train', X_train.shape)
+        # print('X_train', X_train.shape)
         X_test = scaler.transform(df_X_test)
-        print('X_test', X_test.shape)
+        # print('X_test', X_test.shape)
 
         y_train = df_base[name_open].iloc[1:]
-        print('y_train', y_train.shape)
+        # print('y_train', y_train.shape)
 
         pls = PLSRegression(n_components=n_comp)
         pls.fit(X_train, y_train)
