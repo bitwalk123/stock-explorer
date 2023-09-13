@@ -40,7 +40,7 @@ def main():
     end_dt = dt.datetime.strptime(end_str, '%Y-%m-%d')
 
     # Loop condition
-    duration = 210 * day
+    duration = 240 * day
     origin = end = int(dt.datetime.timestamp(end_dt)) + tz_delta
 
     while end < origin + duration:
