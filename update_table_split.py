@@ -20,7 +20,7 @@ def main():
         query.prepare(sql)
         key_split_date = 'lastSplitDate'
         key_split_factor = 'lastSplitFactor'
-        for id_code in sorted(dict_code.keys(), reverse=True):
+        for id_code in sorted(dict_code.keys(), reverse=False):
             sql2 = get_sql_select_lastsplit_split_with_id_code(id_code)
             query2 = QSqlQuery(sql2)
             id_split = None
@@ -61,7 +61,7 @@ def main():
                     query.bindValue(2, dict_info[key_split_factor])
                     query.exec()
                     print(
-                        'U', id_split, id_code, '%d.T' % code,
+                        'A', id_split, id_code, '%d.T' % code,
                         dict_info[key_split_date],
                         dict_info[key_split_factor]
                     )
