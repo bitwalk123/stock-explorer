@@ -1,7 +1,11 @@
 import mplfinance as mpf
+from PySide6.QtSql import QSqlQuery
 
+from functions.conv_timestamp2date import conv_timestamp2date
+from functions.get_dict_code import get_dict_code, get_dict_id_code
 from functions.get_open_with_code import get_open_with_code
 from functions.get_trade_with_code import get_trade_with_code
+from functions.resources import get_connection
 from widgets.charts import Trend
 
 
@@ -56,6 +60,20 @@ def draw_trend_open(chart: Trend, code: int, start: int):
         tick2.set_rotation(45)
     #
     chart.refreshDraw()
+
+    con = get_connection()
+    if con.open():
+        dict_id_code = get_dict_id_code()
+        sql = 'SELECT lastSplitDate FROM split WHERE id_code=%d' % dict_id_code[code]
+        query = QSqlQuery(sql)
+        last_split_date = 0
+        while query.next():
+            last_split_date = query.value(0)
+        con.close
+
+        #print(dict_id_code[code], code, last_split_date)
+        if last_split_date > 0:
+            print(code, ': split on', conv_timestamp2date(last_split_date), 'id_code =', dict_id_code[code])
 
 
 def draw_trend_candle(chart: Trend, code: int, start: int):

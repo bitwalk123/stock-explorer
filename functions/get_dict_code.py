@@ -5,13 +5,26 @@ from database.sqls import get_sql_select_id_code_code_from_ticker
 
 def get_dict_code() -> dict:
     dict_code = dict()
-    list_id_code = list()
+    #list_id_code = list()
 
     sql = get_sql_select_id_code_code_from_ticker()
     query = QSqlQuery(sql)
     while query.next():
         id_code = query.value(0)
-        list_id_code.append(id_code)
+        #list_id_code.append(id_code)
         code = query.value(1)
         dict_code[id_code] = code
     return dict_code
+
+def get_dict_id_code() -> dict:
+    dict_id_code = dict()
+    #list_code = list()
+
+    sql = get_sql_select_id_code_code_from_ticker()
+    query = QSqlQuery(sql)
+    while query.next():
+        id_code = query.value(0)
+        #list_id_code.append(id_code)
+        code = query.value(1)
+        dict_id_code[code] = id_code
+    return dict_id_code
