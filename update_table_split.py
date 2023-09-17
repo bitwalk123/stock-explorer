@@ -37,13 +37,13 @@ def main():
                     print('S', id_split, '%d.T' % code)
                     continue
                 print(id_split, '%d.T' % code)
-                if last_split_date != dict_info[key_split_date]:
+                if last_split_date != dict_info[key_split_date] or last_split_factor != dict_info[key_split_factor]:
                     query3 = QSqlQuery()
                     sql31 = 'UPDATE split SET lastSplitDate=%d WHERE id_split=%d;' % (
                         dict_info[key_split_date], id_split
                     )
                     query3.exec(sql31)
-                    sql32 = 'UPDATE split SET lastSplitFactor=%s WHERE id_split=%d;' % (
+                    sql32 = 'UPDATE split SET lastSplitFactor="%s" WHERE id_split=%d;' % (
                         dict_info[key_split_factor], id_split
                     )
                     query3.exec(sql32)
