@@ -1,5 +1,5 @@
 from functions.get_dict_code import get_dict_code
-from functions.get_info_ticker import get_info_ticker
+from functions.get_info_ticker import get_info_ticker_renew
 from functions.resources import get_connection
 
 
@@ -13,7 +13,7 @@ def main():
 
     for id_code in dict_code.keys():
         code = dict_code[id_code]
-        get_info_ticker(code)
+        get_info_ticker_renew(code)
         print(code)
 
 
