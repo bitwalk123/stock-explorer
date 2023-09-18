@@ -24,15 +24,16 @@ def main():
 
         for id_code in dict_code.keys():
             code = dict_code[id_code]
-            checker = preProcess(id_code, start, end)
-            if checker.check():
+            preprcs = preProcess(id_code, start, end)
+            if preprcs.exclude():
                 num_total += 1
                 print(
                     '%d.T' % code,
-                    conv_timestamp2date(checker.date),
-                    checker.price_open_pre, '>>',
-                    checker.price_open, ':',
-                    checker.price_open - checker.price_open_pre
+                    conv_timestamp2date(preprcs.date),
+                    preprcs.price_open_pre, '>>',
+                    preprcs.price_open, ':',
+                    preprcs.price_open - preprcs.price_open_pre,
+                    preprcs.flag_exclude
                 )
 
         con.close()
