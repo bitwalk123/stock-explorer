@@ -108,13 +108,20 @@ def get_sql_insert_into_trade_values(id_code: int, series: pd.Series) -> str:
 
 
 def get_sql_select_all_from_trade_with_id_code(id_code: int) -> str:
-    sql = 'SELECT date, open, high, low, close, volume FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+    sql = """
+        SELECT date, open, high, low, close, volume FROM trade
+        WHERE id_code=%d
+        ORDER BY date;
+    """ % id_code
     return sql
 
 
 def get_sql_select_all_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT date, open, high, low, close, volume FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (
-        id_code, start)
+    sql = """
+        SELECT date, open, high, low, close, volume FROM trade
+        WHERE id_code=%d AND date >= %d
+        ORDER BY date;
+    """ % (id_code, start)
     return sql
 
 
@@ -134,98 +141,172 @@ def get_sql_select_count_from_ticker() -> str:
 
 
 def get_sql_select_date_from_split_with_id_code(id_code: int) -> str:
-    sql = 'SELECT lastSplitDate FROM split WHERE id_code=%d;' % id_code
+    sql = """
+        SELECT lastSplitDate FROM split
+        WHERE id_code=%d;
+    """ % id_code
+    return sql
+
+
+def get_sql_select_date_open_from_trade_with_id_code(id_code: int) -> str:
+    sql = """
+        SELECT date, open FROM trade
+        WHERE id_code=%d
+        ORDER BY date;
+    """ % id_code
+    return sql
+
+
+def get_sql_select_date_open_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
+    sql = """
+        SELECT date, open FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d
+        ORDER BY date;
+    """ % (id_code, start, end)
     return sql
 
 
 def get_sql_select_date_open_volume_from_trade_with_id_code(id_code: int) -> str:
-    sql = 'SELECT date, open, volume FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+    sql = """
+        SELECT date, open, volume FROM trade
+        WHERE id_code=%d
+        ORDER BY date;
+    """ % id_code
     return sql
 
 
 def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT date, open, volume FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
+    sql = """
+        SELECT date, open, volume FROM trade
+        WHERE id_code=%d AND date >= %d
+        ORDER BY date;
+    """ % (id_code, start)
     return sql
 
 
 def get_sql_select_date_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT date, volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
+    sql = """
+        SELECT date, volume FROM trade
+        WHERE id_code=%d AND date >= %d;
+    """ % (id_code, start)
     return sql
 
 
 def get_sql_select_id_code_from_ticker() -> str:
-    sql = 'SELECT id_code FROM ticker;'
+    sql = """
+        SELECT id_code FROM ticker;
+    """
     return sql
 
 
 def get_sql_select_id_code_code_from_ticker() -> str:
-    sql = 'SELECT id_code, コード FROM ticker;'
+    sql = """
+        SELECT id_code, コード FROM ticker;
+    """
     return sql
 
 
 def get_sql_select_id_code_code_cname_from_ticker() -> str:
-    sql = 'SELECT id_code, コード, 銘柄名 FROM ticker;'
+    sql = """
+        SELECT id_code, コード, 銘柄名 FROM ticker;
+    """
     return sql
 
 
 def get_sql_select_id_code_cname_from_ticker_with_code(code: int) -> str:
-    sql = 'SELECT id_code, 銘柄名 FROM ticker WHERE コード=%d;' % code
+    sql = """
+        SELECT id_code, 銘柄名 FROM ticker
+        WHERE コード=%d;
+    """ % code
     return sql
 
 
 def get_sql_select_id_code_from_ticker_with_code(code: int) -> str:
-    sql = 'SELECT id_code FROM ticker WHERE コード=%d;' % code
+    sql = """
+        SELECT id_code FROM ticker
+        WHERE コード=%d;
+    """ % code
     return sql
 
 
 def get_sql_select_id_trade_date_open_from_trade_with_id_code(id_code: int) -> str:
-    sql = 'SELECT id_trade, date, open FROM trade WHERE id_code=%d ORDER BY date;' % id_code
+    sql = """
+        SELECT id_trade, date, open FROM trade
+        WHERE id_code=%d
+        ORDER BY date;
+    """ % id_code
     return sql
 
 
 def get_sql_select_id_trade_date_open_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT id_trade, date, open FROM trade WHERE id_code=%d AND date >= %d ORDER BY date;' % (id_code, start)
+    sql = """
+        SELECT id_trade, date, open FROM trade
+        WHERE id_code=%d AND date >= %d
+        ORDER BY date;
+    """ % (id_code, start)
     return sql
 
 
 def get_sql_select_lastsplit_split_with_id_code(id_code: int):
-    sql = 'SELECT id_split, lastSplitDate, lastSplitFactor from split WHERE id_code=%d' % id_code
+    sql = """
+        SELECT id_split, lastSplitDate, lastSplitFactor from split
+        WHERE id_code=%d;
+    """ % id_code
     return sql
 
 
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
-    sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d;' % id_code
+    sql = """
+        SELECT MAX(date) FROM trade
+        WHERE id_code=%d;
+    """ % id_code
     return sql
 
 
 def get_sql_select_max_date_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = 'SELECT MAX(date) FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (id_code, start, end)
+    sql = """
+        SELECT MAX(date) FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d;
+    """ % (id_code, start, end)
     return sql
 
 
 def get_sql_select_min_date_from_trade_with_id_code_end(id_code: int, end: int) -> str:
     """This SQL searches next trade day from end date specified"""
-    sql = 'SELECT MIN(date) FROM trade WHERE id_code=%d AND date > %d;' % (id_code, end)
+    sql = """
+        SELECT MIN(date) FROM trade
+        WHERE id_code=%d AND date > %d;
+    """ % (id_code, end)
     return sql
 
 
 def get_sql_select_open_from_trade_with_id_code_date(id_code: int, date: int) -> str:
-    sql = 'SELECT open FROM trade WHERE id_code=%d AND date = %d;' % (id_code, date)
+    sql = """
+        SELECT open FROM trade
+        WHERE id_code=%d AND date = %d;
+    """ % (id_code, date)
     return sql
 
 
 def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
-    sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d;' % (id_code, start)
+    sql = """
+        SELECT volume FROM trade
+        WHERE id_code=%d AND date >= %d;
+    """ % (id_code, start)
     return sql
 
 
 def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = 'SELECT volume FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (id_code, start, end)
+    sql = """
+        SELECT volume FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d;
+    """ % (id_code, start, end)
     return sql
 
 
 def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = 'SELECT date, open, high, low, close FROM trade WHERE id_code=%d AND date >= %d AND date < %d;' % (
-        id_code, start, end
-    )
+    sql = """
+        SELECT date, open, high, low, close FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d;
+    """ % (id_code, start, end)
     return sql
