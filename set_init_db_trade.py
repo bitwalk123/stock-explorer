@@ -1,3 +1,5 @@
+"""Set initial data to ingest from CSV file to the trade table of the database
+"""
 import os
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
@@ -9,7 +11,6 @@ from database.sqls import (
 from functions.resources import get_connection
 
 con = get_connection()
-
 if con.open():
     sql1 = get_sql_select_id_code_code_cname_from_ticker()
     query1 = QSqlQuery(sql1)
