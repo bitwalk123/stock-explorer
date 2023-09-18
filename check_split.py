@@ -22,6 +22,8 @@ def main():
     if con.open():
         # prepare dictionary for id_code and code
         dict_code: dict = get_dict_code()
+        # valide list of id_code
+        list_id_code = list()
 
         for id_code in dict_code.keys():
             code = dict_code[id_code]
@@ -49,12 +51,14 @@ def main():
                     )
                 else:
                     print('Unknown')
-
+            else:
+                list_id_code.append(id_code)
         con.close()
     else:
         print('fail to open db.')
 
-    print('total', num_total)
+    print('excluded %d / %d' % (num_total, len(dict_code.keys())))
+    print('valid number of id_code : %d' % len(list_id_code))
 
 
 if __name__ == "__main__":
