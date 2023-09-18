@@ -17,13 +17,15 @@ def main():
     end = int(dt.datetime.timestamp(end_dt)) + tz_delta
     print(start, conv_timestamp2date(start), '-', end, conv_timestamp2date(end))
 
+    # valide list of id_code
+    list_id_code = list()
+    dict_code = dict()
     num_total = 0
+
     con = get_connection()
     if con.open():
         # prepare dictionary for id_code and code
         dict_code: dict = get_dict_code()
-        # valide list of id_code
-        list_id_code = list()
 
         for id_code in dict_code.keys():
             code = dict_code[id_code]
