@@ -10,7 +10,7 @@ from database.sqls import get_sql_select_code_cname_from_ticker
 from functions.resources import get_connection
 
 #start = dt.date(2000, 1, 1)
-start = dt.date(2020, 1, 1)
+start = dt.date(2021, 1, 1)
 end = dt.date.today()
 
 con = get_connection()
