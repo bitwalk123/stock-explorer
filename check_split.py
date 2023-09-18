@@ -1,5 +1,6 @@
 import datetime as dt
 
+from functions.app_enum import PreProcsExcl
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
 from functions.preprocess import preProcess
@@ -27,14 +28,27 @@ def main():
             preprcs = preProcess(id_code, start, end)
             if preprcs.exclude():
                 num_total += 1
-                print(
-                    '%d.T' % code,
-                    conv_timestamp2date(preprcs.date),
-                    preprcs.price_open_pre, '>>',
-                    preprcs.price_open, ':',
-                    preprcs.price_open - preprcs.price_open_pre,
-                    preprcs.flag_exclude
-                )
+
+                print('%d.T : ' % code, end='')
+                if preprcs.flag_exclude == PreProcsExcl.EMPTY:
+                    print('No Data!')
+                elif preprcs.flag_exclude == PreProcsExcl.VOLUME:
+                    print(
+                        'Volume(Median) =',
+                        preprcs.volume_median,
+                    )
+                elif preprcs.flag_exclude == PreProcsExcl.SPLIT:
+                    print(
+                        'Volume(Median) =',
+                        preprcs.volume_median,
+                        'Split',
+                        conv_timestamp2date(preprcs.date),
+                        preprcs.price_open_pre, '>>',
+                        preprcs.price_open, ':',
+                        preprcs.price_open - preprcs.price_open_pre,
+                    )
+                else:
+                    print('Unknown')
 
         con.close()
     else:
