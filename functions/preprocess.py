@@ -9,9 +9,10 @@ from database.sqls import (
 from functions.app_enum import PreProcsExcl
 
 
-class preProcess():
-    factor_split = 1.5
-    factor_volumne = 10000
+class PreProcess():
+    # CONSTANT
+    FACTOR_SPLIT = 1.5
+    FACTOR_VOLUME = 10000
 
     def __init__(self, id_code: int, start: int, end: int):
         self.id_code = id_code
@@ -25,8 +26,8 @@ class preProcess():
 
     def is_split(self) -> bool:
         flag_date = self.price_open_pre > 0
-        flag_upper = self.price_open_pre / self.factor_split > self.price_open
-        flag_lower = self.price_open_pre * self.factor_split < self.price_open
+        flag_upper = self.price_open_pre / self.FACTOR_SPLIT > self.price_open
+        flag_lower = self.price_open_pre * self.FACTOR_SPLIT < self.price_open
         return flag_date and (flag_upper or flag_lower)
 
     def exclude(self) -> bool:
@@ -36,7 +37,8 @@ class preProcess():
         # Check split
         if self.check_split():
             return True
-        return False
+        else:
+            return False
 
     def check_volume(self):
         list_volume = list()
@@ -52,11 +54,11 @@ class preProcess():
             return True
 
         self.volume_median = int(statistics.median(list_volume))
-        if self.volume_median < self.factor_volumne:
+        if self.volume_median < self.FACTOR_VOLUME:
             self.flag_exclude = PreProcsExcl.VOLUME
             return True
-
-        return False
+        else:
+            return False
 
     def check_split(self):
         """Determine if price split exists
@@ -73,4 +75,5 @@ class preProcess():
                 self.flag_exclude = PreProcsExcl.SPLIT
                 return True
             self.price_open_pre = self.price_open
+
         return False

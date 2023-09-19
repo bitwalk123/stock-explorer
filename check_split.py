@@ -3,7 +3,7 @@ import datetime as dt
 from functions.app_enum import PreProcsExcl
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
-from functions.preprocess import preProcess
+from functions.preprocess import PreProcess
 from functions.resources import get_connection
 
 
@@ -29,7 +29,7 @@ def main():
 
         for id_code in dict_code.keys():
             code = dict_code[id_code]
-            preprcs = preProcess(id_code, start, end)
+            preprcs = PreProcess(id_code, start, end)
             if preprcs.exclude():
                 num_total += 1
 
