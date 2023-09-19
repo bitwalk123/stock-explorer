@@ -17,7 +17,7 @@ def main():
     end = int(dt.datetime.timestamp(end_dt)) + tz_delta
     print(start, conv_timestamp2date(start), '-', end, conv_timestamp2date(end))
 
-    # valide list of id_code
+    # valid list of id_code
     list_id_code = list()
     dict_code = dict()
     num_total = 0
