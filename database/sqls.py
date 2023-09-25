@@ -184,14 +184,6 @@ def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code: int, 
     return sql
 
 
-def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = """
-        SELECT volume FROM trade
-        WHERE id_code=%d AND date >= %d AND data < %d
-    """ % (id_code, start, end)
-    return sql
-
-
 def get_sql_select_date_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     sql = """
         SELECT date, volume FROM trade
@@ -307,7 +299,7 @@ def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int
 def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT volume FROM trade
-        WHERE id_code=%d AND date >= %d AND date < %d;
+        WHERE id_code=%d AND date >= %d AND data < %d
     """ % (id_code, start, end)
     return sql
 
@@ -317,4 +309,26 @@ def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start
         SELECT date, open, high, low, close FROM trade
         WHERE id_code=%d AND date >= %d AND date < %d;
     """ % (id_code, start, end)
+    return sql
+
+
+def get_sql_udate_trade_values(id_trade: int, series: pd.Series) -> str:
+    sql = """
+        UPDATE trade
+        SET open=%f,
+            high~%f,
+            low~%f,
+            close=%f,
+            close_adj=%f,
+            volume=%d
+        WHERE id_trade=%d;
+    """ % (
+        series['Open'],
+        series['High'],
+        series['Low'],
+        series['Close'],
+        series['Adj Close'],
+        int(series['Volume']),
+        id_trade
+    )
     return sql
