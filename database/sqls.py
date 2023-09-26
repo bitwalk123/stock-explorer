@@ -148,6 +148,14 @@ def get_sql_select_date_from_split_with_id_code(id_code: int) -> str:
     return sql
 
 
+def get_sql_select_date_id_code_from_ticker(date: int, id_code: int) -> str:
+    sql = """
+        SELECT date, id_code FROM trade
+        WHERE date=%d AND id_code=%d;
+    """
+    return sql
+
+
 def get_sql_select_date_open_from_trade_with_id_code(id_code: int) -> str:
     sql = """
         SELECT date, open FROM trade
@@ -247,6 +255,14 @@ def get_sql_select_id_trade_date_open_from_trade_with_id_code_start(id_code: int
     return sql
 
 
+def get_sql_select_id_trade_from_trade_with_date_id_code(date: int, id_code: int) -> str:
+    sql = """
+        SELECT id_trade FROM trade
+        WHERE date=%d AND id_code=%d;
+    """ % (date, id_code)
+    return sql
+
+
 def get_sql_select_lastsplit_split_with_id_code(id_code: int):
     sql = """
         SELECT id_split, lastSplitDate, lastSplitFactor from split
@@ -312,7 +328,7 @@ def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start
     return sql
 
 
-def get_sql_udate_trade_values(id_trade: int, series: pd.Series) -> str:
+def get_sql_update_trade_values(id_trade: int, series: pd.Series) -> str:
     sql = """
         UPDATE trade
         SET open=%f,

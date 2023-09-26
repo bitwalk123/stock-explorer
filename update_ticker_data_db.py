@@ -6,7 +6,9 @@ from PySide6.QtSql import QSqlQuery
 from database.sqls import (
     get_sql_insert_into_trade_values,
     get_sql_select_id_code_code_from_ticker,
+    get_sql_select_id_trade_from_trade_with_date_id_code,
     get_sql_select_max_date_from_trade_with_id_code,
+    get_sql_update_trade_values,
 )
 from functions.conv_timestamp2date import conv_timestamp2date_next
 from functions.resources import get_connection
@@ -36,8 +38,15 @@ if con.open():
             for row in df.index:
                 timestamp = row.timestamp()
                 series = df.loc[row].copy()
-                series['Date'] = timestamp
-                sql3 = get_sql_insert_into_trade_values(id_code, series)
-                query3 = QSqlQuery()
-                query3.exec(sql3)
+                date = series['Date'] = timestamp
+
+                sql3 = get_sql_select_id_trade_from_trade_with_date_id_code(date, id_code)
+                query3 = QSqlQuery(sql3)
+                if query3.next():
+                    id_trade = query3.value(0)
+                    sql4 = get_sql_update_trade_values(id_trade, series)
+                else:
+                    sql4 = get_sql_insert_into_trade_values(id_code, series)
+                query4 = QSqlQuery()
+                query4.exec(sql4)
     con.close()
