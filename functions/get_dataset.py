@@ -65,9 +65,13 @@ def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
             list_series.append(series_low)
             list_series.append(series_close)
 
-    df = pd.concat(list_series, axis=1)
-    df.dropna(how='any', axis=0, inplace=True)
-    return df
+    if len(list_series) == 0:
+        print('list_series', 0)
+        return pd.DataFrame()
+    else:
+        df = pd.concat(list_series, axis=1)
+        df.dropna(how='any', axis=0, inplace=True)
+        return df
 
 
 def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int) -> list:
@@ -120,6 +124,7 @@ def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int
         con.close()
         return list_id_code
 
+
 def get_valid_list_id_code_wo_split(start: int, end: int, count_min: int, volume_min: int) -> list:
     """Get valid set of id_code with specified conditions
 
@@ -155,6 +160,7 @@ def get_valid_list_id_code_wo_split(start: int, end: int, count_min: int, volume
 
         con.close()
         return list_id_code
+
 
 def get_target_list_id_code(list_id_code: list, price_min: int, price_max: int, start: int, end: int) -> list:
     list_id_code_target = list()
