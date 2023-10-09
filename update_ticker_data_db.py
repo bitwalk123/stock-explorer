@@ -13,40 +13,53 @@ from database.sqls import (
 from functions.conv_timestamp2date import conv_timestamp2date_next
 from functions.resources import get_connection
 
-end = dt.date.today()
 
-con = get_connection()
-if con.open():
-    sql1 = get_sql_select_id_code_code_from_ticker()
-    query1 = QSqlQuery(sql1)
-    while query1.next():
-        id_code = query1.value(0)
-        code = '%d.T' % query1.value(1)
+def update_ticker_data_db(end):
+    con = get_connection()
+    if con.open():
+        # get list of id_code, code from the ticker table
+        sql1 = get_sql_select_id_code_code_from_ticker()
+        query1 = QSqlQuery(sql1)
+        while query1.next():
+            id_code = query1.value(0)
+            code = '%d.T' % query1.value(1)
 
-        sql2 = get_sql_select_max_date_from_trade_with_id_code(id_code)
-        query2 = QSqlQuery(sql2)
-        while query2.next():
-            date_max = query2.value(0)
-            if type(date_max) is not int:
-                continue
-            start = conv_timestamp2date_next(date_max)
-            print('\n', code)
+            # get latest date of the trade table with specified id_code
+            sql2 = get_sql_select_max_date_from_trade_with_id_code(id_code)
+            query2 = QSqlQuery(sql2)
+            while query2.next():
+                date_max = query2.value(0)
+                if type(date_max) is not int:
+                    continue
+                # start day is next to the latest date
+                start = conv_timestamp2date_next(date_max)
+                print('\n', code)
 
-            df = yf.download(code, start, end)
-            if len(df) == 0:
-                continue
-            for row in df.index:
-                timestamp = row.timestamp()
-                series = df.loc[row].copy()
-                date = series['Date'] = timestamp
+                # get data from Yahoo finance
+                df = yf.download(code, start, end)
+                if len(df) == 0:
+                    continue
+                for row in df.index:
+                    timestamp = row.timestamp()
+                    series = df.loc[row].copy()
+                    date = series['Date'] = timestamp
 
-                sql3 = get_sql_select_id_trade_from_trade_with_date_id_code(date, id_code)
-                query3 = QSqlQuery(sql3)
-                if query3.next():
-                    id_trade = query3.value(0)
-                    sql4 = get_sql_update_trade_values(id_trade, series)
-                else:
-                    sql4 = get_sql_insert_into_trade_values(id_code, series)
-                query4 = QSqlQuery()
-                query4.exec(sql4)
-    con.close()
+                    # get id_trade from the trade table with specified date and id_code
+                    sql3 = get_sql_select_id_trade_from_trade_with_date_id_code(date, id_code)
+                    query3 = QSqlQuery(sql3)
+                    if query3.next():
+                        # if data exists, update the trade table
+                        id_trade = query3.value(0)
+                        sql4 = get_sql_update_trade_values(id_trade, series)
+                    else:
+                        # if not, append data to the trade table
+                        sql4 = get_sql_insert_into_trade_values(id_code, series)
+                    # execute query
+                    query4 = QSqlQuery()
+                    query4.exec(sql4)
+        con.close()
+
+
+if __name__ == '__main__':
+    end = dt.date.today()
+    update_ticker_data_db(end)
