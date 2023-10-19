@@ -12,7 +12,7 @@ from functions.conv_timestamp2date import conv_timestamp2date_next
 from functions.resources import get_connection
 
 
-def update_ticker_data_db(end):
+def update_ticker(end):
     con = get_connection()
     if con.open():
         # get list of id_code, code from the ticker table

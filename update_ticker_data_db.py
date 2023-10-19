@@ -1,7 +1,7 @@
 import datetime as dt
 
-from functions.update_ticker_data_db import update_ticker_data_db
+from functions.update_db import update_ticker
 
 if __name__ == '__main__':
     end = dt.date.today()
-    update_ticker_data_db(end)
+    update_ticker(end)
