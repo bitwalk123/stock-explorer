@@ -48,8 +48,8 @@ def get_sql_create_table_split() -> str:
         CREATE TABLE split(
             id_split INTEGER PRIMARY KEY AUTOINCREMENT,
             id_code INTEGER,
-            lastSplitDate INTEGER,
-            lastSplitFactor STRING
+            date INTEGER,
+            ratio REAL
         )
     """
     return sql
