@@ -142,7 +142,7 @@ def get_sql_select_count_from_ticker() -> str:
 
 def get_sql_select_date_from_split_with_id_code(id_code: int) -> str:
     sql = """
-        SELECT lastSplitDate FROM split
+        SELECT date FROM split
         WHERE id_code=%d;
     """ % id_code
     return sql
@@ -263,9 +263,9 @@ def get_sql_select_id_trade_from_trade_with_date_id_code(date: int, id_code: int
     return sql
 
 
-def get_sql_select_lastsplit_split_with_id_code(id_code: int):
+def get_sql_select_date_ratio_with_id_code(id_code: int):
     sql = """
-        SELECT id_split, lastSplitDate, lastSplitFactor from split
+        SELECT id_split, date, ratio from split
         WHERE id_code=%d;
     """ % id_code
     return sql
