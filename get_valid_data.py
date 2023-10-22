@@ -22,7 +22,8 @@ def main():
     )
 
     # valid list of id_code
-    list_id_code = list()
+    list_valid_id_code = list()
+    list_target_id_code = list()
     dict_code = dict()
     num_total = 0
 
@@ -34,7 +35,7 @@ def main():
             code = dict_code[id_code]
             prep = PreProcess(id_code, start, end)
 
-            if prep.exclude():
+            if prep.IsExclude():
                 num_total += 1
                 print('%d.T is excluded : ' % code, end='')
 
@@ -58,14 +59,18 @@ def main():
                 else:
                     print('Unknown')
             else:
-                list_id_code.append(id_code)
+                list_valid_id_code.append(id_code)
+                if prep.IsTarget():
+                    print('%d.T is target' % code)
+                    list_target_id_code.append(id_code)
 
         con.close()
     else:
         print('fail to open db.')
 
     print('excluded %d out of %d tickers' % (num_total, len(dict_code.keys())))
-    print('valid number of id_code : %d' % len(list_id_code))
+    print('number of valid id_code : %d' % len(list_valid_id_code))
+    print('number of target id_code : %d' % len(list_target_id_code))
 
 
 if __name__ == "__main__":

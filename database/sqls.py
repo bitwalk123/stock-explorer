@@ -140,6 +140,14 @@ def get_sql_select_count_from_ticker() -> str:
     return sql
 
 
+def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
+    sql = """
+        SELECT date, open, high, low, close FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d;
+    """ % (id_code, start, end)
+    return sql
+
+
 def get_sql_select_date_from_split_with_id_code(id_code: int) -> str:
     sql = """
         SELECT date FROM split
@@ -189,6 +197,14 @@ def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code: int, 
         WHERE id_code=%d AND date >= %d
         ORDER BY date;
     """ % (id_code, start)
+    return sql
+
+
+def get_sql_select_date_ratio_with_id_code(id_code: int):
+    sql = """
+        SELECT id_split, date, ratio from split
+        WHERE id_code=%d;
+    """ % id_code
     return sql
 
 
@@ -263,14 +279,6 @@ def get_sql_select_id_trade_from_trade_with_date_id_code(date: int, id_code: int
     return sql
 
 
-def get_sql_select_date_ratio_with_id_code(id_code: int):
-    sql = """
-        SELECT id_split, date, ratio from split
-        WHERE id_code=%d;
-    """ % id_code
-    return sql
-
-
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = """
         SELECT MAX(date) FROM trade
@@ -304,6 +312,14 @@ def get_sql_select_open_from_trade_with_id_code_date(id_code: int, date: int) ->
     return sql
 
 
+def get_sql_select_open_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
+    sql = """
+        SELECT open FROM trade
+        WHERE id_code=%d AND date >= %d AND date < %d;
+    """ % (id_code, start, end)
+    return sql
+
+
 def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     sql = """
         SELECT volume FROM trade
@@ -315,14 +331,6 @@ def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int
 def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT volume FROM trade
-        WHERE id_code=%d AND date >= %d AND date < %d;
-    """ % (id_code, start, end)
-    return sql
-
-
-def get_sql_select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
-    sql = """
-        SELECT date, open, high, low, close FROM trade
         WHERE id_code=%d AND date >= %d AND date < %d;
     """ % (id_code, start, end)
     return sql

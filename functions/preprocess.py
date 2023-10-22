@@ -4,6 +4,7 @@ from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
     get_sql_select_date_open_from_trade_with_id_code_start_end,
+    get_sql_select_open_from_trade_with_id_code_start_end,
     get_sql_select_volume_from_trade_with_id_code_start_end,
 )
 from functions.app_enum import PreProcessExcluded
@@ -12,6 +13,7 @@ from functions.app_enum import PreProcessExcluded
 class PreProcess():
     # INITIAL CONSTANT
     FACTOR_PRICE: float = 1000.0
+    FACTOR_TOLERANCE: float = 0.05
     FACTOR_SPLIT: float = 1.5
     FACTOR_VOLUME: int = 10000
 
@@ -24,6 +26,7 @@ class PreProcess():
         self.date = 0
         self.price_open = 0
         self.price_open_pre = -1
+        self.open_median = 0
         self.volume_median = 0
 
     def init(self, target_price: float, ratio_split: float, target_volume: int):
@@ -31,13 +34,7 @@ class PreProcess():
         self.FACTOR_SPLIT = ratio_split
         self.FACTOR_VOLUME = target_volume
 
-    def is_split(self) -> bool:
-        flag_date = self.price_open_pre > 0
-        flag_upper = self.price_open_pre / self.FACTOR_SPLIT > self.price_open
-        flag_lower = self.price_open_pre * self.FACTOR_SPLIT < self.price_open
-        return flag_date and (flag_upper or flag_lower)
-
-    def exclude(self) -> bool:
+    def IsExclude(self) -> bool:
         # Check volume
         if self.check_volume():
             return True
@@ -46,6 +43,33 @@ class PreProcess():
             return True
         else:
             return False
+
+    def IsTarget(self):
+        list_open = list()
+        sql = get_sql_select_open_from_trade_with_id_code_start_end(
+            self.id_code, self.start, self.end
+        )
+        query = QSqlQuery(sql)
+        while query.next():
+            list_open.append(query.value(0))
+
+        if len(list_open) == 0:
+            self.FLAG_EXCLUDE = PreProcessExcluded.EMPTY
+            return True
+
+        self.open_median = int(statistics.median(list_open))
+        if self.open_median < self.FACTOR_PRICE * (1 - self.FACTOR_TOLERANCE):
+            return False
+        elif self.open_median > self.FACTOR_PRICE * (1 + self.FACTOR_TOLERANCE):
+            return False
+        else:
+            return True
+
+    def is_split(self) -> bool:
+        flag_date = self.price_open_pre > 0
+        flag_upper = self.price_open_pre / self.FACTOR_SPLIT > self.price_open
+        flag_lower = self.price_open_pre * self.FACTOR_SPLIT < self.price_open
+        return flag_date and (flag_upper or flag_lower)
 
     def check_volume(self):
         list_volume = list()
@@ -80,7 +104,6 @@ class PreProcess():
             self.price_open = query.value(1)
             if self.is_split():
                 self.FLAG_EXCLUDE = PreProcessExcluded.SPLIT
-                print(self.date, ':', self.price_open_pre, '>', self.price_open)
                 return True
 
             self.price_open_pre = self.price_open
