@@ -14,13 +14,45 @@ DAY1 = 24 * 60 * 60
 TZ_DELTA = 9 * 60 * 60  # Asia/Tokyo timezone
 
 
-def get_dataset(start, end) -> pd.DataFrame:
+def get_valid_dataset(start, end) -> pd.DataFrame:
+    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
     # get list of valid code and target
-    list_valid_id_code, list_target_id_code = get_valid_code(start, end)
+    pkl_list_valid_id_code = 'pool/list_valid_id_code_%d.pkl' % end
+    pkl_list_target_id_code = 'pool/list_target_id_code_%d.pkl' % end
+    if os.path.isfile(pkl_list_valid_id_code) and os.path.isfile(pkl_list_target_id_code):
+        with open(pkl_list_valid_id_code, 'rb') as f:
+            list_valid_id_code = pickle.load(f)
+        with open(pkl_list_target_id_code, 'rb') as f:
+            list_target_id_code = pickle.load(f)
+    else:
+        if not os.path.isdir('pool'):
+            os.mkdir('pool')
+        list_valid_id_code, list_target_id_code = get_valid_code(start, end)
+        with open(pkl_list_valid_id_code, 'wb') as f:
+            pickle.dump(list_valid_id_code, f)
+        with open(pkl_list_target_id_code, 'wb') as f:
+            pickle.dump(list_target_id_code, f)
+
     print('number of valid id_code : %d' % len(list_valid_id_code))
     print('number of target id_code : %d' % len(list_target_id_code))
-    df: pd.DataFrame = get_basic_dataset(list_valid_id_code, start, end)
-    return df
+
+    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+    # get base dataframe
+    pkl_df_base = 'pool/df_base_%d.pkl' % end
+    if os.path.isfile(pkl_df_base):
+        with open(pkl_df_base, 'rb') as f:
+            df_base = pickle.load(f)
+    else:
+        if not os.path.isdir('pool'):
+            os.mkdir('pool')
+        df_base: pd.DataFrame = get_basic_dataset(list_valid_id_code, start, end)
+        with open(pkl_df_base, 'wb') as f:
+            pickle.dump(df_base, f)
+
+    print(df_base)
+    print(df_base.shape)
+
+    return df_base
 
 
 def main():
@@ -37,20 +69,9 @@ def main():
 
     con = get_connection()
     if con.open():
-        pkl_df_base = 'pool/df_base_%d.pkl' % end
-        if os.path.isfile(pkl_df_base):
-            with open(pkl_df_base, 'rb') as f:
-                df_base = pickle.load(f)
-        else:
-            if not os.path.isdir('pool'):
-                os.mkdir('pool')
-            df_base = get_dataset(start, end)
-            with open(pkl_df_base, 'wb') as f:
-                pickle.dump(df_base, f)
+        # Generate base dataframe
+        df_base = get_valid_dataset(start, end)
         con.close()
-
-        print(df_base)
-        print(df_base.shape)
     else:
         print('fail to open db.')
 
