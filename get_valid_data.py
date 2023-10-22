@@ -27,7 +27,7 @@ def get_valid_dataset(start, end) -> tuple:
     else:
         if not os.path.isdir('pool'):
             os.mkdir('pool')
-        list_valid_id_code, list_target_id_code = get_valid_code(start, end)
+        dict_code, list_valid_id_code, list_target_id_code = get_valid_code(start, end)
         with open(pkl_list_valid_id_code, 'wb') as f:
             pickle.dump(list_valid_id_code, f)
         with open(pkl_list_target_id_code, 'wb') as f:
@@ -36,7 +36,7 @@ def get_valid_dataset(start, end) -> tuple:
     print('number of valid id_code : %d' % len(list_valid_id_code))
     print('number of target id_code : %d' % len(list_target_id_code))
 
-    return list_valid_id_code, list_target_id_code
+    return dict_code, list_valid_id_code, list_target_id_code
 
 
 def get_base_dataframe(list_valid_id_code, start, end) -> pd.DataFrame:
@@ -72,7 +72,7 @@ def main():
     con = get_connection()
     if con.open():
         # Get list of valid code and target
-        list_valid_id_code, list_target_id_code = get_valid_dataset(start, end)
+        dict_code, list_valid_id_code, list_target_id_code = get_valid_dataset(start, end)
         # Generate base dataframe
         df_base = get_base_dataframe(list_valid_id_code, start, end)
         con.close()

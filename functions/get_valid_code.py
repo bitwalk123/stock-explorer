@@ -59,4 +59,4 @@ def get_valid_code(start: int, end: int) -> tuple:
                 list_target_id_code.append(id_code)
 
     print('excluded %d out of %d tickers' % (num_total, len(dict_code.keys())))
-    return list_valid_id_code, list_target_id_code
+    return dict_code, list_valid_id_code, list_target_id_code
