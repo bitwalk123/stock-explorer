@@ -32,28 +32,28 @@ def main():
         dict_code: dict = get_dict_code()
         for id_code in dict_code.keys():
             code = dict_code[id_code]
-            preprocess = PreProcess(id_code, start, end)
+            prep = PreProcess(id_code, start, end)
 
-            if preprocess.exclude():
+            if prep.exclude():
                 num_total += 1
                 print('%d.T is excluded : ' % code, end='')
 
-                if preprocess.FLAG_EXCLUDE == PreProcessExcluded.EMPTY:
+                if prep.FLAG_EXCLUDE == PreProcessExcluded.EMPTY:
                     print('No Data!')
-                elif preprocess.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
+                elif prep.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
                     print(
                         'Volume(Median) =',
-                        preprocess.volume_median,
+                        prep.volume_median,
                     )
-                elif preprocess.FLAG_EXCLUDE == PreProcessExcluded.SPLIT:
+                elif prep.FLAG_EXCLUDE == PreProcessExcluded.SPLIT:
                     print(
                         'Volume(Median) =',
-                        preprocess.volume_median,
+                        prep.volume_median,
                         'Split',
-                        conv_timestamp2date(preprocess.date),
-                        preprocess.price_open_pre, '>>',
-                        preprocess.price_open, ':',
-                        preprocess.price_open - preprocess.price_open_pre,
+                        conv_timestamp2date(prep.date),
+                        prep.price_open_pre, '>>',
+                        prep.price_open, ':',
+                        prep.price_open - prep.price_open_pre,
                     )
                 else:
                     print('Unknown')
