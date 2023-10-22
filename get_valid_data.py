@@ -1,4 +1,7 @@
 import datetime as dt
+import os
+import pickle
+
 import pandas as pd
 import time
 
@@ -34,7 +37,16 @@ def main():
 
     con = get_connection()
     if con.open():
-        df_base = get_dataset(start, end)
+        pkl_df_base = 'pool/df_base_%d.pkl' % end
+        if os.path.isfile(pkl_df_base):
+            with open(pkl_df_base, 'rb') as f:
+                df_base = pickle.load(f)
+        else:
+            if not os.path.isdir('pool'):
+                os.mkdir('pool')
+            df_base = get_dataset(start, end)
+            with open(pkl_df_base, 'wb') as f:
+                pickle.dump(df_base, f)
         con.close()
 
         print(df_base)
