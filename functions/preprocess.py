@@ -10,9 +10,10 @@ from functions.app_enum import PreProcessExcluded
 
 
 class PreProcess():
-    # CONSTANT
-    FACTOR_SPLIT = 1.5
-    FACTOR_VOLUME = 10000
+    # INITIAL CONSTANT
+    FACTOR_PRICE: float = 1000.0
+    FACTOR_SPLIT: float = 1.5
+    FACTOR_VOLUME: int = 10000
 
     def __init__(self, id_code: int, start: int, end: int):
         self.id_code = id_code
@@ -23,6 +24,11 @@ class PreProcess():
         self.price_open_pre = -1
         self.flag_exclude = None
         self.volume_median = 0
+
+    def init(self, target_price: float, ratio_split: float, target_volume: int):
+        self.FACTOR_PRICE = target_price
+        self.FACTOR_SPLIT = ratio_split
+        self.FACTOR_VOLUME = target_volume
 
     def is_split(self) -> bool:
         flag_date = self.price_open_pre > 0
