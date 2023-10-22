@@ -1,6 +1,8 @@
 import datetime as dt
+import pandas as pd
 import time
 
+from functions.get_dataset import get_basic_dataset
 from functions.get_elapsed import get_elapsed
 from functions.get_valid_code import get_valid_code
 from functions.resources import get_connection
@@ -26,6 +28,10 @@ def main():
         list_valid_id_code, list_target_id_code = get_valid_code(start, end)
         print('number of valid id_code : %d' % len(list_valid_id_code))
         print('number of target id_code : %d' % len(list_target_id_code))
+
+        df: pd.DataFrame = get_basic_dataset(list_valid_id_code, start, end)
+        print(df)
+        print(df.shape)
 
         con.close()
     else:
