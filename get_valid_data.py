@@ -7,14 +7,24 @@ from functions.get_elapsed import get_elapsed
 from functions.get_valid_code import get_valid_code
 from functions.resources import get_connection
 
+DAY1 = 24 * 60 * 60
+TZ_DELTA = 9 * 60 * 60  # Asia/Tokyo timezone
+
+
+def get_dataset(start, end) -> pd.DataFrame:
+    # get list of valid code and target
+    list_valid_id_code, list_target_id_code = get_valid_code(start, end)
+    print('number of valid id_code : %d' % len(list_valid_id_code))
+    print('number of target id_code : %d' % len(list_target_id_code))
+    df: pd.DataFrame = get_basic_dataset(list_valid_id_code, start, end)
+    return df
+
 
 def main():
-    day1 = 24 * 60 * 60
-    tz_delta = 9 * 60 * 60  # Asia/Tokyo timezone
     now_dt = dt.datetime.now()
-    now = int(dt.datetime.timestamp(now_dt)) + tz_delta
-    end = (now // day1 - 1) * day1
-    start = end - 365 * day1
+    now = int(dt.datetime.timestamp(now_dt)) + TZ_DELTA
+    end = (now // DAY1 - 1) * DAY1
+    start = end - 365 * DAY1
     print(
         'date scope :',
         dt.datetime.fromtimestamp(start),
@@ -24,16 +34,11 @@ def main():
 
     con = get_connection()
     if con.open():
-        # get list of valid code and target
-        list_valid_id_code, list_target_id_code = get_valid_code(start, end)
-        print('number of valid id_code : %d' % len(list_valid_id_code))
-        print('number of target id_code : %d' % len(list_target_id_code))
-
-        df: pd.DataFrame = get_basic_dataset(list_valid_id_code, start, end)
-        print(df)
-        print(df.shape)
-
+        df_base = get_dataset(start, end)
         con.close()
+
+        print(df_base)
+        print(df_base.shape)
     else:
         print('fail to open db.')
 

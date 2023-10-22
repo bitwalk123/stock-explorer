@@ -26,7 +26,8 @@ def get_valid_code(start: int, end: int) -> tuple:
                     'Few data =',
                     prep.data_n,
                     '<',
-                    prep.minimum_n
+                    prep.minimum_n,
+                    '(minimum)'
                 )
             elif prep.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
                 print(
