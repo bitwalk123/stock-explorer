@@ -1,8 +1,5 @@
 import datetime as dt
 
-from PySide6.QtSql import QSqlQuery
-
-from database.sqls import get_sql_select_volume_from_trade_with_id_code_start_end
 from functions.app_enum import PreProcessExcluded
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
@@ -13,7 +10,7 @@ from functions.resources import get_connection
 def main():
     tz_delta = 9 * 60 * 60  # Asia/Tokyo timezone
 
-    start_str = '2022-01-04'
+    start_str = '2023-01-04'
     start_dt = dt.datetime.strptime(start_str, '%Y-%m-%d')
     start = int(dt.datetime.timestamp(start_dt)) + tz_delta
     end_dt = dt.datetime.now()
