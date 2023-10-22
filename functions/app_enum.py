@@ -1,7 +1,7 @@
 from enum import auto, Enum
 
 
-class PreProcessExcluded(Enum):
+class PreProcessEnum(Enum):
     VOLUME = auto()
     SPLIT = auto()
     EMPTY = auto()

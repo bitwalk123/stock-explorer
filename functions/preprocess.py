@@ -6,7 +6,7 @@ from database.sqls import (
     get_sql_select_date_open_from_trade_with_id_code_start_end,
     get_sql_select_volume_from_trade_with_id_code_start_end,
 )
-from functions.app_enum import PreProcessExcluded
+from functions.app_enum import PreProcessEnum
 
 
 class PreProcess():
@@ -56,12 +56,12 @@ class PreProcess():
             list_volume.append(query.value(0))
 
         if len(list_volume) == 0:
-            self.flag_exclude = PreProcessExcluded.EMPTY
+            self.flag_exclude = PreProcessEnum.EMPTY
             return True
 
         self.volume_median = int(statistics.median(list_volume))
         if self.volume_median < self.FACTOR_VOLUME:
-            self.flag_exclude = PreProcessExcluded.VOLUME
+            self.flag_exclude = PreProcessEnum.VOLUME
             return True
         else:
             return False
@@ -78,7 +78,7 @@ class PreProcess():
             self.date = query.value(0)
             self.price_open = query.value(1)
             if self.is_split():
-                self.flag_exclude = PreProcessExcluded.SPLIT
+                self.flag_exclude = PreProcessEnum.SPLIT
                 return True
 
             self.price_open_pre = self.price_open

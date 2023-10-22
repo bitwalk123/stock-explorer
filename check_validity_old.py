@@ -1,6 +1,6 @@
 import datetime as dt
 
-from functions.app_enum import PreProcessExcluded
+from functions.app_enum import PreProcessEnum
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
 from functions.preprocess import PreProcess
@@ -34,14 +34,14 @@ def main():
                 num_total += 1
 
                 print('%d.T : ' % code, end='')
-                if preprocess.flag_exclude == PreProcessExcluded.EMPTY:
+                if preprocess.flag_exclude == PreProcessEnum.EMPTY:
                     print('No Data!')
-                elif preprocess.flag_exclude == PreProcessExcluded.VOLUME:
+                elif preprocess.flag_exclude == PreProcessEnum.VOLUME:
                     print(
                         'Volume(Median) =',
                         preprocess.volume_median,
                     )
-                elif preprocess.flag_exclude == PreProcessExcluded.SPLIT:
+                elif preprocess.flag_exclude == PreProcessEnum.SPLIT:
                     print(
                         'Volume(Median) =',
                         preprocess.volume_median,
