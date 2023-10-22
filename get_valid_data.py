@@ -1,8 +1,10 @@
 import datetime as dt
+import time
 
 from functions.app_enum import PreProcessExcluded
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
+from functions.get_elapsed import get_elapsed
 from functions.preprocess import PreProcess
 from functions.resources import get_connection
 
@@ -61,7 +63,13 @@ def main():
             else:
                 list_valid_id_code.append(id_code)
                 if prep.IsTarget():
-                    print('%d.T is target' % code)
+                    print(
+                        '%d.T is target: Open(Median) = %.1f JPY, Volume(Median) = %d' % (
+                            code,
+                            prep.open_median,
+                            prep.volume_median,
+                        )
+                    )
                     list_target_id_code.append(id_code)
 
         con.close()
@@ -74,4 +82,6 @@ def main():
 
 
 if __name__ == "__main__":
+    time_start = time.time()
     main()
+    print('elapsed %.3f sec' % get_elapsed(time_start))
