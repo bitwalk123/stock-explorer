@@ -14,7 +14,7 @@ from database.sqls import (
 )
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import (
-    get_basic_dataset,
+    combine_ticker_data,
     get_candidate_tickers,
     get_target_list_id_code,
     get_valid_list_id_code,
@@ -78,7 +78,7 @@ def main():
         with open(pkl_df_base, 'rb') as f:
             df_base = pickle.load(f)
     else:
-        df_base = get_basic_dataset(list_id_code, start, end)
+        df_base = combine_ticker_data(list_id_code, start, end)
         with open(pkl_df_base, 'wb') as f:
             pickle.dump(df_base, f)
 

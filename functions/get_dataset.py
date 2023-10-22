@@ -19,7 +19,7 @@ from functions.prediction import (
 from functions.resources import get_connection
 
 
-def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
+def combine_ticker_data(list_id_code: list, start: int, end: int) -> pd.DataFrame:
     list_series = list()
     for id_code in list_id_code:
         con = get_connection()
