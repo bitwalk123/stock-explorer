@@ -19,8 +19,13 @@ class PreProcess():
 
     FLAG_EXCLUDE = None
 
+    DAY1 = 24 * 60 * 60
+    HOLIDAYS = 16
+
     def __init__(self, id_code: int, start: int, end: int):
         self.id_code = id_code
+        self.minimum_n = self.get_min_data(start, end)
+        self.data_n = 0
         self.start = start
         self.end = end
         self.date = 0
@@ -65,12 +70,6 @@ class PreProcess():
         else:
             return True
 
-    def is_split(self) -> bool:
-        flag_date = self.price_open_pre > 0
-        flag_upper = self.price_open_pre / self.FACTOR_SPLIT > self.price_open
-        flag_lower = self.price_open_pre * self.FACTOR_SPLIT < self.price_open
-        return flag_date and (flag_upper or flag_lower)
-
     def check_volume(self):
         list_volume = list()
         sql = get_sql_select_volume_from_trade_with_id_code_start_end(
@@ -80,8 +79,15 @@ class PreProcess():
         while query.next():
             list_volume.append(query.value(0))
 
-        if len(list_volume) == 0:
+        list_volume_2 = [k for k in list_volume if len(str(k)) > 0]
+        self.data_n = len(list_volume_2)
+        # print(self.data_n, self.minimum_n)
+        if self.data_n == 0:
             self.FLAG_EXCLUDE = PreProcessExcluded.EMPTY
+            return True
+
+        if self.data_n < self.minimum_n:
+            self.FLAG_EXCLUDE = PreProcessExcluded.FEW
             return True
 
         self.volume_median = int(statistics.median(list_volume))
@@ -109,3 +115,12 @@ class PreProcess():
             self.price_open_pre = self.price_open
 
         return False
+
+    def get_min_data(self, start: int, end: int) -> int:
+        return int(((end - start) / self.DAY1 * 5 / 7 - self.HOLIDAYS) * 0.9)
+
+    def is_split(self) -> bool:
+        flag_date = self.price_open_pre > 0
+        flag_upper = self.price_open_pre / self.FACTOR_SPLIT > self.price_open
+        flag_lower = self.price_open_pre * self.FACTOR_SPLIT < self.price_open
+        return flag_date and (flag_upper or flag_lower)

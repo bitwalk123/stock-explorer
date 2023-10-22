@@ -60,6 +60,7 @@ def get_basic_dataset(list_id_code: list, start: int, end: int) -> pd.DataFrame:
                 name='%d_close' % id_code
             )
 
+            #print(id_code, len(series_open), len(series_high), len(series_low), len(series_close))
             list_series.append(series_open)
             list_series.append(series_high)
             list_series.append(series_low)

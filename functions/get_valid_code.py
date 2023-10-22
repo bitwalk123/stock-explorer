@@ -21,6 +21,13 @@ def get_valid_code(start: int, end: int) -> tuple:
 
             if prep.FLAG_EXCLUDE == PreProcessExcluded.EMPTY:
                 print('No Data!')
+            elif prep.FLAG_EXCLUDE == PreProcessExcluded.FEW:
+                print(
+                    'Few data =',
+                    prep.data_n,
+                    '<',
+                    prep.minimum_n
+                )
             elif prep.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
                 print(
                     'Volume(Median) =',
