@@ -1,6 +1,9 @@
 import datetime as dt
 
-from functions.app_enum import PreProcsExcl
+from PySide6.QtSql import QSqlQuery
+
+from database.sqls import get_sql_select_volume_from_trade_with_id_code_start_end
+from functions.app_enum import PreProcessExcluded
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
 from functions.preprocess import PreProcess
@@ -29,27 +32,27 @@ def main():
 
         for id_code in dict_code.keys():
             code = dict_code[id_code]
-            preprcs = PreProcess(id_code, start, end)
-            if preprcs.exclude():
+            preprocess = PreProcess(id_code, start, end)
+            if preprocess.exclude():
                 num_total += 1
 
                 print('%d.T : ' % code, end='')
-                if preprcs.flag_exclude == PreProcsExcl.EMPTY:
+                if preprocess.flag_exclude == PreProcessExcluded.EMPTY:
                     print('No Data!')
-                elif preprcs.flag_exclude == PreProcsExcl.VOLUME:
+                elif preprocess.flag_exclude == PreProcessExcluded.VOLUME:
                     print(
                         'Volume(Median) =',
-                        preprcs.volume_median,
+                        preprocess.volume_median,
                     )
-                elif preprcs.flag_exclude == PreProcsExcl.SPLIT:
+                elif preprocess.flag_exclude == PreProcessExcluded.SPLIT:
                     print(
                         'Volume(Median) =',
-                        preprcs.volume_median,
+                        preprocess.volume_median,
                         'Split',
-                        conv_timestamp2date(preprcs.date),
-                        preprcs.price_open_pre, '>>',
-                        preprcs.price_open, ':',
-                        preprcs.price_open - preprcs.price_open_pre,
+                        conv_timestamp2date(preprocess.date),
+                        preprocess.price_open_pre, '>>',
+                        preprocess.price_open, ':',
+                        preprocess.price_open - preprocess.price_open_pre,
                     )
                 else:
                     print('Unknown')

@@ -315,7 +315,7 @@ def get_sql_select_volume_from_trade_with_id_code_start(id_code: int, start: int
 def get_sql_select_volume_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT volume FROM trade
-        WHERE id_code=%d AND date >= %d AND data < %d
+        WHERE id_code=%d AND date >= %d AND date < %d;
     """ % (id_code, start, end)
     return sql
 
