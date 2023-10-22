@@ -1,6 +1,6 @@
 import datetime as dt
 
-from functions.app_enum import PreProcessEnum
+from functions.app_enum import PreProcessExcluded
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code
 from functions.preprocess import PreProcess
@@ -23,28 +23,29 @@ def main():
 
     # valid list of id_code
     list_id_code = list()
+    dict_code = dict()
     num_total = 0
 
     con = get_connection()
     if con.open():
         # prepare dictionary for id_code and code
         dict_code: dict = get_dict_code()
-        for id_code in list(dict_code.keys()):
+        for id_code in dict_code.keys():
             code = dict_code[id_code]
             preprocess = PreProcess(id_code, start, end)
 
             if preprocess.exclude():
                 num_total += 1
-                print('%d.T : ' % code, end='')
+                print('%d.T is excluded : ' % code, end='')
 
-                if preprocess.flag_exclude == PreProcessEnum.EMPTY:
+                if preprocess.FLAG_EXCLUDE == PreProcessExcluded.EMPTY:
                     print('No Data!')
-                elif preprocess.flag_exclude == PreProcessEnum.VOLUME:
+                elif preprocess.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
                     print(
                         'Volume(Median) =',
                         preprocess.volume_median,
                     )
-                elif preprocess.flag_exclude == PreProcessEnum.SPLIT:
+                elif preprocess.FLAG_EXCLUDE == PreProcessExcluded.SPLIT:
                     print(
                         'Volume(Median) =',
                         preprocess.volume_median,
@@ -62,6 +63,9 @@ def main():
         con.close()
     else:
         print('fail to open db.')
+
+    print('excluded %d / %d' % (num_total, len(dict_code.keys())))
+    print('valid number of id_code : %d' % len(list_id_code))
 
 
 if __name__ == "__main__":
