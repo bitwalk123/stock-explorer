@@ -64,7 +64,7 @@ def main():
     else:
         print('fail to open db.')
 
-    print('excluded %d / %d' % (num_total, len(dict_code.keys())))
+    print('excluded %d out of %d tickers' % (num_total, len(dict_code.keys())))
     print('valid number of id_code : %d' % len(list_id_code))
 
 
