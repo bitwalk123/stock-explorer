@@ -5,7 +5,13 @@ import pickle
 import pandas as pd
 import time
 
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.metrics import r2_score
+from sklearn.preprocessing import StandardScaler
+
+from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import combine_ticker_data
+from functions.get_dict_code import get_dict_code
 from functions.get_elapsed import get_elapsed
 from functions.get_valid_code import get_valid_code
 from functions.resources import get_connection
@@ -20,6 +26,7 @@ def get_valid_dataset(start, end) -> tuple:
     pkl_list_valid_id_code = 'pool/list_valid_id_code_%d.pkl' % end
     pkl_list_target_id_code = 'pool/list_target_id_code_%d.pkl' % end
     if os.path.isfile(pkl_list_valid_id_code) and os.path.isfile(pkl_list_target_id_code):
+        dict_code: dict = get_dict_code()
         with open(pkl_list_valid_id_code, 'rb') as f:
             list_valid_id_code = pickle.load(f)
         with open(pkl_list_target_id_code, 'rb') as f:
@@ -76,6 +83,34 @@ def main():
         # Generate base dataframe
         df_base = get_base_dataframe(list_valid_id_code, start, end)
         con.close()
+        # Prediction for next Open price
+        for target_id_code in list_target_id_code:
+            name_open = '%d_open' % target_id_code
+            df_base_2 = df_base.drop(name_open, axis=1)
+            # Preparing Training & Test datasets
+            df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
+            df_X_test = df_base_2.tail(1)
+            # Standardization
+            scaler = StandardScaler()
+            scaler.fit(df_X_train)
+            X_train = scaler.transform(df_X_train)
+            X_test = scaler.transform(df_X_test)
+            # Pas data for Training
+            y_train = df_base[name_open].iloc[1:]
+            # PLS model
+            n_comp = 20
+            pls = PLSRegression(n_components=n_comp)
+            pls.fit(X_train, y_train)
+            # Prediction and Correlation score (R square)
+            y_pred = pls.predict(X_train)
+            r2 = r2_score(y_train, y_pred)
+            # Predict Open price for tomorrow
+            price_open_pred = pls.predict(X_test)[0]
+            print(
+                '%d.T: R2 = %.2f %%, Prediction = %.1f JPY' % (
+                    dict_code[target_id_code], r2 * 100, price_open_pred
+                )
+            )
     else:
         print('fail to open db.')
 
