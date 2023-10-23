@@ -6,7 +6,8 @@ import pandas as pd
 import time
 
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.model_selection import cross_val_predict
 from sklearn.preprocessing import StandardScaler
 
 from functions.conv_timestamp2date import conv_timestamp2date
@@ -16,6 +17,7 @@ from functions.get_elapsed import get_elapsed
 from functions.get_valid_code import get_valid_code
 from functions.prediction import search_minimal_component_number
 from functions.resources import get_connection
+from functions.trading_date import get_last_trading_date, get_next_trading_date
 
 DAY1 = 24 * 60 * 60
 TZ_DELTA = 9 * 60 * 60  # Asia/Tokyo timezone
@@ -66,25 +68,26 @@ def get_base_dataframe(list_valid_id_code, start, end) -> pd.DataFrame:
 
 
 def main():
-    now_dt = dt.datetime.now()
-    now = int(dt.datetime.timestamp(now_dt)) + TZ_DELTA
-    end = (now // DAY1 - 1) * DAY1
-    start = end - 365 * DAY1
-    print(
-        'date scope :',
-        dt.datetime.fromtimestamp(start),
-        '-',
-        dt.datetime.fromtimestamp(end)
-    )
-
     con = get_connection()
     if con.open():
+        end: int = get_last_trading_date()
+        start = end - 365 * DAY1
+        print(
+            'date scope :',
+            dt.datetime.fromtimestamp(start),
+            '-',
+            dt.datetime.fromtimestamp(end)
+        )
+        end_next = get_next_trading_date(end)
+
         # Get list of valid code and target
         dict_code, list_valid_id_code, list_target_id_code = get_valid_dataset(start, end)
         # Generate base dataframe
         df_base = get_base_dataframe(list_valid_id_code, start, end)
         con.close()
         # Prediction for next Open price
+        columns_summary_code = ['Components', 'RMSE', 'R2', 'Open']
+        df_summary_code = pd.DataFrame(columns=columns_summary_code)
         for target_id_code in list_target_id_code:
             name_open = '%d_open' % target_id_code
             df_base_2 = df_base.drop(name_open, axis=1)
@@ -106,13 +109,21 @@ def main():
             # Prediction and Correlation score (R square)
             y_pred = pls.predict(X_train)
             r2 = r2_score(y_train, y_pred)
+            rmse = mean_squared_error(y_train, y_pred, squared=False)
             # Predict Open price for tomorrow
             price_open_pred = pls.predict(X_test)[0]
-            print(
-                '%d.T: Components = %d, R2 = %.3f %%, Prediction = %.1f JPY' % (
-                    dict_code[target_id_code], n_comp, r2 * 100, price_open_pred
-                )
+            series_code = pd.Series(
+                data=[
+                    n_comp,
+                    '{:.3f}'.format(rmse),
+                    '{:.3f}'.format(r2),
+                    '{:.1f}'.format(price_open_pred)
+                ],
+                index=columns_summary_code,
+                name=dict_code[target_id_code]
             )
+            df_summary_code.loc[dict_code[target_id_code]] = series_code
+            print(df_summary_code)
     else:
         print('fail to open db.')
 

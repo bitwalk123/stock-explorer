@@ -278,6 +278,9 @@ def get_sql_select_id_trade_from_trade_with_date_id_code(date: int, id_code: int
     """ % (date, id_code)
     return sql
 
+def get_sql_select_max_date_from_trade() -> str:
+    sql = "SELECT MAX(date) FROM trade;"
+    return sql
 
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = """
