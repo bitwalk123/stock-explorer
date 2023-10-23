@@ -14,6 +14,7 @@ from functions.get_dataset import combine_ticker_data
 from functions.get_dict_code import get_dict_code
 from functions.get_elapsed import get_elapsed
 from functions.get_valid_code import get_valid_code
+from functions.prediction import search_minimal_component_number
 from functions.resources import get_connection
 
 DAY1 = 24 * 60 * 60
@@ -97,8 +98,9 @@ def main():
             X_test = scaler.transform(df_X_test)
             # Pas data for Training
             y_train = df_base[name_open].iloc[1:]
-            # PLS model
-            n_comp = 20
+            # PLS model with optimal n_comp to minimize MSE
+            index_mse_min = search_minimal_component_number(X_train, y_train)
+            n_comp = index_mse_min + 1
             pls = PLSRegression(n_components=n_comp)
             pls.fit(X_train, y_train)
             # Prediction and Correlation score (R square)
@@ -107,8 +109,8 @@ def main():
             # Predict Open price for tomorrow
             price_open_pred = pls.predict(X_test)[0]
             print(
-                '%d.T: R2 = %.2f %%, Prediction = %.1f JPY' % (
-                    dict_code[target_id_code], r2 * 100, price_open_pred
+                '%d.T: Components = %d, R2 = %.3f %%, Prediction = %.1f JPY' % (
+                    dict_code[target_id_code], n_comp, r2 * 100, price_open_pred
                 )
             )
     else:
