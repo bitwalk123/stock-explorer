@@ -18,14 +18,40 @@ def get_sql_create_table_predict() -> str:
     return sql
 
 
-def get_sql_insert_into_predict_values(id_code: int, end_next: int, series: pd.Series) -> str:
+def get_sql_insert_into_predict_values(id_code: int, date: int, series: pd.Series) -> str:
     sql = 'INSERT INTO predict VALUES(NULL, %d, %d, %d, %f, %f, %f);' % (
         id_code,
-        end_next,
+        date,
         int(series['Components']),
         series['RMSE'],
         series['R2'],
         series['Open']
+    )
+    return sql
+
+
+def get_sql_select_id_predict_from_predict_with_id_code_date(id_code: int, date: int) -> str:
+    sql = """
+        SELECT id_predict FROM predict
+        WHERE id_code=%d AND date=%d;
+    """ % (id_code, date)
+    return sql
+
+
+def get_sql_update_predict_values(id_predict: int, series: pd.Series) -> str:
+    sql = """
+        UPDATE predict
+        SET comp=%f,
+            rmse=%f,
+            r2=%f,
+            open=%f
+        WHERE id_predict=%d;
+    """ % (
+        int(series['Components']),
+        series['RMSE'],
+        series['R2'],
+        series['Open'],
+        id_predict
     )
     return sql
 
@@ -189,7 +215,7 @@ def get_sql_select_date_id_code_from_ticker(date: int, id_code: int) -> str:
     sql = """
         SELECT date, id_code FROM trade
         WHERE date=%d AND id_code=%d;
-    """
+    """ % (date, id_code)
     return sql
 
 
@@ -374,8 +400,8 @@ def get_sql_update_trade_values(id_trade: int, series: pd.Series) -> str:
     sql = """
         UPDATE trade
         SET open=%f,
-            high~%f,
-            low~%f,
+            high=%f,
+            low=%f,
             close=%f,
             close_adj=%f,
             volume=%d

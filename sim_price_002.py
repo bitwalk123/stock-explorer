@@ -8,11 +8,13 @@ import time
 from PySide6.QtSql import QSqlQuery
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import r2_score, mean_squared_error
-from sklearn.model_selection import cross_val_predict
 from sklearn.preprocessing import StandardScaler
 
-from database.sqls import get_sql_insert_into_predict_values
-from functions.conv_timestamp2date import conv_timestamp2date
+from database.sqls import (
+    get_sql_insert_into_predict_values,
+    get_sql_select_id_predict_from_predict_with_id_code_date,
+    get_sql_update_predict_values
+)
 from functions.get_dataset import combine_ticker_data
 from functions.get_dict_code import get_dict_code
 from functions.get_elapsed import get_elapsed
@@ -118,25 +120,34 @@ def main():
             rmse = mean_squared_error(y_train, y_pred, squared=False)
             # Predict Open price for tomorrow
             price_open_pred = pls.predict(X_test)[0]
-            series_code = pd.Series(
-                data=[
-                    n_comp,
-                    rmse,
-                    r2,
-                    price_open_pred,
-                ],
+            series_fitting = pd.Series(
+                data=[n_comp, rmse, r2, price_open_pred],
                 index=columns_summary_code,
                 name=dict_code[target_id_code]
             )
 
             con = get_connection()
             if con.open():
-                sql = get_sql_insert_into_predict_values(target_id_code, end_next, series_code)
-                query = QSqlQuery(sql)
-                query.exec()
+                sql1 = get_sql_select_id_predict_from_predict_with_id_code_date(
+                    target_id_code, end_next
+                )
+                query1 = QSqlQuery()
+                query1.exec(sql1)
+                if query1.next():
+                    id_predict = query1.value(0)
+                    sql2 = get_sql_update_predict_values(
+                        id_predict, series_fitting
+                    )
+                else:
+                    sql2 = get_sql_insert_into_predict_values(
+                        target_id_code, end_next, series_fitting
+                    )
+                # execute query
+                query2 = QSqlQuery()
+                query2.exec(sql2)
                 con.close()
 
-            df_summary_code.loc[dict_code[target_id_code]] = series_code
+            df_summary_code.loc[dict_code[target_id_code]] = series_fitting
             print(df_summary_code)
     else:
         print('fail to open db.')
