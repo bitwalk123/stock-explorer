@@ -5,11 +5,13 @@ import pickle
 import pandas as pd
 import time
 
+from PySide6.QtSql import QSqlQuery
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import cross_val_predict
 from sklearn.preprocessing import StandardScaler
 
+from database.sqls import get_sql_insert_into_predict_values
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import combine_ticker_data
 from functions.get_dict_code import get_dict_code
@@ -84,7 +86,6 @@ def main():
         dict_code, list_valid_id_code, list_target_id_code = get_valid_dataset(start, end)
         # Generate base dataframe
         df_base = get_base_dataframe(list_valid_id_code, start, end)
-        con.close()
         # Prediction for next Open price
         columns_summary_code = ['Components', 'RMSE', 'R2', 'Open']
         df_summary_code = pd.DataFrame(columns=columns_summary_code)
@@ -115,15 +116,19 @@ def main():
             series_code = pd.Series(
                 data=[
                     n_comp,
-                    '{:.3f}'.format(rmse),
-                    '{:.3f}'.format(r2),
-                    '{:.1f}'.format(price_open_pred)
+                    rmse,
+                    r2,
+                    price_open_pred,
                 ],
                 index=columns_summary_code,
                 name=dict_code[target_id_code]
             )
+            sql = get_sql_insert_into_predict_values(target_id_code, end_next, series_code)
+            query = QSqlQuery()
+            query.exec(sql)
             df_summary_code.loc[dict_code[target_id_code]] = series_code
             print(df_summary_code)
+        con.close()
     else:
         print('fail to open db.')
 

@@ -1,6 +1,49 @@
 import pandas as pd
 
 
+def get_sql_create_table_predict() -> str:
+    """Create trade table
+    """
+    sql = """
+        CREATE TABLE predict(
+            id_predict INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_code INTEGER,
+            date INTEGER,
+            comp INTEGER,
+            rmse REAL,
+            r2 REAL,
+            open REAL
+        );
+    """
+    return sql
+
+
+def get_sql_insert_into_predict_values(id_code: int, end_next: int, series: pd.Series) -> str:
+    sql = 'INSERT INTO predict VALUES(NULL, %d, %d, %d, %f, %f, %f);' % (
+        id_code,
+        end_next,
+        int(series['Components']),
+        series['RMSE'],
+        series['R2'],
+        series['Open']
+    )
+    return sql
+
+
+def get_sql_create_table_split() -> str:
+    """Create trade table
+    """
+    sql = """
+        CREATE TABLE split(
+            id_split INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_code INTEGER,
+            date INTEGER,
+            ratio REAL
+        );
+    """
+    return sql
+
+
 def get_sql_create_table_ticker() -> str:
     """Create ticker table
     """
@@ -17,7 +60,7 @@ def get_sql_create_table_ticker() -> str:
             '17業種区分' STRING,
             '規模コード' STRING,
             '規模区分' STRING
-        )
+        );
     """
     return sql
 
@@ -36,21 +79,7 @@ def get_sql_create_table_trade() -> str:
             close REAL,
             close_adj REAL,
             volume INTEGER
-        )
-    """
-    return sql
-
-
-def get_sql_create_table_split() -> str:
-    """Create trade table
-    """
-    sql = """
-        CREATE TABLE split(
-            id_split INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_code INTEGER,
-            date INTEGER,
-            ratio REAL
-        )
+        );
     """
     return sql
 
@@ -61,19 +90,19 @@ def get_sql_delete_trade_with_id_trade(id_trade: int) -> str:
     Args:
         id_trade(int): id_trade
     """
-    sql = 'DELETE FROM trade WHERE id_trade = %d' % id_trade
+    sql = 'DELETE FROM trade WHERE id_trade = %d;' % id_trade
     return sql
 
 
 def get_sql_drop_table_ticker() -> str:
     """Drop table ticker if exists
     """
-    sql = 'DROP TABLE IF EXISTS ticker'
+    sql = 'DROP TABLE IF EXISTS ticker;'
     return sql
 
 
 def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
-    sql = 'INSERT INTO ticker VALUES(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s")' % (
+    sql = 'INSERT INTO ticker VALUES(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s");' % (
         series['日付'],
         series['コード'],
         series['銘柄名'],
@@ -89,12 +118,12 @@ def get_sql_insert_into_ticker_values(series: pd.Series) -> str:
 
 
 def get_sql_insert_into_split_values() -> str:
-    sql = 'INSERT INTO split VALUES(NULL, ?, ?, ?)'
+    sql = 'INSERT INTO split VALUES(NULL, ?, ?, ?);'
     return sql
 
 
 def get_sql_insert_into_trade_values(id_code: int, series: pd.Series) -> str:
-    sql = 'INSERT INTO trade VALUES(NULL, %d, %d, %f, %f, %f, %f, %f, %d)' % (
+    sql = 'INSERT INTO trade VALUES(NULL, %d, %d, %f, %f, %f, %f, %f, %d);' % (
         id_code,
         int(series['Date']),
         series['Open'],
@@ -278,9 +307,11 @@ def get_sql_select_id_trade_from_trade_with_date_id_code(date: int, id_code: int
     """ % (date, id_code)
     return sql
 
+
 def get_sql_select_max_date_from_trade() -> str:
     sql = "SELECT MAX(date) FROM trade;"
     return sql
+
 
 def get_sql_select_max_date_from_trade_with_id_code(id_code: int) -> str:
     sql = """
