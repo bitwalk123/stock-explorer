@@ -82,10 +82,15 @@ def main():
         )
         end_next = get_next_trading_date(end)
 
+        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # Get list of valid code and target
         dict_code, list_valid_id_code, list_target_id_code = get_valid_dataset(start, end)
+        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # Generate base dataframe
         df_base = get_base_dataframe(list_valid_id_code, start, end)
+        con.close()
+
+        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # Prediction for next Open price
         columns_summary_code = ['Components', 'RMSE', 'R2', 'Open']
         df_summary_code = pd.DataFrame(columns=columns_summary_code)
@@ -123,12 +128,16 @@ def main():
                 index=columns_summary_code,
                 name=dict_code[target_id_code]
             )
-            sql = get_sql_insert_into_predict_values(target_id_code, end_next, series_code)
-            query = QSqlQuery()
-            query.exec(sql)
+
+            con = get_connection()
+            if con.open():
+                sql = get_sql_insert_into_predict_values(target_id_code, end_next, series_code)
+                query = QSqlQuery(sql)
+                query.exec()
+                con.close()
+
             df_summary_code.loc[dict_code[target_id_code]] = series_code
             print(df_summary_code)
-        con.close()
     else:
         print('fail to open db.')
 
