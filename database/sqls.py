@@ -271,6 +271,13 @@ def get_sql_select_date_volume_from_trade_with_id_code_start(id_code: int, start
     return sql
 
 
+def get_sql_select_id_code_from_predict() -> str:
+    sql = """
+        SELECT id_code FROM predict;
+    """
+    return sql
+
+
 def get_sql_select_id_code_from_ticker() -> str:
     sql = """
         SELECT id_code FROM ticker;

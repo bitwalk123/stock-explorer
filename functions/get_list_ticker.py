@@ -1,6 +1,10 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_code_cname_from_ticker
+from database.sqls import (
+    get_sql_select_code_cname_from_ticker,
+    get_sql_select_id_code_from_predict,
+)
+from functions.get_dict_code import get_dict_code
 from functions.resources import get_connection
 
 
@@ -24,3 +28,25 @@ def get_list_ticker() -> dict:
     else:
         print('database cannot be opened!')
         return dict()
+
+
+def get_list_ticker_predicted() -> list:
+    set_id_code_predicted = set()
+    list_ticker_predicted = list()
+    con = get_connection()
+    if con.open():
+        sql = get_sql_select_id_code_from_predict()
+        query = QSqlQuery(sql)
+        while query.next():
+            id_code = query.value(0)
+            set_id_code_predicted.add(id_code)
+        dict_code = get_dict_code()
+        con.close()
+
+        for id_code in sorted(list(set_id_code_predicted)):
+            list_ticker_predicted.append(dict_code[id_code])
+
+        return list_ticker_predicted
+    else:
+        print('database cannot be opened!')
+        return list()

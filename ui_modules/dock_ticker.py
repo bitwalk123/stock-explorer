@@ -11,7 +11,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from functions.get_list_ticker import get_list_ticker
+from functions.get_list_ticker import (
+    get_list_ticker,
+    get_list_ticker_predicted,
+)
+from widgets.buttons import TickerRadioButton
 
 
 class DockTicker(QDockWidget):
@@ -46,8 +50,9 @@ class DockTicker(QDockWidget):
 
         id = 0
         dict_ticker = get_list_ticker()
+        print(get_list_ticker_predicted())
         for key in dict_ticker.keys():
-            rb = QRadioButton(str(key))
+            rb = TickerRadioButton(str(key))
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
             id += 1
