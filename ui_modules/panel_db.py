@@ -48,12 +48,14 @@ class PanelDB(QWidget):
         but_dup.clicked.connect(self.check_duplicate)
         layout.addWidget(but_dup, row, 1)
 
+        """
         row += 1
         lab_update = QLabel('最新の株価データに更新')
         layout.addWidget(lab_update, row, 0)
         but_update = ApplyButton()
         but_update.clicked.connect(self.update_trade)
         layout.addWidget(but_update, row, 1)
+        """
 
     def getTabLabel(self) -> str:
         return self.tab_label
