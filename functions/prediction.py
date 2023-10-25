@@ -14,7 +14,9 @@ def search_minimal_component_number(X, y):
     """
     list_mse = []
     """
-    Note: Oct 25 03:28:27 in case of n_comp = 50
+    Note:
+        Oct 25 03:28:27 in case of n_comp = 50, FACTOR_TOLERANCE=0.02
+        Oct 26 01:46:05 in case of n_comp = 30, FACTOR_TOLERANCE=0.02
     """
     n_comp = 30
     component = np.arange(1, n_comp + 1)
