@@ -17,3 +17,11 @@ class ApplyButton(QPushButton):
 class TickerRadioButton(QRadioButton):
     def __init__(self, *args):
         super().__init__(*args)
+
+    def setPredicted(self):
+        self.setStyleSheet("""
+            QRadioButton {
+                color: #800000;
+                background-color: #FFE0E0;
+            }
+        """)

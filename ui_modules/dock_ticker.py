@@ -50,9 +50,11 @@ class DockTicker(QDockWidget):
 
         id = 0
         dict_ticker = get_list_ticker()
-        print(get_list_ticker_predicted())
+        list_ticker_predicted = get_list_ticker_predicted()
         for key in dict_ticker.keys():
             rb = TickerRadioButton(str(key))
+            if key in list_ticker_predicted:
+                rb.setPredicted()
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
             id += 1
