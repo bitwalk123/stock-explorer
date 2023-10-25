@@ -10,8 +10,13 @@ warnings.simplefilter("ignore")
 
 
 def search_minimal_component_number(X, y):
+    """Search number of minimal component for PLS
+    """
     list_mse = []
-    n_comp = 50
+    """
+    Note: Oct 25 03:28:27 in case of n_comp = 50
+    """
+    n_comp = 30
     component = np.arange(1, n_comp + 1)
 
     for i in component:
