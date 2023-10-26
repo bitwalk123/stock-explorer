@@ -1,7 +1,7 @@
 import datetime as dt
 import pandas as pd
 
-from database.sqls import get_sql_insert_into_contract_values
+from database.sqls import get_sql_insert_into_contract_values, get_sql_update_contract_values
 
 
 def main(filename: str):
@@ -30,6 +30,8 @@ def main(filename: str):
     df2[col] = [int(dt.datetime.timestamp(dt.datetime.strptime('%s/%s' % (y, t), fmt))) for t in df2[col]]
     for row_index in df2.index:
         series = df2.loc[row_index]
+        sql = get_sql_update_contract_values(0, series)
+        print(sql)
         sql = get_sql_insert_into_contract_values(series)
         print(sql)
     df2.to_csv('out.csv', index=False)

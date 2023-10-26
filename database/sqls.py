@@ -25,23 +25,70 @@ def get_sql_create_table_contract() -> str:
     """
     return sql
 
-def get_sql_insert_into_contract_values(series: pd.Series) -> str:
-    sql = 'INSERT INTO predict VALUES(NULL, %d, %s, %d, %s, %s, %s, %s, %s, %d, %d, %s, %f, %d, %d);' % (
+
+def get_sql_update_contract_values(id_contract: int, series: pd.Series) -> str:
+    sql = """
+        UPDATE contract
+        SET '注文番号'=%d,
+            '状況'=%s,
+            '注文日時'=%d,
+            '銘柄'=%s,
+            '銘柄コード・市場'=%s,
+            '売買'=%s,
+            '口座'=%s,
+            '注文方法'=%s,
+            '注文数量[株/口]'=%d,
+            '約定数量[株/口]'=%d,
+            '注文単価[円]'=%s,
+            '約定単価[円]'=%f,
+            '約定代金[円]'=%d,
+            '手数料[円]'=%d
+        WHERE id_contract=%d;
+    """ % (
         int(series['注文番号']),
-        str(series['状況']),
+        '\'%s\'' % str(series['状況']),
         int(series['注文日時']),
-        str(series['銘柄']),
-        str(series['銘柄コード・市場']),
-        str(series['売買']),
-        str(series['口座']),
-        str(series['注文方法']),
+        '\'%s\'' % str(series['銘柄']),
+        '\'%s\'' % str(series['銘柄コード・市場']),
+        '\'%s\'' % str(series['売買']),
+        '\'%s\'' % str(series['口座']),
+        '\'%s\'' % str(series['注文方法']),
         int(series['注文数量[株/口]']),
         int(series['約定数量[株/口]']),
-        str(series['注文単価[円]']),
+        '\'%s\'' % str(series['注文単価[円]']),
+        float(series['約定単価[円]'].replace(',', '')),
+        int(series['約定代金[円]'].replace(',', '')),
+        int(series['手数料[円]']),
+        id_contract
+    )
+    return sql
+
+
+def get_sql_insert_into_contract_values(series: pd.Series) -> str:
+    sql = 'INSERT INTO contract VALUES(NULL, %d, %s, %d, %s, %s, %s, %s, %s, %d, %d, %s, %f, %d, %d);' % (
+        int(series['注文番号']),
+        '\'%s\'' % str(series['状況']),
+        int(series['注文日時']),
+        '\'%s\'' % str(series['銘柄']),
+        '\'%s\'' % str(series['銘柄コード・市場']),
+        '\'%s\'' % str(series['売買']),
+        '\'%s\'' % str(series['口座']),
+        '\'%s\'' % str(series['注文方法']),
+        int(series['注文数量[株/口]']),
+        int(series['約定数量[株/口]']),
+        '\'%s\'' % str(series['注文単価[円]']),
         float(series['約定単価[円]'].replace(',', '')),
         int(series['約定代金[円]'].replace(',', '')),
         int(series['手数料[円]'])
     )
+    return sql
+
+
+def get_sql_select_id_contract_from_contract_with_order_date(order: int, date: int) -> str:
+    sql = """
+        SELECT id_predict FROM predict
+        WHERE '注文番号'=%d AND '注文日時'=%d;
+    """ % (order, date)
     return sql
 
 
