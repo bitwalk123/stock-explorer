@@ -86,8 +86,8 @@ def get_sql_insert_into_contract_values(series: pd.Series) -> str:
 
 def get_sql_select_id_contract_from_contract_with_order_date(order: int, date: int) -> str:
     sql = """
-        SELECT id_predict FROM predict
-        WHERE '注文番号'=%d AND '注文日時'=%d;
+        SELECT id_contract FROM contract
+        WHERE 注文番号=%d AND 注文日時=%d;
     """ % (order, date)
     return sql
 
