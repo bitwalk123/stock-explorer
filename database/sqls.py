@@ -1,6 +1,50 @@
 import pandas as pd
 
 
+def get_sql_create_table_contract() -> str:
+    """Create ticker table
+    """
+    sql = """
+        CREATE TABLE contract(
+            id_contract INTEGER PRIMARY KEY AUTOINCREMENT,
+            '注文番号' INTEGER,
+            '状況' STRING,
+            '注文日時' INTEGER,
+            '銘柄' STRING,
+            '銘柄コード・市場' STRING,
+            '売買' STRING,
+            '口座' STRING,
+            '注文方法' STRING,
+            '注文数量[株/口]' INTEGER,
+            '約定数量[株/口]' INTEGER,
+            '注文単価[円]' STRING,
+            '約定単価[円]' REAL,
+            '約定代金[円]' INTEGER,
+            '手数料[円]' INTEGER
+        );
+    """
+    return sql
+
+def get_sql_insert_into_contract_values(series: pd.Series) -> str:
+    sql = 'INSERT INTO predict VALUES(NULL, %d, %s, %d, %s, %s, %s, %s, %s, %d, %d, %s, %f, %d, %d);' % (
+        int(series['注文番号']),
+        str(series['状況']),
+        int(series['注文日時']),
+        str(series['銘柄']),
+        str(series['銘柄コード・市場']),
+        str(series['売買']),
+        str(series['口座']),
+        str(series['注文方法']),
+        int(series['注文数量[株/口]']),
+        int(series['約定数量[株/口]']),
+        str(series['注文単価[円]']),
+        float(series['約定単価[円]'].replace(',', '')),
+        int(series['約定代金[円]'].replace(',', '')),
+        int(series['手数料[円]'])
+    )
+    return sql
+
+
 def get_sql_create_table_predict() -> str:
     """Create trade table
     """
