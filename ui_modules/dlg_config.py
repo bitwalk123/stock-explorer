@@ -7,7 +7,8 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_standard_icon import get_standard_icon
-from ui_modules.panel_db import PanelDB
+from ui_modules.tab_panel_contract import TabPanelContract
+from ui_modules.tab_panel_database import TabPanelDatabase
 
 
 class DlgConfig(QDialog):
@@ -34,8 +35,10 @@ class DlgConfig(QDialog):
         tab = QTabWidget()
         layout.addWidget(tab)
 
-        panel_db = PanelDB()
-        tab.addTab(panel_db, panel_db.getTabLabel())
+        panel_contract = TabPanelContract()
+        panel_database = TabPanelDatabase()
+        tab.addTab(panel_contract, panel_contract.getTabLabel())
+        tab.addTab(panel_database, panel_database.getTabLabel())
 
         dlg_button = QDialogButtonBox.StandardButton.Ok
         bbox = QDialogButtonBox(dlg_button)
