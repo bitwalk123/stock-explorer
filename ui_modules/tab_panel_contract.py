@@ -1,8 +1,8 @@
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QLabel
 
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.buttons import ApplyButton
+from widgets.layout import GridLayout
 
 
 class TabPanelContract(TabPanelAbstract):
@@ -13,8 +13,7 @@ class TabPanelContract(TabPanelAbstract):
         self.init_ui()
 
     def init_ui(self):
-        layout = QGridLayout()
-        layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        layout = GridLayout()
         self.setLayout(layout)
 
         row = 0
