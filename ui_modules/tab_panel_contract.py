@@ -1,3 +1,4 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QLabel
 
 from ui_modules.panel_abstract import TabPanelAbstract
@@ -13,6 +14,7 @@ class TabPanelContract(TabPanelAbstract):
 
     def init_ui(self):
         layout = QGridLayout()
+        layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(layout)
 
         row = 0

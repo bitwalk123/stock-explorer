@@ -22,6 +22,7 @@ class TabPanelDatabase(TabPanelAbstract):
 
     def init_ui(self):
         layout = QGridLayout()
+        layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.setLayout(layout)
 
         row = 0
