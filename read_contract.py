@@ -62,5 +62,5 @@ def main(filename: str):
 
 
 if __name__ == '__main__':
-    csvname = '/home/bitwalk/ダウンロード/stockorder(JP)_20231030.csv'
+    csvname = '/home/bitwalk/ダウンロード/stockorder(JP)_20231026.csv'
     main(csvname)

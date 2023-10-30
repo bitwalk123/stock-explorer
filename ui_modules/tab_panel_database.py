@@ -1,18 +1,18 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QGridLayout,
     QLabel,
     QProgressDialog,
-    QWidget,
 )
 
 from database.schema import initialize_db
 from database.ticker import DBTblTicker
 from database.trade import DBTblTrade
+from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.buttons import ApplyButton
+from widgets.layout import GridLayout
 
 
-class PanelDB(QWidget):
+class TabPanelDatabase(TabPanelAbstract):
     tab_label = 'データベース'
 
     def __init__(self):
@@ -21,7 +21,7 @@ class PanelDB(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        layout = QGridLayout()
+        layout = GridLayout()
         self.setLayout(layout)
 
         row = 0
@@ -56,9 +56,6 @@ class PanelDB(QWidget):
         but_update.clicked.connect(self.update_trade)
         layout.addWidget(but_update, row, 1)
         """
-
-    def getTabLabel(self) -> str:
-        return self.tab_label
 
     def update_progress(self, progress: int):
         self.progressbar.setValue(progress)
