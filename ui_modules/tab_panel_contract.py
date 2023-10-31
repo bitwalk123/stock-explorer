@@ -1,7 +1,8 @@
-from PySide6.QtWidgets import QGridLayout, QLabel, QFileDialog
+from PySide6.QtWidgets import QLabel, QFileDialog
 
+from functions.read_csv import read_csv_contract_from_shiftjis
 from ui_modules.panel_abstract import TabPanelAbstract
-from widgets.buttons import ApplyButton, ButtonIcon
+from widgets.buttons import ButtonIcon
 from widgets.layout import GridLayout
 
 
@@ -37,5 +38,5 @@ class TabPanelContract(TabPanelAbstract):
         if len(csvfile) == 0:
             return
 
-        #self.read_zipfile(csvfile)
         print(csvfile)
+        read_csv_contract_from_shiftjis(csvfile)
