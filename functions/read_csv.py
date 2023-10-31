@@ -11,7 +11,7 @@ from database.sqls import (
 from functions.resources import get_connection
 
 
-def read_csv_contract_from_shiftjis(filename: str):
+def read_csv_contract_from_shiftjis(filename: str) -> pd.DataFrame:
     columns = [
         '注文番号',
         '状況',
@@ -61,4 +61,5 @@ def read_csv_contract_from_shiftjis(filename: str):
 
         con.close()
 
-    df2.to_csv('out.csv', index=False)
+    # df2.to_csv('out.csv', index=False)
+    return df2

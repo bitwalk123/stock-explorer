@@ -1,3 +1,5 @@
+import pandas as pd
+
 from PySide6.QtWidgets import QLabel, QFileDialog
 
 from functions.read_csv import read_csv_contract_from_shiftjis
@@ -38,5 +40,5 @@ class TabPanelContract(TabPanelAbstract):
         if len(csvfile) == 0:
             return
 
-        print(csvfile)
-        read_csv_contract_from_shiftjis(csvfile)
+        df: pd.DataFrame = read_csv_contract_from_shiftjis(csvfile)
+        print(df)
