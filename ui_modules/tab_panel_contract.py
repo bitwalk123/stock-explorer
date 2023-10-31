@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QGridLayout, QLabel
+from PySide6.QtWidgets import QGridLayout, QLabel, QFileDialog
 
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.buttons import ApplyButton, ButtonIcon
@@ -21,5 +21,21 @@ class TabPanelContract(TabPanelAbstract):
         lab_read = QLabel('取引注文ファイルの読み込み')
         layout.addWidget(lab_read, row, 0)
         but_read = ButtonIcon('SP_DirIcon')
-        # but_read.clicked.connect()
+        but_read.clicked.connect(self.on_read_clicked)
         layout.addWidget(but_read, row, 1)
+
+    def on_read_clicked(self):
+        # _____________________________________________________________________
+        # Dialog
+        selection = QFileDialog.getOpenFileName(
+            parent=self,
+            caption='取引注文ファイルの選択',
+            filter='CSV File (*.csv)',
+        )
+
+        csvfile = selection[0]
+        if len(csvfile) == 0:
+            return
+
+        #self.read_zipfile(csvfile)
+        print(csvfile)
