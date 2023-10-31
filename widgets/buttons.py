@@ -27,7 +27,6 @@ class ButtonIcon(QPushButton):
         pixmap = getattr(QStyle.StandardPixmap, name_icon)
         icon = QIcon(self.style().standardIcon(pixmap))
         self.setIcon(icon)
-        self.setContentsMargins(0, 0, 0, 0)
 
 
 class TickerRadioButton(QRadioButton):

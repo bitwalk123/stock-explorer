@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QGridLayout, QLabel
 
 from ui_modules.panel_abstract import TabPanelAbstract
-from widgets.buttons import ApplyButton
+from widgets.buttons import ApplyButton, ButtonIcon
 from widgets.layout import GridLayout
 
 
@@ -20,6 +20,6 @@ class TabPanelContract(TabPanelAbstract):
         # データベースの初期化
         lab_read = QLabel('取引注文ファイルの読み込み')
         layout.addWidget(lab_read, row, 0)
-        but_read = ApplyButton()
+        but_read = ButtonIcon('SP_DirIcon')
         # but_read.clicked.connect()
         layout.addWidget(but_read, row, 1)
