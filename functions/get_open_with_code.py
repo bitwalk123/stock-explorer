@@ -2,6 +2,7 @@ from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
     get_sql_select_date_open_volume_from_trade_with_id_code,
+    get_sql_select_date_open_from_predict_with_id_code_start,
     get_sql_select_date_open_volume_from_trade_with_id_code_start,
     get_sql_select_id_code_cname_from_ticker_with_code,
 )
@@ -55,3 +56,23 @@ def get_open_with_code(code: int, start: int) -> tuple:
         print('database cannot be opened!')
 
     return cname, list_x, list_y, list_z
+
+
+def get_predict_with_id_code(id_code: int, start: int) -> tuple:
+    list_x = list()
+    list_y = list()
+    sql = get_sql_select_date_open_from_predict_with_id_code_start(id_code, start)
+    con = get_connection()
+    if con.open():
+        query = QSqlQuery(sql)
+        while query.next():
+            x = query.value(0)
+            dt = conv_timestamp(x)
+            list_x.append(dt)
+            list_y.append(query.value(1))
+
+        con.close()
+    else:
+        print('database cannot be opened!')
+
+    return list_x, list_y

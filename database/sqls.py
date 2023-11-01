@@ -345,6 +345,13 @@ def get_sql_select_date_open_volume_from_trade_with_id_code_start(id_code: int, 
     """ % (id_code, start)
     return sql
 
+def get_sql_select_date_open_from_predict_with_id_code_start(id_code: int, start: int) -> str:
+    sql = """
+        SELECT date, open FROM predict
+        WHERE id_code=%d AND date >= %d
+        ORDER BY date;
+    """ % (id_code, start)
+    return sql
 
 def get_sql_select_date_ratio_with_id_code(id_code: int):
     sql = """
