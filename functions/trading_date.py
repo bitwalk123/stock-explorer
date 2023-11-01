@@ -21,6 +21,8 @@ def get_next_trading_date(end: int) -> int:
     weekday = day_last.weekday()
     if weekday == 4:
         end_next = end + day1 * 3
+    elif weekday == 5:
+        end_next = end + day1 * 2
     else:
         end_next = end + day1
     list_holiday = get_holiday_list()

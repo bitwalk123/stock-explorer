@@ -4,7 +4,10 @@ from PySide6.QtSql import QSqlQuery
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dict_code import get_dict_code, get_dict_id_code
 from functions.get_id_code_from_code import get_id_code_from_code
-from functions.get_open_with_code import get_open_with_code, get_predict_with_id_code
+from functions.get_open_with_code import (
+    get_open_with_code,
+    get_predict_with_id_code,
+)
 from functions.get_trade_with_code import get_trade_with_code
 from functions.resources import get_connection
 from widgets.charts import Trend
@@ -51,6 +54,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     if code > 0:
         chart.ax1.set_title('%s (%d.T) Open' % (cname, code))
         id_code = get_id_code_from_code(code)
+        print(code, id_code)
         list_x_pred, list_y_pred = get_predict_with_id_code(id_code, start)
         # print(list_x_pred)
         # print(list_y_pred)
@@ -101,7 +105,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
         last_split_date = 0
         while query.next():
             last_split_date = query.value(0)
-        con.close
+        con.close()
 
         # print(dict_id_code[code], code, last_split_date)
         if last_split_date > 0:
