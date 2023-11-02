@@ -6,7 +6,7 @@ import yfinance as yf
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_code_cname_from_ticker
+from database.sqls import select_code_cname_from_ticker
 from functions.resources import get_connection
 
 #start = dt.date(2000, 1, 1)
@@ -15,7 +15,7 @@ end = dt.date.today()
 
 con = get_connection()
 if con.open():
-    sql = get_sql_select_code_cname_from_ticker()
+    sql = select_code_cname_from_ticker()
     query = QSqlQuery(sql)
     while query.next():
         code = '%d.T' % query.value(0)

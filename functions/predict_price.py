@@ -8,9 +8,9 @@ from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
 from database.sqls import (
-    get_sql_select_id_predict_from_predict_with_id_code_date,
-    get_sql_update_predict_values,
-    get_sql_insert_into_predict_values,
+    select_id_predict_from_predict_with_id_code_date,
+    update_predict_values,
+    insert_into_predict_values,
 )
 from functions.get_dataset import combine_ticker_data
 from functions.get_dict_code import get_dict_code
@@ -98,18 +98,18 @@ def get_prediction_by_pls(df_base, dict_code, end_next, list_target_id_code):
 
         con = get_connection()
         if con.open():
-            sql1 = get_sql_select_id_predict_from_predict_with_id_code_date(
+            sql1 = select_id_predict_from_predict_with_id_code_date(
                 target_id_code, end_next
             )
             query1 = QSqlQuery()
             query1.exec(sql1)
             if query1.next():
                 id_predict = query1.value(0)
-                sql2 = get_sql_update_predict_values(
+                sql2 = update_predict_values(
                     id_predict, series_fitting
                 )
             else:
-                sql2 = get_sql_insert_into_predict_values(
+                sql2 = insert_into_predict_values(
                     target_id_code, end_next, series_fitting
                 )
             # execute query

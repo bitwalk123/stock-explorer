@@ -1,8 +1,8 @@
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_select_code_cname_from_ticker,
-    get_sql_select_id_code_from_predict,
+    select_code_cname_from_ticker,
+    select_id_code_from_predict,
 )
 from functions.get_dict_code import get_dict_code
 from functions.resources import get_connection
@@ -17,7 +17,7 @@ def get_list_ticker() -> dict:
     dict_ticker = dict()
     con = get_connection()
     if con.open():
-        sql = get_sql_select_code_cname_from_ticker()
+        sql = select_code_cname_from_ticker()
         query = QSqlQuery(sql)
         while query.next():
             code = query.value(0)
@@ -35,7 +35,7 @@ def get_list_ticker_predicted() -> list:
     list_ticker_predicted = list()
     con = get_connection()
     if con.open():
-        sql = get_sql_select_id_code_from_predict()
+        sql = select_id_code_from_predict()
         query = QSqlQuery(sql)
         while query.next():
             id_code = query.value(0)

@@ -5,12 +5,12 @@ from PySide6.QtSql import QSqlQuery
 from sklearn.preprocessing import StandardScaler
 
 from database.sqls import (
-    get_sql_select_dataset_from_trade_with_id_code_start_end,
-    get_sql_select_date_from_split_with_id_code,
-    get_sql_select_id_code_from_ticker,
-    get_sql_select_max_date_from_trade_with_id_code_start_end,
-    get_sql_select_open_from_trade_with_id_code_date,
-    get_sql_select_volume_from_trade_with_id_code_start_end,
+    select_dataset_from_trade_with_id_code_start_end,
+    select_date_from_split_with_id_code,
+    select_id_code_from_ticker,
+    select_max_date_from_trade_with_id_code_start_end,
+    select_open_from_trade_with_id_code_date,
+    select_volume_from_trade_with_id_code_start_end,
 )
 from functions.prediction import (
     minimal_scores,
@@ -24,7 +24,7 @@ def combine_ticker_data(list_id_code: list, start: int, end: int) -> pd.DataFram
     for id_code in list_id_code:
         con = get_connection()
         if con.open():
-            sql = get_sql_select_dataset_from_trade_with_id_code_start_end(id_code, start, end)
+            sql = select_dataset_from_trade_with_id_code_start_end(id_code, start, end)
             query = QSqlQuery(sql)
             list_id_date = list()
             list_id_open = list()
@@ -89,13 +89,13 @@ def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int
     """
     con = get_connection()
     if con.open():
-        sql1 = get_sql_select_id_code_from_ticker()
+        sql1 = select_id_code_from_ticker()
         query1 = QSqlQuery(sql1)
         list_id_code = list()
         while query1.next():
             id_code = query1.value(0)
             # split check
-            sql2 = get_sql_select_date_from_split_with_id_code(id_code)
+            sql2 = select_date_from_split_with_id_code(id_code)
             query2 = QSqlQuery(sql2)
             split_flag = False
             while query2.next():
@@ -109,7 +109,7 @@ def get_valid_list_id_code(start: int, end: int, count_min: int, volume_min: int
                 continue
 
             # volume check
-            sql3 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
+            sql3 = select_volume_from_trade_with_id_code_start_end(id_code, start, end)
             query3 = QSqlQuery(sql3)
             list_volume = list()
             while query3.next():
@@ -140,13 +140,13 @@ def get_valid_list_id_code_wo_split(start: int, end: int, count_min: int, volume
     """
     con = get_connection()
     if con.open():
-        sql1 = get_sql_select_id_code_from_ticker()
+        sql1 = select_id_code_from_ticker()
         query1 = QSqlQuery(sql1)
         list_id_code = list()
         while query1.next():
             id_code = query1.value(0)
             # volume check
-            sql3 = get_sql_select_volume_from_trade_with_id_code_start_end(id_code, start, end)
+            sql3 = select_volume_from_trade_with_id_code_start_end(id_code, start, end)
             query3 = QSqlQuery(sql3)
             list_volume = list()
             while query3.next():
@@ -168,11 +168,11 @@ def get_target_list_id_code(list_id_code: list, price_min: int, price_max: int, 
     con = get_connection()
     if con.open():
         for id_code in list_id_code:
-            sql1 = get_sql_select_max_date_from_trade_with_id_code_start_end(id_code, start, end)
+            sql1 = select_max_date_from_trade_with_id_code_start_end(id_code, start, end)
             query1 = QSqlQuery(sql1)
             while query1.next():
                 date = query1.value(0)
-                sql2 = get_sql_select_open_from_trade_with_id_code_date(id_code, date)
+                sql2 = select_open_from_trade_with_id_code_date(id_code, date)
                 query2 = QSqlQuery(sql2)
                 while query2.next():
                     price_open = query2.value(0)

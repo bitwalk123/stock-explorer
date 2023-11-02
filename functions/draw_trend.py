@@ -54,7 +54,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     if code > 0:
         chart.ax1.set_title('%s (%d.T) Open' % (cname, code))
         id_code = get_id_code_from_code(code)
-        print(code, id_code)
+        # print(code, id_code)
         list_x_pred, list_y_pred = get_predict_with_id_code(id_code, start)
         # print(list_x_pred)
         # print(list_y_pred)

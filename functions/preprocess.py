@@ -3,9 +3,9 @@ import statistics
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_select_date_open_from_trade_with_id_code_start_end,
-    get_sql_select_open_from_trade_with_id_code_start_end,
-    get_sql_select_volume_from_trade_with_id_code_start_end,
+    select_date_open_from_trade_with_id_code_start_end,
+    select_open_from_trade_with_id_code_start_end,
+    select_volume_from_trade_with_id_code_start_end,
 )
 from functions.app_enum import PreProcessExcluded
 
@@ -51,7 +51,7 @@ class PreProcess():
 
     def IsTarget(self):
         list_open = list()
-        sql = get_sql_select_open_from_trade_with_id_code_start_end(
+        sql = select_open_from_trade_with_id_code_start_end(
             self.id_code, self.start, self.end
         )
         query = QSqlQuery(sql)
@@ -72,7 +72,7 @@ class PreProcess():
 
     def check_volume(self):
         list_volume = list()
-        sql = get_sql_select_volume_from_trade_with_id_code_start_end(
+        sql = select_volume_from_trade_with_id_code_start_end(
             self.id_code, self.start, self.end
         )
         query = QSqlQuery(sql)
@@ -101,7 +101,7 @@ class PreProcess():
         """Determine if price split exists
             based on the split factor in specified period.
         """
-        sql = get_sql_select_date_open_from_trade_with_id_code_start_end(
+        sql = select_date_open_from_trade_with_id_code_start_end(
             self.id_code, self.start, self.end
         )
         query = QSqlQuery(sql)

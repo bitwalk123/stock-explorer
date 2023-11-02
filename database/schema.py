@@ -1,9 +1,9 @@
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_create_table_ticker,
-    get_sql_create_table_split,
-    get_sql_create_table_trade,
+    create_table_ticker,
+    create_table_split,
+    create_table_trade,
 )
 from functions.resources import get_connection
 
@@ -16,15 +16,15 @@ def initialize_db():
     if not con.open():
         return
 
-    sql = get_sql_create_table_ticker()
+    sql = create_table_ticker()
     query = QSqlQuery()
     query.exec(sql)
 
-    sql = get_sql_create_table_trade()
+    sql = create_table_trade()
     query = QSqlQuery()
     query.exec(sql)
 
-    sql = get_sql_create_table_split()
+    sql = create_table_split()
     query = QSqlQuery()
     query.exec(sql)
 

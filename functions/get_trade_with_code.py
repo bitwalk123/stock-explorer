@@ -3,9 +3,9 @@ from PySide6.QtSql import QSqlQuery
 from matplotlib.dates import date2num
 
 from database.sqls import (
-    get_sql_select_id_code_cname_from_ticker_with_code,
-    get_sql_select_all_from_trade_with_id_code_start,
-    get_sql_select_all_from_trade_with_id_code,
+    select_id_code_cname_from_ticker_with_code,
+    select_all_from_trade_with_id_code_start,
+    select_all_from_trade_with_id_code,
 )
 from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
@@ -34,7 +34,7 @@ def get_trade_with_code(code: int, start: int) -> tuple:
     if con.open():
         # get id_code == id_code
         id_code = 0
-        sql = get_sql_select_id_code_cname_from_ticker_with_code(code)
+        sql = select_id_code_cname_from_ticker_with_code(code)
         query = QSqlQuery(sql)
         while query.next():
             id_code = query.value(0)
@@ -43,9 +43,9 @@ def get_trade_with_code(code: int, start: int) -> tuple:
 
         # Get list of Date, Open, High, Low, Close and Volume specified with id_code
         if start > 0:
-            sql = get_sql_select_all_from_trade_with_id_code_start(id_code, start)
+            sql = select_all_from_trade_with_id_code_start(id_code, start)
         else:
-            sql = get_sql_select_all_from_trade_with_id_code(id_code)
+            sql = select_all_from_trade_with_id_code(id_code)
 
         query = QSqlQuery(sql)
         while query.next():

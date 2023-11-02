@@ -3,12 +3,12 @@ import datetime as dt
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_max_date_from_trade
+from database.sqls import select_max_date_from_trade
 
 
 def get_last_trading_date() -> int:
     end = 0
-    sql = get_sql_select_max_date_from_trade()
+    sql = select_max_date_from_trade()
     query = QSqlQuery(sql)
     while query.next():
         end = query.value(0)

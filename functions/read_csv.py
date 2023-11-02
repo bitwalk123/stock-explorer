@@ -4,9 +4,9 @@ import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_insert_into_contract_values,
-    get_sql_select_id_contract_from_contract_with_order_date,
-    get_sql_update_contract_values,
+    insert_into_contract_values,
+    select_id_contract_from_contract_with_order_date,
+    update_contract_values,
 )
 from functions.resources import get_connection
 
@@ -42,7 +42,7 @@ def read_csv_contract_from_shiftjis(filename: str) -> pd.DataFrame:
 
             num_order = int(series['注文番号'])
             date_order = int(series['注文日時'])
-            sql1 = get_sql_select_id_contract_from_contract_with_order_date(num_order, date_order)
+            sql1 = select_id_contract_from_contract_with_order_date(num_order, date_order)
             query1 = QSqlQuery()
             query1.exec(sql1)
             if query1.next():
@@ -50,11 +50,11 @@ def read_csv_contract_from_shiftjis(filename: str) -> pd.DataFrame:
                 # if data exists, update the trade table
                 id_contract = query1.value(0)
                 print('UPDATE id_contract =', id_contract)
-                sql2 = get_sql_update_contract_values(id_contract, series)
+                sql2 = update_contract_values(id_contract, series)
             else:
                 # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
                 # if not, append data to the trade table
-                sql2 = get_sql_insert_into_contract_values(series)
+                sql2 = insert_into_contract_values(series)
             # execute query
             query2 = QSqlQuery()
             query2.exec(sql2)

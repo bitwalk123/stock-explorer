@@ -10,8 +10,8 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.preprocessing import StandardScaler
 
 from database.sqls import (
-    get_sql_select_min_date_from_trade_with_id_code_end,
-    get_sql_select_open_from_trade_with_id_code_date,
+    select_min_date_from_trade_with_id_code_end,
+    select_open_from_trade_with_id_code_date,
 )
 from functions.conv_timestamp2date import conv_timestamp2date
 from functions.get_dataset import (
@@ -125,12 +125,12 @@ def main():
         con = get_connection()
         if con.open():
             # Get next trade day
-            sql1 = get_sql_select_min_date_from_trade_with_id_code_end(id_code, end)
+            sql1 = select_min_date_from_trade_with_id_code_end(id_code, end)
             query1 = QSqlQuery(sql1)
             while query1.next():
                 end_next = query1.value(0)
             # Get open price in next trade day
-            sql2 = get_sql_select_open_from_trade_with_id_code_date(id_code, end_next)
+            sql2 = select_open_from_trade_with_id_code_date(id_code, end_next)
             query2 = QSqlQuery(sql2)
             while query2.next():
                 price_open = query2.value(0)

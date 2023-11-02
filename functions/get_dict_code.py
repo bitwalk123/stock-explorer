@@ -1,13 +1,13 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_code_from_ticker
+from database.sqls import select_id_code_code_from_ticker
 
 
 def get_dict_code() -> dict:
     dict_code = dict()
     #list_id_code = list()
 
-    sql = get_sql_select_id_code_code_from_ticker()
+    sql = select_id_code_code_from_ticker()
     query = QSqlQuery(sql)
     while query.next():
         id_code = query.value(0)
@@ -20,7 +20,7 @@ def get_dict_id_code() -> dict:
     dict_id_code = dict()
     #list_code = list()
 
-    sql = get_sql_select_id_code_code_from_ticker()
+    sql = select_id_code_code_from_ticker()
     query = QSqlQuery(sql)
     while query.next():
         id_code = query.value(0)

@@ -5,7 +5,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import get_sql_select_id_code_from_ticker
+from database.sqls import select_id_code_from_ticker
 from database.trade_worker import DBTblTradeCheckDuplicateWorker, DBTblTradeUpdateTradeWorker
 from functions.resources import get_threadpool, get_connection
 

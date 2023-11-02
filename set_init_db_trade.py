@@ -5,14 +5,14 @@ import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_insert_into_trade_values,
-    get_sql_select_id_code_code_cname_from_ticker,
+    insert_into_trade_values,
+    select_id_code_code_cname_from_ticker,
 )
 from functions.resources import get_connection
 
 con = get_connection()
 if con.open():
-    sql1 = get_sql_select_id_code_code_cname_from_ticker()
+    sql1 = select_id_code_code_cname_from_ticker()
     query1 = QSqlQuery(sql1)
     while query1.next():
         id = query1.value(0)
@@ -28,7 +28,7 @@ if con.open():
 
             for r in range(len(df)):
                 series = df.iloc[r]
-                sql2 = get_sql_insert_into_trade_values(id, series)
+                sql2 = insert_into_trade_values(id, series)
                 query2 = QSqlQuery()
                 query2.exec(sql2)
     con.close()

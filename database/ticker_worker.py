@@ -6,9 +6,9 @@ from PySide6.QtCore import (
 from PySide6.QtSql import QSqlQuery
 
 from database.sqls import (
-    get_sql_create_table_ticker,
-    get_sql_drop_table_ticker,
-    get_sql_insert_into_ticker_values,
+    create_table_ticker,
+    drop_table_ticker,
+    insert_into_ticker_values,
 )
 from database.worker_signals import WorkerSignals
 from functions.get_elapsed import get_elapsed
@@ -39,14 +39,14 @@ class DBTblTickerWorker(QRunnable):
         df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
         record_total = len(df_stock.index)
 
-        sql = get_sql_drop_table_ticker()
+        sql = drop_table_ticker()
         self.query.exec(sql)
-        sql = get_sql_create_table_ticker()
+        sql = create_table_ticker()
         self.query.exec(sql)
 
         for count, row in enumerate(df_stock.index):
             series = df_stock.loc[row]
-            sql = get_sql_insert_into_ticker_values(series)
+            sql = insert_into_ticker_values(series)
             self.query.exec(sql)
 
             # update progress
