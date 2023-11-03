@@ -24,29 +24,19 @@ class DBTblTicker(QObject):
         self.threadpool: QThreadPool = get_threadpool()
         self.con = None
 
-    def update(self):
-        """Update ticker table in database
-        """
-        self.con = get_connection()
-        if not self.con.open():
-            print('database can not be opened!')
-            return
-        query = QSqlQuery()
-        # _____________________________________________________________________
-        # Threading
-        worker = DBTblTickerWorker(query)
-        worker.signals.finished.connect(self.thread_completed)
-        worker.signals.logMessage.connect(self.show_log)
-        worker.signals.updateProgress.connect(self.update_progress)
-        self.threadpool.start(worker)
-
     def show_log(self, msg: str):
         """Show message
+
+        Args:
+            msg(str): message string to show
         """
         self.logMessage.emit(msg)
 
-    def thread_completed(self, elapsed):
+    def thread_completed(self, elapsed: float):
         """Process for thread completed
+
+        Args:
+            elapsed(float): value in second for elapsed
         """
         if self.threadpool.activeThreadCount() > 0:
             print(
@@ -61,7 +51,27 @@ class DBTblTicker(QObject):
         self.logMessage.emit('finished updating!')
         self.finished.emit(float)
 
+    def update(self):
+        """Update ticker table in database
+        """
+        self.con = get_connection()
+        if not self.con.open():
+            print('database can not be opened!')
+            return
+
+        query = QSqlQuery()
+        # _____________________________________________________________________
+        # Threading
+        worker = DBTblTickerWorker(query)
+        worker.signals.finished.connect(self.thread_completed)
+        worker.signals.logMessage.connect(self.show_log)
+        worker.signals.updateProgress.connect(self.update_progress)
+        self.threadpool.start(worker)
+
     def update_progress(self, progress: int):
         """Emit for updating progress
+
+        Args:
+            progress(int): progress percentage in int
         """
         self.updateProgress.emit(progress)
