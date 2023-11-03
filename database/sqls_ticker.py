@@ -24,6 +24,16 @@ def create_table_ticker() -> str:
     return sql
 
 
+def delete_ticker_with_code(code: int) -> str:
+    """Delete record of ticker table with specified code
+
+    Args:
+        code(int): ticker code
+    """
+    sql = 'DELETE FROM ticker WHERE コード=%d;' % code
+    return sql
+
+
 def drop_table_ticker() -> str:
     """Drop table ticker if exists
     """
@@ -48,12 +58,18 @@ def insert_into_ticker_values(series: pd.Series) -> str:
 
 
 def select_code_cname_from_ticker() -> str:
-    sql = 'select コード, 銘柄名 from ticker;'
+    sql = """
+        SELECT コード, 銘柄名 FROM ticker
+        ORDER BY コード;
+    """
     return sql
 
 
 def select_code_from_ticker() -> str:
-    sql = 'SELECT コード FROM ticker;'
+    sql = """
+        SELECT コード FROM ticker
+        ORDER BY コード;
+    """
     return sql
 
 
@@ -72,21 +88,24 @@ def select_date_id_code_from_ticker(date: int, id_code: int) -> str:
 
 def select_id_code_from_ticker() -> str:
     sql = """
-        SELECT id_code FROM ticker;
+        SELECT id_code FROM ticker
+        ORDER BY コード;
     """
     return sql
 
 
 def select_id_code_code_from_ticker() -> str:
     sql = """
-        SELECT id_code, コード FROM ticker;
+        SELECT id_code, コード FROM ticker
+        ORDER BY コード;
     """
     return sql
 
 
 def select_id_code_code_cname_from_ticker() -> str:
     sql = """
-        SELECT id_code, コード, 銘柄名 FROM ticker;
+        SELECT id_code, コード, 銘柄名 FROM ticker
+        ORDER BY コード;
     """
     return sql
 
@@ -104,4 +123,34 @@ def select_id_code_from_ticker_with_code(code: int) -> str:
         SELECT id_code FROM ticker
         WHERE コード=%d;
     """ % code
+    return sql
+
+
+def update_ticker_values(id_code: int, series: pd.Series) -> str:
+    sql = """
+        UPDATE ticker
+        SET 日付=%d,
+            コード=%d,
+            銘柄名=%s,
+            市場・商品区分=%s,
+            33業種コード=%d,
+            33業種区分=%s,
+            17業種コード=%d,
+            17業種区分=%s,
+            規模コード=%s,
+            規模区分=%s,
+        WHERE id_code=%d;
+    """ % (
+        series['日付'],
+        series['コード'],
+        series['銘柄名'],
+        series['市場・商品区分'],
+        series['33業種コード'],
+        series['33業種区分'],
+        series['17業種コード'],
+        series['17業種区分'],
+        series['規模コード'],
+        series['規模区分'],
+        id_code,
+    )
     return sql

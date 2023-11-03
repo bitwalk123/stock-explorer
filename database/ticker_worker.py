@@ -18,6 +18,7 @@ from functions.resources import get_tse_data
 class DBTblTickerWorker(QRunnable):
     """thread worker class for table ticker creation in database
     """
+
     def __init__(self, query: QSqlQuery):
         super().__init__()
         self.signals = WorkerSignals()
@@ -36,7 +37,8 @@ class DBTblTickerWorker(QRunnable):
             'プライム（内国株式）',
             'プライム（外国株式）',
         ]
-        df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
+        # df_stock = df_all[df_all['市場・商品区分'].isin(list_market)].reset_index(drop=True)
+        df_stock = df_all[df_all['市場・商品区分'].isin(list_market) & (df_all['コード'] < 10000)].reset_index(drop=True)
         record_total = len(df_stock.index)
 
         sql = drop_table_ticker()
