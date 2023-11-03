@@ -1,14 +1,16 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QLabel,
-    QProgressDialog,
+    QProgressDialog, QMessageBox,
 )
 
 from database.schema import initialize_db
 from database.ticker import DBTblTicker
 from database.trade import DBTblTrade
+from functions.get_standard_icon import get_standard_icon
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.buttons import ApplyButton
+from widgets.dialog import DialogConfirmationYesCancel
 from widgets.layout import GridLayout
 
 
@@ -34,7 +36,7 @@ class TabPanelDatabase(TabPanelAbstract):
 
         row += 1
         # 東証から上場企業の一覧を取得
-        lab_tse = QLabel('東証上場企業一覧を取得・更新')
+        lab_tse = QLabel('東証上場企業一覧を新規作成')
         layout.addWidget(lab_tse, row, 0)
         but_tse = ApplyButton()
         but_tse.clicked.connect(self.update_tse)
@@ -61,6 +63,13 @@ class TabPanelDatabase(TabPanelAbstract):
         self.progressbar.setValue(progress)
 
     def update_tse(self):
+        dlg = DialogConfirmationYesCancel(parent=self)
+        dlg.setText('本当に、東証上場企業一覧を新規に作成して宜しいですか？')
+        button = dlg.exec()
+        if button == QMessageBox.StandardButton.Cancel:
+            print('Canceled to create new ticker table.')
+            return
+
         obj = DBTblTicker(self)
         obj.updateProgress.connect(self.update_progress)
         obj.update()
@@ -70,7 +79,7 @@ class TabPanelDatabase(TabPanelAbstract):
         self.progressbar.setWindowModality(Qt.WindowModal)
         self.progressbar.setCancelButton(None)
         self.progressbar.setWindowTitle('進捗')
-        self.progressbar.setLabelText('東証上場企業一覧を取得・更新中')
+        self.progressbar.setLabelText('東証上場企業一覧を取得・作成中')
         self.progressbar.show()
 
     def check_duplicate(self):
