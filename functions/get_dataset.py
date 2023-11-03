@@ -71,7 +71,7 @@ def combine_ticker_data(list_id_code: list, start: int, end: int) -> pd.DataFram
         return pd.DataFrame()
     else:
         df = pd.concat(list_series, axis=1)
-        df.dropna(how='any', axis=0, inplace=True)
+        df.dropna(how='any', axis=1, inplace=True)
         return df
 
 
