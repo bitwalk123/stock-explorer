@@ -16,7 +16,7 @@ from functions.predict_price import (
     get_prediction_by_pls,
     get_valid_dataset,
 )
-from functions.resources import get_connection
+from functions.resources import get_connection, get_original_start
 from functions.trading_date import (
     get_last_trading_date,
     get_next_trading_date,
@@ -70,11 +70,13 @@ def update_ticker(end):
             query2.exec(sql2)
             while query2.next():
                 date_max = query2.value(0)
-                if type(date_max) is not int:
-                    continue
-                # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
-                # start day is next to the latest date
-                start = conv_timestamp2date_next(date_max)
+                if type(date_max) is int:
+                    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+                    # start day is next to the latest date
+                    start = conv_timestamp2date_next(date_max)
+                else:
+                    start = get_original_start()
+
                 print('\n', code)
                 # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
                 # get data from Yahoo finance

@@ -1,4 +1,5 @@
 import os
+import datetime as dt
 
 import pandas as pd
 import wget
@@ -49,6 +50,10 @@ def get_info(key: str) -> str:
         str: string value corrensponding to the keyword
     """
     return res[key]
+
+
+def get_original_start() -> int:
+    return int(dt.datetime(2021, 1, 1, 0, 0).timestamp())
 
 
 def get_threadpool() -> QThreadPool:
