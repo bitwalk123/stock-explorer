@@ -3,7 +3,7 @@ import datetime as dt
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_contract import (
     insert_into_contract_values,
     select_id_contract_from_contract_with_order_date,
     update_contract_values,

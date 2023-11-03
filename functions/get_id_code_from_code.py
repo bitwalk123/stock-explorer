@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import select_id_code_from_ticker_with_code
+from database.sqls_ticker import select_id_code_from_ticker_with_code
 from functions.resources import get_connection
 
 

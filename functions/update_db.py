@@ -3,13 +3,13 @@ import datetime as dt
 import yfinance as yf
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_trade import (
     insert_into_trade_values,
-    select_id_code_code_from_ticker,
     select_id_trade_from_trade_with_date_id_code,
     select_max_date_from_trade_with_id_code,
     update_trade_values,
 )
+from database.sqls_ticker import select_id_code_code_from_ticker
 from functions.conv_timestamp2date import conv_timestamp2date_next
 from functions.predict_price import (
     get_base_dataframe,

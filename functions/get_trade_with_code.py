@@ -1,12 +1,11 @@
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
-from matplotlib.dates import date2num
 
-from database.sqls import (
-    select_id_code_cname_from_ticker_with_code,
-    select_all_from_trade_with_id_code_start,
+from database.sqls_trade import (
     select_all_from_trade_with_id_code,
+    select_all_from_trade_with_id_code_start,
 )
+from database.sqls_ticker import select_id_code_cname_from_ticker_with_code
 from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
 

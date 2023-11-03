@@ -2,7 +2,7 @@ import statistics
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_trade import (
     select_date_open_from_trade_with_id_code_start_end,
     select_open_from_trade_with_id_code_start_end,
     select_volume_from_trade_with_id_code_start_end,

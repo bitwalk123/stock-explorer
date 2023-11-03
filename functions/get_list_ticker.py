@@ -1,9 +1,7 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
-    select_code_cname_from_ticker,
-    select_id_code_from_predict,
-)
+from database.sqls_predict import select_id_code_from_predict
+from database.sqls_ticker import select_code_cname_from_ticker
 from functions.get_dict_code import get_dict_code
 from functions.resources import get_connection
 

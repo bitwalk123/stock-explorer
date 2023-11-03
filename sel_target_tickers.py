@@ -8,7 +8,7 @@ from PySide6.QtSql import QSqlQuery
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.preprocessing import StandardScaler
 
-from database.sqls import (
+from database.sqls_trade import (
     select_min_date_from_trade_with_id_code_end,
     select_open_from_trade_with_id_code_date,
 )

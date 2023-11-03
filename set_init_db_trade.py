@@ -4,10 +4,10 @@ import os
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_trade import (
     insert_into_trade_values,
-    select_id_code_code_cname_from_ticker,
 )
+from database.sqls_ticker import select_id_code_code_cname_from_ticker
 from functions.resources import get_connection
 
 con = get_connection()

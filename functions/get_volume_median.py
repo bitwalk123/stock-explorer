@@ -2,8 +2,8 @@ import statistics
 
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
-    select_id_code_from_ticker_with_code,
+from database.sqls_ticker import select_id_code_from_ticker_with_code
+from database.sqls_trade import (
     select_date_volume_from_trade_with_id_code_start,
 )
 from functions.resources import get_connection

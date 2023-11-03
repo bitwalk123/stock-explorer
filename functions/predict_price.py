@@ -7,10 +7,10 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
-from database.sqls import (
+from database.sqls_predict import (
+    insert_into_predict_values,
     select_id_predict_from_predict_with_id_code_date,
     update_predict_values,
-    insert_into_predict_values,
 )
 from functions.get_dataset import combine_ticker_data
 from functions.get_dict_code import get_dict_code

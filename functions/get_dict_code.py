@@ -1,6 +1,6 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import select_id_code_code_from_ticker
+from database.sqls_ticker import select_id_code_code_from_ticker
 
 
 def get_dict_code() -> dict:

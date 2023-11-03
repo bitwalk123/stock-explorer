@@ -1,10 +1,10 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
-    create_table_ticker,
-    create_table_split,
+from database.sqls_trade import (
     create_table_trade,
 )
+from database.sqls_ticker import create_table_ticker
+from database.sqls_split import create_table_split
 from functions.resources import get_connection
 
 

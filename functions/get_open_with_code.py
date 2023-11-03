@@ -1,11 +1,11 @@
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_trade import (
     select_date_open_volume_from_trade_with_id_code,
-    select_date_open_from_predict_with_id_code_start,
     select_date_open_volume_from_trade_with_id_code_start,
-    select_id_code_cname_from_ticker_with_code,
 )
+from database.sqls_ticker import select_id_code_cname_from_ticker_with_code
+from database.sqls_predict import select_date_open_from_predict_with_id_code_start
 from functions.conv_timestamp2date import conv_timestamp
 from functions.resources import get_connection
 

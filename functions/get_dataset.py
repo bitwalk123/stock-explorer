@@ -4,14 +4,14 @@ import statistics
 from PySide6.QtSql import QSqlQuery
 from sklearn.preprocessing import StandardScaler
 
-from database.sqls import (
+from database.sqls_trade import (
     select_dataset_from_trade_with_id_code_start_end,
-    select_date_from_split_with_id_code,
-    select_id_code_from_ticker,
     select_max_date_from_trade_with_id_code_start_end,
     select_open_from_trade_with_id_code_date,
     select_volume_from_trade_with_id_code_start_end,
 )
+from database.sqls_ticker import select_id_code_from_ticker
+from database.sqls_split import select_date_from_split_with_id_code
 from functions.prediction import (
     minimal_scores,
     search_minimal_component_number,

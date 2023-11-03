@@ -5,7 +5,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import (
+from database.sqls_ticker import (
     create_table_ticker,
     drop_table_ticker,
     insert_into_ticker_values,

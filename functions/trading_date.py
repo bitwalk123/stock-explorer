@@ -3,7 +3,7 @@ import datetime as dt
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from database.sqls import select_max_date_from_trade
+from database.sqls_trade import select_max_date_from_trade
 
 
 def get_last_trading_date() -> int:
