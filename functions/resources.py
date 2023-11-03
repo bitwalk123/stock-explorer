@@ -44,7 +44,7 @@ def get_threadpool() -> QThreadPool:
     return threadpool
 
 
-def get_tse_data():
+def get_tse_data() -> pd.DataFrame:
     """Get TSE data in Excel format from specified URL
     """
     url = get_info('tse')
@@ -53,4 +53,5 @@ def get_tse_data():
     filename = wget.download(url)
     df_all = pd.read_excel(filename)
     delete_file(filename)
+
     return df_all
