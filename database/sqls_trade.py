@@ -67,7 +67,7 @@ def select_all_from_trade_with_id_code_start(id_code: int, start: int) -> str:
 def select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT date, open, high, low, close FROM trade
-        WHERE id_code=%d AND date >= %d AND date < %d;
+        WHERE id_code=%d AND date > %d AND date <= %d;
     """ % (id_code, start, end)
     return sql
 
