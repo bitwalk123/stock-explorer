@@ -63,11 +63,13 @@ def get_base_dataframe(list_valid_id_code, start, end) -> pd.DataFrame:
     return df_base
 
 
-def get_prediction_by_pls(df_base, dict_code, end_next, list_target_id_code):
+def get_prediction_by_pls(df_base:pd.DataFrame, dict_code, end_next, list_target_id_code):
     columns_summary_code = ['Components', 'RMSE', 'R2', 'Open']
     df_summary_code = pd.DataFrame(columns=columns_summary_code)
     for target_id_code in list_target_id_code:
         name_open = '%d_open' % target_id_code
+        if not (name_open in df_base.columns):
+            continue
         df_base_2 = df_base.drop(name_open, axis=1)
         # Preparing Training & Test datasets
         df_X_train = df_base_2.iloc[0:len(df_base_2) - 1, :]
