@@ -154,5 +154,5 @@ class ToolBarMain(QToolBar):
         dlg.show()
 
     def update_ticker(self, code):
-        ticker = '%d.T' % code
+        ticker = '%d' % code
         self.le_ticker.setText(ticker)
