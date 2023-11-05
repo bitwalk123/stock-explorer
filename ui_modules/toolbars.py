@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_standard_icon import get_standard_icon
+from ui_modules.dlf_predictions import DlgPredictions
 from ui_modules.dlg_config import DlgConfig
 from ui_modules.dlg_info_ticker import DlgInfoTicker
 from widgets.combos import ComboTradeRange
@@ -102,9 +103,17 @@ class ToolBarMain(QToolBar):
         self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
 
+        # Prediction viewer
+        but_pred = QToolButton()
+        but_pred.setToolTip('予測値の閲覧')
+        icon_pred = get_standard_icon(self, 'SP_FileDialogContentsView')
+        but_pred.setIcon(icon_pred)
+        but_pred.clicked.connect(self.show_predictions)
+        self.addWidget(but_pred)
+
         # Application config.
         but_conf = QToolButton()
-        but_conf.setText('Configuration')
+        # but_conf.setText('Configuration')
         but_conf.setToolTip('このアプリケーションの設定')
         icon_conf = get_standard_icon(self, 'SP_FileDialogDetailedView')
         but_conf.setIcon(icon_conf)
@@ -151,6 +160,10 @@ class ToolBarMain(QToolBar):
 
     def show_conf_dialog(self):
         dlg = DlgConfig(parent=self)
+        dlg.show()
+
+    def show_predictions(self):
+        dlg = DlgPredictions(parent=self)
         dlg.show()
 
     def update_ticker(self, code):
