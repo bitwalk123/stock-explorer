@@ -1,12 +1,11 @@
-import pandas as pd
-from PySide6.QtSql import QSqlQuery
+from PySide6.QtCore import Qt
 
-from PySide6.QtWidgets import QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout
 
-from database.sqls_predict import select_max_date_from_predict
-from functions.conv_timestamp2date import conv_timestamp2date
-from functions.resources import get_connection
+from functions.get_predict_date import get_predict_date_latest
 from ui_modules.panel_abstract import TabPanelAbstract
+from widgets.labels import LabelDate, LabelFlat
+from widgets.widgets import HPad
 
 
 class TabPanelPredictions(TabPanelAbstract):
@@ -14,17 +13,30 @@ class TabPanelPredictions(TabPanelAbstract):
 
     def __init__(self):
         super().__init__()
+        # self.setContentsMargins(0, 0, 0, 0)
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        # layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
 
-        con = get_connection()
-        if con.open():
-            sql = select_max_date_from_predict()
-            query = QSqlQuery(sql)
-            if query.next():
-                date_int = query.value(0)
-                print(date_int, conv_timestamp2date(date_int))
-            con.close()
+        bar = QWidget()
+        # bar.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(bar)
+
+        layout2 = QHBoxLayout()
+        layout2.setSpacing(0)
+        layout2.setContentsMargins(0, 0, 0, 0)
+        bar.setLayout(layout2)
+
+        lab_date_title = LabelFlat("Prediction Date")
+        layout2.addWidget(lab_date_title)
+        lab_date = LabelDate()
+        date_predict = get_predict_date_latest()
+        lab_date.setDate(date_predict)
+        lab_date.setFixedWidth(100)
+        layout2.addWidget(lab_date)
+        pad = HPad()
+        layout2.addWidget(pad)
