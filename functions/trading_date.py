@@ -25,8 +25,9 @@ def get_next_trading_date(end: int) -> int:
         end_next = end + day1 * 2
     else:
         end_next = end + day1
+
     list_holiday = get_holiday_list()
-    while end_next in list_holiday:
+    while (end_next in list_holiday) | (dt.datetime.fromtimestamp(end_next).weekday() > 4):
         end_next += day1
     return end_next
 

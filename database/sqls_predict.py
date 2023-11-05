@@ -56,6 +56,11 @@ def select_id_predict_from_predict_with_id_code_date(id_code: int, date: int) ->
     return sql
 
 
+def select_max_date_from_predict() -> str:
+    sql = 'SELECT MAX(date) FROM predict;'
+    return sql
+
+
 def update_predict_values(id_predict: int, series: pd.Series) -> str:
     sql = """
         UPDATE predict

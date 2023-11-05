@@ -1,11 +1,12 @@
 import pandas as pd
+from PySide6.QtSql import QSqlQuery
 
-from PySide6.QtWidgets import QLabel, QFileDialog, QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout
 
-from functions.read_csv import read_csv_contract_from_shiftjis
+from database.sqls_predict import select_max_date_from_predict
+from functions.conv_timestamp2date import conv_timestamp2date
+from functions.resources import get_connection
 from ui_modules.panel_abstract import TabPanelAbstract
-from widgets.buttons import ButtonIcon
-from widgets.layout import GridLayout
 
 
 class TabPanelPredictions(TabPanelAbstract):
@@ -18,3 +19,12 @@ class TabPanelPredictions(TabPanelAbstract):
     def init_ui(self):
         layout = QVBoxLayout()
         self.setLayout(layout)
+
+        con = get_connection()
+        if con.open():
+            sql = select_max_date_from_predict()
+            query = QSqlQuery(sql)
+            if query.next():
+                date_int = query.value(0)
+                print(date_int, conv_timestamp2date(date_int))
+            con.close()
