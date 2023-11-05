@@ -24,11 +24,9 @@ class TabPanelPredict(TabPanelAbstract):
         layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
-        # layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
 
         bar = QWidget()
-        # bar.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(bar)
 
         layout_bar = QHBoxLayout()
@@ -36,7 +34,7 @@ class TabPanelPredict(TabPanelAbstract):
         layout_bar.setContentsMargins(0, 0, 0, 0)
         bar.setLayout(layout_bar)
 
-        lab_date_title = LabelFlat("Prediction Date")
+        lab_date_title = LabelFlat('Target Date')
         layout_bar.addWidget(lab_date_title)
         lab_date = LabelDate()
         date_predict = get_predict_date_latest()
