@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_standard_icon import get_standard_icon
-from ui_modules.dlf_predictions import DlgPredictions
+from ui_modules.dlg_predictions import DlgPredictions
 from ui_modules.dlg_config import DlgConfig
 from ui_modules.dlg_info_ticker import DlgInfoTicker
 from widgets.combos import ComboTradeRange
