@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_standard_icon import get_standard_icon
+from ui_modules.tab_panel_predictions import TabPanelPredictions
 
 
 class DlgPredictions(QDialog):
@@ -15,7 +16,7 @@ class DlgPredictions(QDialog):
 
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
         self.setWindowModality(Qt.WindowModal)
-        self.setWindowTitle('予測値')
+        self.setWindowTitle('予測値閲覧')
 
         name = 'SP_FileDialogContentsView'
         icon_win = get_standard_icon(self, name)
@@ -33,10 +34,8 @@ class DlgPredictions(QDialog):
         tab = QTabWidget()
         layout.addWidget(tab)
 
-        #panel_contract = TabPanelContract()
-        #panel_database = TabPanelDatabase()
-        #tab.addTab(panel_contract, panel_contract.getTabLabel())
-        #tab.addTab(panel_database, panel_database.getTabLabel())
+        panel_pred = TabPanelPredictions()
+        tab.addTab(panel_pred, panel_pred.getTabLabel())
 
         dlg_button = QDialogButtonBox.StandardButton.Ok
         bbox = QDialogButtonBox(dlg_button)
