@@ -2,13 +2,16 @@ from PySide6.QtCore import Qt
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout
 
-from functions.get_predict_date import get_predict_date_latest
+from functions.get_predict import (
+    get_predict_dataframe,
+    get_predict_date_latest,
+)
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.labels import LabelDate, LabelFlat
 from widgets.widgets import HPad
 
 
-class TabPanelPredictions(TabPanelAbstract):
+class TabPanelPredict(TabPanelAbstract):
     tab_label = '始値予測一覧'
 
     def __init__(self):
@@ -18,7 +21,9 @@ class TabPanelPredictions(TabPanelAbstract):
 
     def init_ui(self):
         layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        layout.setAlignment(
+            Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        )
         # layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
 
@@ -40,3 +45,6 @@ class TabPanelPredictions(TabPanelAbstract):
         layout_bar.addWidget(lab_date)
         pad = HPad()
         layout_bar.addWidget(pad)
+
+        df_pred = get_predict_dataframe(date_predict)
+        print(df_pred)

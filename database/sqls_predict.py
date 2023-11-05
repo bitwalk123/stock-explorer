@@ -32,6 +32,14 @@ def insert_into_predict_values(id_code: int, date: int, series: pd.Series) -> st
     return sql
 
 
+def select_all_from_predict_with_date(date: int) -> str:
+    sql = """
+        SELECT id_code, comp, rmse, r2, open FROM predict
+        WHERE date=%d;
+    """ % date
+    return sql
+
+
 def select_date_open_from_predict_with_id_code_start(id_code: int, start: int) -> str:
     sql = """
         SELECT date, open FROM predict

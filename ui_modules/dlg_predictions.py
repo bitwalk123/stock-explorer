@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_standard_icon import get_standard_icon
-from ui_modules.tab_panel_predictions import TabPanelPredictions
+from ui_modules.tab_panel_predict import TabPanelPredict
 
 
 class DlgPredictions(QDialog):
@@ -34,7 +34,7 @@ class DlgPredictions(QDialog):
         tab = QTabWidget()
         layout.addWidget(tab)
 
-        panel_pred = TabPanelPredictions()
+        panel_pred = TabPanelPredict()
         tab.addTab(panel_pred, panel_pred.getTabLabel())
 
         dlg_button = QDialogButtonBox.StandardButton.Ok
@@ -42,3 +42,4 @@ class DlgPredictions(QDialog):
         bbox.setContentsMargins(0, 0, 0, 0)
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
+
