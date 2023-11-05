@@ -103,6 +103,7 @@ class ToolBarMain(QToolBar):
         self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
 
+        self.addSeparator()
         # Prediction viewer
         but_pred = QToolButton()
         but_pred.setToolTip('予測値の閲覧')
