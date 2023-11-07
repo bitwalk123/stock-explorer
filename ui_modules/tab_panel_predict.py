@@ -18,7 +18,7 @@ class TabPanelPredict(TabPanelAbstract):
 
     def __init__(self):
         super().__init__()
-        self.setMinimumSize(QSize(700, 700))
+        self.setMinimumSize(QSize(700, 500))
         # self.resize(QSize(600, 600))
         self.init_ui()
 

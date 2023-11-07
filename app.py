@@ -23,7 +23,7 @@ class StockExplorer(QMainWindow):
     """Main class for this application
     """
     __version__ = '0.1.0'
-    __build__ = '20231105'
+    __build__ = '20231107'
 
     def __init__(self):
         super().__init__()
@@ -34,7 +34,7 @@ class StockExplorer(QMainWindow):
         print(self.file_ini)
 
         self.setWindowTitle('Stock Explorer')
-        self.resize(1200, 700)
+        self.resize(1200, 600)
         icon = QIcon(os.path.join('images', 'stock.png'))
         self.setWindowIcon(icon)
 
