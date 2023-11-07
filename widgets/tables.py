@@ -1,3 +1,5 @@
+import pandas as pd
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
@@ -6,8 +8,10 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QScrollArea,
     QSizePolicy,
-    QVBoxLayout, QWidget,
+    QVBoxLayout, QWidget, QTableView, QHeaderView,
 )
+
+from widgets.models import TblPredictModel
 
 
 class CellDescription(QPlainTextEdit):
@@ -41,9 +45,9 @@ class CellOfficers(QScrollArea):
         self.setContentsMargins(0, 0, 0, 0)
         self.setWidgetResizable(True)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        #if len(list_dict) > 1:
+        # if len(list_dict) > 1:
         #    self.setFixedHeight(200)
-        #else:
+        # else:
         #    self.setFixedHeight(120)
         self.setFixedHeight(200)
 
@@ -98,3 +102,13 @@ class HeaderGeneral(QLabel):
         self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
         self.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.setStyleSheet('QLabel {padding:0 2px; background-color:#f0f0f0;}')
+
+
+class TblPredict(QTableView):
+    def __init__(self, df: pd.DataFrame):
+        super().__init__()
+        self.setAlternatingRowColors(True)
+        model = TblPredictModel(df)
+        self.setModel(model)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)

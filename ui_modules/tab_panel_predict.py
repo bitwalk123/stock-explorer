@@ -9,6 +9,7 @@ from functions.get_predict import (
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.labels import LabelDate, LabelFlat
 from widgets.models import TblPredictModel
+from widgets.tables import TblPredict
 from widgets.widgets import HPad
 
 
@@ -49,10 +50,5 @@ class TabPanelPredict(TabPanelAbstract):
         layout_bar.addWidget(pad)
 
         df_pred = get_predict_dataframe(date_predict)
-        view = QTableView()
+        view = TblPredict(df_pred)
         layout.addWidget(view)
-        view.setAlternatingRowColors(True)
-        model = TblPredictModel(df_pred)
-        view.setModel(model)
-        header = view.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
