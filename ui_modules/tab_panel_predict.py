@@ -49,6 +49,7 @@ class TabPanelPredict(TabPanelAbstract):
         pad = HPad()
         layout_bar.addWidget(pad)
 
+        # Predictions
         df_pred = get_predict_dataframe(date_predict)
         view = TblPredict(df_pred)
         layout.addWidget(view)

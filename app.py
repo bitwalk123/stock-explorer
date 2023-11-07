@@ -34,7 +34,7 @@ class StockExplorer(QMainWindow):
         print(self.file_ini)
 
         self.setWindowTitle('Stock Explorer')
-        self.resize(1500, 800)
+        self.resize(1200, 700)
         icon = QIcon(os.path.join('images', 'stock.png'))
         self.setWindowIcon(icon)
 
