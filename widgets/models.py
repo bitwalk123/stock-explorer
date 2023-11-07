@@ -2,6 +2,8 @@
 # coding: utf-8
 # Reference
 # https://doc.qt.io/qtforpython/examples/example_external__pandas.html
+from typing import Any
+
 import pandas as pd
 from PySide6.QtCore import (
     QAbstractTableModel,
@@ -48,7 +50,7 @@ class PandasModel(QAbstractTableModel):
 
         return None
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: Qt.ItemDataRole):
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = ...) -> Any:
         """Override method from QAbstractTableModel
 
         Return dataframe index as vertical header data and columns as horizontal header data.
