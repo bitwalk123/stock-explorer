@@ -12,7 +12,7 @@ from PySide6.QtCore import (
 )
 
 
-class PandasModel(QAbstractTableModel):
+class TblPredictModel(QAbstractTableModel):
     """A model to interface a Qt view with pandas dataframe """
 
     def __init__(self, dataframe: pd.DataFrame, parent=None):

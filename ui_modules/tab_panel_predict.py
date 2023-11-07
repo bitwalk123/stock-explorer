@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, QSize
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView, QSizePolicy
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView, QSizePolicy, QHeaderView
 
 from functions.get_predict import (
     get_predict_dataframe,
@@ -8,7 +8,7 @@ from functions.get_predict import (
 )
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.labels import LabelDate, LabelFlat
-from widgets.models import PandasModel
+from widgets.models import TblPredictModel
 from widgets.widgets import HPad
 
 
@@ -52,5 +52,7 @@ class TabPanelPredict(TabPanelAbstract):
         view = QTableView()
         layout.addWidget(view)
         view.setAlternatingRowColors(True)
-        model = PandasModel(df_pred)
+        model = TblPredictModel(df_pred)
         view.setModel(model)
+        header = view.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
