@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt, QSize
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView, QSizePolicy
 
 from functions.get_predict import (
     get_predict_dataframe,
@@ -17,7 +17,8 @@ class TabPanelPredict(TabPanelAbstract):
 
     def __init__(self):
         super().__init__()
-        # self.setMinimumSize(QSize(600, 600))
+        self.setMinimumSize(QSize(700, 700))
+        # self.resize(QSize(600, 600))
         self.init_ui()
 
     def init_ui(self):
