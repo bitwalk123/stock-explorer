@@ -1,6 +1,6 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout
+from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView
 
 from functions.get_predict import (
     get_predict_dataframe,
@@ -8,6 +8,7 @@ from functions.get_predict import (
 )
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.labels import LabelDate, LabelFlat
+from widgets.models import PandasModel
 from widgets.widgets import HPad
 
 
@@ -16,11 +17,13 @@ class TabPanelPredict(TabPanelAbstract):
 
     def __init__(self):
         super().__init__()
-        # self.setContentsMargins(0, 0, 0, 0)
+        # self.setMinimumSize(QSize(600, 600))
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
+        layout.setSpacing(0)
+        layout.setContentsMargins(5, 5, 5, 5)
         layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
@@ -45,4 +48,8 @@ class TabPanelPredict(TabPanelAbstract):
         layout_bar.addWidget(pad)
 
         df_pred = get_predict_dataframe(date_predict)
-        print(df_pred)
+        view = QTableView()
+        layout.addWidget(view)
+        view.setAlternatingRowColors(True)
+        model = PandasModel(df_pred)
+        view.setModel(model)
