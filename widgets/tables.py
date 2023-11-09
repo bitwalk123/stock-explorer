@@ -107,6 +107,11 @@ class HeaderGeneral(QLabel):
 class TblPredict(QTableView):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
+        self.setStyleSheet("""
+            QTableView {
+                font-family: monospace;
+            }
+        """)
         self.setAlternatingRowColors(True)
         model = TblPredictModel(df)
         self.setModel(model)

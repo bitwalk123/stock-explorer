@@ -4,6 +4,7 @@
 # https://doc.qt.io/qtforpython/examples/example_external__pandas.html
 from typing import Any
 
+import numpy as np
 import pandas as pd
 from PySide6.QtCore import (
     QAbstractTableModel,
@@ -45,8 +46,26 @@ class TblPredictModel(QAbstractTableModel):
         if not index.isValid():
             return None
 
+        row = index.row()
+        col = index.column()
+        value = self._dataframe.iloc[row, col]
+
         if role == Qt.DisplayRole:
-            return str(self._dataframe.iloc[index.row(), index.column()])
+            if type(value) is str:
+                return value
+            elif type(value) is np.float64:
+                if self._dataframe.columns[col] == 'R2':
+                    return '%.3f' % value
+                else:
+                    return '%.1f' % value
+            else:
+                return str(value)
+        elif role == Qt.TextAlignmentRole:
+            if (type(value) is np.int64) | (type(value) is np.float64):
+                flag = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+            else:
+                flag = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+            return flag
 
         return None
 
