@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
+import os
 import sys
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -17,6 +19,9 @@ class TransactionManager(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Transaction Manager')
+        icon = QIcon(os.path.join('images', 'spreadsheet.png'))
+        self.setWindowIcon(icon)
+
         self.init_ui()
 
     def init_ui(self):
