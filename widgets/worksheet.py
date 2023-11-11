@@ -1,5 +1,9 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QTableWidget, QHeaderView, QTableWidgetItem
+from PySide6.QtWidgets import (
+    QHeaderView,
+    QTableWidget,
+    QTableWidgetItem,
+)
 
 
 class WorkSheet(QTableWidget):
@@ -10,12 +14,12 @@ class WorkSheet(QTableWidget):
                 font-family: monospace;
             }
             QTableCornerButton::section {
-                background: white;
+                background: #fff;
             }
             QHeaderView {
                 font-family: monospace;
                 background: #eee;
-                color: #000;
+                color: #666;
             }
         """)
         self.itemChanged.connect(self.cell_updated)
@@ -24,6 +28,7 @@ class WorkSheet(QTableWidget):
         header_horiz.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.setHorizontalHeader(header_horiz)
         # self.setHorizontalHeaderLabels(list_header_col)
+
         header_vert = QHeaderView(Qt.Orientation.Vertical, parent=self)
         header_vert.setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
         header_vert.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
@@ -32,6 +37,7 @@ class WorkSheet(QTableWidget):
     def cell_updated(self, item: QTableWidgetItem):
         value = item.text()
         if self.is_num(value):
+            item.setText(str(float(value)))
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
         else:
             item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
