@@ -28,6 +28,7 @@ class TransactionManager(QMainWindow):
         self.setWindowTitle('Transaction Manager')
         self.dict_cname = get_dict_code_cname()
         print(self.dict_cname)
+        self.shares = 100
         self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
         self.sheet = WorkSheet(col_max=len(self.headers))
         self.init_ui()
@@ -64,6 +65,7 @@ class TransactionManager(QMainWindow):
                 value_new = str(int(float(value)))
                 if value_new in self.dict_cname.keys():
                     self.set_cname(row, value_new)
+                    self.set_shares(row)
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
 
@@ -104,6 +106,15 @@ class TransactionManager(QMainWindow):
             self.sheet.setItem(row, col_cname, item_cname)
         item_cname.setText(self.dict_cname[code_str])
         item_cname.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+
+    def set_shares(self, row: int):
+        col_shares = self.headers.index('株数')
+        item_shares = self.sheet.item(row, col_shares)
+        if item_shares is None:
+            item_shares = QTableWidgetItem()
+            self.sheet.setItem(row, col_shares, item_shares)
+        item_shares.setText(str(self.shares))
+        item_shares.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
 
 def main():
