@@ -1,6 +1,6 @@
 from functions.app_enum import PreProcessExcluded
 from functions.conv_timestamp2date import conv_timestamp2date
-from functions.get_dict_code import get_dict_code
+from functions.get_dict_code import get_dict_it_code_code
 from functions.preprocess import PreProcess
 
 
@@ -10,7 +10,7 @@ def get_valid_code(start: int, end: int) -> tuple:
     list_target_id_code = list()
     num_total = 0
     # prepare dictionary for id_code and code
-    dict_code: dict = get_dict_code()
+    dict_code: dict = get_dict_it_code_code()
     for id_code in dict_code.keys():
         code = dict_code[id_code]
         prep = PreProcess(id_code, start, end)

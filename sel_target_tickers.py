@@ -19,7 +19,7 @@ from functions.get_dataset import (
     get_target_list_id_code,
     get_valid_list_id_code,
 )
-from functions.get_dict_code import get_dict_code
+from functions.get_dict_code import get_dict_it_code_code
 from functions.get_elapsed import get_elapsed
 from functions.resources import get_connection
 
@@ -106,7 +106,7 @@ def main():
     dict_code = dict()
     con = get_connection()
     if con.open():
-        dict_code = get_dict_code()
+        dict_code = get_dict_it_code_code()
     con.close()
 
     # Create empty table

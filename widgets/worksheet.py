@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QHeaderView,
     QTableWidget,
@@ -7,27 +7,29 @@ from PySide6.QtWidgets import (
 
 
 class WorkSheet(QTableWidget):
+    cellUpdated = Signal(QTableWidgetItem)
+    css_table = """
+        QTableWidget {
+            font-family: monospace;
+        }
+        QTableCornerButton::section {
+            background: #fff;
+        }
+        QHeaderView {
+            font-family: monospace;
+            background: #eee;
+            color: #666;
+        }
+    """
+
     def __init__(self, row_max=256, col_max=100):
         super().__init__(row_max, col_max)
-        self.setStyleSheet("""
-            QTableWidget {
-                font-family: monospace;
-            }
-            QTableCornerButton::section {
-                background: #fff;
-            }
-            QHeaderView {
-                font-family: monospace;
-                background: #eee;
-                color: #666;
-            }
-        """)
-        self.itemChanged.connect(self.cell_updated)
+        self.setStyleSheet(self.css_table)
+        self.enableEvent()
 
         header_horiz = QHeaderView(Qt.Orientation.Horizontal, parent=self)
         header_horiz.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.setHorizontalHeader(header_horiz)
-        # self.setHorizontalHeaderLabels(list_header_col)
 
         header_vert = QHeaderView(Qt.Orientation.Vertical, parent=self)
         header_vert.setDefaultAlignment(Qt.AlignmentFlag.AlignRight)
@@ -35,18 +37,10 @@ class WorkSheet(QTableWidget):
         self.setVerticalHeader(header_vert)
 
     def cell_updated(self, item: QTableWidgetItem):
-        value = item.text()
-        if self.is_num(value):
-            item.setText(str(float(value)))
-            item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
-        else:
-            item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.cellUpdated.emit(item)
 
-    @staticmethod
-    def is_num(str_float: str) -> bool:
-        try:
-            float(str_float)
-        except ValueError:
-            return False
-        else:
-            return True
+    def enableEvent(self):
+        self.itemChanged.connect(self.cell_updated)
+
+    def disableEvent(self):
+        self.itemChanged.disconnect(self.cell_updated)

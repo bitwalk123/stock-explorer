@@ -2,7 +2,7 @@ import mplfinance as mpf
 from PySide6.QtSql import QSqlQuery
 
 from functions.conv_timestamp2date import conv_timestamp2date
-from functions.get_dict_code import get_dict_code, get_dict_id_code
+from functions.get_dict_code import get_dict_it_code_code, get_dict_code_id_code
 from functions.get_id_code_from_code import get_id_code_from_code
 from functions.get_open_with_code import (
     get_open_with_code,
@@ -99,7 +99,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
 
     con = get_connection()
     if con.open():
-        dict_id_code = get_dict_id_code()
+        dict_id_code = get_dict_code_id_code()
         sql = 'SELECT lastSplitDate FROM split WHERE id_code=%d' % dict_id_code[code]
         query = QSqlQuery(sql)
         last_split_date = 0

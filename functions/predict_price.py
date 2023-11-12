@@ -13,7 +13,7 @@ from database.sqls_predict import (
     update_predict_values,
 )
 from functions.get_dataset import combine_ticker_data
-from functions.get_dict_code import get_dict_code
+from functions.get_dict_code import get_dict_it_code_code
 from functions.get_valid_code import get_valid_code
 from functions.prediction import search_minimal_component_number
 from functions.resources import get_connection
@@ -25,7 +25,7 @@ def get_valid_dataset(start, end) -> tuple:
     pkl_list_valid_id_code = 'pool/list_valid_id_code_%d.pkl' % end
     pkl_list_target_id_code = 'pool/list_target_id_code_%d.pkl' % end
     if os.path.isfile(pkl_list_valid_id_code) and os.path.isfile(pkl_list_target_id_code):
-        dict_code: dict = get_dict_code()
+        dict_code: dict = get_dict_it_code_code()
         with open(pkl_list_valid_id_code, 'rb') as f:
             list_valid_id_code = pickle.load(f)
         with open(pkl_list_target_id_code, 'rb') as f:
