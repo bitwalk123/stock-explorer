@@ -29,7 +29,8 @@ class TransactionManager(QMainWindow):
         self.dict_cname = get_dict_code_cname()
         print(self.dict_cname)
         self.shares = 100
-        self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
+        #self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
+        self.headers = ['コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
         self.sheet = WorkSheet(col_max=len(self.headers))
         self.init_ui()
 
@@ -68,6 +69,18 @@ class TransactionManager(QMainWindow):
                     self.set_shares(row)
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+        elif header == '買値':
+            value_new = ''
+            if self.is_num(value):
+                value_new = '%.1f' % float(value)
+            item.setText(value_new)
+            item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
+        elif header == '売値':
+            value_new = ''
+            if self.is_num(value):
+                value_new = '%.1f' % float(value)
+            item.setText(value_new)
+            item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.sheet.enableEvent()
 
