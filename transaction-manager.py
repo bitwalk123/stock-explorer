@@ -50,7 +50,7 @@ class TransactionManager(QMainWindow):
         header = self.headers[col]
         if header == '取引日':
             value_date = ''
-            if value == 'today':
+            if (value == 'today') | (value == 'now'):
                 value_date = self.get_today_str()
             else:
                 m = self.pattern_date.match(value)
