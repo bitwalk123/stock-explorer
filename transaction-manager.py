@@ -14,7 +14,6 @@ from PySide6.QtWidgets import (
 )
 
 from functions.get_dict_code import get_dict_code_cname
-from functions.resources import get_connection
 from widgets.worksheet import WorkSheet
 
 
