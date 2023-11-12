@@ -29,7 +29,7 @@ class TransactionManager(QMainWindow):
         self.dict_cname = get_dict_code_cname()
         print(self.dict_cname)
         self.shares = 100
-        #self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
+        # self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
         self.headers = ['コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
         self.sheet = WorkSheet(col_max=len(self.headers))
         self.init_ui()
@@ -72,13 +72,17 @@ class TransactionManager(QMainWindow):
         elif header == '買値':
             value_new = ''
             if self.is_num(value):
-                value_new = '%.1f' % float(value)
+                value_new = '{:,.1f}'.format(float(value))
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
         elif header == '売値':
             value_new = ''
             if self.is_num(value):
-                value_new = '%.1f' % float(value)
+                price_sell = float(value)
+                value_new = '{:,.1f}'.format(price_sell)
+
+                self.set_profit_loss(row, price_sell)
+
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
@@ -119,6 +123,32 @@ class TransactionManager(QMainWindow):
             self.sheet.setItem(row, col_cname, item_cname)
         item_cname.setText(self.dict_cname[code_str])
         item_cname.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+
+    def set_profit_loss(self, row: int, price_sell: float):
+        col_pl = self.headers.index('株数')
+        item_pl = self.sheet.item(row, col_pl)
+        shares_str = item_pl.text()
+        shares = int(shares_str)
+        # print('株数', shares, type(shares))
+
+        col_buy = self.headers.index('買値')
+        item_buy = self.sheet.item(row, col_buy)
+        buy_str = item_buy.text().replace(',', '')
+        price_buy = float(buy_str)
+        # print('買値', price_buy, type(price_buy))
+        # print('売値', price_sell, type(price_sell))
+
+        profit_loss = int((price_sell - price_buy) * shares)
+        profit_loss_str = '{:,d}'.format(profit_loss)
+        # print('損益', profit_loss_str, type(profit_loss_str))
+
+        col_pl = self.headers.index('損益')
+        item_pl = self.sheet.item(row, col_pl)
+        if item_pl is None:
+            item_pl = QTableWidgetItem()
+            self.sheet.setItem(row, col_pl, item_pl)
+        item_pl.setText(profit_loss_str)
+        item_pl.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
     def set_shares(self, row: int):
         col_shares = self.headers.index('株数')
