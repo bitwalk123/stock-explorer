@@ -1,19 +1,23 @@
 #!/usr/bin/env python
 # coding: utf-8
-import datetime
 import os
 import re
 import sys
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QColor
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QTableWidgetItem,
 )
 
+from functions.conv_date import (
+    get_date_str,
+    get_today_str,
+)
 from functions.get_dict_code import get_dict_code_cname
+from functions.numeric import is_num
 from widgets.worksheet import WorkSheet
 
 
@@ -29,8 +33,7 @@ class TransactionManager(QMainWindow):
         self.dict_cname = get_dict_code_cname()
         print(self.dict_cname)
         self.shares = 100
-        # self.headers = ['取引日', 'コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
-        self.headers = ['コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント', 'コメント２']
+        self.headers = ['コード', '銘柄', '株数', '買値', '売値', '損益', 'コメント１', 'コメント２']
         self.sheet = WorkSheet(col_max=len(self.headers))
         self.init_ui()
 
@@ -39,6 +42,7 @@ class TransactionManager(QMainWindow):
         self.resize(800, 600)
 
     def init_ui(self):
+        # WorkSheet class
         self.sheet.setHorizontalHeaderLabels(self.headers)
         self.sheet.cellUpdated.connect(self.cell_updated)
         self.setCentralWidget(self.sheet)
@@ -50,19 +54,9 @@ class TransactionManager(QMainWindow):
         value = item.text()
 
         header = self.headers[col]
-        if header == '取引日':
-            value_date = ''
-            if (value == 'today') | (value == 'now'):
-                value_date = self.get_today_str()
-            else:
-                m = self.pattern_date.match(value)
-                if m:
-                    value_date = self.get_date_str(m)
-            item.setText(value_date)
-            item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
-        elif header == 'コード':
+        if header == 'コード':
             value_new = ''
-            if self.is_num(value):
+            if is_num(value):
                 value_new = str(int(float(value)))
                 if value_new in self.dict_cname.keys():
                     self.set_cname(row, value_new)
@@ -71,13 +65,13 @@ class TransactionManager(QMainWindow):
             item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
         elif header == '買値':
             value_new = ''
-            if self.is_num(value):
+            if is_num(value):
                 value_new = '{:,.1f}'.format(float(value))
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
         elif header == '売値':
             value_new = ''
-            if self.is_num(value):
+            if is_num(value):
                 price_sell = float(value)
                 value_new = '{:,.1f}'.format(price_sell)
 
@@ -87,33 +81,6 @@ class TransactionManager(QMainWindow):
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.sheet.enableEvent()
-
-    @staticmethod
-    def get_date_str(m: re.Match) -> str:
-        month = int(m.group(1))
-        day = int(m.group(2))
-        dt_now = datetime.datetime.now()
-        year = dt_now.year
-        value_date = '%4d/%02d/%02d' % (year, month, day)
-        return value_date
-
-    @staticmethod
-    def get_today_str():
-        dt_now = datetime.datetime.now()
-        year = dt_now.year
-        month = dt_now.month
-        day = dt_now.day
-        value_date = '%4d/%02d/%02d' % (year, month, day)
-        return value_date
-
-    @staticmethod
-    def is_num(str_float: str) -> bool:
-        try:
-            float(str_float)
-        except ValueError:
-            return False
-        else:
-            return True
 
     def set_cname(self, row: int, code_str: str):
         col_cname = self.headers.index('銘柄')
@@ -139,6 +106,11 @@ class TransactionManager(QMainWindow):
         # print('売値', price_sell, type(price_sell))
 
         profit_loss = int((price_sell - price_buy) * shares)
+        if profit_loss > 0:
+            color = QColor(0, 128, 0)
+        else:
+            color = QColor(255, 0, 0)
+
         profit_loss_str = '{:,d}'.format(profit_loss)
         # print('損益', profit_loss_str, type(profit_loss_str))
 
@@ -148,6 +120,7 @@ class TransactionManager(QMainWindow):
             item_pl = QTableWidgetItem()
             self.sheet.setItem(row, col_pl, item_pl)
         item_pl.setText(profit_loss_str)
+        item_pl.setForeground(color)
         item_pl.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
     def set_shares(self, row: int):
