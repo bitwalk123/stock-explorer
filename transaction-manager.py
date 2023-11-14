@@ -74,9 +74,7 @@ class TransactionManager(QMainWindow):
             if is_num(value):
                 price_sell = float(value)
                 value_new = '{:,.1f}'.format(price_sell)
-
                 self.set_profit_loss(row, price_sell)
-
             item.setText(value_new)
             item.setTextAlignment(Qt.AlignmentFlag.AlignRight)
 
@@ -96,14 +94,11 @@ class TransactionManager(QMainWindow):
         item_pl = self.sheet.item(row, col_pl)
         shares_str = item_pl.text()
         shares = int(shares_str)
-        # print('株数', shares, type(shares))
 
         col_buy = self.headers.index('買値')
         item_buy = self.sheet.item(row, col_buy)
         buy_str = item_buy.text().replace(',', '')
         price_buy = float(buy_str)
-        # print('買値', price_buy, type(price_buy))
-        # print('売値', price_sell, type(price_sell))
 
         profit_loss = int((price_sell - price_buy) * shares)
         if profit_loss > 0:
@@ -112,7 +107,6 @@ class TransactionManager(QMainWindow):
             color = QColor(255, 0, 0)
 
         profit_loss_str = '{:,d}'.format(profit_loss)
-        # print('損益', profit_loss_str, type(profit_loss_str))
 
         col_pl = self.headers.index('損益')
         item_pl = self.sheet.item(row, col_pl)

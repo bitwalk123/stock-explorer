@@ -7,5 +7,5 @@ if __name__ == '__main__':
     time_start = time.time()
     update_ticker_tbl()
     elapsed = get_elapsed(time_start)
-    print('[thread] finished updating! (%.3f sec)' % elapsed)
+    print('finished updating! (%.3f sec)' % elapsed)
 

@@ -23,7 +23,7 @@ class StockExplorer(QMainWindow):
     """Main class for this application
     """
     __version__ = '0.1.0'
-    __build__ = '20231111'
+    __build__ = '20231113'
 
     def __init__(self):
         super().__init__()

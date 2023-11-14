@@ -131,26 +131,12 @@ def update_ticker_values(id_code: int, series: pd.Series) -> str:
         UPDATE ticker
         SET 日付=%d,
             コード=%d,
-            銘柄名=%s,
-            市場・商品区分=%s,
-            33業種コード=%d,
-            33業種区分=%s,
-            17業種コード=%d,
-            17業種区分=%s,
-            規模コード=%s,
-            規模区分=%s,
+            銘柄名=\"%s\"
         WHERE id_code=%d;
     """ % (
         series['日付'],
         series['コード'],
         series['銘柄名'],
-        series['市場・商品区分'],
-        series['33業種コード'],
-        series['33業種区分'],
-        series['17業種コード'],
-        series['17業種区分'],
-        series['規模コード'],
-        series['規模区分'],
         id_code,
     )
     return sql
