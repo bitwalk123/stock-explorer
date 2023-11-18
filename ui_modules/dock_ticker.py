@@ -22,6 +22,7 @@ class DockTicker(QDockWidget):
     """Dock for listing all tickers
     """
     clicked = Signal(int)
+    dict_ticker = None
 
     def __init__(self):
         super().__init__()
@@ -49,16 +50,16 @@ class DockTicker(QDockWidget):
         base.setLayout(layout)
 
         id = 0
-        dict_ticker = get_list_ticker()
+        self.dict_ticker = get_list_ticker()
         list_ticker_predicted = get_list_ticker_predicted()
-        for key in dict_ticker.keys():
+        for key in self.dict_ticker.keys():
             rb = TickerRadioButton(str(key))
             if key in list_ticker_predicted:
                 rb.setPredicted()
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
             id += 1
-            rb.setToolTip(dict_ticker[key])
+            rb.setToolTip(self.dict_ticker[key])
             rb.toggled.connect(self.on_button_clicked)
             layout.addWidget(rb)
         self.id_max = id
@@ -108,3 +109,6 @@ class DockTicker(QDockWidget):
     def set_rb_checked_with_id(self, id):
         rb = self.rb_group.button(id)
         rb.setChecked(True)
+
+    def update_ticker(self, code:int):
+        print(code)

@@ -11,8 +11,10 @@ from PySide6.QtWidgets import (
 )
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
+from functions.alert import alert_no_ticker
 from functions.draw_trend import draw_trend
 from functions.get_ini_file import get_ini_file
+from functions.numeric import is_num
 from ui_modules.dock_controller import DockController
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.toolbars import ToolBarMain
@@ -111,8 +113,12 @@ class StockExplorer(QMainWindow):
         self.dock_left.get_ticker_down()
 
     def on_ticker_entered(self, ticker: str):
-        # self.dock_left.get_ticker_down()
-        print(ticker)
+        if is_num(ticker):
+            print(ticker)
+        else:
+            alert_no_ticker(ticker)
+            code = self.dock_left.get_current_ticker()
+            self.toolbar.update_ticker(code)
 
     def on_ticker_up(self):
         """Move ticker up

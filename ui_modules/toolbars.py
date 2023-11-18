@@ -35,6 +35,9 @@ class ToolBarMain(QToolBar):
 
         self.init_ui()
 
+    def clear_ticker(self):
+        self.ent_ticker.setText('')
+
     def init_ui(self):
         # Ticker
         lab_ticker = QLabel('銘柄')
