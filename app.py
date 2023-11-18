@@ -47,6 +47,12 @@ class StockExplorer(QMainWindow):
 
         self.init_ui()
 
+    def closeEvent(self, event):
+        """Close event when user click X button.
+        """
+        print('アプリケーションを終了します。')
+        event.accept()  # let the window close
+
     def init_ui(self):
         """Initialize UI
         """
@@ -114,22 +120,21 @@ class StockExplorer(QMainWindow):
 
     def on_ticker_entered(self, ticker: str):
         if is_num(ticker):
-            print(ticker)
+            code = int(ticker)
+            if not self.dock_left.update_ticker(code):
+                self.restore_no_ticker(ticker)
         else:
-            alert_no_ticker(ticker)
-            code = self.dock_left.get_current_ticker()
-            self.toolbar.update_ticker(code)
+            self.restore_no_ticker(ticker)
 
     def on_ticker_up(self):
         """Move ticker up
         """
         self.dock_left.get_ticker_up()
 
-    def closeEvent(self, event):
-        """Close event when user click X button.
-        """
-        print('アプリケーションを終了します。')
-        event.accept()  # let the window close
+    def restore_no_ticker(self, ticker):
+        alert_no_ticker(ticker)
+        code = self.dock_left.get_current_ticker()
+        self.toolbar.update_ticker(code)
 
 
 def main():

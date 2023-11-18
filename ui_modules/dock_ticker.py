@@ -29,6 +29,7 @@ class DockTicker(QDockWidget):
         self.setTitleBarWidget(QWidget(None))
         # self.setContentsMargins(0, 0, 0, 0)
 
+        self.dict_id = dict()
         self.id_max = 0
         self.area = QScrollArea()
         self.rb_group = QButtonGroup()
@@ -58,6 +59,7 @@ class DockTicker(QDockWidget):
                 rb.setPredicted()
             self.rb_group.addButton(rb)
             self.rb_group.setId(rb, id)
+            self.dict_id[key] = id
             id += 1
             rb.setToolTip(self.dict_ticker[key])
             rb.toggled.connect(self.on_button_clicked)
@@ -110,5 +112,11 @@ class DockTicker(QDockWidget):
         rb = self.rb_group.button(id)
         rb.setChecked(True)
 
-    def update_ticker(self, code:int):
-        print(code)
+    def update_ticker(self, code: int) -> bool:
+        if code in self.dict_ticker.keys():
+            id = self.dict_id[code]
+            rb: TickerRadioButton = self.rb_group.button(id)
+            rb.setChecked(True)
+            return True
+        else:
+            return False
