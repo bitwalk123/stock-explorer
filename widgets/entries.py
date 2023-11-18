@@ -6,5 +6,4 @@ class EntryTicker(QLineEdit):
         super().__init__()
         self.setFixedWidth(75)
         self.setStyleSheet('QLineEdit {padding-left:5px;}')
-        self.setReadOnly(True)
 

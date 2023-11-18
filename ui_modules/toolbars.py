@@ -1,5 +1,3 @@
-import datetime as dt
-import pandas as pd
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import (
@@ -10,6 +8,7 @@ from PySide6.QtWidgets import (
     QToolButton,
 )
 
+from functions.get_past_date import get_past_date
 from functions.get_standard_icon import get_standard_icon
 from ui_modules.dlg_predictions import DlgPredictions
 from ui_modules.dlg_config import DlgConfig
@@ -21,11 +20,12 @@ from widgets.widgets import HPad
 
 class ToolBarMain(QToolBar):
     periodUpdate = Signal()
-    tickerUp = Signal()
     tickerDown = Signal()
+    tickerEntered = Signal(str)
+    tickerUp = Signal()
     plotTypeUpdated = Signal()
 
-    le_ticker = None
+    ent_ticker = None
     combo_range = None
     rb_group = None
 
@@ -40,8 +40,11 @@ class ToolBarMain(QToolBar):
         lab_ticker = QLabel('銘柄')
         lab_ticker.setContentsMargins(0, 0, 5, 0)
         self.addWidget(lab_ticker)
-        self.le_ticker = EntryTicker()
-        self.addWidget(self.le_ticker)
+        self.ent_ticker = EntryTicker()
+        self.ent_ticker.returnPressed.connect(
+            self.on_ticker_entered
+        )
+        self.addWidget(self.ent_ticker)
 
         # 期間
         lab_range = QLabel('期間')
@@ -49,7 +52,9 @@ class ToolBarMain(QToolBar):
         self.addWidget(lab_range)
 
         self.combo_range = ComboTradeRange()
-        self.combo_range.currentIndexChanged.connect(self.on_selected_range_changed)
+        self.combo_range.currentIndexChanged.connect(
+            self.on_selected_range_changed
+        )
         self.addWidget(self.combo_range)
 
         self.addSeparator()
@@ -92,11 +97,11 @@ class ToolBarMain(QToolBar):
         #
         rb_candle = QRadioButton('Candle')
         rb_candle.setChecked(True)
-        rb_candle.clicked.connect(self.on_plot_tyoe_changed)
+        rb_candle.clicked.connect(self.on_plot_type_changed)
         self.addWidget(rb_candle)
         #
         rb_open = QRadioButton('Open')
-        rb_open.clicked.connect(self.on_plot_tyoe_changed)
+        rb_open.clicked.connect(self.on_plot_type_changed)
         self.addWidget(rb_open)
         #
         self.rb_group = QButtonGroup()
@@ -123,24 +128,13 @@ class ToolBarMain(QToolBar):
 
     def get_start_date(self) -> int:
         sel = self.combo_range.currentText()
-        today = int(pd.to_datetime(str(dt.date.today())).timestamp())
-        year = 365 * 24 * 60 * 60
-        if sel == '３ヵ月':
-            return int(today - year / 4)
-        elif sel == '６ヵ月':
-            return int(today - year / 2)
-        elif sel == '１年':
-            return today - year
-        elif sel == '２年':
-            return today - 2 * year
-        else:
-            return -1
+        return get_past_date(sel)
 
     def get_plot_type(self):
         rb = self.rb_group.checkedButton()
         return rb.text()
 
-    def on_plot_tyoe_changed(self):
+    def on_plot_type_changed(self):
         rb: QRadioButton = self.sender()
         if rb.isChecked():
             self.plotTypeUpdated.emit()
@@ -148,13 +142,17 @@ class ToolBarMain(QToolBar):
     def on_selected_range_changed(self, i):
         self.periodUpdate.emit()
 
+    def on_ticker_down(self):
+        self.tickerDown.emit()
+
+    def on_ticker_entered(self):
+        entered: str = self.ent_ticker.text()
+        self.tickerEntered.emit(entered)
+
     def on_ticker_info(self):
         code = self.parent.dock_left.get_current_ticker()
         dlg = DlgInfoTicker(code, parent=self)
         dlg.show()
-
-    def on_ticker_down(self):
-        self.tickerDown.emit()
 
     def on_ticker_up(self):
         self.tickerUp.emit()
@@ -169,4 +167,4 @@ class ToolBarMain(QToolBar):
 
     def update_ticker(self, code):
         ticker = '%d' % code
-        self.le_ticker.setText(ticker)
+        self.ent_ticker.setText(ticker)

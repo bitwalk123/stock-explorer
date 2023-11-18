@@ -23,7 +23,7 @@ class StockExplorer(QMainWindow):
     """Main class for this application
     """
     __version__ = '0.1.0'
-    __build__ = '20231113'
+    __build__ = '20231119'
 
     def __init__(self):
         super().__init__()
@@ -51,6 +51,7 @@ class StockExplorer(QMainWindow):
         # Toolbar
         self.toolbar.periodUpdate.connect(self.on_period_update)
         self.toolbar.tickerDown.connect(self.on_ticker_down)
+        self.toolbar.tickerEntered.connect(self.on_ticker_entered)
         self.toolbar.tickerUp.connect(self.on_ticker_up)
         self.toolbar.plotTypeUpdated.connect(self.on_chart_type_update)
         self.addToolBar(self.toolbar)
@@ -108,6 +109,10 @@ class StockExplorer(QMainWindow):
         """Move ticker down
         """
         self.dock_left.get_ticker_down()
+
+    def on_ticker_entered(self, ticker: str):
+        # self.dock_left.get_ticker_down()
+        print(ticker)
 
     def on_ticker_up(self):
         """Move ticker up
