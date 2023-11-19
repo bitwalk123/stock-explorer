@@ -64,7 +64,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
         list_y,
         color='blue',
         marker='o',
-        markersize=2,
+        markersize=4,
         linewidth=0.5
     )
     if len(list_x_pred) > 0:
@@ -73,7 +73,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
             list_y_pred,
             color='red',
             marker='o',
-            markersize=2,
+            markersize=4,
             linestyle='dotted',
             linewidth=0.5,
         )
