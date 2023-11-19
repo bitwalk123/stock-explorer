@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
@@ -8,13 +8,13 @@ from PySide6.QtWidgets import (
 
 from functions.get_standard_icon import get_standard_icon
 from ui_modules.tab_panel_predict import TabPanelPredict
-from ui_modules.toolbar_abstract import ToolBarMainAbstract
 
 
 class DlgPredictions(QDialog):
-    def __init__(self, parent: ToolBarMainAbstract = None):
+    updateCode = Signal(int)
+
+    def __init__(self, parent):
         super().__init__(parent)
-        self.parent = parent
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
         self.setWindowModality(Qt.WindowModality.NonModal)
         self.setWindowTitle('予測値閲覧')
@@ -46,5 +46,4 @@ class DlgPredictions(QDialog):
         layout.addWidget(bbox)
 
     def update_code(self, code: int):
-        self.parent.update_ticker(code)
-        self.parent.on_ticker_entered()
+        self.updateCode.emit(code)
