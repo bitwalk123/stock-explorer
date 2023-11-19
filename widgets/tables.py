@@ -159,6 +159,6 @@ class TblPredict(QTableView):
             QHeaderView.ResizeMode.ResizeToContents
         )
 
-    def get_code(self, row: int):
+    def get_code(self, row: int) -> int:
         code = int(self.model.get_row(row)['コード'].iloc[0])
-        print(code)
+        return code

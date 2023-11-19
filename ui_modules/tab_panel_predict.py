@@ -1,4 +1,8 @@
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import (
+    QSize,
+    Qt,
+    Signal,
+)
 
 from PySide6.QtWidgets import (
     QHBoxLayout,
@@ -17,6 +21,7 @@ from widgets.widgets import HPad
 
 
 class TabPanelPredict(TabPanelAbstract):
+    rowDblClicked = Signal(int)
     tab_label = '始値予測一覧'
 
     def __init__(self):
@@ -61,4 +66,5 @@ class TabPanelPredict(TabPanelAbstract):
         layout.addWidget(self.view)
 
     def row_double_clicked(self, row: int):
-        self.view.get_code(row)
+        code = self.view.get_code(row)
+        self.rowDblClicked.emit(code)

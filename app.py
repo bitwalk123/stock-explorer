@@ -136,6 +136,11 @@ class StockExplorer(QMainWindow):
         code = self.dock_left.get_current_ticker()
         self.toolbar.update_ticker(code)
 
+    def update_code(self, code: int):
+        self.toolbar.update_ticker(code)
+        if not self.dock_left.update_ticker(code):
+            self.restore_no_ticker(str(code))
+
 
 def main():
     """Main event loop

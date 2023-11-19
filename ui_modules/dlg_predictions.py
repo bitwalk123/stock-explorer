@@ -13,7 +13,7 @@ from ui_modules.tab_panel_predict import TabPanelPredict
 class DlgPredictions(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-
+        self.parent = parent
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
         self.setWindowModality(Qt.WindowModality.NonModal)
         self.setWindowTitle('予測値閲覧')
@@ -35,6 +35,7 @@ class DlgPredictions(QDialog):
         layout.addWidget(tab)
 
         panel_pred = TabPanelPredict()
+        panel_pred.rowDblClicked.connect(self.update_code)
         tab.addTab(panel_pred, panel_pred.getTabLabel())
 
         dlg_button = QDialogButtonBox.StandardButton.Ok
@@ -42,3 +43,7 @@ class DlgPredictions(QDialog):
         bbox.setContentsMargins(0, 0, 0, 0)
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
+
+    def update_code(self, code:int):
+        self.parent.update_ticker(code)
+        self.parent.on_ticker_entered()
