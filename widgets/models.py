@@ -64,3 +64,6 @@ class TblPredictModel(QAbstractTableModel):
                 return Qt.AlignmentFlag.AlignVCenter + Qt.AlignmentFlag.AlignRight
 
         return None
+
+    def get_row(self, row: int):
+        return self._dataframe[row:row + 1:]

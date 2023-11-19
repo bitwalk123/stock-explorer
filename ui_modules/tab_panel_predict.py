@@ -1,6 +1,10 @@
 from PySide6.QtCore import Qt, QSize
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QTableView, QSizePolicy, QHeaderView
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QVBoxLayout,
+    QWidget,
+)
 
 from functions.get_predict import (
     get_predict_dataframe,
@@ -8,7 +12,6 @@ from functions.get_predict import (
 )
 from ui_modules.panel_abstract import TabPanelAbstract
 from widgets.labels import LabelDate, LabelFlat
-from widgets.models import TblPredictModel
 from widgets.tables import TblPredict
 from widgets.widgets import HPad
 
@@ -18,6 +21,7 @@ class TabPanelPredict(TabPanelAbstract):
 
     def __init__(self):
         super().__init__()
+        self.view = None
         self.setMinimumSize(QSize(700, 500))
         # self.resize(QSize(600, 600))
         self.init_ui()
@@ -51,5 +55,10 @@ class TabPanelPredict(TabPanelAbstract):
 
         # Predictions
         df_pred = get_predict_dataframe(date_predict)
-        view = TblPredict(df_pred)
-        layout.addWidget(view)
+        self.view = TblPredict(df_pred)
+        header_row = self.view.verticalHeader()
+        header_row.sectionDoubleClicked.connect(self.row_double_clicked)
+        layout.addWidget(self.view)
+
+    def row_double_clicked(self, row: int):
+        self.view.get_code(row)

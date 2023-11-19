@@ -15,7 +15,7 @@ class DlgPredictions(QDialog):
         super().__init__(parent)
 
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
-        self.setWindowModality(Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModality.NonModal)
         self.setWindowTitle('予測値閲覧')
 
         name = 'SP_FileDialogContentsView'
@@ -42,4 +42,3 @@ class DlgPredictions(QDialog):
         bbox.setContentsMargins(0, 0, 0, 0)
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
-

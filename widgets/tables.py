@@ -4,11 +4,14 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
+    QHeaderView,
     QLabel,
     QPlainTextEdit,
     QScrollArea,
     QSizePolicy,
-    QVBoxLayout, QWidget, QTableView, QHeaderView,
+    QTableView,
+    QVBoxLayout,
+    QWidget,
 )
 
 from widgets.models import TblPredictModel
@@ -17,8 +20,15 @@ from widgets.models import TblPredictModel
 class CellDescription(QPlainTextEdit):
     def __init__(self, value):
         super().__init__(str(value))
-        self.setStyleSheet('QPlainTextEdit {padding:0 2px; background-color:white;}')
         self.setFixedHeight(200)
+        self.setStyleSheet(
+            """
+            QPlainTextEdit {
+                padding: 0 2px;
+                background-color: white;
+            }
+            """
+        )
 
 
 class CellGeneral(QLabel):
@@ -26,7 +36,14 @@ class CellGeneral(QLabel):
         super().__init__(str(value))
         self.setContentsMargins(0, 0, 0, 0)
         self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        self.setStyleSheet('QLabel {padding:0 2px; background-color:white;}')
+        self.setStyleSheet(
+            """
+            QLabel {
+                padding: 0 2px;
+                background-color: white;
+            }
+            """
+        )
 
 
 class CellHyperLink(QLabel):
@@ -36,7 +53,14 @@ class CellHyperLink(QLabel):
         self.setOpenExternalLinks(True)
         self.setContentsMargins(0, 0, 0, 0)
         self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        self.setStyleSheet('QLabel {padding:0 2px; background-color:white;}')
+        self.setStyleSheet(
+            """
+            QLabel {
+                padding: 0 2px;
+                background-color: white;
+            }
+            """
+        )
 
 
 class CellOfficers(QScrollArea):
@@ -70,7 +94,13 @@ class CellOfficerSingle(QFrame):
         super().__init__()
         self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
         self.setLineWidth(2)
-        self.setStyleSheet('QFrame {background-color:#ccc;}')
+        self.setStyleSheet(
+            """
+            QFrame {
+                background-color: #ccc;
+            }
+            """
+        )
         self.setContentsMargins(2, 2, 2, 2)
         self.setSizePolicy(
             QSizePolicy.Policy.Expanding,
@@ -101,19 +131,34 @@ class HeaderGeneral(QLabel):
         self.setContentsMargins(0, 0, 0, 0)
         self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
         self.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.setStyleSheet('QLabel {padding:0 2px; background-color:#f0f0f0;}')
+        self.setStyleSheet(
+            """
+            QLabel {
+                padding: 0 2px;
+                background-color: #f0f0f0;
+            }
+            """
+        )
 
 
 class TblPredict(QTableView):
     def __init__(self, df: pd.DataFrame):
         super().__init__()
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QTableView {
                 font-family: monospace;
             }
-        """)
+            """
+        )
         self.setAlternatingRowColors(True)
-        model = TblPredictModel(df)
-        self.setModel(model)
-        header = self.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.model = TblPredictModel(df)
+        self.setModel(self.model)
+        header_vert = self.horizontalHeader()
+        header_vert.setSectionResizeMode(
+            QHeaderView.ResizeMode.ResizeToContents
+        )
+
+    def get_code(self, row: int):
+        code = int(self.model.get_row(row)['コード'].iloc[0])
+        print(code)
