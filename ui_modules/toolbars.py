@@ -110,7 +110,6 @@ class ToolBarMain(ToolBarMainAbstract):
 
         # Application config.
         but_conf = QToolButton()
-        # but_conf.setText('Configuration')
         but_conf.setToolTip('このアプリケーションの設定')
         icon_conf = get_standard_icon(self, 'SP_FileDialogDetailedView')
         but_conf.setIcon(icon_conf)
