@@ -7,7 +7,11 @@ from PySide6.QtWidgets import (
     QToolButton,
 )
 
+from functions.get_past_date import get_past_date
 from functions.get_standard_icon import get_standard_icon
+from ui_modules.dlg_config import DlgConfig
+from ui_modules.dlg_info_ticker import DlgInfoTicker
+from ui_modules.dlg_predictions import DlgPredictions
 from ui_modules.toolbar_abstract import ToolBarMainAbstract
 from widgets.combos import ComboTradeRange
 from widgets.entries import EntryTicker
@@ -18,6 +22,9 @@ class ToolBarMain(ToolBarMainAbstract):
     def __init__(self, parent):
         super().__init__(parent)
         self.init_ui()
+
+    def clear_ticker(self):
+        self.ent_ticker.setText('')
 
     def init_ui(self):
         # Ticker
@@ -109,3 +116,24 @@ class ToolBarMain(ToolBarMainAbstract):
         but_conf.setIcon(icon_conf)
         but_conf.clicked.connect(self.show_conf_dialog)
         self.addWidget(but_conf)
+
+    def get_start_date(self) -> int:
+        sel = self.combo_range.currentText()
+        return get_past_date(sel)
+
+    def get_plot_type(self):
+        rb = self.rb_group.checkedButton()
+        return rb.text()
+
+    def on_ticker_info(self):
+        code = self.parent.dock_left.get_current_ticker()
+        dlg = DlgInfoTicker(code, parent=self)
+        dlg.show()
+
+    def show_conf_dialog(self):
+        dlg = DlgConfig(parent=self)
+        dlg.show()
+
+    def show_predictions(self):
+        dlg = DlgPredictions(parent=self)
+        dlg.show()

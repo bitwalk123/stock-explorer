@@ -8,10 +8,11 @@ from PySide6.QtWidgets import (
 
 from functions.get_standard_icon import get_standard_icon
 from ui_modules.tab_panel_predict import TabPanelPredict
+from ui_modules.toolbar_abstract import ToolBarMainAbstract
 
 
 class DlgPredictions(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent: ToolBarMainAbstract = None):
         super().__init__(parent)
         self.parent = parent
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
@@ -44,6 +45,6 @@ class DlgPredictions(QDialog):
         bbox.accepted.connect(self.accept)
         layout.addWidget(bbox)
 
-    def update_code(self, code:int):
+    def update_code(self, code: int):
         self.parent.update_ticker(code)
         self.parent.on_ticker_entered()
