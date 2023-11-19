@@ -15,7 +15,7 @@ class PreProcess():
     FACTOR_PRICE: float = 1100.0
     FACTOR_TOLERANCE: float = 0.2
     FACTOR_SPLIT: float = 1.5
-    FACTOR_VOLUME: int = 50000
+    FACTOR_VOLUME: int = 100000
 
     FLAG_EXCLUDE = None
 
