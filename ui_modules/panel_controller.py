@@ -59,9 +59,9 @@ class PanelInfo(QWidget):
         layout.addWidget(hpad)
 
     def update_ticker(self, code: int, start: int):
-        self.disp_code.setText('%d.T' % code)
+        self.disp_code.setText('%d' % code)
         date_min, date_max, volume_median, num = get_volume_median_with_code_start(code, start)
         self.disp_from.setDate(date_min)
         self.disp_to.setDate(date_max)
-        self.disp_volume.setText('%d' % volume_median)
+        self.disp_volume.setText(format(volume_median, ','))
         self.disp_num.setText('%d' % num)

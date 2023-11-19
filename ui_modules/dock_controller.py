@@ -1,12 +1,10 @@
 from PySide6.QtWidgets import (
     QDockWidget,
-    QPushButton,
     QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
 
-from functions.get_volume_median import get_volume_median_with_code_start
 from ui_modules.dock_ticker import DockTicker
 from ui_modules.panel_controller import PanelInfo
 from ui_modules.toolbars import ToolBarMain
@@ -39,14 +37,6 @@ class DockController(QDockWidget):
         self.info = PanelInfo()
         layout.addWidget(self.info)
 
-        but = QPushButton('TEST')
-        but.clicked.connect(self.on_click_button)
-        but.setSizePolicy(
-            QSizePolicy.Policy.Fixed,
-            QSizePolicy.Policy.Preferred
-        )
-        layout.addWidget(but)
-
         # padding horizontally
         hpad = QWidget()
         hpad.setSizePolicy(
@@ -58,10 +48,3 @@ class DockController(QDockWidget):
     def update_ticker(self, code: int):
         start = self.toolbar.get_start_date()
         self.info.update_ticker(code, start)
-
-    def on_click_button(self):
-        """Handle buttonclick event
-        """
-        code: int = self.dock_ticker.get_current_ticker()
-        start = self.toolbar.get_start_date()
-        volume_median = get_volume_median_with_code_start(code, start)
