@@ -85,20 +85,20 @@ class ToolBarMain(ToolBarMainAbstract):
         lab_plottype = QLabel('プロット')
         lab_plottype.setContentsMargins(0, 0, 10, 0)
         self.addWidget(lab_plottype)
-        #
+        # for Candle chart
         rb_candle = QRadioButton('Candle')
         rb_candle.setChecked(True)
         rb_candle.clicked.connect(self.on_plot_type_changed)
         self.addWidget(rb_candle)
-        #
+        # for Open chart
         rb_open = QRadioButton('Open')
         rb_open.clicked.connect(self.on_plot_type_changed)
         self.addWidget(rb_open)
-        #
+        # RadioButton group
         self.rb_group = QButtonGroup()
-        self.rb_group.addButton(rb_open)
         self.rb_group.addButton(rb_candle)
-
+        self.rb_group.addButton(rb_open)
+        #
         self.addSeparator()
         # Prediction viewer
         but_pred = QToolButton()
@@ -107,7 +107,6 @@ class ToolBarMain(ToolBarMainAbstract):
         but_pred.setIcon(icon_pred)
         but_pred.clicked.connect(self.show_predictions)
         self.addWidget(but_pred)
-
         # Application config.
         but_conf = QToolButton()
         but_conf.setToolTip('このアプリケーションの設定')
