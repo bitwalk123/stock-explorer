@@ -26,6 +26,7 @@ class ToolBarMain(QToolBar):
     ent_ticker = None
     combo_range = None
     rb_group = None
+    but_pred = None
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -33,6 +34,9 @@ class ToolBarMain(QToolBar):
 
     def clear_ticker(self):
         self.ent_ticker.setText('')
+
+    def enable_but_pred(self, flag: bool = True):
+        self.but_pred.setEnabled(flag)
 
     def init_ui(self):
         # Ticker
@@ -102,12 +106,12 @@ class ToolBarMain(QToolBar):
         #
         self.addSeparator()
         # Prediction viewer
-        but_pred = QToolButton()
-        but_pred.setToolTip('予測値の閲覧')
+        self.but_pred = QToolButton()
+        self.but_pred.setToolTip('予測値の閲覧')
         icon_pred = get_standard_icon(self, 'SP_FileDialogContentsView')
-        but_pred.setIcon(icon_pred)
-        but_pred.clicked.connect(self.show_predictions)
-        self.addWidget(but_pred)
+        self.but_pred.setIcon(icon_pred)
+        self.but_pred.clicked.connect(self.show_predictions)
+        self.addWidget(self.but_pred)
         # Application config.
         but_conf = QToolButton()
         but_conf.setToolTip('このアプリケーションの設定')
@@ -147,9 +151,12 @@ class ToolBarMain(QToolBar):
         dlg.show()
 
     def show_predictions(self):
+        self.enable_but_pred(flag=False)
         dlg = DlgPredictions(self)
         dlg.updateCode.connect(self.update_code)
+        dlg.closeDlg.connect(self.enable_but_pred)
         dlg.show()
+
 
     def update_code(self, code: int):
         self.update_ticker(code)
