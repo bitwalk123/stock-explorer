@@ -23,13 +23,14 @@ class ToolBarMain(QToolBar):
     tickerEntered = Signal(str)
     tickerUp = Signal()
 
-    ent_ticker = None
-    combo_range = None
-    rb_group = None
-    but_pred = None
-
     def __init__(self, parent):
         super().__init__(parent)
+
+        self.ent_ticker = EntryTicker()
+        self.combo_range = ComboTradeRange()
+        self.rb_group = QButtonGroup()
+        self.but_pred = QToolButton()
+
         self.init_ui()
 
     def clear_ticker(self):
@@ -43,7 +44,6 @@ class ToolBarMain(QToolBar):
         lab_ticker = QLabel('銘柄')
         lab_ticker.setContentsMargins(0, 0, 5, 0)
         self.addWidget(lab_ticker)
-        self.ent_ticker = EntryTicker()
         self.ent_ticker.returnPressed.connect(
             self.on_ticker_entered
         )
@@ -54,7 +54,6 @@ class ToolBarMain(QToolBar):
         lab_range.setContentsMargins(10, 0, 5, 0)
         self.addWidget(lab_range)
 
-        self.combo_range = ComboTradeRange()
         self.combo_range.currentIndexChanged.connect(
             self.on_selected_range_changed
         )
@@ -100,13 +99,11 @@ class ToolBarMain(QToolBar):
         rb_open.clicked.connect(self.on_plot_type_changed)
         self.addWidget(rb_open)
         # RadioButton group
-        self.rb_group = QButtonGroup()
         self.rb_group.addButton(rb_candle)
         self.rb_group.addButton(rb_open)
         #
         self.addSeparator()
         # Prediction viewer
-        self.but_pred = QToolButton()
         self.but_pred.setToolTip('予測値の閲覧')
         icon_pred = get_standard_icon(self, 'SP_FileDialogContentsView')
         self.but_pred.setIcon(icon_pred)
@@ -156,7 +153,6 @@ class ToolBarMain(QToolBar):
         dlg.updateCode.connect(self.update_code)
         dlg.closeDlg.connect(self.enable_but_pred)
         dlg.show()
-
 
     def update_code(self, code: int):
         self.update_ticker(code)
