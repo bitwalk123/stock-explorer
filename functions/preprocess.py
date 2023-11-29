@@ -12,10 +12,10 @@ from functions.app_enum import PreProcessExcluded
 
 class PreProcess():
     # INITIAL CONSTANT
-    FACTOR_PRICE: float = 1100.0
-    FACTOR_TOLERANCE: float = 0.2
+    FACTOR_PRICE: float = 1200.0
+    FACTOR_TOLERANCE: float = 0.3
     FACTOR_SPLIT: float = 1.5
-    FACTOR_VOLUME: int = 100000
+    FACTOR_VOLUME: int = 1000000
 
     FLAG_EXCLUDE = None
 
