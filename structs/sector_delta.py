@@ -14,5 +14,6 @@ class SectorDelta():
             list_standardized.append(diff2 / denominator * 100)
         return list_standardized
 
+
     def get_sectors(self) -> list:
         return list(self.dict_sector_dist.keys())
