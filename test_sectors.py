@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     ax.set_xlabel('差分（円）', fontproperties=fp_axtitle)
     ax.set_ylabel('33業種区分', fontproperties=fp_axtitle)
-    plt.title('%s 終値の前日差' % date_report, fontproperties=fp_title)
+    plt.title('%s 東証終値の前日差' % date_report, fontproperties=fp_title)
     plt.grid()
 
     plt.subplots_adjust(left=0.35, right=0.95, bottom=0.1, top=0.9)
