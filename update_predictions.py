@@ -4,7 +4,6 @@ import time
 from functions.get_elapsed import get_elapsed
 from functions.update_db import (
     update_prediction,
-    update_ticker,
 )
 
 if __name__ == '__main__':
