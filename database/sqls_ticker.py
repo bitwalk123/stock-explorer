@@ -59,9 +59,9 @@ def insert_into_ticker_values(series: pd.Series) -> str:
 
 def select_13sector_from_ticker_with_code(code: int):
     sql = """
-        SELECT 33業種区分 FROM ticker
+        SELECT "33業種区分" FROM ticker
         WHERE コード=%d;
-    """
+    """ % code
     return sql
 
 
