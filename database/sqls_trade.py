@@ -64,11 +64,24 @@ def select_all_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     return sql
 
 
+def select_close_from_trade_with_id_code_date(id_code: int, date: int) -> str:
+    sql = """
+        SELECT close FROM trade
+        WHERE id_code=%d AND date = %d;
+    """ % (id_code, date)
+    return sql
+
+
 def select_dataset_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT date, open, high, low, close FROM trade
         WHERE id_code=%d AND date > %d AND date <= %d;
     """ % (id_code, start, end)
+    return sql
+
+
+def select_date_from_trade() -> str:
+    sql = "SELECT date FROM trade ORDER BY date;"
     return sql
 
 
@@ -144,6 +157,14 @@ def select_id_trade_from_trade_with_date_id_code(date: int, id_code: int) -> str
 
 def select_max_date_from_trade() -> str:
     sql = "SELECT MAX(date) FROM trade;"
+    return sql
+
+
+def select_max_date_from_trade_less_date(date: int) -> str:
+    sql = """
+        SELECT MAX(date) FROM trade
+        WHERE date < %d;
+    """ % date
     return sql
 
 

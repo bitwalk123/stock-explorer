@@ -52,7 +52,7 @@ def draw_trend_open(chart: Trend, code: int, start: int):
     chart.clearAxes()
     #
     if code > 0:
-        chart.ax1.set_title('%s (%d.T) Open' % (cname, code))
+        chart.ax1.set_title('%s (%d) Open' % (cname, code))
         id_code = get_id_code_from_code(code)
         # print(code, id_code)
         list_x_pred, list_y_pred = get_predict_with_id_code(id_code, start)
@@ -123,7 +123,7 @@ def draw_trend_candle(chart: Trend, code: int, start: int):
     cname, df = get_trade_with_code(code, start)
     chart.clearAxes()
     # title
-    chart.ax1.set_title('%s (%d.T)' % (cname, code))
+    chart.ax1.set_title('%s (%d)' % (cname, code))
 
     # https://github.com/matplotlib/mplfinance/blob/master/examples/styles.ipynb
     mpf.plot(
