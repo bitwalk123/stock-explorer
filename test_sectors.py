@@ -12,7 +12,7 @@ if __name__ == '__main__':
     sector_delta = diff_close_by_sector(pair_date)
 
     fp_title = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=16)
-    fp_axtitle = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=14)
+    fp_axlabel = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=14)
     fp_tick = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=11)
 
     list_sector = list()
@@ -34,8 +34,8 @@ if __name__ == '__main__':
     for label in ax.get_yticklabels():
         label.set_fontproperties(fp_tick)
 
-    ax.set_xlabel('差分（円）', fontproperties=fp_axtitle)
-    ax.set_ylabel('33業種区分', fontproperties=fp_axtitle)
+    ax.set_xlabel('差分（円）', fontproperties=fp_axlabel)
+    ax.set_ylabel('33業種区分', fontproperties=fp_axlabel)
     plt.title('%s 東証終値の前日差' % date_report, fontproperties=fp_title)
     plt.grid()
 
