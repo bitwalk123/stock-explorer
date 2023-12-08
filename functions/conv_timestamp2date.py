@@ -14,7 +14,7 @@ def conv_timestamp(timestamp: int):
 
 
 def conv_timestamp2date(timestamp: int):
-    """Convert timestamp to date of 1 day advance
+    """Convert timestamp to date
     """
     date = str(pd.to_datetime(timestamp, unit='s'))
     pattern = re.compile(r'(\d{4})-(\d{2})-(\d{2})\s\d{2}:\d{2}:\d{2}')
@@ -26,6 +26,19 @@ def conv_timestamp2date(timestamp: int):
         return dt.date(yyyy, mm, dd)
     else:
         return None
+
+
+def conv_timestamp2year(timestamp: int) -> int:
+    """Convert timestamp to year
+    """
+    date = str(pd.to_datetime(timestamp, unit='s'))
+    pattern = re.compile(r'(\d{4})-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}')
+    m = pattern.match(date)
+    if m:
+        yyyy = int(m.group(1))
+        return yyyy
+    else:
+        return 0
 
 
 def conv_timestamp2date_next(timestamp: int):

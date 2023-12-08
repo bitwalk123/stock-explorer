@@ -1,12 +1,12 @@
 from matplotlib import pyplot as plt
 from matplotlib.font_manager import FontProperties
 
-from functions.conv_timestamp2date import conv_timestamp2date
+from functions.conv_timestamp2date import conv_timestamp2date, conv_timestamp2year
 from functions.diff_close import diff_close_by_sector
 from functions.get_latest_2dates import get_latest_2dates
 
 FONT_PATH = r'fonts/RictyDiminished-Regular.ttf'
-loc_report = '/home/bitwalk/MyProjects/stock/report/2023/'
+loc_report = '/home/bitwalk/MyProjects/stock/report/%d/'
 
 
 if __name__ == '__main__':
@@ -46,5 +46,6 @@ if __name__ == '__main__':
 
     plt.subplots_adjust(left=0.35, right=0.95, bottom=0.1, top=0.9)
 
-    plt.savefig('%s/close_%d.png' % (loc_report, pair_date[1]))
+    year = conv_timestamp2year(pair_date[1])
+    plt.savefig('%s/close_%d.png' % (loc_report % year, pair_date[1]))
     #plt.show()
