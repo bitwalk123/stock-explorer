@@ -5,17 +5,19 @@ from functions.conv_timestamp2date import conv_timestamp2date
 from functions.diff_close import diff_close_by_sector
 from functions.get_latest_2dates import get_latest_2dates
 
+FONT_PATH = r'fonts/RictyDiminished-Regular.ttf'
 loc_report = '/home/bitwalk/MyProjects/stock/report/2023/'
+
 
 if __name__ == '__main__':
     pair_date = get_latest_2dates()
     date_report = str(conv_timestamp2date(pair_date[1]))
-    print(date_report)
+    print('Generating close repoty for %s...' % date_report)
     sector_delta = diff_close_by_sector(pair_date)
 
-    fp_title = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=16)
-    fp_axlabel = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=14)
-    fp_tick = FontProperties(fname=r'fonts/RictyDiminished-Regular.ttf', size=11)
+    fp_title = FontProperties(fname=FONT_PATH, size=16)
+    fp_axlabel = FontProperties(fname=FONT_PATH, size=14)
+    fp_tick = FontProperties(fname=FONT_PATH, size=11)
 
     list_sector = list()
     list_data = list()
@@ -44,4 +46,4 @@ if __name__ == '__main__':
     plt.subplots_adjust(left=0.35, right=0.95, bottom=0.1, top=0.9)
 
     plt.savefig('%s/close_%d.png' % (loc_report, pair_date[1]))
-    plt.show()
+    # plt.show()
