@@ -5,6 +5,8 @@ from functions.conv_timestamp2date import conv_timestamp2date
 from functions.diff_close import diff_close_by_sector
 from functions.get_latest_2dates import get_latest_2dates
 
+loc_report = '/home/bitwalk/MyProjects/stock/report/2023/'
+
 if __name__ == '__main__':
     pair_date = get_latest_2dates()
     date_report = str(conv_timestamp2date(pair_date[1]))
@@ -28,7 +30,7 @@ if __name__ == '__main__':
         list_data,
         labels=list_sector,
         vert=False,
-        flierprops={'marker': 'o', 'markersize': 2}
+        flierprops={'marker': 'o', 'markersize': 1.5}
     )
 
     for label in ax.get_yticklabels():
@@ -41,5 +43,5 @@ if __name__ == '__main__':
 
     plt.subplots_adjust(left=0.35, right=0.95, bottom=0.1, top=0.9)
 
-    plt.savefig('pool/close_%d.png' % pair_date[1])
-    # plt.show()
+    plt.savefig('%s/close_%d.png' % (loc_report, pair_date[1]))
+    plt.show()
