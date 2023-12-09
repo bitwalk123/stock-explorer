@@ -31,12 +31,12 @@ def get_valid_code(start: int, end: int) -> tuple:
                 )
             elif prep.FLAG_EXCLUDE == PreProcessExcluded.VOLUME:
                 print(
-                    'Volume(Median) =',
+                    'Volume(median) =',
                     prep.volume_median,
                 )
             elif prep.FLAG_EXCLUDE == PreProcessExcluded.SPLIT:
                 print(
-                    'Volume(Median) =',
+                    'Volume(median) =',
                     prep.volume_median,
                     'Split',
                     conv_timestamp2date(prep.date),
@@ -50,9 +50,9 @@ def get_valid_code(start: int, end: int) -> tuple:
             list_valid_id_code.append(id_code)
             if prep.IsTarget():
                 print(
-                    '%d.T is target: Open(Median) = %.1f JPY, Volume(Median) = %d' % (
+                    '%d.T is target: Open(latest) = %.1f JPY, Volume(median) = %d' % (
                         code,
-                        prep.open_median,
+                        prep.open_latest,
                         prep.volume_median,
                     )
                 )

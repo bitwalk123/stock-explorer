@@ -97,7 +97,7 @@ def select_date_open_from_trade_with_id_code(id_code: int) -> str:
 def select_date_open_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT date, open FROM trade
-        WHERE id_code=%d AND date >= %d AND date < %d
+        WHERE id_code=%d AND date >= %d AND date <= %d
         ORDER BY date;
     """ % (id_code, start, end)
     return sql
@@ -204,7 +204,7 @@ def select_open_from_trade_with_id_code_date(id_code: int, date: int) -> str:
 def select_open_from_trade_with_id_code_start_end(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT open FROM trade
-        WHERE id_code=%d AND date >= %d AND date < %d;
+        WHERE id_code=%d AND date >= %d AND date <= %d;
     """ % (id_code, start, end)
     return sql
 

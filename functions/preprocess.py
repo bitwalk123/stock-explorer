@@ -31,7 +31,8 @@ class PreProcess():
         self.date = 0
         self.price_open = 0
         self.price_open_pre = -1
-        self.open_median = 0
+        #self.open_median = 0
+        self.open_latest = 0
         self.volume_median = 0
 
     def init(self, target_price: float, ratio_split: float, target_volume: int):
@@ -50,22 +51,30 @@ class PreProcess():
             return False
 
     def IsTarget(self):
+        list_date = list()
         list_open = list()
-        sql = select_open_from_trade_with_id_code_start_end(
+        #sql = select_open_from_trade_with_id_code_start_end(
+        #    self.id_code, self.start, self.end
+        #)
+        sql = select_date_open_from_trade_with_id_code_start_end(
             self.id_code, self.start, self.end
         )
         query = QSqlQuery(sql)
         while query.next():
-            list_open.append(query.value(0))
+            list_date.append(query.value(0))
+            list_open.append(query.value(1))
 
         if len(list_open) == 0:
             self.FLAG_EXCLUDE = PreProcessExcluded.EMPTY
             return True
 
-        self.open_median = int(statistics.median(list_open))
-        if self.open_median < self.FACTOR_PRICE * (1 - self.FACTOR_TOLERANCE):
+        date_latest = max(list_date)
+        idx_latest = list_date.index(date_latest)
+        self.open_latest = list_open[idx_latest]
+        #self.open_median = int(statistics.median(list_open))
+        if self.open_latest < self.FACTOR_PRICE * (1 - self.FACTOR_TOLERANCE):
             return False
-        elif self.open_median > self.FACTOR_PRICE * (1 + self.FACTOR_TOLERANCE):
+        elif self.open_latest > self.FACTOR_PRICE * (1 + self.FACTOR_TOLERANCE):
             return False
         else:
             return True
