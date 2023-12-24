@@ -42,7 +42,7 @@ def drop_table_ticker() -> str:
 
 
 def insert_into_ticker_values(series: pd.Series) -> str:
-    sql = 'INSERT INTO ticker VALUES(NULL, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s");' % (
+    sql = 'INSERT INTO ticker VALUES(default, %d, %d, "%s", "%s", %d, "%s", %d, "%s", "%s", "%s");' % (
         series['日付'],
         series['コード'],
         series['銘柄名'],
