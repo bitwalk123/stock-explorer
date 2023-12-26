@@ -4,7 +4,8 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QLabel,
     QRadioButton,
-    QToolButton, QToolBar,
+    QToolBar,
+    QToolButton,
 )
 
 from functions.get_past_date import get_past_date
