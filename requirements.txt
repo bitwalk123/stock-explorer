@@ -3,12 +3,9 @@ isoduration
 jsonpointer
 jupyterlab
 mplfinance
-pandas-datareader
 pip-chill
 pip-review
 pyside6
-scikit-learn
-seaborn
 uri-template
 webcolors
 wget

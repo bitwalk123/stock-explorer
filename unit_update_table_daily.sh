@@ -1,0 +1,14 @@
+#!/bin/bash
+cd "$(dirname ${0})" || exit
+source venv/bin/activate
+
+# daily data update for trade
+python unit_update_table_trade_daily.py
+
+# daily report
+python report_sector_close_daily.py
+python report_sector_close_open_daily.py
+cd /home/bitwalk/MyProjects/stock || exit
+git add report/*/*.png
+git commit -m "update"
+git push

@@ -1,3 +1,0 @@
-from functions.check_duplicate_trade import check_duplicate_trade
-
-check_duplicate_trade()
