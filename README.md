@@ -1,1 +1,1 @@
-# stock-explorer-postgres
+# stock-explorer
