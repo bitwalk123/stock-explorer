@@ -30,7 +30,7 @@ from sqls.sql_trade import (
     sql_sel_open_volume_from_trade_with_id_code_start,
     sql_sel_open_volume_from_trade_with_id_code,
     sql_sel_max_date_from_trade_with_id_code,
-    sql_upd_trade_values,
+    sql_upd_trade_values, sql_sel_close_from_trade_with_id_code_start,
 )
 from structs.db_info import DBInfo
 from structs.trend_object import TrendObj
@@ -86,6 +86,31 @@ def drop_tbl_trade() -> bool:
     else:
         print('database can not be opened!')
         return False
+
+
+def get_date_close_with_id_code_start(id_code: int, start: int) -> pd.DataFrame:
+    list_date = list()
+    list_close = list()
+
+    con = DBInfo.get_connection()
+    if con.open():
+        sql = sql_sel_close_from_trade_with_id_code_start(id_code, start)
+        query = QSqlQuery(sql)
+        while query.next():
+            ds = conv_pandas_timestamp(query.value(0))
+            list_date.append(ds)
+            list_close.append(query.value(1))
+        con.close()
+
+        df = pd.DataFrame({
+            'Date': list_date,
+            'Close': list_close,
+        })
+        df.set_index('Date', inplace=True)
+
+        return df
+    else:
+        return pd.DataFrame()
 
 
 def get_trade_with_code(code: str, start: int) -> tuple:

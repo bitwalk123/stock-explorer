@@ -123,8 +123,11 @@ def get_original_start() -> int:
 
 
 def get_past_date(past):
-    today = int(pd.to_datetime(str(dt.date.today())).timestamp())
-    year = 365 * 24 * 60 * 60
+    # today = int(pd.to_datetime(str(dt.date.today())).timestamp())
+    now = int(time.time())
+    today = now - now % day1
+
+    year = 365.25 * day1
     if past == '３ヵ月':
         return int(today - year / 4)
     elif past == '６ヵ月':
@@ -135,3 +138,11 @@ def get_past_date(past):
         return today - 2 * year
     else:
         return -1
+
+
+def get_past_month_day(num: int) -> int:
+    month = 30 * day1
+    now = int(time.time())
+    today = now - now % day1
+    past_month_day = today - num * month
+    return past_month_day
