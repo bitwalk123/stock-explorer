@@ -6,6 +6,7 @@ source venv/bin/activate
 python unit_update_table_trade_daily.py
 
 # daily report
+python report_correlation_01.py
 python report_sector_close_daily.py
 python report_sector_close_open_daily.py
 cd /home/bitwalk/MyProjects/stock || exit
