@@ -37,7 +37,7 @@ def report_correlation_01(code_target: str, start: int):
 
     now = int(time.time())
     today = now - now % day1
-    pkl_corr = 'pool/corre-%d.pkl' % today
+    pkl_corr = 'pool/corr-%d.pkl' % today
 
     with open(pkl_corr, mode='wb') as f:
       pickle.dump(df_result, f)
