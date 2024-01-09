@@ -7,7 +7,7 @@ from PySide6.QtSql import QSqlQuery
 
 from funcs.tbl_currency import get_dict_currency
 from funcs.tbl_exchange import add_rows_tbl_exchange
-from funcs.tide import get_elapsed, conv_timestamp2date_next, get_original_start
+from funcs.tide import get_elapsed, conv_timestamp2date_next, get_original_start, conv_timestamp2date
 from snippets.set_env import set_env
 from sqls.sql_exchange import sql_sel_max_date_from_exchange_with_id_currency
 from structs.db_info import DBInfo
@@ -21,16 +21,16 @@ def update_tbl_exchange(end: dt.date) -> bool:
     if con.open():
         for id_currency in dict_currency:
             currency = '%s=X' % dict_currency[id_currency]
-            print(currency)
             # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
             # get latest date of the exchange table with specified id_currency
             query = QSqlQuery()
             sql = sql_sel_max_date_from_exchange_with_id_currency(id_currency)
             query.exec(sql)
-            while query.next():
+            if query.next():
                 date_latest = query.value(0)
                 if type(date_latest) is int:
-                    start = conv_timestamp2date_next(date_latest)
+                    # start = conv_timestamp2date_next(date_latest)
+                    start = conv_timestamp2date(date_latest)
                 else:
                     start = get_original_start()
                 if start == end:
@@ -38,6 +38,7 @@ def update_tbl_exchange(end: dt.date) -> bool:
                     continue
                 # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
                 # get data from Yahoo finance
+                print(currency, start, end)
                 df: pd.DataFrame = yf.download(currency, start, end)
                 size_row = len(df)
                 if size_row == 0:
@@ -50,6 +51,7 @@ def update_tbl_exchange(end: dt.date) -> bool:
     else:
         print('database can not be opened!')
         return False
+
 
 if __name__ == '__main__':
     dict_info = set_env()

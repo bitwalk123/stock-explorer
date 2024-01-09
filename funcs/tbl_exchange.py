@@ -137,7 +137,7 @@ def init_tbl_exchange():
     if con.open():
         for id_currency in dict_currency:
             currency = '%s=X' % dict_currency[id_currency]
-            print(currency)
+            print(currency, start, end)
             df: pd.DataFrame = yf.download(currency, start, end)
             add_rows_tbl_exchange(df, id_currency)
         con.close()
