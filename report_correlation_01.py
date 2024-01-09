@@ -40,7 +40,8 @@ def report_correlation_01(code_target: str, start: int):
     pkl_corr = 'pool/corr-%d.pkl' % today
 
     with open(pkl_corr, mode='wb') as f:
-      pickle.dump(df_result, f)
+        pickle.dump(df_result, f)
+
 
 if __name__ == '__main__':
     dict_info = set_env()
