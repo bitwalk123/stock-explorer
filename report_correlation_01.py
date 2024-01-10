@@ -33,7 +33,8 @@ def report_correlation_01(code_target: str, start: int):
     col_name = 'Correlation'
     df_result.columns = [col_name]
     df_result.sort_values(col_name, inplace=True)
-    print(df_result.head(5))
+    df_top = df_result.head(1)
+    print(df_top)
 
     now = int(time.time())
     today = now - now % day1
