@@ -67,7 +67,7 @@ class Browser(QMainWindow):
 
 
 class NewsGoodBad(Browser):
-    #codeSelected = Signal(str)
+    # codeSelected = Signal(str)
     goodbadRequested = Signal(dict)
 
     def __init__(self, url: QUrl, jscript: str):
@@ -76,7 +76,21 @@ class NewsGoodBad(Browser):
         icon = QIcon(os.path.join(res.getImagePath(), 'kabutan.png'))
         self.setWindowIcon(icon)
 
-
     def auxiliary(self, content):
         dict_df = parser_good_bad_1(content)
         self.goodbadRequested.emit(dict_df)
+
+
+class RakutenRanking(Browser):
+    parseRequested = Signal(str)
+
+    def __init__(self, url: QUrl, jscript: str):
+        super().__init__(url, jscript)
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
+        self.setWindowIcon(icon)
+
+    def auxiliary(self, content):
+        #print(content)
+        #print(type(content))
+        self.parseRequested.emit(content)

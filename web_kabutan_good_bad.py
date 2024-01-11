@@ -6,11 +6,17 @@ from PySide6.QtWidgets import (
 )
 
 from ui.browser import NewsGoodBad
+from ui.sub_good_bad import SubGoodBad
+
+
+def on_goodbad_requested(dict_df: dict):
+    print(dict_df)
 
 
 def main(url_init: QUrl, script_extract: str):
     app = QApplication()
     ex = NewsGoodBad(url_init, script_extract)
+    ex.goodbadRequested.connect(on_goodbad_requested)
     ex.show()
     sys.exit(app.exec())
 
