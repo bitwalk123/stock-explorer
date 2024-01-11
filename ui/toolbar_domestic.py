@@ -117,6 +117,16 @@ class ToolBarDomesticStocks(ToolBarMain):
         # Separator
         self.addSeparator()
 
+        but_rakuten = QToolButton()
+        icon_rakuten = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
+        but_rakuten.setIcon(icon_rakuten)
+        but_rakuten.setToolTip('楽天証券')
+        but_rakuten.clicked.connect(self.on_click_rakuten)
+        self.addWidget(but_rakuten)
+
+        # Separator
+        self.addSeparator()
+
         # Prediction viewer
         but_pred = QToolButton()
         but_pred.setToolTip('予測値の閲覧')
@@ -193,6 +203,9 @@ class ToolBarDomesticStocks(ToolBarMain):
         web.show()
 
     def on_click_budget(self):
+        pass
+
+    def on_click_rakuten(self):
         pass
 
     def on_goodbadRequested(self, dict_df: dict):
