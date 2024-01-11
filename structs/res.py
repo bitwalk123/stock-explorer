@@ -7,16 +7,25 @@ class AppRes():
     path_image = 'images'
 
     kabutan_koaku = QUrl('https://selection.kabutan.jp/category/koaku/')
-    jscrupt_inner_html = "document.getElementsByClassName('body')[0].innerHTML"
+    jscrupt_body0_inner_html = "document.getElementsByClassName('body')[0].innerHTML"
+
+    rakuten = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
+    jscript_oneday_ranking = "document.getElementById('margin-oneday-ranking').innerHTML"
 
     def getImagePath(self) -> str:
         return self.path_image
 
+    def getJScriptBody0(self) -> str:
+        return self.jscrupt_body0_inner_html
+
+    def getJScriptOneDayRanking(self) -> str:
+        return self.jscript_oneday_ranking
+
     def getURLKabutanKoaku(self) -> QUrl:
         return self.kabutan_koaku
 
-    def getJScriptInnerHTML(self) -> str:
-        return self.jscrupt_inner_html
+    def getURLRakuten(self) -> QUrl:
+        return self.rakuten
 
     def getTSE(self) -> str:
         return self.tse

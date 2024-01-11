@@ -1,3 +1,4 @@
+import re
 from typing import Union
 
 from PySide6.QtCore import Qt
@@ -28,12 +29,13 @@ class MainDomesticStocks(TabPanelMain):
 
     def init_ui(self):
         self.toolbar = toolbar = ToolBarDomesticStocks(self)
-        toolbar.goodbadRequested.connect(self.on_good_bad_requested)
+        toolbar.kabutanGoodBadRequested.connect(self.on_good_bad_requested)
         toolbar.periodUpdate.connect(self.on_period_update)
         toolbar.plotTypeUpdated.connect(self.on_plot_type_changed)
         toolbar.tickerDown.connect(self.on_ticker_down)
         toolbar.tickerEntered.connect(self.on_ticker_entered)
         toolbar.tickerUp.connect(self.on_ticker_up)
+        toolbar.rakutenOneDayRankingRequested.connect(self.on_oneday_ranking_requested)
         self.addToolBar(toolbar)
         # Right Dock
         self.dock_right = dock_right = DockDomesticTickers(self)
@@ -53,6 +55,20 @@ class MainDomesticStocks(TabPanelMain):
         # display first code at the first time
         code = dock_right.getTickerFirst()
         self.on_disp_update(code)
+
+    def on_oneday_ranking_requested(self, content):
+        # いちにち信用ランキング
+        pattern_date = r'<p class="pgh-01 align-R">(.+?)更新</p>'
+        list_date = re.findall(pattern_date, content, re.DOTALL)
+        print(list_date[0])
+
+        pattern_header = r'<th class="cell-01 align-C" scope="col">(.+?)</th>\s*<th class="cell-01 align-C" scope="col">(.+?)</th>\s*<th class="cell-01 align-C" scope="col">(.+?)</th>'
+        list_header = re.findall(pattern_header, content, re.DOTALL)
+        print(list(list_header[0]))
+
+        pattern_content = r'<th class="cell-02 align-C">(\d+?)</th>\s*<td class="align-C">(.+?)</td>\s*<td>(.+?)</td>'
+        list_content = re.findall(pattern_content, content, re.DOTALL)
+        print(list_content)
 
     def on_disp_update(self, code: str):
         self.toolbar.updateTicker(code)

@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
 
 from funcs.tide import get_past_date
 from structs.res import AppRes
-from ui.browser import NewsGoodBad
+from ui.browser import NewsGoodBad, RakutenRanking
 from widgets.labels import Label
 from widgets.tab_panels import TabPanelMain
 from widgets.toolbar_main import ToolBarMain
@@ -25,9 +25,10 @@ from widgets.pads import HPad
 
 
 class ToolBarDomesticStocks(ToolBarMain):
-    goodbadRequested = Signal(dict)
+    kabutanGoodBadRequested = Signal(dict)
     periodUpdate = Signal()
     plotTypeUpdated = Signal()
+    rakutenOneDayRankingRequested = Signal(str)
     tickerDown = Signal()
     tickerEntered = Signal(str)
     tickerUp = Signal()
@@ -36,7 +37,8 @@ class ToolBarDomesticStocks(ToolBarMain):
         super().__init__(parent)
         self.parent = parent
         self.res = res = AppRes()
-        self.web = None
+        self.web_kabutan = None
+        self.web_rakuten = None
         self.action_grp: QActionGroup = None
 
         # Ticker
@@ -195,21 +197,29 @@ class ToolBarDomesticStocks(ToolBarMain):
         return get_past_date(sel)
 
     def on_click_kabutan(self):
-        self.web = web = NewsGoodBad(
+        self.web_kabutan = web = NewsGoodBad(
             self.res.getURLKabutanKoaku(),
-            self.res.getJScriptInnerHTML()
+            self.res.getJScriptBody0()
         )
-        web.goodbadRequested.connect(self.on_goodbadRequested)
+        web.goodbadRequested.connect(self.on_goodbad_requested)
         web.show()
 
     def on_click_budget(self):
         pass
 
     def on_click_rakuten(self):
-        pass
+        self.web_rakuten = web = RakutenRanking(
+            self.res.getURLRakuten(),
+            self.res.getJScriptOneDayRanking()
+        )
+        web.parseRequested.connect(self.on_parse_requested)
+        web.show()
 
-    def on_goodbadRequested(self, dict_df: dict):
-        self.goodbadRequested.emit(dict_df)
+    def on_goodbad_requested(self, dict_df: dict):
+        self.kabutanGoodBadRequested.emit(dict_df)
+
+    def on_parse_requested(self, content: str):
+        self.rakutenOneDayRankingRequested.emit(content)
 
     def on_plot_type_changed(self):
         self.plotTypeUpdated.emit()
