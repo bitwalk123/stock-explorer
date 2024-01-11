@@ -15,7 +15,7 @@ from ui.main_exchange import MainExchange
 
 class StockExplorer(QTabWidget):
     __version__ = '0.2.0'
-    __build__ = '20240107'
+    __build__ = '20240111'
 
     def __init__(self):
         super().__init__()
