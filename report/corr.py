@@ -1,16 +1,13 @@
 import pickle
 import time
+
 import pandas as pd
 
 from funcs.tbl_ticker import get_dict_id_code
 from funcs.tbl_trade import get_date_close_with_id_code_start
-from funcs.tide import get_elapsed, get_past_month_day
-from snippets.set_env import set_env
-
-day1 = 24 * 60 * 60
 
 
-def report_correlation_01(code_target: str, start: int):
+def correlation_1to1(code_target: str, start: int):
     # print(code_target, datetime.datetime.fromtimestamp(start))
     dict_id_code = get_dict_id_code()
     list_code = list(dict_id_code.keys())
@@ -37,20 +34,9 @@ def report_correlation_01(code_target: str, start: int):
     print(df_top)
 
     now = int(time.time())
+    day1 = 24 * 60 * 60
     today = now - now % day1
-    pkl_corr = 'pool/corr_1-%d.pkl' % today
+    pkl_corr = 'pool/corr_%s-%d.pkl' % (code_target, today)
 
     with open(pkl_corr, mode='wb') as f:
         pickle.dump(df_result, f)
-
-
-if __name__ == '__main__':
-    dict_info = set_env()
-    time_start = time.time()
-
-    start = get_past_month_day(6)
-    code_target = '8306'
-
-    report_correlation_01(code_target, start)
-
-    print('elapsed %.3f sec' % get_elapsed(time_start))
