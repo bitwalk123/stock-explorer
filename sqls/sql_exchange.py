@@ -60,7 +60,7 @@ def sql_sel_all_from_exchange_with_id_currency_start(id_currency: int, start: in
 def sql_sel_id_exchange_from_exchange_with_date_id_currency(id_currency: int, timestamp: int) -> str:
     sql = """
         SELECT "id_exchange" FROM exchange
-        WHERE "id_code"=%d AND "Date"=%d;
+        WHERE "id_currency"=%d AND "Date"=%d;
     """ % (id_currency, timestamp)
     return sql
 
