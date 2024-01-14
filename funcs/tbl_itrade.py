@@ -8,7 +8,7 @@ from funcs.tbl_iticker import get_dict_index
 from sqls.sql_itrade import (
     sql_create_tbl_itrade,
     sql_sel_id_itrade_from_itrade_with_date_id_index,
-    sql_upd_itrade_values, sql_ins_into_itrade_values,
+    sql_upd_itrade_values, sql_ins_into_itrade_values, sql_drop_tbl_itrade,
 )
 from structs.db_info import DBInfo
 
@@ -49,6 +49,20 @@ def create_tbl_itrade_procs():
     sql = sql_create_tbl_itrade()
     if not query.exec(sql):
         print(query.lastError())
+
+
+def drop_tbl_itrade() -> bool:
+    con = DBInfo.get_connection()
+
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_drop_tbl_itrade()
+        result = query.exec(sql)
+        con.close()
+        return result
+    else:
+        print('database can not be opened!')
+        return False
 
 
 def init_tbl_itrade() -> bool:
