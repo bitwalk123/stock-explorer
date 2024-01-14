@@ -31,6 +31,14 @@ def sql_sel_id_index_from_iticker_with_iticker(iticker: str) -> str:
     return sql
 
 
+def sql_sel_id_index_index_from_iticker() -> str:
+    sql = """
+        SELECT id_index, "指数" FROM iticker
+        ORDER BY id_index ASC;
+    """
+    return sql
+
+
 def sql_upd_iticker_vals(id_index: int, row: list) -> str:
     sql = """
         UPDATE iticker
