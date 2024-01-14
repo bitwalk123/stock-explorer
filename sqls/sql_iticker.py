@@ -11,6 +11,11 @@ def sql_create_tbl_iticker() -> str:
     return sql
 
 
+def sql_drop_tbl_iticker() -> str:
+    sql = 'DROP TABLE IF EXISTS iticker;'
+    return sql
+
+
 def sql_ins_into_iticker_vals(row: list) -> str:
     sql = """
         INSERT INTO iticker VALUES(default, '%s', '%s');

@@ -4,7 +4,7 @@ from sqls.sql_iticker import (
     sql_create_tbl_iticker,
     sql_ins_into_iticker_vals,
     sql_sel_id_index_from_iticker_with_iticker,
-    sql_upd_iticker_vals,
+    sql_upd_iticker_vals, sql_drop_tbl_iticker,
 )
 from structs.db_info import DBInfo
 
@@ -29,6 +29,18 @@ def create_tbl_iticker():
         print('database can not be opened!')
         return False
 
+def drop_tbl_iticker() -> bool:
+    con = DBInfo.get_connection()
+
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_drop_tbl_iticker()
+        result = query.exec(sql)
+        con.close()
+        return result
+    else:
+        print('database can not be opened!')
+        return False
 
 def create_tbl_iticker_procs_1():
     query = QSqlQuery()
