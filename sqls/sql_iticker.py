@@ -3,7 +3,7 @@ def sql_create_tbl_iticker() -> str:
         CREATE TABLE IF NOT EXISTS iticker
         (
             id_index serial,
-            "指数" character varying(6) UNIQUE,
+            "指数" character varying(8) UNIQUE,
             "名称" character varying(255),
             PRIMARY KEY (id_index)
         )
