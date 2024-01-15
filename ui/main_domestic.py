@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QWidget
 
 from funcs.draw import draw_chart
 from structs.trend_object import TrendObj
+from ui.dock_navigator import DockNavigator
 from ui.statusbar_domestic import StatusbarDomesticTicker
 from ui.sub_good_bad import SubGoodBad
 from widgets.charts import Trend
@@ -22,6 +23,7 @@ class MainDomesticStocks(TabPanelMain):
         super().__init__(parent)
         self.toolbar = None
         self.dock_right = None
+        self.dock_bottom = None
         self.statusbar = None
         self.sub_good_bad = None
 
@@ -52,6 +54,14 @@ class MainDomesticStocks(TabPanelMain):
         # CandleStick chart as default
         chart = Trend()
         self.setCentralWidget(chart)
+
+        # Bottom Dock
+        self.dock_bottom = dock_bottom = DockNavigator(self, chart)
+        self.addDockWidget(
+            Qt.DockWidgetArea.BottomDockWidgetArea,
+            dock_bottom
+        )
+
         # display first code at the first time
         code = dock_right.getTickerFirst()
         self.on_disp_update(code)

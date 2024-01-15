@@ -9,13 +9,14 @@ from PySide6.QtWidgets import (
 
 from snippets.set_env import set_env
 from structs.res import AppRes
+from ui.main_analytics import MainAnalytics
 from ui.main_domestic import MainDomesticStocks
 from ui.main_exchange import MainExchange
 
 
 class StockExplorer(QTabWidget):
     __version__ = '0.2.0'
-    __build__ = '20240111'
+    __build__ = '20240115'
 
     def __init__(self):
         super().__init__()
@@ -44,6 +45,7 @@ class StockExplorer(QTabWidget):
         list_content = [
             MainDomesticStocks(self),
             MainExchange(self),
+            MainAnalytics(self),
         ]
         for content in list_content:
             self.addTab(content, content.getTabLabel())
