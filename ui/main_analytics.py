@@ -3,6 +3,7 @@ import mplfinance as mpf
 import yfinance as yf
 
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget
 
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
@@ -25,6 +26,7 @@ class MainAnalytics(TabPanelMain):
 
     def init_ui(self):
         self.toolbar = toolbar = ToolBarNavigation(self)
+        toolbar.drawRequested.connect(self.on_draw)
         self.addToolBar(toolbar)
 
         # CandleStick chart as default
@@ -38,16 +40,11 @@ class MainAnalytics(TabPanelMain):
             dock_bottom
         )
 
+    def on_draw(self, ticker: str, start: str, end: str):
+        chart: QWidget | Trend = self.centralWidget()
 
-    def draw(self):
-        chart = self.centralWidget()
-
-        d = 12
-        start = dt.date(2024, 1, d)
-        end = dt.date(2024, 1, d + 1)
-        ticker = '8035.T'  # 東京エレクトロン
         df = yf.download(ticker, start, end, interval='5m')
-        # mpf.plot(df, type='candle', style='binance', figratio=(12, 4))
+        chart.clearAxes()
         mpf.plot(
             df,
             type='candle',

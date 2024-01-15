@@ -146,3 +146,10 @@ def get_past_month_day(num: int) -> int:
     today = now - now % day1
     past_month_day = today - num * month
     return past_month_day
+
+def get_ymd() -> (int, int, int):
+    now = dt.datetime.now()
+    y = now.year
+    m = now.month
+    d = now.day
+    return y, m, d
