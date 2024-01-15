@@ -7,6 +7,7 @@ from funcs.tbl_trade import (
     get_trend_object_close_open,
     get_trend_object_open,
 )
+from structs.res import AppRes
 from structs.trend_object import TrendObj
 from widgets.charts import ChartAbstract, Trend
 
@@ -54,6 +55,7 @@ def draw_candle_stick(chart: Trend, code: str, start: int = -1) -> TrendObj:
     Returns:
         TrendObj
     """
+    res = AppRes()
     obj = get_trend_object_candle(code, start)
     cname = obj.getCname()
     df = obj.getDataFrame()
@@ -75,7 +77,7 @@ def draw_candle_stick(chart: Trend, code: str, start: int = -1) -> TrendObj:
         type='candle',
         datetime_format='%y/%m/%d',
         tight_layout=False,
-        style='binance',
+        style=res.getCandleStyle(),
         mav=(5, 25),
         ax=chart.ax,
         volume=chart.ax2
@@ -203,6 +205,7 @@ def draw_close_open(chart: Trend, code: str, start: int = -1) -> TrendObj:
 
 
 def draw_exchange(chart: Trend, currency: str, start: int = -1) -> TrendObj:
+    res = AppRes()
     obj = get_trend_object_exchange(currency, start)
     df = obj.getDataFrame()
 
@@ -222,7 +225,7 @@ def draw_exchange(chart: Trend, currency: str, start: int = -1) -> TrendObj:
         type='candle',
         datetime_format='%y/%m/%d',
         tight_layout=False,
-        style='binance',
+        style=res.getCandleStyle(),
         mav=(5, 25),
         ax=chart.ax
     )

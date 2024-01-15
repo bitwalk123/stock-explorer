@@ -12,6 +12,11 @@ class AppRes():
     rakuten = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
     jscript_oneday_ranking = "document.getElementById('margin-oneday-ranking').innerHTML"
 
+    candle_style = 'binance'
+
+    def getCandleStyle(self) -> str:
+        return self.candle_style
+
     def getImagePath(self) -> str:
         return self.path_image
 
