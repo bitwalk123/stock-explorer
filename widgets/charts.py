@@ -28,13 +28,16 @@ class ChartAbstract(FigureCanvas):
 
 
 class Trend(ChartAbstract):
-    def __init__(self):
+    def __init__(self, gtype='Candle'):
         super().__init__()
         self.ax = None
         self.ax = None
         self.ax2 = None
-        self.gtype = 'Candle'
-        self.initCandleStick()
+
+        if gtype=='Candle':
+            self.initCandleStick()
+        else:
+            self.initTrend()
 
     def initCandleStick(self):
         grid = plt.GridSpec(3, 1, wspace=0.0, hspace=0.0)
