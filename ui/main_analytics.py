@@ -46,7 +46,7 @@ class MainAnalytics(TabPanelMain):
         df = yf.download(ticker, start, end, interval='5m')
 
         cname = get_cname_with_code(code)
-        title = '%s (%s)\n５分足 on %s' %(cname, code, start)
+        title = '%s (%s)\n５分足チャート on %s' %(cname, code, start)
 
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
