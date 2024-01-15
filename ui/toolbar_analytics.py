@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QToolButton,
 )
 
+from funcs.tbl_ticker import get_cname_with_code
 from funcs.tide import get_ymd
 from structs.res import AppRes
 from widgets.entries import (
@@ -74,9 +75,11 @@ class ToolBarNavigation(ToolBarMain):
         calendar.deleteLater()
 
     def on_draw_chart(self):
-        ticker = '8035.T'
+        code = self.ent_ticker.text()
         start, end = self.ent_date.getDateRange()
-        self.drawRequested.emit(ticker, start, end)
+        self.drawRequested.emit(code, start, end)
 
     def on_ticker_entered(self):
         code = self.ent_ticker.text()
+        cname = get_cname_with_code(code)
+        self.ent_ticker.setToolTip(cname)

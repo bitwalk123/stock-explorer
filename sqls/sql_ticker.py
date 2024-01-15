@@ -70,6 +70,14 @@ def sql_sel_13sector_from_ticker_with_code(code: str):
     return sql
 
 
+def sql_sel_cname_with_code_from_ticker(code: str) -> str:
+    sql = """
+        SELECT "銘柄名" FROM ticker
+        WHERE "コード"='%s';
+    """ % code
+    return sql
+
+
 def sql_sel_code_from_ticker() -> str:
     sql = """
         SELECT "コード" FROM ticker

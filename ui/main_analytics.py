@@ -5,6 +5,7 @@ import yfinance as yf
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 
+from funcs.tbl_ticker import get_cname_with_code
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
 from ui.toolbar_analytics import ToolBarNavigation
@@ -40,10 +41,14 @@ class MainAnalytics(TabPanelMain):
             dock_bottom
         )
 
-    def on_draw(self, ticker: str, start: str, end: str):
-        chart: QWidget | Trend = self.centralWidget()
-
+    def on_draw(self, code: str, start: str, end: str):
+        ticker = '%s.T' % code
         df = yf.download(ticker, start, end, interval='5m')
+
+        cname = get_cname_with_code(code)
+        title = '%s (%s)\n５分足 on %s' %(cname, code, start)
+
+        chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
         mpf.plot(
             df,
@@ -53,6 +58,7 @@ class MainAnalytics(TabPanelMain):
             style=self.res.getCandleStyle(),
             ax=chart.ax
         )
+        chart.ax.set_title(title)
         chart.ax.set_ylabel('Price (JPY)')
         chart.ax.yaxis.tick_right()
         chart.ax.yaxis.set_label_position('right')

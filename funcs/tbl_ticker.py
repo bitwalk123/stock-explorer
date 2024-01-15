@@ -7,6 +7,7 @@ from sqls.sql_ticker import (
     sql_del_ticker_with_code,
     sql_drop_tbl_ticker,
     sql_ins_into_ticker_vals,
+    sql_sel_cname_with_code_from_ticker,
     sql_sel_code_from_ticker,
     sql_sel_id_code_code_from_ticker,
     sql_sel_id_code_from_ticker_with_code,
@@ -48,6 +49,23 @@ def drop_tbl_ticker() -> bool:
     else:
         print('database can not be opened!')
         return False
+
+
+def get_cname_with_code(code: str) -> str:
+    con = DBInfo.get_connection()
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_sel_cname_with_code_from_ticker(code)
+        query.exec(sql)
+        if query.next():
+            cname = query.value(0)
+        else:
+            cname = ''
+        con.close()
+        return cname
+    else:
+        print('database can not be opened!')
+        return ''
 
 
 def get_dict_code() -> dict:
