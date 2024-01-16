@@ -1,4 +1,3 @@
-import datetime as dt
 import os
 
 from PySide6.QtCore import QDate, Signal
@@ -6,6 +5,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QCalendarWidget,
     QToolButton,
+    QToolTip,
 )
 
 from funcs.tbl_ticker import get_cname_with_code
@@ -83,3 +83,5 @@ class ToolBarNavigation(ToolBarMain):
         code = self.ent_ticker.text()
         cname = get_cname_with_code(code)
         self.ent_ticker.setToolTip(cname)
+        if cname != '':
+            QToolTip.showText(self.ent_ticker.pos(), self.ent_ticker.toolTip())
