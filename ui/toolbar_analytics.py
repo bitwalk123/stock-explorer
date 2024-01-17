@@ -64,6 +64,9 @@ class ToolBarNavigation(ToolBarMain):
     def on_select_calendar(self):
         self.calendar = calendar = QCalendarWidget()
         calendar.setMaximumDate(QDate(*get_ymd()))
+
+        if self.ent_date.date is not None:
+            calendar.setSelectedDate(self.ent_date.date)
         calendar.activated.connect(self.on_activated)
         calendar.show()
 
