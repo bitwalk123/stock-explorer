@@ -1,6 +1,7 @@
 import os
 import sys
 
+from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon, QFontDatabase
 from PySide6.QtWidgets import (
     QApplication,
@@ -17,6 +18,8 @@ from ui.main_exchange import MainExchange
 class StockExplorer(QTabWidget):
     __version__ = '0.2.0'
     __build__ = '20240115'
+    size_init = QSize(1200, 700)
+    size_square = QSize(1000, 1000)
 
     def __init__(self):
         super().__init__()
@@ -35,20 +38,34 @@ class StockExplorer(QTabWidget):
 
         self.init_ui()
         self.setWindowTitle('Stock Explorer - %s' % self.__version__)
-        self.resize(1200, 700)
+        # self.resize(1200, 700)
+        self.resize(self.size_init)
 
     def closeEvent(self, event):
         print('アプリケーションを終了します。')
         event.accept()  # let the window close
 
     def init_ui(self):
-        list_content = [
-            MainDomesticStocks(self),
-            MainExchange(self),
-            MainAnalytics(self),
-        ]
+        list_content = list()
+
+        domestic_stocks = MainDomesticStocks(self)
+        list_content.append(domestic_stocks)
+
+        exchange = MainExchange(self)
+        list_content.append(exchange)
+
+        analytics = MainAnalytics(self)
+        analytics.resizeRequested.connect(self.on_resize_requested)
+        list_content.append(analytics)
+
         for content in list_content:
             self.addTab(content, content.getTabLabel())
+
+    def on_resize_requested(self, flag: bool):
+        if flag:
+            self.resize(self.size_square)
+        else:
+            self.resize(self.size_init)
 
 
 def main():

@@ -2,7 +2,7 @@ import datetime as dt
 import mplfinance as mpf
 import yfinance as yf
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget
 
 from funcs.tbl_ticker import get_cname_with_code
@@ -15,6 +15,7 @@ from widgets.tab_panels import TabPanelMain
 
 class MainAnalytics(TabPanelMain):
     tab_label = '分析'
+    resizeRequested = Signal(bool)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -28,6 +29,7 @@ class MainAnalytics(TabPanelMain):
     def init_ui(self):
         self.toolbar = toolbar = ToolBarNavigation(self)
         toolbar.drawRequested.connect(self.on_draw)
+        toolbar.resizeRequested.connect(self.on_resize_requested)
         self.addToolBar(toolbar)
 
         # CandleStick chart as default
@@ -46,7 +48,7 @@ class MainAnalytics(TabPanelMain):
         df = yf.download(ticker, start, end, interval='5m')
 
         cname = get_cname_with_code(code)
-        title = '%s (%s)\n５分足チャート on %s' %(cname, code, start)
+        title = '%s (%s)\n５分足チャート on %s' % (cname, code, start)
 
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
@@ -64,3 +66,6 @@ class MainAnalytics(TabPanelMain):
         chart.ax.yaxis.set_label_position('right')
         chart.ax.grid()
         chart.refreshDraw()
+
+    def on_resize_requested(self, flag: bool):
+        self.resizeRequested.emit(flag)

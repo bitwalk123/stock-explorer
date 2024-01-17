@@ -1,4 +1,5 @@
 import datetime as dt
+from typing import Union
 
 from PySide6.QtCore import QDate
 from PySide6.QtWidgets import QLineEdit
@@ -22,6 +23,9 @@ class EntryDate(QLineEdit):
         self.setContentsMargins(0, 0, 0, 0)
         self.setFixedWidth(100)
         self.setStyleSheet('QLineEdit {padding-left:5px;}')
+
+    def getDate(self) -> Union[QDate, None]:
+        return self.date
 
     def setDate(self, date: QDate):
         self.date = date

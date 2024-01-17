@@ -16,12 +16,14 @@ from widgets.entries import (
     EntryTicker,
 )
 from widgets.labels import Label
+from widgets.pads import HPad
 from widgets.tab_panels import TabPanelMain
 from widgets.toolbar_main import ToolBarMain
 
 
 class ToolBarNavigation(ToolBarMain):
     drawRequested = Signal(str, str, str)
+    resizeRequested = Signal(bool)
 
     def __init__(self, parent: TabPanelMain):
         super().__init__(parent)
@@ -61,12 +63,23 @@ class ToolBarNavigation(ToolBarMain):
         but_chart.clicked.connect(self.on_draw_chart)
         self.addWidget(but_chart)
 
+        pad = HPad()
+        self.addWidget(pad)
+
+        but_resize = QToolButton()
+        but_resize.setContentsMargins(0, 0, 0, 0)
+        icon_resize = QIcon(os.path.join(res.getImagePath(), 'resize.png'))
+        but_resize.setIcon(icon_resize)
+        but_resize.setCheckable(True)
+        but_resize.toggled.connect(self.on_resize_toggled)
+        self.addWidget(but_resize)
+
     def on_select_calendar(self):
         self.calendar = calendar = QCalendarWidget()
         calendar.setMaximumDate(QDate(*get_ymd()))
-
-        if self.ent_date.date is not None:
-            calendar.setSelectedDate(self.ent_date.date)
+        date = self.ent_date.getDate()
+        if date is not None:
+            calendar.setSelectedDate(date)
         calendar.activated.connect(self.on_activated)
         calendar.show()
 
@@ -81,6 +94,9 @@ class ToolBarNavigation(ToolBarMain):
         code = self.ent_ticker.text()
         start, end = self.ent_date.getDateRange()
         self.drawRequested.emit(code, start, end)
+
+    def on_resize_toggled(self, checked: bool):
+        self.resizeRequested.emit(checked)
 
     def on_ticker_entered(self):
         code = self.ent_ticker.text()
