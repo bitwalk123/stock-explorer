@@ -1,11 +1,10 @@
-import datetime as dt
 import mplfinance as mpf
-import yfinance as yf
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget
 
 from funcs.tbl_ticker import get_cname_with_code
+from funcs.tbl_trade5m import refresh_trade5m
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
 from ui.toolbar_trade5m import ToolBarTrade5m
@@ -44,9 +43,7 @@ class MainTrade5m(TabPanelMain):
         )
 
     def on_draw(self, code: str, start: str, end: str):
-        ticker = '%s.T' % code
-        df = yf.download(ticker, start, end, interval='5m')
-        print(df.columns)
+        df = refresh_trade5m(code, start, end)
 
         cname = get_cname_with_code(code)
         title = '%s (%s)\n５分足チャート on %s' % (cname, code, start)

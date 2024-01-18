@@ -1,3 +1,5 @@
+from typing import Union
+
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
@@ -108,6 +110,23 @@ def get_dict_id_code() -> dict:
     else:
         print('database can not be opened!')
         return dict()
+
+
+def get_id_code_from_code(code: str) -> Union[int, None]:
+    con = DBInfo.get_connection()
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_sel_id_code_from_ticker_with_code(code)
+        query.exec(sql)
+        if query.next():
+            id_code = query.value(0)
+        else:
+            id_code = None
+        con.close()
+        return id_code
+    else:
+        print('database can not be opened!')
+        return None
 
 
 def update_tbl_ticker(tse: str) -> bool:
