@@ -41,7 +41,16 @@ def sql_ins_into_trade5m_values(id_code: int, series: pd.Series) -> str:
     return sql
 
 
-def sql_sel_all_from_trade5m_with_dates_id_code_start(id_code: int, start: int, end: int) -> str:
+def sql_sel_all_from_trade5m_with_dates_id_code_date(id_code: int, start: int) -> str:
+    sql = """
+        SELECT "Date", "Open", "High", "Low", "Close", "Volume" FROM trade5m
+        WHERE id_code = %d AND "Date" = %d
+        ORDER BY "Date" ASC;
+    """ % (id_code, start)
+    return sql
+
+
+def sql_sel_all_from_trade5m_with_dates_id_code_dates(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT "Date", "Open", "High", "Low", "Close", "Volume" FROM trade5m
         WHERE id_code = %d AND "Date" >= %d AND "Date" < %d
