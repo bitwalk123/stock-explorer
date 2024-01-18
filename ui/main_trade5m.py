@@ -1,3 +1,6 @@
+import datetime as dt
+import re
+
 import mplfinance as mpf
 
 from PySide6.QtCore import Qt, Signal
@@ -43,6 +46,17 @@ class MainTrade5m(TabPanelMain):
         )
 
     def on_draw(self, code: str, start: str, end: str):
+        pattern = re.compile(r'^([0-9]+)-([0-9]+)-([0-9]+)$')
+        m = pattern.match(start)
+        if m:
+            yyyy = int(m.group(1))
+            mm = int(m.group(2))
+            dd = int(m.group(3))
+            start_dt = dt.datetime(yyyy, mm, dd)
+            print(start_dt)
+            start_timestamp = int(start_dt.timestamp())
+            # Need to get Close price of precious trade day
+
         df = refresh_trade5m(code, start, end)
 
         cname = get_cname_with_code(code)

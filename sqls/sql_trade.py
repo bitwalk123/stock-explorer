@@ -68,6 +68,14 @@ def sql_sel_close_from_trade_with_id_code(id_code: int) -> str:
     return sql
 
 
+def sql_sel_close_from_trade_with_id_code_date(id_code: int, date: int) -> str:
+    sql = """
+        SELECT "Close" FROM trade
+        WHERE id_code = %d AND "Date" = %d;
+    """ % (id_code, date)
+    return sql
+
+
 def sql_sel_close_from_trade_with_id_code_start(id_code: int, start: int) -> str:
     sql = """
         SELECT "Date", "Close" FROM trade
@@ -94,6 +102,33 @@ def sql_sel_close_volume_from_trade_with_id_code_start(id_code: int, start: int)
     """ % (id_code, start)
     return sql
 
+def sql_sel_id_trade_from_trade_with_date_id_code(id_code: int, timestamp: int) -> str:
+    sql = """
+        SELECT "id_trade" FROM trade
+        WHERE "id_code" = %d AND "Date" = %d;
+    """ % (id_code, timestamp)
+    return sql
+
+def sql_sel_max_date_from_trade_less_date(date: int) -> str:
+    sql = """
+        SELECT MAX("Date") FROM trade
+        WHERE "Date" < %d;
+    """ % date
+    return sql
+
+def sql_sel_max_date_from_trade_with_id_code_less_date(id_code, date: int) -> str:
+    sql = """
+        SELECT MAX("Date") FROM trade
+        WHERE id_code = %d AND "Date" < %d;
+    """ % (id_code, date)
+    return sql
+
+def sql_sel_max_date_from_trade_with_id_code(id_code: int) -> str:
+    sql = """
+        SELECT MAX("Date") FROM trade
+        WHERE id_code = %d;
+    """ % id_code
+    return sql
 
 def sql_sel_open_from_trade_with_id_code(id_code: int) -> str:
     sql = """
@@ -149,14 +184,6 @@ def sql_sel_open_close_volume_from_trade_with_id_code_start(id_code: int, start:
     return sql
 
 
-def sql_sel_close_from_trade_with_id_code_date(id_code: int, date: int) -> str:
-    sql = """
-        SELECT "Close" FROM trade
-        WHERE id_code = %d AND "Date" = %d;
-    """ % (id_code, date)
-    return sql
-
-
 def sql_sel_open_close_from_trade_with_id_code_date(id_code: int, date: int) -> str:
     sql = """
         SELECT "Open", "Close" FROM trade
@@ -165,12 +192,6 @@ def sql_sel_open_close_from_trade_with_id_code_date(id_code: int, date: int) -> 
     return sql
 
 
-def sql_sel_id_trade_from_trade_with_date_id_code(id_code: int, timestamp: int) -> str:
-    sql = """
-        SELECT "id_trade" FROM trade
-        WHERE "id_code" = %d AND "Date" = %d;
-    """ % (id_code, timestamp)
-    return sql
 
 
 def sql_sel_max_date_from_trade() -> str:
@@ -180,20 +201,6 @@ def sql_sel_max_date_from_trade() -> str:
     return sql
 
 
-def sql_sel_max_date_from_trade_less_date(date: int) -> str:
-    sql = """
-        SELECT MAX("Date") FROM trade
-        WHERE "Date" < %d;
-    """ % date
-    return sql
-
-
-def sql_sel_max_date_from_trade_with_id_code(id_code: int) -> str:
-    sql = """
-        SELECT MAX("Date") FROM trade
-        WHERE id_code = %d;
-    """ % id_code
-    return sql
 
 
 def sql_upd_trade_values(id_trade: int, series: pd.Series) -> str:
