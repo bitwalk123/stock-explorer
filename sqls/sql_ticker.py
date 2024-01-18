@@ -24,7 +24,7 @@ def sql_create_tbl_ticker() -> str:
 
 def sql_del_ticker_with_code(code: str) -> str:
     sql = """
-        DELETE FROM ticker WHERE "コード"='%s';
+        DELETE FROM ticker WHERE "コード" = '%s';
     """ % code
     return sql
 
@@ -73,7 +73,7 @@ def sql_sel_13sector_from_ticker_with_code(code: str):
 def sql_sel_cname_with_code_from_ticker(code: str) -> str:
     sql = """
         SELECT "銘柄名" FROM ticker
-        WHERE "コード"='%s';
+        WHERE "コード" = '%s';
     """ % code
     return sql
 
@@ -97,7 +97,7 @@ def sql_sel_id_code_code_from_ticker() -> str:
 def sql_sel_id_code_cname_from_ticker_with_code(code: str) -> str:
     sql = """
         SELECT id_code, "銘柄名" FROM ticker
-        WHERE "コード"='%s';
+        WHERE "コード" = '%s';
     """ % code
     return sql
 
@@ -105,7 +105,7 @@ def sql_sel_id_code_cname_from_ticker_with_code(code: str) -> str:
 def sql_sel_id_code_from_ticker_with_code(code: str) -> str:
     sql = """
         SELECT id_code FROM ticker
-        WHERE "コード"='%s';
+        WHERE "コード" = '%s';
     """ % code
     return sql
 
@@ -113,17 +113,17 @@ def sql_sel_id_code_from_ticker_with_code(code: str) -> str:
 def sql_upd_ticker_vals(id_code: int, series: pd.Series) -> str:
     sql = """
         UPDATE ticker
-        SET "日付"=%d,
-            "コード"='%s',
-            "銘柄名"='%s',
-            "市場・商品区分"='%s',
-            "33業種コード"=%d,
-            "33業種区分"='%s',
-            "17業種コード"=%d,
-            "17業種区分"='%s',
-            "規模コード"='%s',
-            "規模区分"='%s'
-        WHERE id_code=%d;
+        SET "日付" = %d,
+            "コード" = '%s',
+            "銘柄名" = '%s',
+            "市場・商品区分" = '%s',
+            "33業種コード" = %d,
+            "33業種区分" = '%s',
+            "17業種コード" = %d,
+            "17業種区分" = '%s',
+            "規模コード" = '%s',
+            "規模区分" = '%s'
+        WHERE id_code = %d;
     """ % (
         series['日付'],
         series['コード'],
