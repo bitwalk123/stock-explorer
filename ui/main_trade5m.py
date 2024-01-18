@@ -8,13 +8,13 @@ from PySide6.QtWidgets import QWidget
 from funcs.tbl_ticker import get_cname_with_code
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
-from ui.toolbar_analytics import ToolBarNavigation
+from ui.toolbar_trade5m import ToolBarTrade5m
 from widgets.charts import Trend
 from widgets.tab_panels import TabPanelMain
 
 
-class MainAnalytics(TabPanelMain):
-    tab_label = '分析'
+class MainTrade5m(TabPanelMain):
+    tab_label = '５分足チャート'
     resizeRequested = Signal(bool)
 
     def __init__(self, parent):
@@ -27,7 +27,7 @@ class MainAnalytics(TabPanelMain):
         self.init_ui()
 
     def init_ui(self):
-        self.toolbar = toolbar = ToolBarNavigation(self)
+        self.toolbar = toolbar = ToolBarTrade5m(self)
         toolbar.drawRequested.connect(self.on_draw)
         toolbar.resizeRequested.connect(self.on_resize_requested)
         self.addToolBar(toolbar)
@@ -46,6 +46,7 @@ class MainAnalytics(TabPanelMain):
     def on_draw(self, code: str, start: str, end: str):
         ticker = '%s.T' % code
         df = yf.download(ticker, start, end, interval='5m')
+        print(df.columns)
 
         cname = get_cname_with_code(code)
         title = '%s (%s)\n５分足チャート on %s' % (cname, code, start)

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 
 from snippets.set_env import set_env
 from structs.res import AppRes
-from ui.main_analytics import MainAnalytics
+from ui.main_trade5m import MainTrade5m
 from ui.main_domestic import MainDomesticStocks
 from ui.main_exchange import MainExchange
 
@@ -54,9 +54,9 @@ class StockExplorer(QTabWidget):
         exchange = MainExchange(self)
         list_content.append(exchange)
 
-        analytics = MainAnalytics(self)
-        analytics.resizeRequested.connect(self.on_resize_requested)
-        list_content.append(analytics)
+        trade5m = MainTrade5m(self)
+        trade5m.resizeRequested.connect(self.on_resize_requested)
+        list_content.append(trade5m)
 
         for content in list_content:
             self.addTab(content, content.getTabLabel())

@@ -21,7 +21,7 @@ from widgets.tab_panels import TabPanelMain
 from widgets.toolbar_main import ToolBarMain
 
 
-class ToolBarNavigation(ToolBarMain):
+class ToolBarTrade5m(ToolBarMain):
     drawRequested = Signal(str, str, str)
     resizeRequested = Signal(bool)
 
