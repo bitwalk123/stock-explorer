@@ -1,5 +1,6 @@
 import datetime as dt
 from statistics import median
+from typing import Union
 
 import pandas as pd
 import yfinance as yf
@@ -31,6 +32,7 @@ from sqls.sql_trade import (
     sql_sel_open_volume_from_trade_with_id_code,
     sql_sel_max_date_from_trade_with_id_code,
     sql_upd_trade_values, sql_sel_close_from_trade_with_id_code_start,
+    sql_sel_max_date_from_trade_with_id_code_less_date,
 )
 from structs.db_info import DBInfo
 from structs.trend_object import TrendObj
@@ -111,6 +113,22 @@ def get_date_close_with_id_code_start(id_code: int, start: int) -> pd.DataFrame:
         return df
     else:
         return pd.DataFrame()
+
+
+def get_max_date_from_trade_with_id_code_less_date(id_code: int, date: int) -> Union[int, None]:
+    con = DBInfo.get_connection()
+    if con.open():
+        sql = sql_sel_max_date_from_trade_with_id_code_less_date(id_code, date)
+        query = QSqlQuery(sql)
+        if query.next():
+            date_prev = query.value(0)
+        else:
+            date_prev = None
+        con.close()
+        return date_prev
+    else:
+        print('database can not be opened!')
+        return None
 
 
 def get_trade_with_code(code: str, start: int) -> tuple:

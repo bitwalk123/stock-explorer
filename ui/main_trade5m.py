@@ -6,7 +6,8 @@ import mplfinance as mpf
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget
 
-from funcs.tbl_ticker import get_cname_with_code
+from funcs.tbl_ticker import get_cname_with_code, get_id_code_from_code
+from funcs.tbl_trade import get_max_date_from_trade_with_id_code_less_date
 from funcs.tbl_trade5m import refresh_trade5m
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
@@ -55,6 +56,11 @@ class MainTrade5m(TabPanelMain):
             start_dt = dt.datetime(yyyy, mm, dd)
             print(start_dt)
             start_timestamp = int(start_dt.timestamp())
+            print(start_timestamp)
+            id_code = get_id_code_from_code(code)
+            print(id_code)
+            prev_timestamp = get_max_date_from_trade_with_id_code_less_date(id_code, start_timestamp)
+            print(prev_timestamp)
             # Need to get Close price of precious trade day
 
         df = refresh_trade5m(code, start, end)

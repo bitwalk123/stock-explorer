@@ -43,5 +43,4 @@ def refresh_trade5m(code, start, end):
     ticker = '%s.T' % code
     df = yf.download(ticker, start, end, interval='5m')
     id_code = get_id_code_from_code(code)
-    print(id_code)
     return df
