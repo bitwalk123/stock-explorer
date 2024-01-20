@@ -1,4 +1,5 @@
 import datetime as dt
+import re
 from statistics import median
 from typing import Union
 
@@ -7,7 +8,7 @@ import yfinance as yf
 
 from PySide6.QtSql import QSqlQuery
 
-from funcs.tbl_ticker import get_dict_code
+from funcs.tbl_ticker import get_dict_code, get_id_code_from_code
 from funcs.tide import (
     conv_pandas_timestamp,
     conv_timestamp2date_next,
@@ -32,7 +33,7 @@ from sqls.sql_trade import (
     sql_sel_open_volume_from_trade_with_id_code,
     sql_sel_max_date_from_trade_with_id_code,
     sql_upd_trade_values, sql_sel_close_from_trade_with_id_code_start,
-    sql_sel_max_date_from_trade_with_id_code_less_date,
+    sql_sel_max_date_from_trade_with_id_code_less_date, sql_sel_close_from_trade_with_id_code_date,
 )
 from structs.db_info import DBInfo
 from structs.trend_object import TrendObj
@@ -90,6 +91,21 @@ def drop_tbl_trade() -> bool:
         return False
 
 
+def get_close_with_id_code_date(id_code, date: int) -> Union[float, None]:
+    con = DBInfo.get_connection()
+    if con.open():
+        sql = sql_sel_close_from_trade_with_id_code_date(id_code, date)
+        query = QSqlQuery(sql)
+        if query.next():
+            price_close = query.value(0)
+        else:
+            price_close = None
+        return price_close
+    else:
+        print('database can not be opened!')
+        return None
+
+
 def get_date_close_with_id_code_start(id_code: int, start: int) -> pd.DataFrame:
     list_date = list()
     list_close = list()
@@ -129,6 +145,26 @@ def get_max_date_from_trade_with_id_code_less_date(id_code: int, date: int) -> U
     else:
         print('database can not be opened!')
         return None
+
+
+def get_previous_close(code: str, date: str) -> Union[float, None]:
+    pattern = re.compile(r'^([0-9]+)-([0-9]+)-([0-9]+)$')
+    m = pattern.match(date)
+    if m:
+        yyyy = int(m.group(1))
+        mm = int(m.group(2))
+        dd = int(m.group(3))
+        date_dt = dt.datetime(yyyy, mm, dd)
+        # print(start_dt)
+        date_timestamp = int(date_dt.timestamp())
+        # print(start_timestamp)
+        id_code = get_id_code_from_code(code)
+        # print(id_code)
+        prev_timestamp = get_max_date_from_trade_with_id_code_less_date(id_code, date_timestamp)
+        # print(prev_timestamp)
+        close_prev = get_close_with_id_code_date(id_code, prev_timestamp)
+        # print(close_prev)
+        return close_prev
 
 
 def get_trade_with_code(code: str, start: int) -> tuple:

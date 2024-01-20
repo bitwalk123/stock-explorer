@@ -82,10 +82,13 @@ def draw_candle_stick(chart: Trend, code: str, start: int = -1) -> TrendObj:
         ax=chart.ax,
         volume=chart.ax2
     )
-    chart.ax.yaxis.tick_right()
-    chart.ax2.yaxis.tick_right()
-    chart.ax.yaxis.set_label_position('right')
-    chart.ax2.yaxis.set_label_position('right')
+    # chart.ax.yaxis.tick_right()
+    # chart.ax2.yaxis.tick_right()
+    # chart.ax.yaxis.set_label_position('right')
+    # chart.ax2.yaxis.set_label_position('right')
+    chart.ax.yaxis.set_tick_params(labelright=True)
+    chart.ax2.yaxis.set_tick_params(labelright=True)
+
     chart.ax.grid()
     chart.ax2.grid()
     chart.refreshDraw()
@@ -116,8 +119,9 @@ def draw_open(chart: Trend, code: str, start: int = -1) -> TrendObj:
         markersize=4,
         linewidth=0.5
     )
-    chart.ax.yaxis.tick_right()
-    chart.ax.yaxis.set_label_position('right')
+    # chart.ax.yaxis.tick_right()
+    # chart.ax.yaxis.set_label_position('right')
+    chart.ax.yaxis.set_tick_params(labelright=True)
     chart.ax.set_ylabel('Price')
     for tick in chart.ax.get_xticklabels():
         tick.set_rotation(45)
@@ -150,8 +154,9 @@ def draw_close(chart: Trend, code: str, start: int = -1) -> TrendObj:
         markersize=4,
         linewidth=0.5
     )
-    chart.ax.yaxis.tick_right()
-    chart.ax.yaxis.set_label_position('right')
+    # chart.ax.yaxis.tick_right()
+    # chart.ax.yaxis.set_label_position('right')
+    chart.ax.yaxis.set_tick_params(labelright=True)
     chart.ax.set_ylabel('Price')
     for tick in chart.ax.get_xticklabels():
         tick.set_rotation(45)
@@ -192,8 +197,9 @@ def draw_close_open(chart: Trend, code: str, start: int = -1) -> TrendObj:
             color = 'gray'
         chart.ax.get_children()[i].set_color(color)
 
-    chart.ax.yaxis.tick_right()
-    chart.ax.yaxis.set_label_position('right')
+    # chart.ax.yaxis.tick_right()
+    # chart.ax.yaxis.set_label_position('right')
+    chart.ax.yaxis.set_tick_params(labelright=True)
     chart.ax.set_ylabel('Price')
     for tick in chart.ax.get_xticklabels():
         tick.set_rotation(45)
@@ -230,8 +236,9 @@ def draw_exchange(chart: Trend, currency: str, start: int = -1) -> TrendObj:
         ax=chart.ax
     )
     chart.ax.set_ylabel('Price (JPY)')
-    chart.ax.yaxis.tick_right()
-    chart.ax.yaxis.set_label_position('right')
+    # chart.ax.yaxis.tick_right()
+    # chart.ax.yaxis.set_label_position('right')
+    chart.ax.yaxis.set_tick_params(labelright=True)
     chart.ax.grid()
     chart.refreshDraw()
 

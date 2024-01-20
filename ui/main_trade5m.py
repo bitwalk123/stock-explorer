@@ -1,13 +1,10 @@
-import datetime as dt
-import re
-
 import mplfinance as mpf
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget
 
-from funcs.tbl_ticker import get_cname_with_code, get_id_code_from_code
-from funcs.tbl_trade import get_max_date_from_trade_with_id_code_less_date
+from funcs.tbl_ticker import get_cname_with_code
+from funcs.tbl_trade import get_previous_close
 from funcs.tbl_trade5m import refresh_trade5m
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
@@ -47,22 +44,7 @@ class MainTrade5m(TabPanelMain):
         )
 
     def on_draw(self, code: str, start: str, end: str):
-        pattern = re.compile(r'^([0-9]+)-([0-9]+)-([0-9]+)$')
-        m = pattern.match(start)
-        if m:
-            yyyy = int(m.group(1))
-            mm = int(m.group(2))
-            dd = int(m.group(3))
-            start_dt = dt.datetime(yyyy, mm, dd)
-            print(start_dt)
-            start_timestamp = int(start_dt.timestamp())
-            print(start_timestamp)
-            id_code = get_id_code_from_code(code)
-            print(id_code)
-            prev_timestamp = get_max_date_from_trade_with_id_code_less_date(id_code, start_timestamp)
-            print(prev_timestamp)
-            # Need to get Close price of precious trade day
-
+        close_prev = get_previous_close(code, start)
         df = refresh_trade5m(code, start, end)
 
         cname = get_cname_with_code(code)
@@ -78,10 +60,18 @@ class MainTrade5m(TabPanelMain):
             style=self.res.getCandleStyle(),
             ax=chart.ax
         )
+        if type(close_prev) is not None:
+            chart.ax.axhline(
+                y=close_prev,
+                color='r',
+                linewidth=1,
+                linestyle=':',
+                xmax=0.25
+            )
+
         chart.ax.set_title(title)
         chart.ax.set_ylabel('Price (JPY)')
-        chart.ax.yaxis.tick_right()
-        chart.ax.yaxis.set_label_position('right')
+        chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
         chart.refreshDraw()
 
