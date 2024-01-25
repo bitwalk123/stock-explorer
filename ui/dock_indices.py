@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QButtonGroup, QWidget
 from funcs.tbl_iticker import get_dict_id_index
 from ui.dock_items import DockItems
 from widgets.areas import ScrollAreaVertical, Container
-from widgets.buttons import TickerButton
+from widgets.buttons import TickerButton, IndexButton
 from widgets.labels import DockImgTitle
 from widgets.layouts import VBoxLayout, HBoxLayout
 from widgets.pads import VPad
@@ -56,28 +56,28 @@ class DockIndices(DockItems):
     def gen_index_buttons(self, vbox):
         self.tb_group = tb_group = QButtonGroup(self)
         for iticker in self.dict_id_index.keys():
-            tb = TickerButton(iticker)
+            ib = IndexButton(iticker)
             id_index = self.dict_id_index[iticker]
-            self.dict_tb[id_index] = tb
-            tb_group.addButton(tb)
-            tb_group.setId(tb, id_index)
-            vbox.addWidget(tb)
+            self.dict_tb[id_index] = ib
+            tb_group.addButton(ib)
+            tb_group.setId(ib, id_index)
+            vbox.addWidget(ib)
         tb_group.buttonClicked.connect(self.on_button_clicked)
 
     def getCurrentIndex(self) -> Union[str, None]:
-        tb = self.tb_group.checkedButton()
-        if tb is not None:
-            return tb.text()
+        ib: IndexButton = self.tb_group.checkedButton()
+        if ib is not None:
+            return ib.getText()
         else:
             return None
 
     def getCurrentDefault(self) -> str:
         return self.defaultIndex
 
-    def on_button_clicked(self, tb: TickerButton):
-        if tb.isChecked():
-            self.setTickerButtonVisible(tb)
-            code = tb.text()
+    def on_button_clicked(self, ib: IndexButton):
+        if ib.isChecked():
+            self.setTickerButtonVisible(ib)
+            code = ib.text()
             self.tickerSelected.emit(code)
 
     def setCheck(self, iticker: str):
