@@ -1,7 +1,9 @@
 from PySide6.QtCore import Qt
 
 from ui.dock_indices import DockIndices
+from ui.statusbar_indices import StatusbarIndices
 from ui.toolbar_indices import ToolBarIndices
+from widgets.charts import Trend
 from widgets.tab_panels import TabPanelMain
 
 
@@ -29,3 +31,11 @@ class MainIndices(TabPanelMain):
             Qt.DockWidgetArea.RightDockWidgetArea,
             dock_right
         )
+        # StatusBar
+        self.statusbar = StatusbarIndices(self)
+        self.statusbar.setSizeGripEnabled(True)
+        self.setStatusBar(self.statusbar)
+
+        # CandleStick chart as default
+        chart = Trend()
+        self.setCentralWidget(chart)

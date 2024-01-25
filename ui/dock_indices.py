@@ -41,17 +41,10 @@ class DockIndices(DockItems):
         base = Container()
         area.setWidget(base)
 
-        hbox = HBoxLayout()
-        base.setLayout(hbox)
-
         self.vbox = vbox = VBoxLayout()
         self.gen_index_buttons(vbox)
         vbox.addWidget(VPad())
-        hbox.addLayout(vbox)
-
-        pad = VPad()
-        pad.setFixedWidth(16)
-        hbox.addWidget(pad)
+        base.setLayout(vbox)
 
     def gen_index_buttons(self, vbox):
         self.tb_group = tb_group = QButtonGroup(self)

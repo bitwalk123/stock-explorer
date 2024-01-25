@@ -45,16 +45,9 @@ class DockDomesticTickers(DockItems):
         base = Container()
         area.setWidget(base)
 
-        hbox = HBoxLayout()
-        base.setLayout(hbox)
-
         self.vbox = vbox = VBoxLayout()
         self.gen_ticker_buttons(vbox)
-        hbox.addLayout(vbox)
-
-        pad = VPad()
-        pad.setFixedWidth(16)
-        hbox.addWidget(pad)
+        base.setLayout(vbox)
 
     def gen_ticker_buttons(self, vbox):
         self.tb_group = tb_group = QButtonGroup(self)
