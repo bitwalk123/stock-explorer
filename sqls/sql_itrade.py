@@ -49,6 +49,14 @@ def sql_sel_id_itrade_from_itrade_with_date_id_index(id_index: int, timestamp: i
     return sql
 
 
+def sql_sel_max_date_from_itrade_with_id_index(id_index: int) -> str:
+    sql = """
+        SELECT MAX("Date") FROM itrade
+        WHERE id_index = %d;
+    """ % id_index
+    return sql
+
+
 def sql_upd_itrade_values(id_itrade: int, series: pd.Series) -> str:
     sql = """
         UPDATE itrade
