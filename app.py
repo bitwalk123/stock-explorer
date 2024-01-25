@@ -17,7 +17,7 @@ from ui.main_exchange import MainExchange
 
 class StockExplorer(QTabWidget):
     __version__ = '0.2.0'
-    __build__ = '20240118'
+    __build__ = '20240125'
     size_init = QSize(1200, 700)
     size_square = QSize(1000, 1000)
 
