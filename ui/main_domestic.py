@@ -30,6 +30,7 @@ class MainDomesticStocks(TabPanelMain):
         self.init_ui()
 
     def init_ui(self):
+        # ToolBar
         self.toolbar = toolbar = ToolBarDomesticStocks(self)
         toolbar.kabutanGoodBadRequested.connect(self.on_good_bad_requested)
         toolbar.periodUpdate.connect(self.on_period_update)

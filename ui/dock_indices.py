@@ -3,7 +3,7 @@ from typing import Union
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QButtonGroup, QWidget
 
-from funcs.tbl_currency import get_dict_id_currency
+from funcs.tbl_iticker import get_dict_id_index
 from ui.dock_items import DockItems
 from widgets.areas import ScrollAreaVertical, Container
 from widgets.buttons import TickerButton
@@ -13,18 +13,18 @@ from widgets.pads import VPad
 from widgets.tab_panels import TabPanelMain
 
 
-class DockExchange(DockItems):
+class DockIndices(DockItems):
     tickerSelected = Signal(str)
-    defaultCurrency = 'USDJPY'
+    defaultIndex = '^N255'
 
     def __init__(self, parent: TabPanelMain):
         super().__init__(parent)
-        self.vbox: VBoxLayout = None
-        self.tb_group: QButtonGroup = None
+        self.vbox: VBoxLayout | None = None
+        self.tb_group: QButtonGroup | None = None
 
-        self.dict_id_currency = get_dict_id_currency()
-        self.list_id_currency = [
-            self.dict_id_currency[currency] for currency in self.dict_id_currency.keys()
+        self.dict_id_index = get_dict_id_index()
+        self.list_id_index = [
+            self.dict_id_index[iticker] for iticker in self.dict_id_index.keys()
         ]
         self.dict_tb = dict()
 
@@ -32,7 +32,7 @@ class DockExchange(DockItems):
 
     def init_ui(self):
         # Dock Title
-        title = DockImgTitle('ticker.png', '為替')
+        title = DockImgTitle('ticker.png', '指数')
         self.setTitleBarWidget(title)
 
         area = ScrollAreaVertical()
@@ -45,7 +45,7 @@ class DockExchange(DockItems):
         base.setLayout(hbox)
 
         self.vbox = vbox = VBoxLayout()
-        self.gen_currency_buttons(vbox)
+        self.gen_index_buttons(vbox)
         vbox.addWidget(VPad())
         hbox.addLayout(vbox)
 
@@ -53,22 +53,18 @@ class DockExchange(DockItems):
         pad.setFixedWidth(16)
         hbox.addWidget(pad)
 
-    def gen_currency_buttons(self, vbox):
+    def gen_index_buttons(self, vbox):
         self.tb_group = tb_group = QButtonGroup(self)
-        for currency in self.dict_id_currency.keys():
-            tb = TickerButton(currency)
-            id_currency = self.dict_id_currency[currency]
-            self.dict_tb[id_currency] = tb
-
-            if currency != self.defaultCurrency:
-                tb.setEnabled(False)
-
+        for iticker in self.dict_id_index.keys():
+            tb = TickerButton(iticker)
+            id_index = self.dict_id_index[iticker]
+            self.dict_tb[id_index] = tb
             tb_group.addButton(tb)
-            tb_group.setId(tb, id_currency)
+            tb_group.setId(tb, id_index)
             vbox.addWidget(tb)
         tb_group.buttonClicked.connect(self.on_button_clicked)
 
-    def getCurrentCurrency(self) -> Union[str, None]:
+    def getCurrentIndex(self) -> Union[str, None]:
         tb = self.tb_group.checkedButton()
         if tb is not None:
             return tb.text()
@@ -76,7 +72,7 @@ class DockExchange(DockItems):
             return None
 
     def getCurrentDefault(self) -> str:
-        return self.defaultCurrency
+        return self.defaultIndex
 
     def on_button_clicked(self, tb: TickerButton):
         if tb.isChecked():
@@ -84,10 +80,10 @@ class DockExchange(DockItems):
             code = tb.text()
             self.tickerSelected.emit(code)
 
-    def setCheck(self, currency: str):
-        id_currency = self.dict_id_currency[currency]
-        if id_currency != self.tb_group.checkedId():
-            tb: Union[QWidget, TickerButton] = self.dict_tb[id_currency]
+    def setCheck(self, iticker: str):
+        id_index = self.dict_id_index[iticker]
+        if id_index != self.tb_group.checkedId():
+            tb: Union[QWidget, TickerButton] = self.dict_tb[id_index]
             tb.setChecked(True)
             self.setTickerButtonVisible(tb)
 

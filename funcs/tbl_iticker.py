@@ -69,6 +69,27 @@ def create_tbl_iticker_procs_2():
             print('query has been successfully executed.')
 
 
+def get_dict_id_index() -> dict:
+    """
+    dict_id_index[iticker] = id_index
+    """
+    con = DBInfo.get_connection()
+    if con.open():
+        dict_id_index = dict()
+        query = QSqlQuery()
+        sql = sql_sel_id_index_index_from_iticker()
+        query.exec(sql)
+        while query.next():
+            id_index = query.value(0)
+            iticker = query.value(1)
+            dict_id_index[iticker] = id_index
+        con.close()
+        return dict_id_index
+    else:
+        print('database can not be opened!')
+        return dict()
+
+
 def get_dict_index() -> dict:
     """
     dict_index[id_index] = iticker

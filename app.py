@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 
 from snippets.set_env import set_env
 from structs.res import AppRes
+from ui.main_indices import MainIndices
 from ui.main_trade5m import MainTrade5m
 from ui.main_domestic import MainDomesticStocks
 from ui.main_exchange import MainExchange
@@ -50,6 +51,9 @@ class StockExplorer(QTabWidget):
 
         domestic_stocks = MainDomesticStocks(self)
         list_content.append(domestic_stocks)
+
+        trade_index = MainIndices(self)
+        list_content.append(trade_index)
 
         exchange = MainExchange(self)
         list_content.append(exchange)
