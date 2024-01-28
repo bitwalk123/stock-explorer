@@ -2,15 +2,14 @@ import os
 from typing import Union
 
 import mplfinance as mpf
-import pandas as pd
 
 from PySide6.QtCore import Qt, Signal, QThreadPool
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QWidget, QProgressBar, QProgressDialog
+from PySide6.QtWidgets import QWidget, QProgressDialog
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tbl_trade import get_previous_close
-from mthreads.get_day_trade import get_day_trade, GetDayTradeWorker
+from mthreads.get_day_trade import GetDayTradeWorker
 from structs.day_trade import DayTrade
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
@@ -25,12 +24,12 @@ class MainTradeDay(TabPanelMain):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.res = AppRes()
         self.threadpool = QThreadPool()
 
         self.progress: Union[QProgressDialog, None] = None
         self.toolbar = None
         self.dock_bottom = None
-        self.res = AppRes()
 
         self.init_ui()
 
