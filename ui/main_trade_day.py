@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 import mplfinance as mpf
@@ -101,8 +102,9 @@ class MainTradeDay(TabPanelMain):
             parent=self
         )
         icon = QIcon(os.path.join(self.res.getImagePath(), 'hourglass.png'))
-        progress.setWindowIcon()
+        progress.setWindowIcon(icon)
         progress.setWindowModality(Qt.WindowModality.WindowModal)
         progress.setCancelButton(None)
         progress.setWindowTitle('status')
+        progress.setRange(0, 0)
         progress.show()
