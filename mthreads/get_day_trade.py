@@ -17,7 +17,6 @@ def get_day_trade(info: DayTrade) -> pd.DataFrame:
 
 
 class GetDayTradeWorkerSignals(QObject):
-    progress = Signal(str)
     finished = Signal(DayTrade)
 
 
