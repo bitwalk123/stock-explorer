@@ -1,4 +1,4 @@
-from funcs.tbl_trade5m import create_tbl_trade5m
+from funcs.tbl_trade_day import create_tbl_trade5m
 from snippets.set_env import set_env
 
 if __name__ == '__main__':

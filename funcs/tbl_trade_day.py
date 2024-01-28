@@ -1,8 +1,12 @@
+import pandas as pd
 import yfinance as yf
 from PySide6.QtSql import QSqlQuery
 
 from funcs.tbl_ticker import get_id_code_from_code
-from sqls.sql_trade5m import sql_create_tbl_trade5m, sql_drop_tbl_trade5m
+from sqls.sql_trade_day import (
+    sql_create_tbl_trade5m,
+    sql_drop_tbl_trade5m,
+)
 from structs.db_info import DBInfo
 
 
@@ -40,8 +44,8 @@ def drop_tbl_trade5m() -> bool:
         return False
 
 
-def refresh_trade5m(code: str, start: int, end: int, interval: str):
+def get_day_trade(code: str, start: str, end: str, interval: str) -> pd.DataFrame:
     ticker = '%s.T' % code
     df = yf.download(ticker, start, end, interval=interval)
-    id_code = get_id_code_from_code(code)
+    # id_code = get_id_code_from_code(code)
     return df

@@ -5,7 +5,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QCalendarWidget,
     QToolButton,
-    QToolTip,
+    QToolTip, QComboBox,
 )
 
 from funcs.tbl_ticker import get_cname_with_code
@@ -21,8 +21,8 @@ from widgets.tab_panels import TabPanelMain
 from widgets.toolbar_main import ToolBarMain
 
 
-class ToolBarTrade5m(ToolBarMain):
-    drawRequested = Signal(str, str, str)
+class ToolBarTradeDay(ToolBarMain):
+    drawRequested = Signal(str, str, str, str)
     resizeRequested = Signal(bool)
 
     def __init__(self, parent: TabPanelMain):
@@ -54,6 +54,15 @@ class ToolBarTrade5m(ToolBarMain):
         but_calendar.setIcon(icon_calendar)
         but_calendar.clicked.connect(self.on_select_calendar)
         self.addWidget(but_calendar)
+
+        self.addSeparator()
+
+        self.combo_interval = combo_interval = QComboBox()
+        combo_interval.setContentsMargins(0, 0, 0, 0)
+        combo_interval.addItems(['１分足', '５分足'])
+        self.addWidget(combo_interval)
+
+        self.addSeparator()
 
         but_chart = QToolButton()
         but_chart.setContentsMargins(0, 0, 0, 0)
@@ -93,7 +102,8 @@ class ToolBarTrade5m(ToolBarMain):
     def on_draw_chart(self):
         code = self.ent_ticker.text()
         start, end = self.ent_date.getDateRange()
-        self.drawRequested.emit(code, start, end)
+        interval = self.combo_interval.currentText()
+        self.drawRequested.emit(code, start, end, interval)
 
     def on_resize_toggled(self, checked: bool):
         self.resizeRequested.emit(checked)

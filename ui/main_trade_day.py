@@ -5,16 +5,16 @@ from PySide6.QtWidgets import QWidget
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tbl_trade import get_previous_close
-from funcs.tbl_trade5m import refresh_trade5m
+from funcs.tbl_trade_day import get_day_trade
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
-from ui.toolbar_trade5m import ToolBarTrade5m
+from ui.toolbar_trade_day import ToolBarTradeDay
 from widgets.charts import Trend
 from widgets.tab_panels import TabPanelMain
 
 
-class MainTrade5m(TabPanelMain):
-    tab_label = '５分足チャート'
+class MainTradeDay(TabPanelMain):
+    tab_label = 'チャート（当日）'
     resizeRequested = Signal(bool)
 
     def __init__(self, parent):
@@ -27,7 +27,7 @@ class MainTrade5m(TabPanelMain):
         self.init_ui()
 
     def init_ui(self):
-        self.toolbar = toolbar = ToolBarTrade5m(self)
+        self.toolbar = toolbar = ToolBarTradeDay(self)
         toolbar.drawRequested.connect(self.on_draw)
         toolbar.resizeRequested.connect(self.on_resize_requested)
         self.addToolBar(toolbar)
@@ -43,20 +43,17 @@ class MainTrade5m(TabPanelMain):
             dock_bottom
         )
 
-    def on_draw(self, code: str, start: str, end: str):
+    def on_draw(self, code: str, start: str, end: str, str_interval: str):
         close_prev = get_previous_close(code, start)
-        interval = '5m'
-        df = refresh_trade5m(code, start, end, interval)
+        if str_interval == '１分足':
+            interval = '1m'
+        elif str_interval == '５分足':
+            interval = '5m'
+        else:
+            interval = ''
+        df = get_day_trade(code, start, end, interval)
 
         cname = get_cname_with_code(code)
-
-        if interval == '1m':
-            str_interval = '１分足'
-        elif interval == '5m':
-            str_interval = '５分足'
-        else:
-            str_interval = ''
-
         title = '%s (%s)\n%sチャート on %s' % (cname, code, str_interval, start)
 
         chart: QWidget | Trend = self.centralWidget()
