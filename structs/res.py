@@ -1,7 +1,7 @@
 from PySide6.QtCore import QUrl
 
 
-class AppRes():
+class AppRes:
     tse = "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xls"
 
     path_image = 'images'

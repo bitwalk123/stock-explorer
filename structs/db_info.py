@@ -1,7 +1,7 @@
 from PySide6.QtSql import QSqlDatabase
 
 
-class DBInfo():
+class DBInfo:
     con: QSqlDatabase = None
 
     @classmethod

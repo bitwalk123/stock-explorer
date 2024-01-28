@@ -3,7 +3,7 @@ import pandas as pd
 from funcs.tide import conv_date_string
 
 
-class TrendObj():
+class TrendObj:
     cname: str = None
     code: str = None
     df: pd.DataFrame = None

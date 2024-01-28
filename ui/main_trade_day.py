@@ -1,11 +1,13 @@
 import mplfinance as mpf
+import pandas as pd
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QThreadPool
 from PySide6.QtWidgets import QWidget
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tbl_trade import get_previous_close
-from funcs.tbl_trade_day import get_day_trade
+from mthreads.get_day_trade import get_day_trade, GetDayTradeWorker
+from structs.day_trade import DayTrade
 from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
 from ui.toolbar_trade_day import ToolBarTradeDay
@@ -19,6 +21,7 @@ class MainTradeDay(TabPanelMain):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.threadpool = QThreadPool()
 
         self.toolbar = None
         self.dock_bottom = None
@@ -43,29 +46,23 @@ class MainTradeDay(TabPanelMain):
             dock_bottom
         )
 
-    def on_draw(self, code: str, start: str, end: str, str_interval: str):
-        close_prev = get_previous_close(code, start)
-        if str_interval == '１分足':
-            interval = '1m'
-        elif str_interval == '５分足':
-            interval = '5m'
-        else:
-            interval = ''
-        df = get_day_trade(code, start, end, interval)
+    def on_draw(self, info: DayTrade):
+        worker = GetDayTradeWorker(info)
+        worker.signals.finished.connect(self.on_draw_2)
+        self.threadpool.start(worker)
 
-        cname = get_cname_with_code(code)
-        title = '%s (%s)\n%sチャート on %s' % (cname, code, str_interval, start)
-
+    def on_draw_2(self, info: DayTrade):
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
         mpf.plot(
-            df,
+            info.df,
             type='candle',
             datetime_format='%H:%M',
             tight_layout=False,
             style=self.res.getCandleStyle(),
             ax=chart.ax
         )
+        close_prev = get_previous_close(info.code, info.start)
         if type(close_prev) is not None:
             chart.ax.axhline(
                 y=close_prev,
@@ -75,6 +72,10 @@ class MainTradeDay(TabPanelMain):
                 xmax=0.25
             )
 
+        cname = get_cname_with_code(info.code)
+        title = '%s (%s)\n%sチャート on %s' % (
+            cname, info.code, info.interval, info.start
+        )
         chart.ax.set_title(title)
         chart.ax.set_ylabel('Price (JPY)')
         chart.ax.yaxis.set_tick_params(labelright=True)

@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tide import get_ymd
+from structs.day_trade import DayTrade
 from structs.res import AppRes
 from widgets.entries import (
     EntryDate,
@@ -22,7 +23,7 @@ from widgets.toolbar_main import ToolBarMain
 
 
 class ToolBarTradeDay(ToolBarMain):
-    drawRequested = Signal(str, str, str, str)
+    drawRequested = Signal(DayTrade)
     resizeRequested = Signal(bool)
 
     def __init__(self, parent: TabPanelMain):
@@ -103,7 +104,13 @@ class ToolBarTradeDay(ToolBarMain):
         code = self.ent_ticker.text()
         start, end = self.ent_date.getDateRange()
         interval = self.combo_interval.currentText()
-        self.drawRequested.emit(code, start, end, interval)
+
+        info = DayTrade()
+        info.code = code
+        info.start = start
+        info.end = end
+        info.interval = interval
+        self.drawRequested.emit(info)
 
     def on_resize_toggled(self, checked: bool):
         self.resizeRequested.emit(checked)

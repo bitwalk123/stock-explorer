@@ -1,4 +1,4 @@
-class SectorDelta():
+class SectorDelta:
     def __init__(self, dict_sector_dist: dict, dict_sector_price: dict):
         self.dict_sector_dist = dict_sector_dist
         self.dict_sector_price = dict_sector_price
