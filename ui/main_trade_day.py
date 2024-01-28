@@ -1,8 +1,11 @@
+from typing import Union
+
 import mplfinance as mpf
 import pandas as pd
 
 from PySide6.QtCore import Qt, Signal, QThreadPool
-from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QWidget, QProgressBar, QProgressDialog
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tbl_trade import get_previous_close
@@ -23,6 +26,7 @@ class MainTradeDay(TabPanelMain):
         super().__init__(parent)
         self.threadpool = QThreadPool()
 
+        self.progress: Union[QProgressDialog, None] = None
         self.toolbar = None
         self.dock_bottom = None
         self.res = AppRes()
@@ -50,8 +54,10 @@ class MainTradeDay(TabPanelMain):
         worker = GetDayTradeWorker(info)
         worker.signals.finished.connect(self.on_draw_2)
         self.threadpool.start(worker)
+        self.progress_show()
 
     def on_draw_2(self, info: DayTrade):
+        self.progress_hide()
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
         mpf.plot(
@@ -84,3 +90,19 @@ class MainTradeDay(TabPanelMain):
 
     def on_resize_requested(self, flag: bool):
         self.resizeRequested.emit(flag)
+
+    def progress_hide(self):
+        self.progress.hide()
+        self.progress.deleteLater()
+
+    def progress_show(self):
+        self.progress = progress = QProgressDialog(
+            labelText='Working...',
+            parent=self
+        )
+        icon = QIcon(os.path.join(self.res.getImagePath(), 'hourglass.png'))
+        progress.setWindowIcon()
+        progress.setWindowModality(Qt.WindowModality.WindowModal)
+        progress.setCancelButton(None)
+        progress.setWindowTitle('status')
+        progress.show()
