@@ -25,6 +25,7 @@ def create_tbl_trade5m_procs():
     if not query.exec(sql):
         print(query.lastError())
 
+
 def drop_tbl_trade5m() -> bool:
     con = DBInfo.get_connection()
 
@@ -39,8 +40,8 @@ def drop_tbl_trade5m() -> bool:
         return False
 
 
-def refresh_trade5m(code, start, end):
+def refresh_trade5m(code: str, start: int, end: int, interval: str):
     ticker = '%s.T' % code
-    df = yf.download(ticker, start, end, interval='5m')
+    df = yf.download(ticker, start, end, interval=interval)
     id_code = get_id_code_from_code(code)
     return df

@@ -45,10 +45,19 @@ class MainTrade5m(TabPanelMain):
 
     def on_draw(self, code: str, start: str, end: str):
         close_prev = get_previous_close(code, start)
-        df = refresh_trade5m(code, start, end)
+        interval = '5m'
+        df = refresh_trade5m(code, start, end, interval)
 
         cname = get_cname_with_code(code)
-        title = '%s (%s)\n５分足チャート on %s' % (cname, code, start)
+
+        if interval == '1m':
+            str_interval = '１分足'
+        elif interval == '5m':
+            str_interval = '５分足'
+        else:
+            str_interval = ''
+
+        title = '%s (%s)\n%sチャート on %s' % (cname, code, str_interval, start)
 
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
