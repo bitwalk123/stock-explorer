@@ -55,6 +55,7 @@ class MainTradeDay(TabPanelMain):
         worker = GetDayTradeWorker(info)
         worker.signals.finished.connect(self.on_draw_2)
         self.threadpool.start(worker)
+        # Show progress dialog
         self.progress_show()
 
     def on_draw_2(self, info: DayTrade):
@@ -87,6 +88,7 @@ class MainTradeDay(TabPanelMain):
         chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
         chart.refreshDraw()
+        # Hide progress dialog
         self.progress_hide()
 
     def on_resize_requested(self, flag: bool):
