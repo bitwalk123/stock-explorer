@@ -58,7 +58,6 @@ class MainTradeDay(TabPanelMain):
         self.progress_show()
 
     def on_draw_2(self, info: DayTrade):
-        self.progress_hide()
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
         mpf.plot(
@@ -88,6 +87,7 @@ class MainTradeDay(TabPanelMain):
         chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
         chart.refreshDraw()
+        self.progress_hide()
 
     def on_resize_requested(self, flag: bool):
         self.resizeRequested.emit(flag)
