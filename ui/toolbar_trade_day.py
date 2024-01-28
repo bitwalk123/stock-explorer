@@ -60,7 +60,9 @@ class ToolBarTradeDay(ToolBarMain):
 
         self.combo_interval = combo_interval = QComboBox()
         combo_interval.setContentsMargins(0, 0, 0, 0)
-        combo_interval.addItems(['１分足', '５分足'])
+        intervals = ['１分足', '５分足']
+        combo_interval.addItems(intervals)
+        combo_interval.setCurrentText(intervals[1])
         self.addWidget(combo_interval)
 
         self.addSeparator()
