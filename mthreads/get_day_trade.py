@@ -1,6 +1,10 @@
 import pandas as pd
 import yfinance as yf
-from PySide6.QtCore import Signal, QObject, QRunnable
+from PySide6.QtCore import (
+    QObject,
+    QRunnable,
+    Signal,
+)
 
 from structs.day_trade import DayTrade
 
@@ -12,7 +16,6 @@ def get_day_trade(info: DayTrade) -> pd.DataFrame:
         info.end,
         interval=info.getInterval()
     )
-    # id_code = get_id_code_from_code(code)
     return df
 
 
