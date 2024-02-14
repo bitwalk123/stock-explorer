@@ -51,7 +51,7 @@ class MainTradeDay(TabPanelMain):
             dock_bottom
         )
 
-    def on_draw(self, info: DayTrade):
+    def on_draw_chart(self, info: DayTrade):
         # Check if dataframe is empty.
         if len(info.df) == 0:
             self.no_data_found(info)
@@ -79,7 +79,10 @@ class MainTradeDay(TabPanelMain):
 
         cname = get_cname_with_code(info.code)
         title = '%s (%s)\n%sチャート on %s' % (
-            cname, info.code, info.interval, info.start
+            cname,
+            info.code,
+            info.interval,
+            info.start
         )
         chart.ax.set_title(title)
         chart.ax.set_ylabel('Price (JPY)')
@@ -92,7 +95,7 @@ class MainTradeDay(TabPanelMain):
 
     def on_get_day_trade(self, info: DayTrade):
         worker = GetDayTradeWorker(info)
-        worker.finished.connect(self.on_draw)
+        worker.finished.connect(self.on_draw_chart)
         self.threadpool.start(worker)
 
         # Show progress dialog
