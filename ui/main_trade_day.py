@@ -3,7 +3,7 @@ from typing import Union
 
 import mplfinance as mpf
 
-from PySide6.QtCore import Qt, Signal, QThreadPool
+from PySide6.QtCore import Qt, QThreadPool, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QProgressDialog
 
@@ -36,7 +36,7 @@ class MainTradeDay(TabPanelMain):
 
     def init_ui(self):
         self.toolbar = toolbar = ToolBarTradeDay(self)
-        toolbar.drawRequested.connect(self.on_draw)
+        toolbar.drawRequested.connect(self.on_get_day_trade)
         toolbar.resizeRequested.connect(self.on_resize_requested)
         self.addToolBar(toolbar)
 
@@ -52,19 +52,9 @@ class MainTradeDay(TabPanelMain):
         )
 
     def on_draw(self, info: DayTrade):
-        worker = GetDayTradeWorker(info)
-        worker.signals.finished.connect(self.on_draw_2)
-        self.threadpool.start(worker)
-        # Show progress dialog
-        self.progress_show()
-
-    def on_draw_2(self, info: DayTrade):
         # Check if dataframe is empty.
         if len(info.df) == 0:
-            self.progress_hide()
-            dlg = DialogAlert()
-            dlg.setText('%s のデータがありませんでした。' % info.start)
-            dlg.exec()
+            self.no_data_found(info)
             return
 
         chart: QWidget | Trend = self.centralWidget()
@@ -96,11 +86,29 @@ class MainTradeDay(TabPanelMain):
         chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
         chart.refreshDraw()
+
         # Hide progress dialog
         self.progress_hide()
 
+    def on_get_day_trade(self, info: DayTrade):
+        worker = GetDayTradeWorker(info)
+        worker.finished.connect(self.on_draw)
+        self.threadpool.start(worker)
+
+        # Show progress dialog
+        self.progress_show()
+
     def on_resize_requested(self, flag: bool):
         self.resizeRequested.emit(flag)
+
+    def no_data_found(self, info: DayTrade):
+        # Hide progress dialog
+        self.progress_hide()
+
+        # Warning dialog
+        dlg = DialogAlert()
+        dlg.setText('%s のデータがありませんでした。' % info.start)
+        dlg.exec()
 
     def progress_hide(self):
         self.progress.hide()

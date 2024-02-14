@@ -23,13 +23,13 @@ class GetDayTradeWorkerSignals(QObject):
     finished = Signal(DayTrade)
 
 
-class GetDayTradeWorker(QRunnable):
+class GetDayTradeWorker(QRunnable, GetDayTradeWorkerSignals):
     def __init__(self, info: DayTrade):
         super().__init__()
-        self.signals = GetDayTradeWorkerSignals()
+        # self.signals = GetDayTradeWorkerSignals()
         self.info = info
 
     def run(self):
         df = get_day_trade(self.info)
         self.info.df = df
-        self.signals.finished.emit(self.info)
+        self.finished.emit(self.info)
