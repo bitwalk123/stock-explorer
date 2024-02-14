@@ -7,8 +7,6 @@ from PySide6.QtCore import Qt, QThreadPool, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QProgressDialog
 
-from funcs.tbl_ticker import get_cname_with_code
-from funcs.tbl_trade import get_previous_close
 from mthreads.get_day_trade import GetDayTradeWorker
 from structs.day_trade import DayTrade
 from structs.res import AppRes
@@ -67,7 +65,7 @@ class MainTradeDay(TabPanelMain):
             style=self.res.getCandleStyle(),
             ax=chart.ax
         )
-        close_prev = get_previous_close(info.code, info.start)
+        close_prev = info.getPrevClose()
         if type(close_prev) is not None:
             chart.ax.axhline(
                 y=close_prev,
@@ -77,14 +75,7 @@ class MainTradeDay(TabPanelMain):
                 xmax=0.25
             )
 
-        cname = get_cname_with_code(info.code)
-        title = '%s (%s)\n%sチャート on %s' % (
-            cname,
-            info.code,
-            info.interval,
-            info.start
-        )
-        chart.ax.set_title(title)
+        chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price (JPY)')
         chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
