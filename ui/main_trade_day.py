@@ -59,6 +59,7 @@ class MainTradeDay(TabPanelMain):
         self.progress_show()
 
     def on_draw_2(self, info: DayTrade):
+        # Check if dataframe is empty.
         if len(info.df) == 0:
             dlg = DialogAlert()
             dlg.setText('NO DATA!')
