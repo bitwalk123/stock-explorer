@@ -43,6 +43,14 @@ class ToolBarTradeDay(ToolBarMain):
 
         self.chk_jpx = JPXCheckBox()
         self.addWidget(self.chk_jpx)
+
+        but_bookmark = QToolButton()
+        but_bookmark.setContentsMargins(0, 0, 0, 0)
+        icon_bookmark = QIcon(os.path.join(res.getImagePath(), 'bookmark.png'))
+        but_bookmark.setIcon(icon_bookmark)
+        # but_bookmark.clicked.connect()
+        self.addWidget(but_bookmark)
+
         self.addSeparator()
 
         self.ent_date = ent_date = EntryDate()
