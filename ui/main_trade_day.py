@@ -63,7 +63,7 @@ class MainTradeDay(TabPanelMain):
         if len(info.df) == 0:
             self.progress_hide()
             dlg = DialogAlert()
-            dlg.setText('データがありませんでした。')
+            dlg.setText('%s のデータがありませんでした。' % info.start)
             dlg.exec()
             return
 
