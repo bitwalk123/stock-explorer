@@ -13,6 +13,7 @@ from funcs.tbl_ticker import get_cname_with_code
 from funcs.tide import get_ymd
 from structs.day_trade import DayTrade
 from structs.res import AppRes
+from widgets.buttons import JPXCheckBox
 from widgets.entries import EntryDate, EntryTicker
 from widgets.labels import Label
 from widgets.pads import HPad
@@ -38,7 +39,10 @@ class ToolBarTradeDay(ToolBarMain):
         self.ent_ticker = ent_ticker = EntryTicker()
         ent_ticker.returnPressed.connect(self.on_ticker_entered)
         self.addWidget(ent_ticker)
+        self.addSeparator()
 
+        self.chk_jpx = JPXCheckBox()
+        self.addWidget(self.chk_jpx)
         self.addSeparator()
 
         self.ent_date = ent_date = EntryDate()
@@ -84,6 +88,9 @@ class ToolBarTradeDay(ToolBarMain):
         but_resize.toggled.connect(self.on_resize_toggled)
         self.addWidget(but_resize)
 
+    def isJPX(self) -> bool:
+        return self.chk_jpx.isChecked()
+
     def on_select_calendar(self):
         self.calendar = calendar = QCalendarWidget()
         calendar.setMaximumDate(QDate(*get_ymd()))
@@ -110,6 +117,7 @@ class ToolBarTradeDay(ToolBarMain):
         info.start = start
         info.end = end
         info.interval = interval
+        info.jpx = self.isJPX()
         self.drawRequested.emit(info)
 
     def on_resize_toggled(self, checked: bool):

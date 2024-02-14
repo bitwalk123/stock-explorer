@@ -13,6 +13,7 @@ class DayTrade:
         self.end: Union[str, None] = None
         self.interval: Union[str, None] = None
         self.df: Union[pd.DataFrame, None] = None
+        self.jpx: Union[bool, None] = None
 
     def getCName(self) -> str:
         return get_cname_with_code(self.code)
@@ -28,17 +29,27 @@ class DayTrade:
     def getPrevClose(self) -> Union[float, None]:
         return get_previous_close(self.code, self.start)
 
-    def getTicker(self, jpx=True) -> str:
-        if jpx:
+    def getTicker(self) -> str:
+        if self.jpx:
             return '%s.T' % self.code
         else:
             return self.code
 
     def getTitle(self) -> str:
-        title = '%s (%s)\n%sチャート on %s' % (
-            self.getCName(),
-            self.code,
-            self.interval,
-            self.start
-        )
+        if self.jpx:
+            title = '%s (%s)\n%sチャート on %s' % (
+                self.getCName(),
+                self.code,
+                self.interval,
+                self.start
+            )
+        else:
+            title = '%s\n%sチャート on %s' % (
+                self.code,
+                self.interval,
+                self.start
+            )
         return title
+
+    def isJPX(self) -> bool:
+        return self.jpx

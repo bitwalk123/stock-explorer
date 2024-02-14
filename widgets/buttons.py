@@ -1,7 +1,14 @@
 import re
 
-from PySide6.QtWidgets import QPushButton
+from PySide6.QtWidgets import QPushButton, QCheckBox
 
+
+class JPXCheckBox(QCheckBox):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.setText('JPX')
+        self.setChecked(True)
+        self.setContentsMargins(0, 0, 0, 0)
 
 class TickerButton(QPushButton):
     def __init__(self, *args):

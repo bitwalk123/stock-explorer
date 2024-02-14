@@ -65,17 +65,18 @@ class MainTradeDay(TabPanelMain):
             style=self.res.getCandleStyle(),
             ax=chart.ax
         )
-        close_prev = info.getPrevClose()
-        if type(close_prev) is not None:
-            chart.ax.axhline(
-                y=close_prev,
-                color='r',
-                linewidth=1,
-                linestyle=':',
-                xmax=0.25
-            )
+        if info.isJPX():
+            close_prev = info.getPrevClose()
+            if type(close_prev) is not None:
+                chart.ax.axhline(
+                    y=close_prev,
+                    color='r',
+                    linewidth=1,
+                    linestyle=':',
+                    xmax=0.25
+                )
         chart.ax.set_title(info.getTitle())
-        chart.ax.set_ylabel('Price (JPY)')
+        chart.ax.set_ylabel('Price')
         chart.ax.yaxis.set_tick_params(labelright=True)
         chart.ax.grid()
         chart.refreshDraw()
