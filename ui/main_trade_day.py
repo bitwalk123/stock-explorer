@@ -61,10 +61,10 @@ class MainTradeDay(TabPanelMain):
     def on_draw_2(self, info: DayTrade):
         # Check if dataframe is empty.
         if len(info.df) == 0:
-            dlg = DialogAlert()
-            dlg.setText('NO DATA!')
-            dlg.exec()
             self.progress_hide()
+            dlg = DialogAlert()
+            dlg.setText('データがありませんでした。')
+            dlg.exec()
             return
 
         chart: QWidget | Trend = self.centralWidget()
