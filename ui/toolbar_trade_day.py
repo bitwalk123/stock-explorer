@@ -4,18 +4,16 @@ from PySide6.QtCore import QDate, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QCalendarWidget,
+    QComboBox,
     QToolButton,
-    QToolTip, QComboBox,
+    QToolTip,
 )
 
 from funcs.tbl_ticker import get_cname_with_code
 from funcs.tide import get_ymd
 from structs.day_trade import DayTrade
 from structs.res import AppRes
-from widgets.entries import (
-    EntryDate,
-    EntryTicker,
-)
+from widgets.entries import EntryDate, EntryTicker
 from widgets.labels import Label
 from widgets.pads import HPad
 from widgets.tab_panels import TabPanelMain
@@ -122,4 +120,7 @@ class ToolBarTradeDay(ToolBarMain):
         cname = get_cname_with_code(code)
         self.ent_ticker.setToolTip(cname)
         if cname != '':
-            QToolTip.showText(self.ent_ticker.pos(), self.ent_ticker.toolTip())
+            QToolTip.showText(
+                self.ent_ticker.pos(),
+                self.ent_ticker.toolTip()
+            )
