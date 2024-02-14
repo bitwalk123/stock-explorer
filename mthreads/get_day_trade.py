@@ -12,8 +12,8 @@ from structs.day_trade import DayTrade
 def get_day_trade(info: DayTrade) -> pd.DataFrame:
     df = yf.download(
         info.getTicker(),
-        info.start,
-        info.end,
+        start=info.start,
+        end=info.end,
         interval=info.getInterval()
     )
     return df
