@@ -26,7 +26,6 @@ class GetDayTradeWorkerSignals(QObject):
 class GetDayTradeWorker(QRunnable, GetDayTradeWorkerSignals):
     def __init__(self, info: DayTrade):
         super().__init__()
-        # self.signals = GetDayTradeWorkerSignals()
         self.info = info
 
     def run(self):
