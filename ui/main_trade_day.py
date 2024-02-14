@@ -74,7 +74,6 @@ class MainTradeDay(TabPanelMain):
                 linestyle=':',
                 xmax=0.25
             )
-
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price (JPY)')
         chart.ax.yaxis.set_tick_params(labelright=True)
@@ -113,7 +112,9 @@ class MainTradeDay(TabPanelMain):
             labelText='Working...',
             parent=self
         )
-        icon = QIcon(os.path.join(self.res.getImagePath(), 'hourglass.png'))
+        icon = QIcon(
+            os.path.join(self.res.getImagePath(), 'hourglass.png')
+        )
         progress.setWindowIcon(icon)
         progress.setWindowModality(Qt.WindowModality.WindowModal)
         progress.setCancelButton(None)
