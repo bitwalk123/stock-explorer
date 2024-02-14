@@ -15,6 +15,7 @@ from structs.res import AppRes
 from ui.dock_navigator import DockNavigator
 from ui.toolbar_trade_day import ToolBarTradeDay
 from widgets.charts import Trend
+from widgets.dialog import DialogAlert
 from widgets.tab_panels import TabPanelMain
 
 
@@ -58,6 +59,13 @@ class MainTradeDay(TabPanelMain):
         self.progress_show()
 
     def on_draw_2(self, info: DayTrade):
+        if len(info.df) == 0:
+            dlg = DialogAlert()
+            dlg.setText('NO DATA!')
+            dlg.exec()
+            self.progress_hide()
+            return
+
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
         mpf.plot(
