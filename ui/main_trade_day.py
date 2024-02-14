@@ -66,15 +66,7 @@ class MainTradeDay(TabPanelMain):
             ax=chart.ax
         )
         if info.isJPX():
-            close_prev = info.getPrevClose()
-            if type(close_prev) is not None:
-                chart.ax.axhline(
-                    y=close_prev,
-                    color='r',
-                    linewidth=1,
-                    linestyle=':',
-                    xmax=0.25
-                )
+            self.add_previous_close(chart, info)
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price')
         chart.ax.yaxis.set_tick_params(labelright=True)
@@ -83,6 +75,18 @@ class MainTradeDay(TabPanelMain):
 
         # Hide progress dialog
         self.progress_hide()
+
+    @staticmethod
+    def add_previous_close(chart, info):
+        close_prev = info.getPrevClose()
+        if type(close_prev) is not None:
+            chart.ax.axhline(
+                y=close_prev,
+                color='r',
+                linewidth=1,
+                linestyle=':',
+                xmax=0.25
+            )
 
     def on_get_day_trade(self, info: DayTrade):
         worker = GetDayTradeWorker(info)
