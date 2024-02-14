@@ -9,6 +9,7 @@ from ui.toolbar_traiding import ToolBarTrading
 class TradingBrowser(QMainWindow):
     def __init__(self, url_init: QUrl):
         super().__init__()
+        self.url_init = url_init
         self.toolbar = None
         self.statusbar = None
         self.view = None
@@ -24,6 +25,7 @@ class TradingBrowser(QMainWindow):
         self.setStatusBar(statusbar)
 
         self.view = view = QWebEngineView()
+        view.loadFinished.connect(self.load_finished)
         self.setCentralWidget(view)
 
         toolbar.setURL(url_init)
@@ -39,6 +41,11 @@ class TradingBrowser(QMainWindow):
         url = QUrl.fromUserInput(url_str)
         if url.isValid():
             self.view.load(url)
+
+    def load_finished(self, flag: bool):
+        print('finished loading!', flag)
+        if self.url_init == self.view.url().toString():
+            print('Initial URL!')
 
     def back(self):
         page: QWebEnginePage = self.view.page()
