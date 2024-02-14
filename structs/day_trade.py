@@ -19,5 +19,8 @@ class DayTrade:
         else:
             return ''
 
-    def getTicker(self) -> str:
-        return '%s.T' % self.code
+    def getTicker(self, jpx=True) -> str:
+        if jpx:
+            return '%s.T' % self.code
+        else:
+            return self.code
