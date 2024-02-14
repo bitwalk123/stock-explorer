@@ -19,11 +19,11 @@ def get_day_trade(info: DayTrade) -> pd.DataFrame:
     return df
 
 
-class GetDayTradeWorkerSignals(QObject):
+class GetDayTradeWorkerSignal(QObject):
     finished = Signal(DayTrade)
 
 
-class GetDayTradeWorker(QRunnable, GetDayTradeWorkerSignals):
+class GetDayTradeWorker(QRunnable, GetDayTradeWorkerSignal):
     def __init__(self, info: DayTrade):
         super().__init__()
         self.info = info
