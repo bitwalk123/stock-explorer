@@ -4,6 +4,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QMainWindow, QStatusBar
 
 from ui.toolbar_traiding import ToolBarTrading
+from ui.win_html import WinHTML
 
 
 class TradingBrowser(QMainWindow):
@@ -13,6 +14,7 @@ class TradingBrowser(QMainWindow):
         self.toolbar = None
         self.statusbar = None
         self.view = None
+        self.win_html = None
 
         self.toolbar = toolbar = ToolBarTrading()
         toolbar.Back.connect(self.back)
@@ -59,7 +61,9 @@ class TradingBrowser(QMainWindow):
         self.toolbar.setURL(url)
 
     def print_html(self, content):
-        print(content)
+        # print(content)
+        self.win_html = win_html = WinHTML(content)
+        win_html.show()
 
     def source_requested(self):
         page = self.view.page()
