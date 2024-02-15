@@ -3,11 +3,12 @@ from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QMainWindow, QStatusBar
 
+from snippets.web_login import get_login_info
 from ui.toolbar_traiding import ToolBarTrading
 from ui.win_html import WinHTML
 
 
-class TradingBrowser(QMainWindow):
+class BrowserTraiding(QMainWindow):
     def __init__(self, url_init: QUrl):
         super().__init__()
         self.url_init = url_init
@@ -47,7 +48,7 @@ class TradingBrowser(QMainWindow):
     def load_finished(self, flag: bool):
         print('finished loading!', flag)
         if self.url_init == self.view.url().toString():
-            print('Initial URL!')
+            self.page_login()
 
     def back(self):
         page: QWebEnginePage = self.view.page()
@@ -57,8 +58,21 @@ class TradingBrowser(QMainWindow):
         page: QWebEnginePage = self.view.page()
         page.triggerAction(QWebEnginePage.WebAction.Forward)
 
-    def url_changed(self, url: QUrl):
-        self.toolbar.setURL(url)
+    def page_login(self):
+        print('Login Page')
+        obj_login = get_login_info()
+        loginid = obj_login.getLoginID()
+        password = obj_login.getPassword()
+        jscript = """
+            var input_username = document.getElementById('form-login-id');
+            input_username.value = '%s';
+            var input_username = document.getElementById('form-login-pass');
+            input_username.value = '%s';
+            //var button = document.getElementById('login-btn');
+            //button.click();
+        """ % (loginid, password)
+        page: QWebEnginePage = self.view.page()
+        page.runJavaScript(jscript)
 
     def print_html(self, content):
         # print(content)
@@ -69,6 +83,9 @@ class TradingBrowser(QMainWindow):
         page = self.view.page()
         # page.runJavaScript(self.jscript, 0, self.auxiliary)
         page.runJavaScript(
-            "document.documentElement.outerHTML",
+            'document.documentElement.outerHTML',
             0, self.print_html
         )
+
+    def url_changed(self, url: QUrl):
+        self.toolbar.setURL(url)
