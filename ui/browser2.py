@@ -1,14 +1,15 @@
-from PySide6.QtCore import QUrl
+from PySide6.QtCore import QUrl, Signal
 from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QMainWindow, QStatusBar
 
-from snippets.web_login import get_login_info
 from ui.toolbar_traiding import ToolBarTrading
 from ui.win_html import WinHTML
 
 
 class BrowserTraiding(QMainWindow):
+    loginReady = Signal()
+
     def __init__(self, url_init: QUrl):
         super().__init__()
         self.url_init = url_init
@@ -60,17 +61,9 @@ class BrowserTraiding(QMainWindow):
 
     def page_login(self):
         print('Login Page')
-        obj_login = get_login_info()
-        loginid = obj_login.getLoginID()
-        password = obj_login.getPassword()
-        jscript = """
-            var input_username = document.getElementById('form-login-id');
-            input_username.value = '%s';
-            var input_username = document.getElementById('form-login-pass');
-            input_username.value = '%s';
-            //var button = document.getElementById('login-btn');
-            //button.click();
-        """ % (loginid, password)
+        self.loginReady.emit()
+
+    def runJScript(self, jscript: str):
         page: QWebEnginePage = self.view.page()
         page.runJavaScript(jscript)
 

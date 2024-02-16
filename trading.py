@@ -1,4 +1,5 @@
 import sys
+from typing import Union
 
 from PySide6.QtWidgets import (
     QApplication,
@@ -18,7 +19,7 @@ class TradingConsole(QMainWindow):
         self.obj_login = get_login_info()
 
         self.statusbar = None
-        self.browser = None
+        self.browser: Union[BrowserTraiding, None] = None
 
         self.init_ui()
         self.show_browser()
@@ -32,14 +33,33 @@ class TradingConsole(QMainWindow):
         base.setLayout(layout)
 
         but_login = QPushButton('Login')
+        but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
 
         self.statusbar = statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
+    def activate_buttons(self):
+        print('Login ready')
+
+    def op_login(self):
+        obj_login = get_login_info()
+        loginid = obj_login.getLoginID()
+        password = obj_login.getPassword()
+        jscript = """
+            var input_username = document.getElementById('form-login-id');
+            input_username.value = '%s';
+            var input_username = document.getElementById('form-login-pass');
+            input_username.value = '%s';
+            //var button = document.getElementById('login-btn');
+            //button.click();
+        """ % (loginid, password)
+        self.browser.runJScript(jscript)
+
     def show_browser(self):
-        self.browser = BrowserTraiding(self.obj_login.getURL())
-        self.browser.show()
+        self.browser = browser = BrowserTraiding(self.obj_login.getURL())
+        browser.loginReady.connect(self.activate_buttons)
+        browser.show()
 
 
 def main():
