@@ -10,11 +10,25 @@ class JPXCheckBox(QCheckBox):
         self.setChecked(True)
         self.setContentsMargins(0, 0, 0, 0)
 
+
 class TickerButton(QPushButton):
     def __init__(self, *args):
         super().__init__(*args)
         self.setCheckable(True)
         self.setContentsMargins(0, 0, 0, 0)
+
+
+class TradingButton(QPushButton):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.func = None
+        self.setEnabled(False)
+
+    def setFunc(self, func: str):
+        self.func = func
+
+    def getFunc(self, func: str) -> str:
+        return self.func
 
 
 class IndexButton(TickerButton):

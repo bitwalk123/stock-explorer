@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 
 from snippets.web_login import get_login_info
 from ui.browser2 import BrowserTraiding
+from widgets.buttons import TradingButton
 
 
 class TradingConsole(QMainWindow):
@@ -32,7 +33,8 @@ class TradingConsole(QMainWindow):
         layout = QVBoxLayout()
         base.setLayout(layout)
 
-        but_login = QPushButton('Login')
+        but_login = TradingButton('ログイン')
+        but_login.setFunc('login')
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
 
