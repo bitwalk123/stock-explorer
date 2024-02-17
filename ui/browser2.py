@@ -41,6 +41,19 @@ class BrowserTraiding(QMainWindow):
 
         self.resize(1300, 1000)
 
+    def back(self):
+        page: QWebEnginePage = self.view.page()
+        page.triggerAction(QWebEnginePage.WebAction.Back)
+
+    def forward(self):
+        page: QWebEnginePage = self.view.page()
+        page.triggerAction(QWebEnginePage.WebAction.Forward)
+
+    def getPageTitle(self) -> str:
+        page: QWebEnginePage = self.view.page()
+        title = page.title()
+        return title
+
     def load(self, url_str: str):
         url = QUrl.fromUserInput(url_str)
         if url.isValid():
@@ -50,15 +63,8 @@ class BrowserTraiding(QMainWindow):
         if self.url_init == self.view.url().toString():
             self.page_login()
         else:
-            print('finished loading page!')
-
-    def back(self):
-        page: QWebEnginePage = self.view.page()
-        page.triggerAction(QWebEnginePage.WebAction.Back)
-
-    def forward(self):
-        page: QWebEnginePage = self.view.page()
-        page.triggerAction(QWebEnginePage.WebAction.Forward)
+            title = self.getPageTitle()
+            print('finished loading page!', title)
 
     def page_login(self):
         print('Login Page')
