@@ -4,7 +4,6 @@ from typing import Union
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QPushButton,
     QStatusBar,
     QWidget, QVBoxLayout,
 )
@@ -27,6 +26,12 @@ class TradingConsole(QMainWindow):
 
         self.setWindowTitle('Trading Console')
 
+    def closeEvent(self, event):
+        if self.browser is not None:
+            self.browser.hide()
+            self.browser.deleteLater()
+        event.accept()
+
     def init_ui(self):
         base = QWidget()
         self.setCentralWidget(base)
@@ -42,7 +47,7 @@ class TradingConsole(QMainWindow):
         self.setStatusBar(statusbar)
 
     def activate_login_button(self):
-        self.but_login.setEnabled(False)
+        self.but_login.setEnabled(True)
 
     def op_login(self):
         obj_login = get_login_info()
@@ -53,8 +58,8 @@ class TradingConsole(QMainWindow):
             input_username.value = '%s';
             var input_username = document.getElementById('form-login-pass');
             input_username.value = '%s';
-            //var button = document.getElementById('login-btn');
-            //button.click();
+            var button = document.getElementById('login-btn');
+            button.click();
         """ % (loginid, password)
         self.browser.runJScript(jscript)
 

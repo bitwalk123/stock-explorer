@@ -47,9 +47,10 @@ class BrowserTraiding(QMainWindow):
             self.view.load(url)
 
     def load_finished(self, flag: bool):
-        print('finished loading!', flag)
         if self.url_init == self.view.url().toString():
             self.page_login()
+        else:
+            print('finished loading page!')
 
     def back(self):
         page: QWebEnginePage = self.view.page()
@@ -63,14 +64,14 @@ class BrowserTraiding(QMainWindow):
         print('Login Page')
         self.loginReady.emit()
 
-    def runJScript(self, jscript: str):
-        page: QWebEnginePage = self.view.page()
-        page.runJavaScript(jscript)
-
     def print_html(self, content):
         # print(content)
         self.win_html = win_html = WinHTML(content)
         win_html.show()
+
+    def runJScript(self, jscript: str):
+        page: QWebEnginePage = self.view.page()
+        page.runJavaScript(jscript)
 
     def source_requested(self):
         page = self.view.page()
