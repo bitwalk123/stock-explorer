@@ -33,7 +33,7 @@ class TradingConsole(QMainWindow):
         layout = QVBoxLayout()
         base.setLayout(layout)
 
-        but_login = TradingButton('ログイン')
+        self.but_login = but_login = TradingButton('ログイン')
         but_login.setFunc('login')
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
@@ -41,8 +41,8 @@ class TradingConsole(QMainWindow):
         self.statusbar = statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
-    def activate_buttons(self):
-        print('Login ready')
+    def activate_login_button(self):
+        self.but_login.setEnabled(False)
 
     def op_login(self):
         obj_login = get_login_info()
@@ -60,7 +60,7 @@ class TradingConsole(QMainWindow):
 
     def show_browser(self):
         self.browser = browser = BrowserTraiding(self.obj_login.getURL())
-        browser.loginReady.connect(self.activate_buttons)
+        browser.loginReady.connect(self.activate_login_button)
         browser.show()
 
 
