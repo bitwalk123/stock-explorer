@@ -1,14 +1,18 @@
+import os
 import sys
 from typing import Union
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QStatusBar,
-    QWidget, QVBoxLayout,
+    QVBoxLayout,
+    QWidget,
 )
 
 from snippets.web_login import get_login_info
+from structs.res import AppRes
 from ui.browser2 import BrowserTraiding
 from widgets.buttons import TradingButton
 
@@ -16,6 +20,7 @@ from widgets.buttons import TradingButton
 class TradingConsole(QMainWindow):
     def __init__(self):
         super().__init__()
+        res = AppRes()
         self.obj_login = get_login_info()
 
         self.statusbar = None
@@ -25,6 +30,8 @@ class TradingConsole(QMainWindow):
         self.show_browser()
 
         self.setWindowTitle('Trading Console')
+        icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
+        self.setWindowIcon(icon)
 
     def closeEvent(self, event):
         if self.browser is not None:
