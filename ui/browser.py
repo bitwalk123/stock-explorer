@@ -99,6 +99,7 @@ class RakutenRanking(Browser):
 
 class BrowserTraiding(QMainWindow):
     loginReady = Signal()
+    loadFinished = Signal(str)
 
     def __init__(self, url_init: QUrl):
         super().__init__()
@@ -153,15 +154,13 @@ class BrowserTraiding(QMainWindow):
             self.view.load(url)
 
     def load_finished(self, flag: bool):
-        if self.url_init == self.view.url().toString():
-            self.page_login()
-        else:
-            title = self.getPageTitle()
-            print('finished loading page!', title)
+        if flag:
+            if self.url_init == self.view.url().toString():
+                self.loginReady.emit()
+            else:
+                title = self.getPageTitle()
+                self.loadFinished.emit(title)
 
-    def page_login(self):
-        print('Login Page')
-        self.loginReady.emit()
 
     def runJScript(self, jscript: str):
         page: QWebEnginePage = self.view.page()

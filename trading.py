@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 
 from snippets.web_login import get_login_info
 from structs.res import AppRes
+from structs.website import WebSite
 from ui.browser import BrowserTraiding
 from widgets.buttons import TradingButton
 
@@ -21,6 +22,7 @@ class TradingConsole(QMainWindow):
     def __init__(self):
         super().__init__()
         res = AppRes()
+        self.website = WebSite()
         self.obj_login = get_login_info()
 
         self.but_login = None
@@ -57,26 +59,32 @@ class TradingConsole(QMainWindow):
         layout.addWidget(but_login)
 
         # Row 2
-        hbox_row2 = QHBoxLayout()
-        layout.addLayout(hbox_row2)
-
         self.but_domestic = but_domestic = TradingButton('国内株式')
         but_domestic.setFunc('domestic')
         but_domestic.clicked.connect(self.op_domestic)
-        hbox_row2.addWidget(but_domestic)
+        layout.addWidget(but_domestic)
 
     def activate_login_button(self):
         self.but_login.setEnabled(True)
+
+    def activate_domestic(self):
         self.but_domestic.setEnabled(True)
+
+    def deactivate_login_button(self):
+        self.but_login.setEnabled(False)
+
+    def load_finished(self, title: str):
+        print('finished loading page!', title)
+        if title == self.website.sites['home']:
+            self.deactivate_login_button()
+            self.activate_domestic()
 
     def op_domestic(self):
         jscript = """
             var element = document.getElementById('gmenu_domestic_stock').getElementsByClassName('pcm-gl-nav-01__button')[0];
             element.onclick.apply();
         """
-        #self.browser.runJScriptDebug(jscript)
         self.browser.runJScript(jscript)
-
 
     def op_login(self):
         obj_login = get_login_info()
@@ -95,6 +103,7 @@ class TradingConsole(QMainWindow):
     def show_browser(self):
         self.browser = browser = BrowserTraiding(self.obj_login.getURL())
         browser.loginReady.connect(self.activate_login_button)
+        browser.loadFinished.connect(self.load_finished)
         browser.show()
 
 

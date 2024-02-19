@@ -25,12 +25,10 @@ class TradingButton(QPushButton):
         self.setStyleSheet("""
             TradingButton {
                 font-family: monospace;
-                font-weight: bold;
             }        
             TradingButton:disabled {
                 color: #888;
                 background-color: #ddd;
-                font-weight: normal;
             }
         """)
         self.setEnabled(False)
