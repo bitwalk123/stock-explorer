@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
 
 from snippets.web_login import get_login_info
 from structs.res import AppRes
-from ui.browser2 import BrowserTraiding
+from ui.browser import BrowserTraiding
 from widgets.buttons import TradingButton
 
 
