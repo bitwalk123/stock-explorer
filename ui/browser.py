@@ -134,6 +134,10 @@ class BrowserTraiding(QMainWindow):
         page: QWebEnginePage = self.view.page()
         page.triggerAction(QWebEnginePage.WebAction.Back)
 
+    @staticmethod
+    def dump_result(result: str):
+        print(result)
+
     def forward(self):
         page: QWebEnginePage = self.view.page()
         page.triggerAction(QWebEnginePage.WebAction.Forward)
@@ -162,6 +166,13 @@ class BrowserTraiding(QMainWindow):
     def runJScript(self, jscript: str):
         page: QWebEnginePage = self.view.page()
         page.runJavaScript(jscript)
+
+    def runJScriptDebug(self, jscript: str):
+        page: QWebEnginePage = self.view.page()
+        page.runJavaScript(
+            jscript,
+            0, self.dump_result
+        )
 
     def url_changed(self, url: QUrl):
         self.toolbar.setURL(url)
