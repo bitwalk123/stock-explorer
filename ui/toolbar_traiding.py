@@ -16,7 +16,7 @@ class ToolBarTrading(QToolBar):
     Back = Signal()
     Forward = Signal()
     Load = Signal(str)
-    Source = Signal()
+    #Source = Signal()
 
     def __init__(self):
         super().__init__()
@@ -45,11 +45,13 @@ class ToolBarTrading(QToolBar):
         address.returnPressed.connect(self.load)
         self.addWidget(address)
 
+        """
         but_source = QPushButton()
         icon_source = QIcon(os.path.join(res.getImagePath(), 'html.png'))
         but_source.setIcon(icon_source)
         but_source.clicked.connect(self.source)
         self.addWidget(but_source)
+        """
 
     def back(self):
         self.Back.emit()
@@ -61,8 +63,10 @@ class ToolBarTrading(QToolBar):
         lineedit: QLineEdit = self.sender()
         self.Load.emit(lineedit.text())
 
+    """
     def source(self):
         self.Source.emit()
+    """
 
     def setURL(self, url: QUrl):
         self.address.setText(url.toString())
