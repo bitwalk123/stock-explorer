@@ -72,7 +72,6 @@ class TradingConsole(QMainWindow):
     def op_domestic(self):
         jscript = """
             var element = document.getElementById('gmenu_domestic_stock').getElementsByClassName('pcm-gl-nav-01__button')[0];
-            //var element = document.getElementById('gmenu_domestic_stock');
             element.onclick.apply();
         """
         #self.browser.runJScriptDebug(jscript)
