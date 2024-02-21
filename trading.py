@@ -33,6 +33,9 @@ class TradingConsole(QMainWindow):
         self.but_domestic = None
         self.combo_ticker: Union[QComboBox, None] = None
         self.but_search = None
+        self.but_buynew = None
+        self.but_long = None
+        self.but_short = None
         self.statusbar = None
         self.init_ui()
 
@@ -84,19 +87,33 @@ class TradingConsole(QMainWindow):
         but_search.clicked.connect(self.op_search)
         box_row3.addWidget(but_search)
 
-
         # Row 4
         box_row4 = QHBoxLayout()
         layout.addLayout(box_row4)
 
         self.but_buynew = but_buynew = TradingButton('信用新規')
         but_buynew.setFunc('buynew')
-        #but_buynew.clicked.connect(self.op_buynew)
+        but_buynew.clicked.connect(self.op_buynew)
         box_row4.addWidget(but_buynew)
 
+        self.but_long = but_long = TradingButton('買　建')
+        but_long.setFunc('long')
+        # but_long.clicked.connect(self.op_long)
+        box_row4.addWidget(but_long)
+
+        self.but_short = but_short = TradingButton('売　建')
+        but_short.setFunc('short')
+        # but_short.clicked.connect(self.op_short)
+        box_row4.addWidget(but_short)
+
+    def activate_buynew(self):
+        self.but_buynew.setEnabled(True)
 
     def activate_login_button(self):
         self.but_login.setEnabled(True)
+
+    def activate_long(self):
+        self.but_long.setEnabled(True)
 
     def activate_domestic(self):
         self.but_domestic.setEnabled(True)
@@ -104,28 +121,61 @@ class TradingConsole(QMainWindow):
     def activate_search(self):
         self.but_search.setEnabled(True)
 
+    def activate_short(self):
+        self.but_short.setEnabled(True)
+
+    def deactivate_buynew(self):
+        self.but_buynew.setEnabled(False)
+
+    def deactivate_long(self):
+        self.but_long.setEnabled(False)
+
     def deactivate_login_button(self):
         self.but_login.setEnabled(False)
+
+    def deactivate_search(self):
+        self.but_search.setEnabled(False)
+
+    def deactivate_short(self):
+        self.but_short.setEnabled(False)
 
     def load_finished(self, title: str):
         print('finished loading page!', title)
         if self.website.checkSite(title, 'home'):
             self.deactivate_login_button()
             self.activate_domestic()
+            self.deactivate_search()
+            self.deactivate_buynew()
+            self.deactivate_long()
+            self.deactivate_short()
         elif self.website.checkSite(title, 'domestic'):
             self.activate_search()
+            self.deactivate_buynew()
+            self.deactivate_long()
+            self.deactivate_short()
+        elif self.website.checkSite(title, 'ticker', self.combo_ticker.currentText()):
+            self.deactivate_search()
+            self.activate_buynew()
+            self.deactivate_long()
+            self.deactivate_short()
+        elif self.website.checkSite(title, 'buynew'):
+            self.deactivate_buynew()
+            self.activate_long()
+            self.activate_short()
 
-    def on_buy_new(self):
+    def op_buynew(self):
         jscript = """
-            var element = document.getElementById('linkBuyNew');
-            element.click();
+            var element1 = document.getElementById('linkBuyNew');
+            var element2 = element1.getElementsByClassName('pcmm_jpstk-btlk-margin-open pcmm_jpstk-btlk-filled pcmm_jpstk-btlk--xs pcmm_jpstk-btlk--block')[0];
+            element2.click();
         """
         self.browser.runJScript(jscript)
 
     def op_domestic(self):
         jscript = """
-            var element = document.getElementById('gmenu_domestic_stock').getElementsByClassName('pcm-gl-nav-01__button')[0];
-            element.onclick.apply();
+            var element1 = document.getElementById('gmenu_domestic_stock');
+            var element2 = element1.getElementsByClassName('pcm-gl-nav-01__button')[0];
+            element2.onclick.apply();
         """
         self.browser.runJScript(jscript)
 
@@ -149,8 +199,9 @@ class TradingConsole(QMainWindow):
         jscript = """
             var input_ticker_name = document.getElementById('dscrCdNm2');
             input_ticker_name.value = '%s';
-            var element = document.getElementsByClassName('btn-box')[0].getElementsByClassName('roll')[0];
-            element.onclick.apply();
+            var element1 = document.getElementsByClassName('btn-box')[0];
+            var element2 = element1.getElementsByClassName('roll')[0];
+            element2.onclick.apply();
         """ % ticker
         self.browser.runJScript(jscript)
 
