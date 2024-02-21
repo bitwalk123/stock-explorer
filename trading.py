@@ -98,7 +98,7 @@ class TradingConsole(QMainWindow):
 
         self.but_long = but_long = TradingButton('買　建')
         but_long.setFunc('long')
-        # but_long.clicked.connect(self.op_long)
+        but_long.clicked.connect(self.op_long)
         box_row4.addWidget(but_long)
 
         self.but_short = but_short = TradingButton('売　建')
@@ -191,6 +191,37 @@ class TradingConsole(QMainWindow):
             var button = document.getElementById('login-btn');
             button.click();
         """ % (loginid, password)
+        self.browser.runJScript(jscript)
+
+    def op_long(self):
+        jscript = """
+            var tradetype = document.getElementById('buy');
+            tradetype.checked = true;
+            tradetype.onclick.apply();
+
+            var maturity = document.getElementById('general_1d');
+            maturity.checked = true;
+            maturity.onclick.apply();
+
+            var ordervalue = document.getElementById('orderValue');
+            ordervalue.value = 100;
+
+            // 成行
+            var marketorderkbn = document.getElementById('priceMarket');
+            marketorderkbn.checked = true;
+            marketorderkbn.onclick.apply();
+
+            var dosetorder = document.getElementById('doSetOrder');
+            dosetorder.checked = true;
+            dosetorder.onclick.apply();
+
+            var setorderpricekbn = document.getElementById('profitMargin');
+            setorderpricekbn.checked = true;
+            setorderpricekbn.onclick.apply();
+
+            var setorderpricekbn2 = document.getElementById('profitMarginPrice');
+            setorderpricekbn2.value = 50;
+        """
         self.browser.runJScript(jscript)
 
     def op_search(self):
