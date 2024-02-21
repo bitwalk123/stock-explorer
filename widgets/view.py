@@ -29,7 +29,7 @@ class BaseBrowserView(QWebEngineView):
             self, 'Save File', url_path, '*.' + suffix
         )
         if path:
-            download.setDownloadDirectory(path)
+            download.setDownloadFileName(path)
             download.accept()
 
     def print_html(self, content):
