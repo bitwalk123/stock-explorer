@@ -26,7 +26,7 @@ class TradingConsole(QMainWindow):
         self.obj_login = get_login_info()
 
         self.dict_ticker = {
-            'ＳＣＲＥＥＮホールディングス (7735)': '7735',
+            'ＳＣＲＥＥＮホールディングス': '7735',
         }
 
         self.but_login = None
@@ -75,7 +75,7 @@ class TradingConsole(QMainWindow):
         layout.addLayout(box_row3)
 
         self.combo_ticker = combo_ticker = QComboBox()
-        combo_ticker.setFixedWidth(300)
+        combo_ticker.setFixedWidth(250)
         combo_ticker.addItems(self.dict_ticker.keys())
         box_row3.addWidget(combo_ticker)
 
@@ -83,6 +83,17 @@ class TradingConsole(QMainWindow):
         but_search.setFunc('search')
         but_search.clicked.connect(self.op_search)
         box_row3.addWidget(but_search)
+
+
+        # Row 4
+        box_row4 = QHBoxLayout()
+        layout.addLayout(box_row4)
+
+        self.but_buynew = but_buynew = TradingButton('信用新規')
+        but_buynew.setFunc('buynew')
+        #but_buynew.clicked.connect(self.op_buynew)
+        box_row4.addWidget(but_buynew)
+
 
     def activate_login_button(self):
         self.but_login.setEnabled(True)
@@ -103,6 +114,13 @@ class TradingConsole(QMainWindow):
             self.activate_domestic()
         elif self.website.checkSite(title, 'domestic'):
             self.activate_search()
+
+    def on_buy_new(self):
+        jscript = """
+            var element = document.getElementById('linkBuyNew');
+            element.click();
+        """
+        self.browser.runJScript(jscript)
 
     def op_domestic(self):
         jscript = """
@@ -128,7 +146,13 @@ class TradingConsole(QMainWindow):
     def op_search(self):
         name_ticker = self.combo_ticker.currentText()
         ticker = self.dict_ticker[name_ticker]
-        print(ticker)
+        jscript = """
+            var input_ticker_name = document.getElementById('dscrCdNm2');
+            input_ticker_name.value = '%s';
+            var element = document.getElementsByClassName('btn-box')[0].getElementsByClassName('roll')[0];
+            element.onclick.apply();
+        """ % ticker
+        self.browser.runJScript(jscript)
 
     def show_browser(self):
         self.browser = browser = BrowserTraiding(self.obj_login.getURL())

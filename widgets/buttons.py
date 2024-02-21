@@ -39,9 +39,24 @@ class TradingButton(QPushButton):
             self.setStyleSheet(self.cssLogin())
         elif func == 'search':
             self.setStyleSheet(self.cssSearch())
+        elif func == 'buynew':
+            self.setStyleSheet(self.cssBuyNew())
 
     def getFunc(self, func: str) -> str:
         return self.func
+
+    def cssBuyNew(self) -> str:
+        return """
+            TradingButton {
+                color: white;
+                background-color: #a762df;
+                font-family: monospace;
+            }        
+            TradingButton:disabled {
+                color: gray;
+                background-color: lightgray;
+            }
+        """
 
     def cssLogin(self) -> str:
         return """
