@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QWidget, QHBoxLayout,
+    QWidget, QHBoxLayout, QComboBox,
 )
 
 from snippets.web_login import get_login_info
@@ -63,6 +63,22 @@ class TradingConsole(QMainWindow):
         but_domestic.setFunc('domestic')
         but_domestic.clicked.connect(self.op_domestic)
         layout.addWidget(but_domestic)
+
+        # Row 3
+        box_row3 = QHBoxLayout()
+        layout.addLayout(box_row3)
+
+        combo_ticker = QComboBox()
+        combo_ticker.setFixedWidth(300)
+        list_ticker = [
+            'ＳＣＲＥＥＮホールディングス (7735)',
+        ]
+        combo_ticker.addItems(list_ticker)
+        box_row3.addWidget(combo_ticker)
+
+        but_search = TradingButton('検索')
+        but_search.setFunc('search')
+        box_row3.addWidget(but_search)
 
     def activate_login_button(self):
         self.but_login.setEnabled(True)
