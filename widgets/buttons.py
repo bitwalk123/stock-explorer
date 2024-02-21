@@ -86,13 +86,10 @@ class TradingButton(QPushButton):
                 background-color: #ddf;
                 font-family: monospace;
                 padding: 0.5em;
-                border: 1px solid #008;
-                border-radius: 15px;
             }        
             TradingButton:disabled {
                 color: gray;
                 background-color: lightgray;
-                border: 1px solid gray;
             }
         """
 
@@ -116,13 +113,10 @@ class TradingButton(QPushButton):
                 background-color: #fdd;
                 font-family: monospace;
                 padding: 0.5em;
-                border: 1px solid #800;
-                border-radius: 15px;
             }        
             TradingButton:disabled {
                 color: gray;
                 background-color: lightgray;
-                border: 1px solid gray;
             }
         """
 
