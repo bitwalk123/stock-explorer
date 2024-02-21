@@ -76,7 +76,7 @@ class TradingConsole(QMainWindow):
         combo_ticker.addItems(list_ticker)
         box_row3.addWidget(combo_ticker)
 
-        but_search = TradingButton('検索')
+        self.but_search = but_search = TradingButton('検索')
         but_search.setFunc('search')
         box_row3.addWidget(but_search)
 
@@ -86,14 +86,20 @@ class TradingConsole(QMainWindow):
     def activate_domestic(self):
         self.but_domestic.setEnabled(True)
 
+    def activate_search(self):
+        self.but_search.setEnabled(True)
+
     def deactivate_login_button(self):
         self.but_login.setEnabled(False)
 
     def load_finished(self, title: str):
         print('finished loading page!', title)
-        if title == self.website.sites['home']:
+        if self.website.checkSite(title, 'home'):
             self.deactivate_login_button()
             self.activate_domestic()
+        elif self.website.checkSite(title, 'domestic'):
+            self.activate_search()
+
 
     def op_domestic(self):
         jscript = """

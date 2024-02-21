@@ -37,11 +37,13 @@ class TradingButton(QPushButton):
         self.func = func
         if func == 'login':
             self.setStyleSheet(self.cssLogin())
+        elif func == 'search':
+            self.setStyleSheet(self.cssSearch())
 
     def getFunc(self, func: str) -> str:
         return self.func
 
-    def cssLogin(self)->str:
+    def cssLogin(self) -> str:
         return """
             TradingButton {
                 color: white;
@@ -56,6 +58,20 @@ class TradingButton(QPushButton):
                 font-weight: normal;
             }
         """
+
+    def cssSearch(self) -> str:
+        return """
+            TradingButton {
+                color: white;
+                background-color: #6385cd;
+                font-family: monospace;
+            }        
+            TradingButton:disabled {
+                color: gray;
+                background-color: lightgray;
+            }
+        """
+
 
 class IndexButton(TickerButton):
     pattern = re.compile(r'^\^(.+)$')
