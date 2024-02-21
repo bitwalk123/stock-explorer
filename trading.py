@@ -25,8 +25,14 @@ class TradingConsole(QMainWindow):
         self.website = WebSite()
         self.obj_login = get_login_info()
 
+        self.dict_ticker = {
+            'ＳＣＲＥＥＮホールディングス (7735)': '7735',
+        }
+
         self.but_login = None
         self.but_domestic = None
+        self.combo_ticker: Union[QComboBox, None] = None
+        self.but_search = None
         self.statusbar = None
         self.init_ui()
 
@@ -68,16 +74,14 @@ class TradingConsole(QMainWindow):
         box_row3 = QHBoxLayout()
         layout.addLayout(box_row3)
 
-        combo_ticker = QComboBox()
+        self.combo_ticker = combo_ticker = QComboBox()
         combo_ticker.setFixedWidth(300)
-        list_ticker = [
-            'ＳＣＲＥＥＮホールディングス (7735)',
-        ]
-        combo_ticker.addItems(list_ticker)
+        combo_ticker.addItems(self.dict_ticker.keys())
         box_row3.addWidget(combo_ticker)
 
         self.but_search = but_search = TradingButton('検索')
         but_search.setFunc('search')
+        but_search.clicked.connect(self.op_search)
         box_row3.addWidget(but_search)
 
     def activate_login_button(self):
@@ -100,7 +104,6 @@ class TradingConsole(QMainWindow):
         elif self.website.checkSite(title, 'domestic'):
             self.activate_search()
 
-
     def op_domestic(self):
         jscript = """
             var element = document.getElementById('gmenu_domestic_stock').getElementsByClassName('pcm-gl-nav-01__button')[0];
@@ -121,6 +124,11 @@ class TradingConsole(QMainWindow):
             button.click();
         """ % (loginid, password)
         self.browser.runJScript(jscript)
+
+    def op_search(self):
+        name_ticker = self.combo_ticker.currentText()
+        ticker = self.dict_ticker[name_ticker]
+        print(ticker)
 
     def show_browser(self):
         self.browser = browser = BrowserTraiding(self.obj_login.getURL())
