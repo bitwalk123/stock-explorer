@@ -11,5 +11,8 @@ class LoginInfo:
     def getPassword(self) -> str:
         return self.login_info['password']
 
+    def getPassnumber(self) -> str:
+        return self.login_info['passnumber']
+
     def getURL(self) -> QUrl:
         return QUrl(self.login_info['url'])

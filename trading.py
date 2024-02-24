@@ -29,33 +29,8 @@ class TradingConsole(QMainWindow):
             'ＳＣＲＥＥＮホールディングス': '7735',
         }
 
-        self.but_login = None
-        self.but_domestic = None
-        self.combo_ticker: Union[QComboBox, None] = None
-        self.but_search = None
-        self.but_buynew = None
-        self.but_long = None
-        self.but_short = None
-        self.statusbar = None
-        self.init_ui()
-
-        self.browser: Union[BrowserTraiding, None] = None
-        self.show_browser()
-
-        self.setWindowTitle('Trading Console')
-        icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
-        self.setWindowIcon(icon)
-
-    def closeEvent(self, event):
-        if self.browser is not None:
-            self.browser.hide()
-            self.browser.deleteLater()
-        event.accept()
-
-    def init_ui(self):
-        self.statusbar = statusbar = QStatusBar()
-        self.setStatusBar(statusbar)
-
+        # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+        # Main panel
         base = QWidget()
         self.setCentralWidget(base)
         layout = QVBoxLayout()
@@ -106,6 +81,21 @@ class TradingConsole(QMainWindow):
         # but_short.clicked.connect(self.op_short)
         box_row4.addWidget(but_short)
 
+        # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+        # Status bar
+        self.statusbar = statusbar = QStatusBar()
+        self.setStatusBar(statusbar)
+
+        # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+        # Browser
+        self.browser: Union[BrowserTraiding, None] = None
+        self.show_browser()
+
+        # Console window
+        self.setWindowTitle('Trading Console')
+        icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
+        self.setWindowIcon(icon)
+
     def activate_buynew(self):
         self.but_buynew.setEnabled(True)
 
@@ -123,6 +113,12 @@ class TradingConsole(QMainWindow):
 
     def activate_short(self):
         self.but_short.setEnabled(True)
+
+    def closeEvent(self, event):
+        if self.browser is not None:
+            self.browser.hide()
+            self.browser.deleteLater()
+        event.accept()
 
     def deactivate_buynew(self):
         self.but_buynew.setEnabled(False)
@@ -180,9 +176,8 @@ class TradingConsole(QMainWindow):
         self.browser.runJScript(jscript)
 
     def op_login(self):
-        obj_login = get_login_info()
-        loginid = obj_login.getLoginID()
-        password = obj_login.getPassword()
+        loginid = self.obj_login.getLoginID()
+        password = self.obj_login.getPassword()
         jscript = """
             var input_username = document.getElementById('form-login-id');
             input_username.value = '%s';
