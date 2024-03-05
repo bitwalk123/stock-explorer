@@ -27,6 +27,7 @@ class TradingConsole(QMainWindow):
 
         self.dict_ticker = {
             'ＳＣＲＥＥＮホールディングス': '7735',
+            'アドバンテスト': '6857',
         }
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -78,7 +79,7 @@ class TradingConsole(QMainWindow):
 
         self.but_short = but_short = TradingButton('売　建')
         but_short.setFunc('short')
-        # but_short.clicked.connect(self.op_short)
+        but_short.clicked.connect(self.op_short)
         box_row4.addWidget(but_short)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -189,6 +190,8 @@ class TradingConsole(QMainWindow):
         self.browser.runJScript(jscript)
 
     def op_long(self):
+        deltavalue = 50
+        passnumber = self.obj_login.getPassnumber()
         jscript = """
             var tradetype = document.getElementById('buy');
             tradetype.checked = true;
@@ -215,8 +218,47 @@ class TradingConsole(QMainWindow):
             setorderpricekbn.onclick.apply();
 
             var setorderpricekbn2 = document.getElementById('profitMarginPrice');
-            setorderpricekbn2.value = 50;
-        """
+            setorderpricekbn2.value = %d;
+            
+            var password = document.getElementsByName('password')[0];
+            password.value = '%s';
+        """ % (deltavalue, passnumber)
+        self.browser.runJScript(jscript)
+
+    def op_short(self):
+        deltavalue = 25
+        passnumber = self.obj_login.getPassnumber()
+        jscript = """
+            var tradetype = document.getElementById('sell');
+            tradetype.checked = true;
+            tradetype.onclick.apply();
+
+            var maturity = document.getElementById('general_1d');
+            maturity.checked = true;
+            maturity.onclick.apply();
+
+            var ordervalue = document.getElementById('orderValue');
+            ordervalue.value = 100;
+
+            // 成行
+            var marketorderkbn = document.getElementById('priceMarket');
+            marketorderkbn.checked = true;
+            marketorderkbn.onclick.apply();
+
+            var dosetorder = document.getElementById('doSetOrder');
+            dosetorder.checked = true;
+            dosetorder.onclick.apply();
+
+            var setorderpricekbn = document.getElementById('profitMargin');
+            setorderpricekbn.checked = true;
+            setorderpricekbn.onclick.apply();
+
+            var setorderpricekbn2 = document.getElementById('profitMarginPrice');
+            setorderpricekbn2.value = %d;
+
+            var password = document.getElementsByName('password')[0];
+            password.value = '%s';
+        """ % (deltavalue, passnumber)
         self.browser.runJScript(jscript)
 
     def op_search(self):
