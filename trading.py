@@ -27,6 +27,7 @@ class TradingConsole(QMainWindow):
 
         self.dict_ticker = {
             'ＳＣＲＥＥＮホールディングス': '7735',
+            '東京エレクトロン': '8035',
             'アドバンテスト': '6857',
         }
 
