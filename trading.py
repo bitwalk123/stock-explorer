@@ -22,6 +22,9 @@ class TradingConsole(QMainWindow):
     def __init__(self):
         super().__init__()
         res = AppRes()
+        self.setStyleSheet("""
+            QMainWindow{background-color: #fed;}
+        """)
         self.website = WebSite()
         self.obj_login = get_login_info()
 
