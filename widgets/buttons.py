@@ -1,6 +1,6 @@
 import re
 
-from PySide6.QtWidgets import QPushButton, QCheckBox
+from PySide6.QtWidgets import QPushButton, QCheckBox, QSizePolicy
 
 
 class JPXCheckBox(QCheckBox):
@@ -22,6 +22,7 @@ class TradingButton(QPushButton):
     def __init__(self, *args):
         super().__init__(*args)
         self.func = None
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         self.setStyleSheet("""
             TradingButton {
                 font-family: monospace;

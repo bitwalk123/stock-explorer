@@ -1,8 +1,8 @@
 import datetime as dt
 from typing import Union
 
-from PySide6.QtCore import QDate
-from PySide6.QtWidgets import QLineEdit
+from PySide6.QtCore import QDate, Qt
+from PySide6.QtWidgets import QLineEdit, QSpinBox, QSizePolicy
 
 
 class EntryTicker(QLineEdit):
@@ -37,3 +37,10 @@ class EntryDate(QLineEdit):
         date_end = self.date.addDays(1)
         end = str(dt.date(*date_end.getDate()))
         return start, end
+
+
+class SpinBox(QSpinBox):
+    def __init__(self):
+        super().__init__()
+        self.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)

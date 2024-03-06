@@ -5,10 +5,14 @@ from typing import Union
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
+    QComboBox,
+    QGridLayout,
+    QHBoxLayout,
     QMainWindow,
+    QSizePolicy,
     QStatusBar,
     QVBoxLayout,
-    QWidget, QHBoxLayout, QComboBox, QGridLayout, QSpinBox, QSizePolicy,
+    QWidget, QLineEdit,
 )
 
 from snippets.web_login import get_login_info
@@ -16,6 +20,7 @@ from structs.res import AppRes
 from structs.website import WebSite
 from ui.browser import BrowserTraiding
 from widgets.buttons import TradingButton
+from widgets.entries import SpinBox
 
 
 class TradingConsole(QMainWindow):
@@ -23,8 +28,9 @@ class TradingConsole(QMainWindow):
         super().__init__()
         res = AppRes()
         self.setStyleSheet("""
-            QMainWindow{background-color: #fed;}
+            QMainWindow{background-color: #321;}
         """)
+
         self.website = WebSite()
         self.obj_login = get_login_info()
 
@@ -39,6 +45,8 @@ class TradingConsole(QMainWindow):
         base = QWidget()
         self.setCentralWidget(base)
         layout = QVBoxLayout()
+        layout.setContentsMargins(2, 2, 2, 2)
+        layout.setSpacing(2)
         base.setLayout(layout)
 
         # Row 1
@@ -58,6 +66,7 @@ class TradingConsole(QMainWindow):
         layout.addLayout(box_row3)
 
         self.combo_ticker = combo_ticker = QComboBox()
+        combo_ticker.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         combo_ticker.setFixedWidth(250)
         combo_ticker.addItems(self.dict_ticker.keys())
         box_row3.addWidget(combo_ticker)
@@ -69,6 +78,8 @@ class TradingConsole(QMainWindow):
 
         # Row 4
         box_row4 = QGridLayout()
+        box_row4.setContentsMargins(0, 0, 0, 0)
+        box_row4.setSpacing(2)
         layout.addLayout(box_row4)
 
         self.but_buynew = but_buynew = TradingButton('信用新規')
@@ -77,7 +88,7 @@ class TradingConsole(QMainWindow):
         but_buynew.clicked.connect(self.op_buynew)
         box_row4.addWidget(but_buynew, 0, 0, 2, 1)
 
-        self.spin_long = spin_long = QSpinBox()
+        self.spin_long = spin_long = SpinBox()
         box_row4.addWidget(spin_long, 0, 1)
 
         self.but_long = but_long = TradingButton('買　建')
@@ -85,7 +96,7 @@ class TradingConsole(QMainWindow):
         but_long.clicked.connect(self.op_long)
         box_row4.addWidget(but_long, 1, 1)
 
-        self.spin_short = spin_short = QSpinBox()
+        self.spin_short = spin_short = SpinBox()
         box_row4.addWidget(spin_short, 0, 2)
 
         self.but_short = but_short = TradingButton('売　建')
@@ -95,8 +106,12 @@ class TradingConsole(QMainWindow):
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Status bar
-        self.statusbar = statusbar = QStatusBar()
+        statusbar = QStatusBar()
         self.setStatusBar(statusbar)
+
+        self.lab_msg = lab_msg = QLineEdit()
+        lab_msg.setEnabled(False)
+        statusbar.addPermanentWidget(lab_msg, stretch=1)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Browser
@@ -107,6 +122,8 @@ class TradingConsole(QMainWindow):
         self.setWindowTitle('Trading Console')
         icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
         self.setWindowIcon(icon)
+
+        self.setFixedSize(self.sizeHint())
 
     def activate_buynew(self):
         self.but_buynew.setEnabled(True)
