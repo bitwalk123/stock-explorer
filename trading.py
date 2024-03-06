@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QStatusBar,
     QVBoxLayout,
-    QWidget, QHBoxLayout, QComboBox,
+    QWidget, QHBoxLayout, QComboBox, QGridLayout, QSpinBox, QSizePolicy,
 )
 
 from snippets.web_login import get_login_info
@@ -65,23 +65,30 @@ class TradingConsole(QMainWindow):
         box_row3.addWidget(but_search)
 
         # Row 4
-        box_row4 = QHBoxLayout()
+        box_row4 = QGridLayout()
         layout.addLayout(box_row4)
 
         self.but_buynew = but_buynew = TradingButton('信用新規')
         but_buynew.setFunc('buynew')
+        but_buynew.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         but_buynew.clicked.connect(self.op_buynew)
-        box_row4.addWidget(but_buynew)
+        box_row4.addWidget(but_buynew, 0, 0, 2, 1)
+
+        self.spin_long = spin_long = QSpinBox()
+        box_row4.addWidget(spin_long, 0, 1)
 
         self.but_long = but_long = TradingButton('買　建')
         but_long.setFunc('long')
         but_long.clicked.connect(self.op_long)
-        box_row4.addWidget(but_long)
+        box_row4.addWidget(but_long, 1, 1)
+
+        self.spin_short = spin_short = QSpinBox()
+        box_row4.addWidget(spin_short, 0, 2)
 
         self.but_short = but_short = TradingButton('売　建')
         but_short.setFunc('short')
         but_short.clicked.connect(self.op_short)
-        box_row4.addWidget(but_short)
+        box_row4.addWidget(but_short, 1, 2)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Status bar
