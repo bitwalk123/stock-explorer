@@ -1,6 +1,10 @@
+import os
 import re
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QPushButton, QCheckBox, QSizePolicy
+
+from structs.res import AppRes
 
 
 class JPXCheckBox(QCheckBox):
@@ -136,3 +140,13 @@ class IndexButton(TickerButton):
 
     def getText(self):
         return self.iticker
+
+class LockButton(QPushButton):
+    def __init__(self):
+        super().__init__()
+        res = AppRes()
+        self.setCheckable(True)
+        self.setChecked(True)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        icon_lock = QIcon(os.path.join(res.getImagePath(), 'lock.png'))
+        self.setIcon(icon_lock)

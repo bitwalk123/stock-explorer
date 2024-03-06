@@ -12,14 +12,14 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QStatusBar,
     QVBoxLayout,
-    QWidget, QLineEdit,
+    QWidget, QLineEdit, QPushButton,
 )
 
 from snippets.web_login import get_login_info
 from structs.res import AppRes
 from structs.website import WebSite
 from ui.browser import BrowserTraiding
-from widgets.buttons import TradingButton
+from widgets.buttons import TradingButton, LockButton
 from widgets.entries import SpinBox
 
 
@@ -35,8 +35,8 @@ class TradingConsole(QMainWindow):
         self.obj_login = get_login_info()
 
         self.dict_ticker = {
-            'ＳＣＲＥＥＮホールディングス': '7735',
             '東京エレクトロン': '8035',
+            'ＳＣＲＥＥＮホールディングス': '7735',
             'アドバンテスト': '6857',
         }
 
@@ -65,9 +65,15 @@ class TradingConsole(QMainWindow):
         box_row3 = QHBoxLayout()
         layout.addLayout(box_row3)
 
+        self.but_lock_ticker = but_lock_ticker = LockButton()
+        box_row3.addWidget(but_lock_ticker)
+
         self.combo_ticker = combo_ticker = QComboBox()
-        combo_ticker.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        combo_ticker.setFixedWidth(250)
+        combo_ticker.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
+        combo_ticker.setMinimumWidth(250)
         combo_ticker.addItems(self.dict_ticker.keys())
         box_row3.addWidget(combo_ticker)
 
@@ -78,31 +84,43 @@ class TradingConsole(QMainWindow):
 
         # Row 4
         box_row4 = QGridLayout()
+        box_row4.setColumnStretch(0, 1)
+        box_row4.setColumnStretch(2, 1)
+        box_row4.setColumnStretch(4, 1)
         box_row4.setContentsMargins(0, 0, 0, 0)
         box_row4.setSpacing(2)
         layout.addLayout(box_row4)
 
         self.but_buynew = but_buynew = TradingButton('信用新規')
         but_buynew.setFunc('buynew')
-        but_buynew.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        but_buynew.setSizePolicy(
+            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Expanding
+        )
         but_buynew.clicked.connect(self.op_buynew)
         box_row4.addWidget(but_buynew, 0, 0, 2, 1)
 
+        self.but_lock_long = but_lock_long = LockButton()
+        box_row4.addWidget(but_lock_long, 0, 1)
+
         self.spin_long = spin_long = SpinBox()
-        box_row4.addWidget(spin_long, 0, 1)
+        box_row4.addWidget(spin_long, 0, 2)
 
         self.but_long = but_long = TradingButton('買　建')
         but_long.setFunc('long')
         but_long.clicked.connect(self.op_long)
-        box_row4.addWidget(but_long, 1, 1)
+        box_row4.addWidget(but_long, 1, 1, 1, 2)
+
+        self.but_lock_short = but_lock_short = LockButton()
+        box_row4.addWidget(but_lock_short, 0, 3)
 
         self.spin_short = spin_short = SpinBox()
-        box_row4.addWidget(spin_short, 0, 2)
+        box_row4.addWidget(spin_short, 0, 4)
 
         self.but_short = but_short = TradingButton('売　建')
         but_short.setFunc('short')
         but_short.clicked.connect(self.op_short)
-        box_row4.addWidget(but_short, 1, 2)
+        box_row4.addWidget(but_short, 1, 3, 1, 2)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Status bar
@@ -120,8 +138,8 @@ class TradingConsole(QMainWindow):
 
         # Console window
         self.setWindowTitle('Trading Console')
-        icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
-        self.setWindowIcon(icon)
+        icon_lock = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
+        self.setWindowIcon(icon_lock)
 
         self.setFixedSize(self.sizeHint())
 

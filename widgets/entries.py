@@ -43,4 +43,7 @@ class SpinBox(QSpinBox):
     def __init__(self):
         super().__init__()
         self.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding
+        )
