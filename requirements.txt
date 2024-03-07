@@ -1,3 +1,5 @@
+aiohttp
+darts
 fqdn
 isoduration
 jsonpointer
@@ -5,7 +7,6 @@ jupyterlab
 mplfinance
 pip-chill
 pip-review
-pyarrow
 pyside6
 uri-template
 webcolors
