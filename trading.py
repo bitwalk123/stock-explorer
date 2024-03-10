@@ -35,8 +35,8 @@ class TradingConsole(QMainWindow):
         self.obj_login = get_login_info()
 
         self.dict_ticker = {
-            '東京エレクトロン': '8035',
             'ＳＣＲＥＥＮホールディングス': '7735',
+            '東京エレクトロン': '8035',
             'アドバンテスト': '6857',
         }
 
