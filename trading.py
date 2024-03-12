@@ -3,18 +3,18 @@ import re
 import sys
 from typing import Union
 
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
     QGridLayout,
     QHBoxLayout,
+    QLineEdit,
     QMainWindow,
     QSizePolicy,
     QStatusBar,
     QVBoxLayout,
-    QWidget, QLineEdit, QPushButton,
+    QWidget,
 )
 
 from snippets.web_login import get_login_info
@@ -136,7 +136,7 @@ class TradingConsole(QMainWindow):
         # Row 5
         self.but_order = but_order = TradingButton('国内株式取引（注文照会・訂正・取消）')
         but_order.setFunc('order')
-        # but_order.clicked.connect(self.op_order)
+        but_order.clicked.connect(self.op_order)
         layout.addWidget(but_order)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -169,14 +169,17 @@ class TradingConsole(QMainWindow):
     def activate_buynew(self):
         self.but_buynew.setEnabled(True)
 
+    def activate_domestic(self):
+        self.but_domestic.setEnabled(True)
+
     def activate_login_button(self):
         self.but_login.setEnabled(True)
 
     def activate_long(self):
         self.but_long.setEnabled(True)
 
-    def activate_domestic(self):
-        self.but_domestic.setEnabled(True)
+    def activate_order(self):
+        self.but_order.setEnabled(True)
 
     def activate_search(self):
         self.but_search.setEnabled(True)
@@ -199,6 +202,9 @@ class TradingConsole(QMainWindow):
     def deactivate_login_button(self):
         self.but_login.setEnabled(False)
 
+    def deactivate_order(self):
+        self.but_order.setEnabled(False)
+
     def deactivate_search(self):
         self.but_search.setEnabled(False)
 
@@ -207,7 +213,7 @@ class TradingConsole(QMainWindow):
 
     def load_finished(self, title: str):
         print('finished loading page!', title)
-        pattern = re.compile(r'(.+?)\s\|.+')
+        pattern = re.compile(r'(.+?)\s+\|.+')
         m = pattern.match(title)
         if m:
             title_top = m.group(1)
@@ -222,20 +228,31 @@ class TradingConsole(QMainWindow):
             self.deactivate_buynew()
             self.deactivate_long()
             self.deactivate_short()
+            self.deactivate_order()
         elif self.website.checkSite(title, 'domestic'):
             self.activate_search()
             self.deactivate_buynew()
             self.deactivate_long()
             self.deactivate_short()
+            self.activate_order()
         elif self.website.checkSite(title, 'ticker', self.combo_ticker.currentText()):
             self.deactivate_search()
             self.activate_buynew()
             self.deactivate_long()
             self.deactivate_short()
+            self.deactivate_order()
         elif self.website.checkSite(title, 'buynew'):
+            self.deactivate_search()
             self.deactivate_buynew()
             self.activate_long()
             self.activate_short()
+            self.deactivate_order()
+        elif self.website.checkSite(title, 'order'):
+            self.deactivate_search()
+            self.deactivate_buynew()
+            self.deactivate_long()
+            self.deactivate_short()
+            self.deactivate_order()
 
     def op_buynew(self):
         jscript = """
@@ -300,6 +317,21 @@ class TradingConsole(QMainWindow):
             var password = document.getElementsByName('password')[0];
             password.value = '%s';
         """ % (deltavalue, passnumber)
+        self.browser.runJScript(jscript)
+
+    def op_order(self):
+        jscript = """
+            var stock_order_data_view = document.getElementById('stock_order_data_view');
+            var rows = stock_order_data_view.getElementsByTagName('tr');
+            for (var row of rows) {
+                var cells = row.getElementsByTagName('td');
+                if (cells[0].innerHTML == '信用取引：') {
+                    var target = cells[1].getElementsByTagName('a');
+                    target[0].click();
+                    break;
+                }
+            }
+        """
         self.browser.runJScript(jscript)
 
     def op_short(self):

@@ -13,6 +13,7 @@ class WebSite:
         'domestic': '国内株式トップ',
         'home': 'ホーム',
         'ticker': '%s-株価',
+        'order': '国内株式取引（注文照会・訂正・取消）-注文照会・訂正・取消',
     }
     pattern = re.compile(r'^(.*?)\s+\|.*')
 

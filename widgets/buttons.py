@@ -42,6 +42,8 @@ class TradingButton(QPushButton):
         self.func = func
         if func == 'login':
             self.setStyleSheet(self.cssLogin())
+        elif func == 'domestic':
+            self.setStyleSheet(self.cssDomestic())
         elif func == 'search':
             self.setStyleSheet(self.cssSearch())
         elif func == 'buynew':
@@ -50,6 +52,9 @@ class TradingButton(QPushButton):
             self.setStyleSheet(self.cssLong())
         elif func == 'short':
             self.setStyleSheet(self.cssShort())
+        elif func == 'order':
+            self.setStyleSheet(self.cssOrder())
+
 
     def getFunc(self, func: str) -> str:
         return self.func
@@ -84,11 +89,40 @@ class TradingButton(QPushButton):
             }
         """
 
+    def cssDomestic(self) -> str:
+        return """
+            TradingButton {
+                color: #212;
+                background-color: #fef;
+                font-family: monospace;
+                padding: 0.5em;
+            }        
+            TradingButton:disabled {
+                color: gray;
+                background-color: lightgray;
+                font-weight: normal;
+            }
+        """
+
     def cssLong(self) -> str:
         return """
             TradingButton {
                 color: #008;
                 background-color: #ddf;
+                font-family: monospace;
+                padding: 0.25em;
+            }        
+            TradingButton:disabled {
+                color: gray;
+                background-color: lightgray;
+            }
+        """
+
+    def cssOrder(self) -> str:
+        return """
+            TradingButton {
+                color: #121;
+                background-color: #efe;
                 font-family: monospace;
                 padding: 0.5em;
             }        
@@ -117,7 +151,7 @@ class TradingButton(QPushButton):
                 color: #800;
                 background-color: #fdd;
                 font-family: monospace;
-                padding: 0.5em;
+                padding: 0.25em;
             }        
             TradingButton:disabled {
                 color: gray;
