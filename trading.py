@@ -1,7 +1,9 @@
 import os
+import re
 import sys
 from typing import Union
 
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -35,10 +37,15 @@ class TradingConsole(QMainWindow):
         self.obj_login = get_login_info()
 
         self.dict_ticker = {
-            'ＳＣＲＥＥＮホールディングス': '7735',
             '東京エレクトロン': '8035',
+            'ＳＣＲＥＥＮホールディングス': '7735',
             'アドバンテスト': '6857',
         }
+
+        # Constants for spin boxes
+        long_value = 40
+        short_value = 20
+        tick_price = 10
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Main panel
@@ -104,6 +111,8 @@ class TradingConsole(QMainWindow):
         box_row4.addWidget(but_lock_long, 0, 1)
 
         self.spin_long = spin_long = SpinBox()
+        spin_long.setValue(long_value)
+        spin_long.setSingleStep(tick_price)
         box_row4.addWidget(spin_long, 0, 2)
 
         self.but_long = but_long = TradingButton('買　建')
@@ -115,6 +124,8 @@ class TradingConsole(QMainWindow):
         box_row4.addWidget(but_lock_short, 0, 3)
 
         self.spin_short = spin_short = SpinBox()
+        spin_short.setValue(short_value)
+        spin_short.setSingleStep(tick_price)
         box_row4.addWidget(spin_short, 0, 4)
 
         self.but_short = but_short = TradingButton('売　建')
@@ -122,12 +133,24 @@ class TradingConsole(QMainWindow):
         but_short.clicked.connect(self.op_short)
         box_row4.addWidget(but_short, 1, 3, 1, 2)
 
+        # Row 5
+        self.but_order = but_order = TradingButton('国内株式取引（注文照会・訂正・取消）')
+        but_order.setFunc('order')
+        # but_order.clicked.connect(self.op_order)
+        layout.addWidget(but_order)
+
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Status bar
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
         self.lab_msg = lab_msg = QLineEdit()
+        lab_msg.setStyleSheet("""
+            QLineEdit {
+                font-size: 9pt;
+                font-family: monospace;
+            }
+        """)
         lab_msg.setEnabled(False)
         statusbar.addPermanentWidget(lab_msg, stretch=1)
 
@@ -184,6 +207,14 @@ class TradingConsole(QMainWindow):
 
     def load_finished(self, title: str):
         print('finished loading page!', title)
+        pattern = re.compile(r'(.+?)\s\|.+')
+        m = pattern.match(title)
+        if m:
+            title_top = m.group(1)
+        else:
+            title_top = ''
+        self.lab_msg.setText('page : %s' % title_top)
+
         if self.website.checkSite(title, 'home'):
             self.deactivate_login_button()
             self.activate_domestic()
