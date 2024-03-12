@@ -236,7 +236,7 @@ class TradingConsole(QMainWindow):
         self.browser.runJScript(jscript)
 
     def op_long(self):
-        deltavalue = 50
+        deltavalue = self.spin_long.value()
         passnumber = self.obj_login.getPassnumber()
         jscript = """
             var tradetype = document.getElementById('buy');
@@ -272,7 +272,7 @@ class TradingConsole(QMainWindow):
         self.browser.runJScript(jscript)
 
     def op_short(self):
-        deltavalue = 25
+        deltavalue = self.spin_short.value()
         passnumber = self.obj_login.getPassnumber()
         jscript = """
             var tradetype = document.getElementById('sell');
