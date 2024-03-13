@@ -111,6 +111,7 @@ class TradingConsole(QMainWindow):
         box_row4.addWidget(but_lock_long, 0, 1)
 
         self.spin_long = spin_long = SpinBox()
+        spin_long.setRange(10, 200)
         spin_long.setValue(long_value)
         spin_long.setSingleStep(tick_price)
         box_row4.addWidget(spin_long, 0, 2)
@@ -124,6 +125,7 @@ class TradingConsole(QMainWindow):
         box_row4.addWidget(but_lock_short, 0, 3)
 
         self.spin_short = spin_short = SpinBox()
+        spin_short.setRange(10, 200)
         spin_short.setValue(short_value)
         spin_short.setSingleStep(tick_price)
         box_row4.addWidget(spin_short, 0, 4)
