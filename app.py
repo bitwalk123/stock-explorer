@@ -18,7 +18,7 @@ from ui.main_exchange import MainExchange
 
 class StockExplorer(QTabWidget):
     __version__ = '0.3.0'
-    __build__ = '20240309'
+    __build__ = '20240318'
     size_init = QSize(1200, 700)
     size_square = QSize(1000, 1000)
 
@@ -38,7 +38,11 @@ class StockExplorer(QTabWidget):
         self.setWindowIcon(icon)
 
         self.init_ui()
-        self.setWindowTitle('Stock Explorer - %s' % self.__version__)
+        self.setWindowTitle(
+            'Stock Explorer - %s with %s' % (
+                self.__version__, dict_info['host']
+            )
+        )
         # self.resize(1200, 700)
         self.resize(self.size_init)
 

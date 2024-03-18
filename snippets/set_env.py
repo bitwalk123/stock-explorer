@@ -7,7 +7,7 @@ def set_env() -> dict:
     return set_info_dict(file_json)
 
 
-def set_info_dict(file_json):
+def set_info_dict(file_json) -> dict:
     dict_info = read_json(file_json)
     DBInfo.setInfoDict(dict_info)
     return dict_info
