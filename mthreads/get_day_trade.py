@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import yfinance as yf
 from PySide6.QtCore import (
@@ -10,12 +12,22 @@ from structs.day_trade import DayTrade
 
 
 def get_day_trade(info: DayTrade) -> pd.DataFrame:
-    df = yf.download(
-        info.getTicker(),
-        start=info.start,
-        end=info.end,
-        interval=info.getInterval()
+    file_cache = 'cache/%s_%s_%s_%s.pkl' % (
+        info.getTicker(), info.start, info.end, info.getInterval()
     )
+    if os.path.isfile(file_cache):
+        print('read from %s' % file_cache)
+        df = pd.read_pickle(file_cache)
+    else:
+        print('read from Yahoo finance')
+        df = yf.download(
+            info.getTicker(),
+            start=info.start,
+            end=info.end,
+            interval=info.getInterval()
+        )
+        df.to_pickle(file_cache)
+
     return df
 
 
