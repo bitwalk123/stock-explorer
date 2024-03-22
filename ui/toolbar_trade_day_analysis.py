@@ -46,7 +46,7 @@ class ToolBarTradeDayAnalysis(ToolBarMain):
         self.addSeparator()
 
         self.ent_date = ent_date = EntryDate()
-        ent_date.setEnabled(False)
+        #ent_date.setEnabled(False)
         ent_date.setContentsMargins(0, 0, 0, 0)
         self.addWidget(ent_date)
 
