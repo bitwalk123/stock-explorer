@@ -1,8 +1,6 @@
 import os
 from typing import Union
 
-import mplfinance as mpf
-
 from PySide6.QtCore import QThreadPool, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
@@ -57,14 +55,15 @@ class MainTradeDayAnalysis(QMainWindow):
 
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
-        mpf.plot(
-            info.df,
-            type='candle',
-            datetime_format='%H:%M',
-            tight_layout=False,
-            style=self.res.getCandleStyle(),
-            ax=chart.ax
+        chart.ax.plot(
+            info.df.index,
+            info.df['Close'],
+            color='#666',
+            marker='o',
+            markersize=2,
+            linewidth=0.5
         )
+
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price')
         chart.ax.yaxis.set_tick_params(labelright=True)
