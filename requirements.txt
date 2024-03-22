@@ -1,5 +1,4 @@
 aiohttp
-darts
 fqdn
 isoduration
 jsonpointer
