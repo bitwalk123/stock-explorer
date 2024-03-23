@@ -68,9 +68,9 @@ class MainTradeDayAnalysis(QMainWindow):
             linewidth=0
         )
 
-        f = interpolate.interp1d(x.to_julian_date(), y, kind='cubic')
+        f = interpolate.interp1d(x.map(pd.Timestamp.timestamp), y, kind='cubic')
         x1 = pd.date_range(min(x), max(x), freq='0.1min')
-        y1 = f(x1.to_julian_date())
+        y1 = f(x1.map(pd.Timestamp.timestamp))
         chart.ax.plot(
             x1, y1,
             color='#f00',
