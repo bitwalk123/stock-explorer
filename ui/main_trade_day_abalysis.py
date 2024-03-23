@@ -62,7 +62,7 @@ class MainTradeDayAnalysis(QMainWindow):
         y = info.df['Close']
         chart.ax.plot(
             x, y,
-            color='#800',
+            color='#008',
             marker='o',
             markersize=1,
             linewidth=0
@@ -73,7 +73,7 @@ class MainTradeDayAnalysis(QMainWindow):
         y1 = f(x1.map(pd.Timestamp.timestamp))
         chart.ax.plot(
             x1, y1,
-            color='#f00',
+            color='#00f',
             linewidth=1
         )
 
