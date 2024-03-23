@@ -55,6 +55,8 @@ class MainTradeDayAnalysis(QMainWindow):
             self.no_data_found(info)
             return
 
+        print(info.getDate())
+
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
 
@@ -62,7 +64,7 @@ class MainTradeDayAnalysis(QMainWindow):
         y = info.df['Close']
         chart.ax.plot(
             x, y,
-            color='#008',
+            color='#444',
             marker='o',
             markersize=1,
             linewidth=0
@@ -73,10 +75,9 @@ class MainTradeDayAnalysis(QMainWindow):
         y1 = f(x1.map(pd.Timestamp.timestamp))
         chart.ax.plot(
             x1, y1,
-            color='#00f',
+            color='#888',
             linewidth=1
         )
-
 
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price')

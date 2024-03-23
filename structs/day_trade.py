@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 
 from typing import Union
@@ -17,6 +19,17 @@ class DayTrade:
 
     def getCName(self) -> str:
         return get_cname_with_code(self.code)
+
+    def getDate(self) -> Union[list, str]:
+        date_pattern = re.compile(r'([0-9]{4})-([0-9]{2})-([0-9]{2})')
+        m = date_pattern.match(self.start)
+        if m:
+            yy = int(m.group(1))
+            mm = int(m.group(2))
+            dd = int(m.group(3))
+            return [yy, mm, dd]
+        else:
+            return self.start
 
     def getInterval(self) -> str:
         if self.interval == '１分足':
