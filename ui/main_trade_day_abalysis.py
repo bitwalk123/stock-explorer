@@ -1,5 +1,6 @@
 import os
 from typing import Union
+import pandas as pd
 
 from PySide6.QtCore import QThreadPool, Qt
 from PySide6.QtGui import QIcon
@@ -8,6 +9,7 @@ from PySide6.QtWidgets import (
     QProgressDialog,
     QWidget,
 )
+from scipy import interpolate
 
 from mthreads.get_day_trade import GetDayTradeWorker
 from structs.day_trade import DayTrade
@@ -55,14 +57,26 @@ class MainTradeDayAnalysis(QMainWindow):
 
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
+
+        x = info.df.index
+        y = info.df['Close']
         chart.ax.plot(
-            info.df.index,
-            info.df['Close'],
-            color='#666',
+            x, y,
+            color='#800',
             marker='o',
-            markersize=2,
-            linewidth=0.5
+            markersize=1,
+            linewidth=0
         )
+
+        f = interpolate.interp1d(x.to_julian_date(), y, kind='cubic')
+        x1 = pd.date_range(min(x), max(x), freq='0.1min')
+        y1 = f(x1.to_julian_date())
+        chart.ax.plot(
+            x1, y1,
+            color='#f00',
+            linewidth=1
+        )
+
 
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price')
