@@ -61,5 +61,11 @@ class DayTrade:
             )
         return title
 
+    def isFullDataSet(self, df: pd.DataFrame) -> bool:
+        if str(max(df.index)) == self.start + ' 14:59:00+09:00':
+            return True
+        else:
+            return False
+
     def isJPX(self) -> bool:
         return self.jpx
