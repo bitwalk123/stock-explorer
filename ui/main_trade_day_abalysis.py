@@ -55,8 +55,6 @@ class MainTradeDayAnalysis(QMainWindow):
             self.no_data_found(info)
             return
 
-        print(info.getDate())
-
         chart: QWidget | Trend = self.centralWidget()
         chart.clearAxes()
 
@@ -71,10 +69,19 @@ class MainTradeDayAnalysis(QMainWindow):
         )
 
         f = interpolate.interp1d(x.map(pd.Timestamp.timestamp), y, kind='cubic')
-        x1 = pd.date_range(min(x), max(x), freq='0.1min')
+
+        x1 = pd.date_range(*info.getTimeMorningRange(x), freq='0.1min')
         y1 = f(x1.map(pd.Timestamp.timestamp))
         chart.ax.plot(
             x1, y1,
+            color='#888',
+            linewidth=1
+        )
+
+        x2 = pd.date_range(*info.getTimeAfternoonRange(x), freq='0.1min')
+        y2 = f(x2.map(pd.Timestamp.timestamp))
+        chart.ax.plot(
+            x2, y2,
             color='#888',
             linewidth=1
         )
