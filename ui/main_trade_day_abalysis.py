@@ -11,7 +11,12 @@ from PySide6.QtWidgets import (
 )
 from scipy import interpolate
 
-from funcs.trade_day_analysis import draw_square, plot_peak, check_peak, calc_diff
+from funcs.trade_day_analysis import (
+    calc_diff,
+    check_peak,
+    draw_square,
+    plot_peak,
+)
 from mthreads.get_day_trade import GetDayTradeWorker
 from structs.day_trade import DayTrade
 from structs.res import AppRes
