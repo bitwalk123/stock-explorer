@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 )
 from scipy import interpolate
 
+from funcs.trade_day_analysis import draw_square, plot_peak, check_peak, calc_diff
 from mthreads.get_day_trade import GetDayTradeWorker
 from structs.day_trade import DayTrade
 from structs.res import AppRes
@@ -62,14 +63,16 @@ class MainTradeDayAnalysis(QMainWindow):
         y = info.df['Close']
         chart.ax.plot(
             x, y,
-            color='#444',
+            color='#222',
             marker='o',
-            markersize=1,
+            markersize=2,
             linewidth=0
         )
 
-        f = interpolate.interp1d(x.map(pd.Timestamp.timestamp), y, kind='cubic')
+        f = interpolate.interp1d(x.map(pd.Timestamp.timestamp), y, kind='slinear')
 
+        # _____________________________________________________________________
+        # Morning session
         x1 = pd.date_range(*info.getTimeMorningRange(x), freq='0.1min')
         y1 = f(x1.map(pd.Timestamp.timestamp))
         chart.ax.plot(
@@ -78,6 +81,30 @@ class MainTradeDayAnalysis(QMainWindow):
             linewidth=1
         )
 
+        diff1 = calc_diff(y1)
+        diff11 = [0] + diff1
+        diff12 = diff1 + [0]
+        peak1 = check_peak(diff11, diff12, y1)
+
+        df1 = pd.DataFrame({
+            'x': x1,
+            'y': y1,
+            'peak': peak1,
+        })
+
+        df1_top = df1[df1['peak'] == 'top']
+        pcolor = 'blue'
+        plot_peak(chart, df1_top, pcolor)
+
+        df1_bottom = df1[df1['peak'] == 'bottom']
+        pcolor = 'red'
+        plot_peak(chart, df1_bottom, pcolor)
+
+        df1_tb = df1.query('peak in ["top", "bottom"]')
+        draw_square(chart, df1_tb)
+
+        # _____________________________________________________________________
+        # Afternoon session
         x2 = pd.date_range(*info.getTimeAfternoonRange(x), freq='0.1min')
         y2 = f(x2.map(pd.Timestamp.timestamp))
         chart.ax.plot(
@@ -86,6 +113,29 @@ class MainTradeDayAnalysis(QMainWindow):
             linewidth=1
         )
 
+        diff2 = calc_diff(y2)
+        diff21 = [0] + diff2
+        diff22 = diff2 + [0]
+        peak2 = check_peak(diff21, diff22, y2)
+
+        df2 = pd.DataFrame({
+            'x': x2,
+            'y': y2,
+            'peak': peak2,
+        })
+
+        df2_top = df2[df2['peak'] == 'top']
+        pcolor = 'blue'
+        plot_peak(chart, df2_top, pcolor)
+
+        df2_bottom = df2[df2['peak'] == 'bottom']
+        pcolor = 'red'
+        plot_peak(chart, df2_bottom, pcolor)
+
+        df2_tb = df2.query('peak in ["top", "bottom"]')
+        draw_square(chart, df2_tb)
+        # _____________________________________________________________________
+        # Plot decolation
         chart.ax.set_title(info.getTitle())
         chart.ax.set_ylabel('Price')
         chart.ax.yaxis.set_tick_params(labelright=True)
