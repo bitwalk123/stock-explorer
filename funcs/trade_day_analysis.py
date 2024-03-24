@@ -34,7 +34,8 @@ def draw_square(
                           facecolor=fcolor,
                           alpha=0.25,
                           fill=True,
-                          lw=1)
+                          lw=1,
+                          joinstyle='round')
             )
 
 
