@@ -43,8 +43,8 @@ class TradingConsole(QMainWindow):
         }
 
         # Constants for spin boxes
-        long_value = 100
-        short_value = 100
+        long_value = 50
+        short_value = 50
         tick_price = 10
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
