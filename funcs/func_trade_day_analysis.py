@@ -7,7 +7,7 @@ from widgets.charts import Trend
 def draw_square(
         chart: Trend,
         df: pd.DataFrame,
-        prange: float = 120
+        price_range: float = 100
 ):
     rows = len(df)
     for r in range(rows - 1):
@@ -21,7 +21,7 @@ def draw_square(
         y2 = df['y'][idx2]
         ptype2 = df['peak'][idx2]
 
-        if abs(y1 - y2) > prange:
+        if abs(y1 - y2) > price_range:
             if ptype1 == 'bottom':
                 ecolor = '#004'
                 fcolor = 'blue'

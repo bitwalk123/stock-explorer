@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 )
 from scipy import interpolate
 
-from funcs.trade_day_analysis import (
+from funcs.func_trade_day_analysis import (
     calc_diff,
     check_peak,
     draw_square,
