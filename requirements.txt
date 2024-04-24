@@ -8,6 +8,7 @@ pip-chill
 pip-review
 pyside6
 scipy
+seaborn
 uri-template
 webcolors
 wget
