@@ -2,28 +2,9 @@ from PySide6.QtWidgets import QComboBox
 
 
 class ComboBookmark(QComboBox):
-    tickers = {
-        '東京エレクトロン': ['8035', True],
-        'スクリーン': ['7735', True],
-        'アドバンテスト': ['6857', True],
-        'レーザーテック': ['6920', True],
-        'ディスコ': ['6146', True],
-        'TSMC': ['TSM', False],
-        'Micron': ['MU', False],
-        'Intel': ['INTC', False],
-        'Lam Research': ['LRCX', False],
-        'Applied Materials': ['AMAT', False],
-        'NVIDIA': ['NVDA', False],
-        'Microsoft': ['MSFT', False],
-        'Apple': ['AAPL', False],
-        'Alphabet': ['GOOG', False],
-        'Amazon': ['AMZN', False],
-        'Meta Platforms': ['META', False],
-        'Tesla': ['TSLA', False],
-    }
-
     def __init__(self):
         super().__init__()
+        self.tickers = self.getTickerList()
         self.setContentsMargins(0, 0, 0, 0)
         self.addItems(list(self.tickers.keys()))
 
@@ -33,6 +14,45 @@ class ComboBookmark(QComboBox):
     def getTicker(self, idx: int) -> str:
         key = self.getName(idx)
         return self.tickers[key][0]
+
+    def getTickerList(self) -> dict:
+        return {
+            '東京エレクトロン': ['8035', True],
+            'スクリーン': ['7735', True],
+            'アドバンテスト': ['6857', True],
+            'レーザーテック': ['6920', True],
+            'ディスコ': ['6146', True],
+        }
+
+
+class ComboBookmarkAll(ComboBookmark):
+    def __init__(self):
+        super().__init__()
+
+    def getTickerList(self) -> dict:
+        return {
+            '日経平均株価（日経225）': ['^N225', False],
+            '東京エレクトロン': ['8035', True],
+            'スクリーン': ['7735', True],
+            'アドバンテスト': ['6857', True],
+            'レーザーテック': ['6920', True],
+            'ディスコ': ['6146', True],
+            'ダウ工業株30種平均': ['^DJI', False],
+            'ナスダック総合指数': ['^IXIC', False],
+            'S&P500': ['^GSPC', False],
+            'TSMC': ['TSM', False],
+            'Micron': ['MU', False],
+            'Intel': ['INTC', False],
+            'Lam Research': ['LRCX', False],
+            'Applied Materials': ['AMAT', False],
+            'NVIDIA': ['NVDA', False],
+            'Microsoft': ['MSFT', False],
+            'Apple': ['AAPL', False],
+            'Alphabet': ['GOOG', False],
+            'Amazon': ['AMZN', False],
+            'Meta Platforms': ['META', False],
+            'Tesla': ['TSLA', False],
+        }
 
     def isJPX(self, idx: int) -> bool:
         key = self.getName(idx)

@@ -14,7 +14,7 @@ from funcs.tide import get_ymd
 from structs.day_trade import DayTrade
 from structs.res import AppRes
 from widgets.buttons import JPXCheckBox
-from widgets.combos import ComboBookmark
+from widgets.combos import ComboBookmarkAll
 from widgets.entries import EntryDate, EntryTicker
 from widgets.labels import Label
 from widgets.pads import HPad
@@ -47,7 +47,7 @@ class ToolBarTradeDay(ToolBarMain):
         self.addWidget(self.chk_jpx)
 
         # Bookmark for Ticker
-        self.combo_bookmark = ComboBookmark()
+        self.combo_bookmark = ComboBookmarkAll()
         self.combo_bookmark.currentIndexChanged.connect(self.on_bookmark_updated)
         self.addWidget(self.combo_bookmark)
 
