@@ -13,21 +13,25 @@ class ComboBookmark(QComboBox):
 
     def getTicker(self, idx: int) -> str:
         key = self.getName(idx)
-        return self.tickers[key][0]
+        return self.tickers[key]
 
     def getTickerList(self) -> dict:
         return {
-            '東京エレクトロン': ['8035', True],
-            'スクリーン': ['7735', True],
-            'アドバンテスト': ['6857', True],
-            'レーザーテック': ['6920', True],
-            'ディスコ': ['6146', True],
+            '東京エレクトロン': '8035.T',
+            'スクリーン': '7735.T',
+            'アドバンテスト': '6857.T',
+            'レーザーテック': '6920.T',
+            'ディスコ': '6146.T',
         }
 
 
 class ComboBookmarkAll(ComboBookmark):
     def __init__(self):
         super().__init__()
+
+    def getTicker(self, idx: int) -> str:
+        key = self.getName(idx)
+        return self.tickers[key][0]
 
     def getTickerList(self) -> dict:
         return {

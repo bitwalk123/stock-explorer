@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 from funcs.tide import get_ymd
 from structs.day_trade import DayTrade
 from structs.res import AppRes
+from widgets.combos import ComboBookmark
 from widgets.entries import EntryDate, EntryTicker
 from widgets.labels import Label
 from widgets.pads import HPad
@@ -36,17 +37,24 @@ class ToolBarTradeDayAnalysis(ToolBarMain):
         self.addWidget(ent_ticker)
         self.addSeparator()
 
+        """
         but_bookmark = QToolButton()
         but_bookmark.setContentsMargins(0, 0, 0, 0)
         icon_bookmark = QIcon(os.path.join(res.getImagePath(), 'bookmark.png'))
         but_bookmark.setIcon(icon_bookmark)
         # but_bookmark.clicked.connect()
         self.addWidget(but_bookmark)
+        """
+
+        # Bookmark for Ticker
+        self.combo_bookmark = ComboBookmark()
+        self.combo_bookmark.currentIndexChanged.connect(self.on_bookmark_updated)
+        self.addWidget(self.combo_bookmark)
 
         self.addSeparator()
 
         self.ent_date = ent_date = EntryDate()
-        #ent_date.setEnabled(False)
+        # ent_date.setEnabled(False)
         ent_date.setContentsMargins(0, 0, 0, 0)
         self.addWidget(ent_date)
 
@@ -55,7 +63,7 @@ class ToolBarTradeDayAnalysis(ToolBarMain):
         but_calendar.setToolTip('カレンダー')
         icon_calendar = QIcon(os.path.join(res.getImagePath(), 'calendar.png'))
         but_calendar.setIcon(icon_calendar)
-        but_calendar.clicked.connect(self.on_select_calendar)
+        but_calendar.clicked.connect(self.on_calendar_selected)
         self.addWidget(but_calendar)
 
         self.addSeparator()
@@ -80,14 +88,9 @@ class ToolBarTradeDayAnalysis(ToolBarMain):
         pad = HPad()
         self.addWidget(pad)
 
-    def on_select_calendar(self):
-        self.calendar = calendar = QCalendarWidget()
-        calendar.setMaximumDate(QDate(*get_ymd()))
-        date = self.ent_date.getDate()
-        if date is not None:
-            calendar.setSelectedDate(date)
-        calendar.activated.connect(self.on_activated)
-        calendar.show()
+        # INIT
+        idx = self.combo_bookmark.currentIndex()
+        self.on_bookmark_updated(idx)
 
     def on_activated(self, date_start: QDate):
         self.ent_date.setDate(date_start)
@@ -95,6 +98,18 @@ class ToolBarTradeDayAnalysis(ToolBarMain):
         calendar: QCalendarWidget = self.sender()
         calendar.hide()
         calendar.deleteLater()
+
+    def on_bookmark_updated(self, idx: int):
+        self.ent_ticker.setText(self.combo_bookmark.getTicker(idx))
+
+    def on_calendar_selected(self):
+        self.calendar = calendar = QCalendarWidget()
+        calendar.setMaximumDate(QDate(*get_ymd()))
+        date = self.ent_date.getDate()
+        if date is not None:
+            calendar.setSelectedDate(date)
+        calendar.activated.connect(self.on_activated)
+        calendar.show()
 
     def on_draw_chart(self):
         code = self.ent_ticker.text()
