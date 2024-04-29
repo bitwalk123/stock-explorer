@@ -16,4 +16,4 @@ if __name__ == '__main__':
     result = update_tbl_trade(end)
     print(result)
     print('elapsed %.3f sec' % get_elapsed(time_start))
-    sys.exit(app.exec())
+    #sys.exit(app.exec())
