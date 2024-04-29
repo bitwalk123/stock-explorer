@@ -4,6 +4,7 @@ import time
 import yfinance as yf
 
 from PySide6.QtSql import QSqlQuery
+from PySide6.QtWidgets import QApplication
 
 from funcs.tbl_currency import get_dict_currency
 from funcs.tbl_exchange import add_rows_tbl_exchange
@@ -61,6 +62,7 @@ def update_tbl_exchange(end: dt.date) -> bool:
 
 
 if __name__ == '__main__':
+    app = QApplication()
     dict_info = set_env()
     time_start = time.time()
     end = dt.date.today()
