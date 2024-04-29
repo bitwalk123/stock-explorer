@@ -1,4 +1,6 @@
 import datetime as dt
+import sys
+
 import pandas as pd
 import time
 import yfinance as yf
@@ -69,3 +71,4 @@ if __name__ == '__main__':
     result = update_tbl_exchange(end)
     print(result)
     print('elapsed %.3f sec' % get_elapsed(time_start))
+    sys.exit(app.exec())
