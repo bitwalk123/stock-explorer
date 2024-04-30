@@ -49,6 +49,7 @@ class ComboBookmarkAll(ComboBookmark):
             'Intel': ['INTC', False],
             'Lam Research': ['LRCX', False],
             'Applied Materials': ['AMAT', False],
+            'ASML Holding N.V.': ['ASML', False],
             'NVIDIA': ['NVDA', False],
             'Microsoft': ['MSFT', False],
             'Apple': ['AAPL', False],
