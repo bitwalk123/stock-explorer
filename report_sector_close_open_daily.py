@@ -1,5 +1,7 @@
+import sys
 import time
 
+from PySide6.QtWidgets import QApplication
 from matplotlib import pyplot as plt
 from matplotlib.font_manager import FontProperties
 
@@ -51,6 +53,7 @@ def report_sector_close_open_diff():
 
 
 if __name__ == '__main__':
+    app = QApplication(sys.argv)
     dict_info = set_env()
     time_start = time.time()
 
