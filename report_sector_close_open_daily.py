@@ -53,10 +53,9 @@ def report_sector_close_open_diff():
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    # app = QApplication(sys.argv)
     dict_info = set_env()
     time_start = time.time()
 
     report_sector_close_open_diff()
     print('elapsed %.3f sec' % get_elapsed(time_start))
-

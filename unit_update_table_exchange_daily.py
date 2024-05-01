@@ -64,7 +64,7 @@ def update_tbl_exchange(end: dt.date) -> bool:
 
 
 if __name__ == '__main__':
-    #app = QApplication(sys.argv)
+    # app = QApplication(sys.argv)
     dict_info = set_env()
     time_start = time.time()
     end = dt.date.today()

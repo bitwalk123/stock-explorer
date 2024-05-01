@@ -8,7 +8,7 @@ from report.corr import correlation_1to1
 from snippets.set_env import set_env
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    # app = QApplication(sys.argv)
     dict_info = set_env()
     time_start = time.time()
 

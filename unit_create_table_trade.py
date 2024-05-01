@@ -9,7 +9,7 @@ from funcs.tbl_trade import (
 from snippets.set_env import set_env
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    # app = QApplication(sys.argv)
     dict_info = set_env()
 
     # create trade table
