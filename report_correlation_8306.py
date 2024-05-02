@@ -1,7 +1,4 @@
-import sys
 import time
-
-from PySide6.QtWidgets import QApplication
 
 from funcs.tide import get_elapsed, get_past_month_day
 from report.corr import correlation_1to1
