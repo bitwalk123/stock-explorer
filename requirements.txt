@@ -3,11 +3,11 @@ fqdn
 isoduration
 jsonpointer
 jupyterlab
+lightgbm
 mplfinance
 pip-chill
 pip-review
 pyside6==6.6.3.1
-scipy
 seaborn
 uri-template
 webcolors
