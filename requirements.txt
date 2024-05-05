@@ -7,10 +7,9 @@ lightgbm
 mplfinance
 pip-chill
 pip-review
+pmdarima
 pyside6==6.6.3.1
-scikit-learn
 seaborn
-statsmodels
 uri-template
 webcolors
 wget
