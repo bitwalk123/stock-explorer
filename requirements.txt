@@ -8,6 +8,7 @@ mplfinance
 pip-chill
 pip-review
 pmdarima
+prophet
 pyside6==6.6.3.1
 seaborn
 uri-template
