@@ -7,6 +7,7 @@ lightgbm
 mplfinance
 pip-chill
 pip-review
+plotly
 pmdarima
 prophet
 pyside6==6.6.3.1
