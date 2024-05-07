@@ -50,6 +50,7 @@ class ComboBookmarkAll(ComboBookmark):
             'Lam Research': ['LRCX', False],
             'Applied Materials': ['AMAT', False],
             'ASML Holding N.V.': ['ASML', False],
+            'ARM Holdings PLC': ['ARM', False],
             'NVIDIA': ['NVDA', False],
             'Microsoft': ['MSFT', False],
             'Apple': ['AAPL', False],
