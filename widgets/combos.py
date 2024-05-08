@@ -44,6 +44,7 @@ class ComboBookmarkAll(ComboBookmark):
             'ダウ工業株30種平均': ['^DJI', False],
             'ナスダック総合指数': ['^IXIC', False],
             'S&P500': ['^GSPC', False],
+            'PHLX Semiconductor': ['^SOX', False],
             'TSMC': ['TSM', False],
             'Micron': ['MU', False],
             'Intel': ['INTC', False],
