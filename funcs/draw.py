@@ -78,7 +78,7 @@ def draw_candle_stick(chart: Trend, code: str, start: int = -1) -> TrendObj:
         datetime_format='%y/%m/%d',
         tight_layout=False,
         style=res.getCandleStyle(),
-        mav=(5, 25),
+        mav=(5, 25, 75),
         ax=chart.ax,
         volume=chart.ax2
     )
@@ -232,7 +232,7 @@ def draw_exchange(chart: Trend, currency: str, start: int = -1) -> TrendObj:
         datetime_format='%y/%m/%d',
         tight_layout=False,
         style=res.getCandleStyle(),
-        mav=(5, 25),
+        mav=(5, 25, 75),
         ax=chart.ax
     )
     chart.ax.set_ylabel('Price (JPY)')
