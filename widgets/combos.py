@@ -22,6 +22,7 @@ class ComboBookmark(QComboBox):
             'アドバンテスト': '6857.T',
             'レーザーテック': '6920.T',
             'ディスコ': '6146.T',
+            'KOKUSAI ELECTRIC': '6525.T',
         }
 
 
