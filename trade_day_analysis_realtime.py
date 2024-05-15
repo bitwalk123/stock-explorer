@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
+import datetime
+import os
+
+import pandas as pd
 import re
 import sys
 
@@ -16,8 +20,14 @@ class Example(QWebEngineView):
 
     def __init__(self):
         super().__init__()
+        self.ticker = '8035'
         self.content_prev = ''
         self.pattern_price = re.compile('([0-9,]+)（([0-9]{1,2}:[0-9]{2}:[0-9]{2})）')
+        self.time_open = pd.to_datetime('08:59:00')
+        self.time_close = pd.to_datetime('15:01:00')
+        self.time_lunch_1 = pd.to_datetime('11:31:00')
+        self.time_lunch_2 = pd.to_datetime('12:29:00')
+        self.df = pd.DataFrame()
 
         self.obj_login = get_login_info()
         self.load(self.url_login)
@@ -25,6 +35,13 @@ class Example(QWebEngineView):
         page: QWebEnginePage = self.page()
         page.titleChanged.connect(self.setWindowTitle)
         self.resize(1300, 800)
+
+    def get_pkl_fine(self) -> str:
+        return 'tmp/%s_%s.pkl' % (self.ticker, str(self.get_timestamp().date()))
+
+    def get_timestamp(self) -> pd.Timestamp:
+        dt_now = datetime.datetime.now()
+        return pd.to_datetime(dt_now)
 
     def on_load_finished(self, flag: bool) -> bool:
         if not flag:
@@ -79,17 +96,21 @@ class Example(QWebEngineView):
         self.run_javascript_2(jscript)
 
     def op_search(self):
-        ticker = '8035'
         jscript = """
             var input_ticker_name = document.getElementById('dscrCdNm2');
             input_ticker_name.value = '%s';
             var element1 = document.getElementsByClassName('btn-box')[0];
             var element2 = element1.getElementsByClassName('roll')[0];
             element2.onclick.apply();
-        """ % ticker
+        """ % self.ticker
         self.run_javascript(jscript)
 
     def print_content(self, content: str):
+        ts = self.get_timestamp()
+        if ts < self.time_open:
+            # print('before market open')
+            return
+
         if content == self.content_prev:
             return
 
@@ -99,8 +120,16 @@ class Example(QWebEngineView):
             return
 
         price_value = m.group(1)
-        price_time = m.group(2)
-        print(price_value, price_time)
+        price_time = pd.to_datetime(m.group(2))
+
+        if len(self.df) == 0:
+            # 最初のみデータフレームを（再）生成
+            self.df = pd.DataFrame({'Price': [price_value]}, index=[price_time])
+        else:
+            # データの追加
+            self.df.loc[price_time] = price_value
+
+        print(price_time, price_value)
 
     def run_javascript(self, jscript):
         page: QWebEnginePage = self.page()
@@ -112,8 +141,30 @@ class Example(QWebEngineView):
 
     def timer_start(self):
         timer = QTimer(self)
-        timer.timeout.connect(self.reload)
+        timer.timeout.connect(self.web_reload)
         timer.start(10000)
+
+    def web_reload(self):
+        ts = self.get_timestamp()
+        if ts < self.time_open:
+            # print('before market open')
+            return
+
+        if (ts > self.time_lunch_1) and (ts < self.time_lunch_2):
+            # print('lunch break')
+            return
+
+        if ts > self.time_close:
+            # print('after market close')
+            pkl = self.get_pkl_fine()
+            if os.path.exists(pkl):
+                return
+            else:
+                self.df.to_pickle(pkl)
+                return
+
+        print('reload!')
+        self.reload()
 
 
 def main():
