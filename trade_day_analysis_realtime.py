@@ -117,6 +117,7 @@ class Example(QWebEngineView):
         self.content_prev = content
         m = self.pattern_price.match(content)
         if not m:
+            print('*** no match')
             return
 
         price_value = m.group(1)
@@ -124,7 +125,10 @@ class Example(QWebEngineView):
 
         if len(self.df) == 0:
             # 最初のみデータフレームを（再）生成
-            self.df = pd.DataFrame({'Price': [price_value]}, index=[price_time])
+            self.df = pd.DataFrame(
+                {'Price': [price_value]},
+                index=[price_time]
+            )
         else:
             # データの追加
             self.df.loc[price_time] = price_value
@@ -162,8 +166,7 @@ class Example(QWebEngineView):
             else:
                 self.df.to_pickle(pkl)
                 return
-
-        print('reload!')
+        # RELOAD
         self.reload()
 
 
