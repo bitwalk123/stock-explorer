@@ -117,11 +117,13 @@ class Example(QWebEngineView):
         self.content_prev = content
         m = self.pattern_price.match(content)
         if not m:
-            print('*** no match')
+            print('*** no match ***')
             return
 
         str1 = m.group(1)
         str2 = m.group(2)
+
+        # Convert appropriate types
         price_value = float(str1.replace(',', ''))
         price_time = pd.to_datetime(str2)
 
