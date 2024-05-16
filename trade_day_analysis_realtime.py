@@ -120,8 +120,10 @@ class Example(QWebEngineView):
             print('*** no match')
             return
 
-        price_value = m.group(1)
-        price_time = pd.to_datetime(m.group(2))
+        str1 = m.group(1)
+        str2 = m.group(2)
+        price_value = float(str1.replace(',', ''))
+        price_time = pd.to_datetime(str2)
 
         if len(self.df) == 0:
             # 最初のみデータフレームを（再）生成
