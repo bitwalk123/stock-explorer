@@ -2,7 +2,6 @@
 # coding: utf-8
 import datetime
 import os
-
 import pandas as pd
 import re
 import sys
