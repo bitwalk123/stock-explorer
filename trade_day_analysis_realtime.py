@@ -10,12 +10,12 @@ import sys
 from PySide6.QtCore import QUrl, QTimer
 from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 from snippets.web_login import get_login_info
 
 
-class Example(QWebEngineView):
+class Example(QMainWindow):
     url_login = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
 
     def __init__(self):
@@ -30,10 +30,13 @@ class Example(QWebEngineView):
         self.df = pd.DataFrame()
         self.timer = QTimer(self)
 
+        self.browser = QWebEngineView()
+        self.setCentralWidget(self.browser)
+
         self.obj_login = get_login_info()
-        self.load(self.url_login)
-        self.loadFinished.connect(self.on_load_finished)
-        page: QWebEnginePage = self.page()
+        self.browser.load(self.url_login)
+        self.browser.loadFinished.connect(self.on_load_finished)
+        page: QWebEnginePage = self.browser.page()
         page.titleChanged.connect(self.setWindowTitle)
         self.resize(1300, 800)
 
@@ -48,7 +51,7 @@ class Example(QWebEngineView):
         if not flag:
             return False
         # self.page().toHtml(self.print_html)
-        page: QWebEnginePage = self.page()
+        page: QWebEnginePage = self.browser.page()
         title = page.title()
         if title == '総合口座ログイン | 楽天証券':
             self.op_login()
@@ -141,11 +144,11 @@ class Example(QWebEngineView):
         print(price_time, price_value)
 
     def run_javascript(self, jscript):
-        page: QWebEnginePage = self.page()
+        page: QWebEnginePage = self.browser.page()
         page.runJavaScript(jscript)
 
     def run_javascript_2(self, jscript):
-        page: QWebEnginePage = self.page()
+        page: QWebEnginePage = self.browser.page()
         page.runJavaScript(jscript, 0, self.print_content)
 
     def timer_start(self):
@@ -174,7 +177,7 @@ class Example(QWebEngineView):
 
             return
         # RELOAD
-        self.reload()
+        self.browser.reload()
 
 
 def main():
