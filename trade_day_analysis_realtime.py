@@ -28,6 +28,7 @@ class Example(QWebEngineView):
         self.time_lunch_1 = pd.to_datetime('11:31:00')
         self.time_lunch_2 = pd.to_datetime('12:29:00')
         self.df = pd.DataFrame()
+        self.timer = QTimer(self)
 
         self.obj_login = get_login_info()
         self.load(self.url_login)
@@ -148,9 +149,9 @@ class Example(QWebEngineView):
         page.runJavaScript(jscript, 0, self.print_content)
 
     def timer_start(self):
-        timer = QTimer(self)
-        timer.timeout.connect(self.web_reload)
-        timer.start(10000)
+        self.timer.timeout.connect(self.web_reload)
+        self.timer.start(10000)
+        print('timer started')
 
     def web_reload(self):
         ts = self.get_timestamp()
@@ -165,11 +166,13 @@ class Example(QWebEngineView):
         if ts > self.time_close:
             # print('after market close')
             pkl = self.get_pkl_fine()
-            if os.path.exists(pkl):
-                return
-            else:
+            if not os.path.exists(pkl):
                 self.df.to_pickle(pkl)
-                return
+                print('saved %s' % pkl)
+                self.timer.stop()
+                print('timer stopped')
+
+            return
         # RELOAD
         self.reload()
 
