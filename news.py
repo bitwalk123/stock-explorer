@@ -44,6 +44,7 @@ class News(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('News')
+        self.resize(600, 300)
 
         toolbar = ToolBarNews()
         toolbar.clickedSearch.connect(self.on_search)
