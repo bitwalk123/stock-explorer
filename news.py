@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.scraping import get_news_kabuyoho
+from widgets.labels import LabelNewsDate, LabelNewsMsg
 
 
 class ToolBarNews(QToolBar):
@@ -58,6 +59,7 @@ class News(QMainWindow):
         sa.setWidget(base)
 
         self.layout = QGridLayout()
+        self.layout.setSpacing(0)
         self.layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
@@ -83,14 +85,13 @@ class News(QMainWindow):
         # 株予想
         results = get_news_kabuyoho(ticker)
         for line in results:
-            lab_date = QLabel(line[0])
+            date = line[0]
+            lab_date = LabelNewsDate(date)
             self.layout.addWidget(lab_date, r, 0)
 
             msg = line[1]
             url = line[2]
-            lab_news = QLabel()
-            lab_news.setText('<a href="%s">%s</a>' % (url, msg))
-            lab_news.setOpenExternalLinks(True)
+            lab_news = LabelNewsMsg(url, msg)
             self.layout.addWidget(lab_news, r, 1)
 
             r += 1

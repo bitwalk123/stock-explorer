@@ -86,9 +86,11 @@ class LabelValue(Label):
             font-family: monospace;
         }
         """)
+
     def setValue(self, value):
         value_str = str(value)
         self.setText(value_str)
+
 
 class LabelDate(LabelValue):
     def __init__(self):
@@ -99,3 +101,30 @@ class LabelDate(LabelValue):
         self.timestamp = timestamp
         date = conv_timestamp2date(timestamp)
         self.setText(str(date))
+
+
+class LabelNewsDate(QLabel):
+    def __init__(self, date: str):
+        super().__init__()
+        self.setText(date)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
+        self.setStyleSheet("""
+        QLabel {
+            background-color: white;
+        }
+        """)
+
+
+class LabelNewsMsg(QLabel):
+    def __init__(self, url: str, msg: str):
+        super().__init__()
+        self.setText('<a href="%s">%s</a>' % (url, msg))
+        self.setOpenExternalLinks(True)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
+        self.setStyleSheet("""
+        QLabel {
+            background-color: white;
+        }
+        """)
