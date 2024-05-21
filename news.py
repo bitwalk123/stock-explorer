@@ -17,7 +17,8 @@ class ToolBarNews(QToolBar):
 
     def __init__(self):
         super().__init__()
-        self.tickers = tickers = {
+
+        self.tickers = {
             '東京エレクトロン': '8035',
             'ＳＣＲＥＥＮホールディングス': '7735',
             'アドバンテスト': '6857',
@@ -26,7 +27,7 @@ class ToolBarNews(QToolBar):
         }
 
         self.combo = combo = QComboBox()
-        combo.addItems(tickers.keys())
+        combo.addItems(self.tickers.keys())
         self.addWidget(combo)
 
         but_search = QPushButton('検索')
