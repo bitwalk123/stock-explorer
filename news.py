@@ -1,12 +1,12 @@
 import sys
 
-from PySide6.QtCore import QCoreApplication, Signal
+from PySide6.QtCore import QCoreApplication, Signal, Qt
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
     QMainWindow,
     QPushButton,
-    QToolBar,
+    QToolBar, QScrollArea, QWidget, QGridLayout, QLabel,
 )
 
 from funcs.scraping import get_news_kabuyoho
@@ -49,15 +49,48 @@ class News(QMainWindow):
         toolbar.clickedSearch.connect(self.on_search)
         self.addToolBar(toolbar)
 
+        sa = QScrollArea()
+        sa.setWidgetResizable(True)
+        self.setCentralWidget(sa)
+
+        self.base = base = QWidget()
+        sa.setWidget(base)
+
+        self.layout = QGridLayout()
+        self.layout.setAlignment(
+            Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        )
+        self.base.setLayout(self.layout)
+
+    def new_layout(self):
+        for r in range(self.layout.rowCount()):
+            for c in range(self.layout.columnCount()):
+                item = self.layout.itemAtPosition(r, c)
+                if item is not None:
+                    item.widget().deleteLater()
+                    self.layout.removeItem(item)
+
     def closeEvent(self, event):
         print('アプリケーションを終了します。')
         event.accept()  # let the window close
 
     def on_search(self, ticker: str):
+        self.new_layout()
+        r = 0
         # 株予想
         results = get_news_kabuyoho(ticker)
         for line in results:
-            print(line)
+            lab_date = QLabel(line[0])
+            self.layout.addWidget(lab_date, r, 0)
+
+            msg = line[1]
+            url = line[2]
+            lab_news = QLabel()
+            lab_news.setText('<a href="%s">%s</a>' % (url, msg))
+            lab_news.setOpenExternalLinks(True)
+            self.layout.addWidget(lab_news, r, 1)
+
+            r += 1
 
     def on_exit(self):
         QCoreApplication.quit()
