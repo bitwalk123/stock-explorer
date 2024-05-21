@@ -78,6 +78,8 @@ class News(QMainWindow):
     def on_search(self, ticker: str):
         self.new_layout()
         r = 0
+
+        # _____________________________________________________________________
         # 株予想
         results = get_news_kabuyoho(ticker)
         for line in results:
