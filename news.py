@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from funcs.scraping import get_news_kabuyoho
+from funcs.scraping import get_news_kabuyoho, get_news_8035
 from widgets.labels import (
     LabelLogo,
     LabelNewsDate,
@@ -120,6 +120,28 @@ class News(QMainWindow):
             self.layout.addWidget(lab_news, r, 2)
 
             r += 1
+
+        # _____________________________________________________________________
+        # 東京エレクトロン (8035)
+        if ticker == '8035':
+            results = get_news_8035()
+            logo = 'images/8035.png'
+            for line in results:
+                lab_logo = LabelLogo(logo)
+                self.layout.addWidget(lab_logo, r, 0)
+
+                date = line[0]
+                lab_date = LabelNewsDate(date)
+                self.layout.addWidget(lab_date, r, 1)
+
+                msg = line[1]
+                url = line[2]
+                lab_news = LabelNewsMsg(url, msg)
+                lab_news.linkActivated.connect(self.show_url)
+                self.layout.addWidget(lab_news, r, 2)
+
+                r += 1
+
 
     def on_exit(self):
         QCoreApplication.quit()
