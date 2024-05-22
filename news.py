@@ -1,16 +1,28 @@
 import sys
 
-from PySide6.QtCore import QCoreApplication, Signal, Qt
+from PySide6.QtCore import (
+    QCoreApplication,
+    Qt,
+    Signal,
+)
+from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
+    QGridLayout,
     QMainWindow,
     QPushButton,
-    QToolBar, QScrollArea, QWidget, QGridLayout, QLabel,
+    QScrollArea,
+    QToolBar,
+    QWidget,
 )
 
 from funcs.scraping import get_news_kabuyoho
-from widgets.labels import LabelNewsDate, LabelNewsMsg
+from widgets.labels import (
+    LabelLogo,
+    LabelNewsDate,
+    LabelNewsMsg,
+)
 
 
 class ToolBarNews(QToolBar):
@@ -25,6 +37,8 @@ class ToolBarNews(QToolBar):
             'アドバンテスト': '6857',
             'レーザーテック': '6920',
             'ディスコ': '6146',
+            'アルバック': '6728',
+            '信越化学': '4063',
         }
 
         self.combo = combo = QComboBox()
@@ -65,6 +79,11 @@ class News(QMainWindow):
         )
         self.base.setLayout(self.layout)
 
+        self.browser = QWebEngineView()
+        self.browser.page().titleChanged.connect(
+            self.browser.setWindowTitle
+        )
+
     def new_layout(self):
         for r in range(self.layout.rowCount()):
             for c in range(self.layout.columnCount()):
@@ -75,6 +94,7 @@ class News(QMainWindow):
 
     def closeEvent(self, event):
         print('アプリケーションを終了します。')
+        self.browser.deleteLater()
         event.accept()  # let the window close
 
     def on_search(self, ticker: str):
@@ -84,20 +104,29 @@ class News(QMainWindow):
         # _____________________________________________________________________
         # 株予想
         results = get_news_kabuyoho(ticker)
+        logo = 'images/kabuyoho.png'
         for line in results:
+            lab_logo = LabelLogo(logo)
+            self.layout.addWidget(lab_logo, r, 0)
+
             date = line[0]
             lab_date = LabelNewsDate(date)
-            self.layout.addWidget(lab_date, r, 0)
+            self.layout.addWidget(lab_date, r, 1)
 
             msg = line[1]
             url = line[2]
             lab_news = LabelNewsMsg(url, msg)
-            self.layout.addWidget(lab_news, r, 1)
+            lab_news.linkActivated.connect(self.show_url)
+            self.layout.addWidget(lab_news, r, 2)
 
             r += 1
 
     def on_exit(self):
         QCoreApplication.quit()
+
+    def show_url(self, url: str):
+        self.browser.load(url)
+        self.browser.show()
 
 
 def main():

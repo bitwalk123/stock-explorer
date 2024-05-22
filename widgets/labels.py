@@ -120,7 +120,7 @@ class LabelNewsMsg(QLabel):
     def __init__(self, url: str, msg: str):
         super().__init__()
         self.setText('<a href="%s">%s</a>' % (url, msg))
-        self.setOpenExternalLinks(True)
+        self.setOpenExternalLinks(False)
         self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
         self.setLineWidth(2)
         self.setStyleSheet("""
@@ -128,3 +128,12 @@ class LabelNewsMsg(QLabel):
             background-color: white;
         }
         """)
+
+
+class LabelLogo(QLabel):
+    def __init__(self, logo: str):
+        super().__init__()
+        pixmap = QPixmap(logo).scaledToHeight(16)
+        self.setPixmap(pixmap)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
