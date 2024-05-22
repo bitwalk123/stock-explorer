@@ -1,3 +1,4 @@
+import os
 from html.parser import HTMLParser
 import re
 
@@ -144,6 +145,10 @@ class Parser8035(HTMLParser):
 
             if self.c_news is True:
                 if len(self.element) > 0:
-                    self.news.append(self.element)
+                    # eliminate PDF files
+                    path = self.element[2]
+                    ext = os.path.splitext(path)[1][1:]
+                    if ext != 'pdf':
+                        self.news.append(self.element)
                 self.c_news = False
                 return

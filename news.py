@@ -142,7 +142,6 @@ class News(QMainWindow):
 
                 r += 1
 
-
     def on_exit(self):
         QCoreApplication.quit()
 
