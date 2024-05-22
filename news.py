@@ -30,6 +30,7 @@ class ToolBarNews(QToolBar):
 
     def __init__(self):
         super().__init__()
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.tickers = {
             '東京エレクトロン': '8035',
@@ -73,6 +74,7 @@ class News(QMainWindow):
         sa.setWidget(base)
 
         self.layout = QGridLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
         self.layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
