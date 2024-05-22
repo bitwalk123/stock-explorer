@@ -112,6 +112,7 @@ class LabelNewsDate(QLabel):
         self.setStyleSheet("""
         QLabel {
             background-color: white;
+            font-family: monospace;
         }
         """)
 
@@ -126,6 +127,7 @@ class LabelNewsMsg(QLabel):
         self.setStyleSheet("""
         QLabel {
             background-color: white;
+            font-family: monospace;
         }
         """)
 

@@ -50,7 +50,7 @@ class ParserKabuYoho(HTMLParser):
     def handle_data(self, data):
         content = data.strip()
         if self.flag_news and self.flag_date:
-            self.element.append(content)
+            self.element.append(content.replace('/', '-'))
             self.flag_date = False
             return
 
@@ -126,7 +126,7 @@ class Parser8035(HTMLParser):
         content = data.strip()
 
         if self.time is True and self.c_news__col is True:
-            self.element.append(content)
+            self.element.append(content.replace('.', '-'))
             self.time = False
             return
 
