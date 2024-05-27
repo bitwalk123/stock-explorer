@@ -9,12 +9,12 @@ import sys
 from PySide6.QtCore import QUrl, QTimer
 from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QTabWidget
 
 from snippets.web_login import get_login_info
 
 
-class Example(QMainWindow):
+class Example(QTabWidget):
     url_login = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
 
     def __init__(self):
@@ -29,8 +29,11 @@ class Example(QMainWindow):
         self.df = pd.DataFrame()
         self.timer = QTimer(self)
 
+        tab1 = QMainWindow()
+        self.addTab(tab1, 'Browser')
+
         self.browser = QWebEngineView()
-        self.setCentralWidget(self.browser)
+        tab1.setCentralWidget(self.browser)
 
         self.obj_login = get_login_info()
         self.browser.load(self.url_login)
