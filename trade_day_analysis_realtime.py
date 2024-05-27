@@ -29,6 +29,7 @@ class Example(QTabWidget):
         self.df = pd.DataFrame()
         self.timer = QTimer(self)
 
+        # _____________________________________________________________________
         tab1 = QMainWindow()
         self.addTab(tab1, 'Browser')
 
@@ -38,8 +39,15 @@ class Example(QTabWidget):
         self.obj_login = get_login_info()
         self.browser.load(self.url_login)
         self.browser.loadFinished.connect(self.on_load_finished)
+
         page: QWebEnginePage = self.browser.page()
         page.titleChanged.connect(self.setWindowTitle)
+
+        # _____________________________________________________________________
+        tab2 = QMainWindow()
+        self.addTab(tab2, 'Chart')
+
+        # _____________________________________________________________________
         self.resize(1300, 800)
 
     def get_pkl_fine(self) -> str:
