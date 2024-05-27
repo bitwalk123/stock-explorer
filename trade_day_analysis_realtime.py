@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-import datetime
 import os
 import pandas as pd
 import re
@@ -11,6 +10,7 @@ from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication, QMainWindow, QTabWidget
 
+from funcs.tide import get_timestamp
 from snippets.web_login import get_login_info
 
 
@@ -51,11 +51,7 @@ class Example(QTabWidget):
         self.resize(1300, 800)
 
     def get_pkl_fine(self) -> str:
-        return 'tmp/%s_%s.pkl' % (self.ticker, str(self.get_timestamp().date()))
-
-    def get_timestamp(self) -> pd.Timestamp:
-        dt_now = datetime.datetime.now()
-        return pd.to_datetime(dt_now)
+        return 'tmp/%s_%s.pkl' % (self.ticker, str(get_timestamp().date()))
 
     def on_load_finished(self, flag: bool) -> bool:
         if not flag:
@@ -120,7 +116,7 @@ class Example(QTabWidget):
         self.run_javascript(jscript)
 
     def print_content(self, content: str):
-        ts = self.get_timestamp()
+        ts = get_timestamp()
         if ts < self.time_open:
             # print('before market open')
             return
@@ -167,7 +163,7 @@ class Example(QTabWidget):
         print('timer started')
 
     def web_reload(self):
-        ts = self.get_timestamp()
+        ts = get_timestamp()
         if ts < self.time_open:
             # print('before market open')
             return

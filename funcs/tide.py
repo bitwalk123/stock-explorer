@@ -1,3 +1,4 @@
+import datetime
 import datetime as dt
 import re
 import time
@@ -146,6 +147,12 @@ def get_past_month_day(num: int) -> int:
     today = now - now % day1
     past_month_day = today - num * month
     return past_month_day
+
+
+def get_timestamp() -> pd.Timestamp:
+    dt_now = datetime.datetime.now()
+    return pd.to_datetime(dt_now)
+
 
 def get_ymd() -> (int, int, int):
     now = dt.datetime.now()
