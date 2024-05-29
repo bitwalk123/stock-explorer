@@ -159,6 +159,9 @@ class Example(QTabWidget):
             self.df.loc[price_time] = price_value
 
         print(price_time, price_value)
+
+        # _____________________________________________________________________
+        # Chart
         self.chart.clearAxes()
         df1 = self.df.loc[self.df.index[self.df.index < self.time_mid]]
         df2 = self.df.loc[self.df.index[self.df.index > self.time_mid]]
@@ -166,7 +169,8 @@ class Example(QTabWidget):
             self.chart.ax.plot(df1, c='C0')
         if len(df2) > 0:
             self.chart.ax.plot(df2, c='C0')
-        #self.chart.ax.set_xlim(self.chart.time_left, self.chart.time_right)
+        self.chart.ax.set_xlim(self.time_left, self.time_right)
+        self.chart.ax.grid()
         self.chart.refreshDraw()
 
     def run_javascript(self, jscript):
