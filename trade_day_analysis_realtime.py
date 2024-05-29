@@ -52,7 +52,7 @@ class Example(QTabWidget):
         tab2.setCentralWidget(chart)
 
         dt = datetime.datetime.today()
-        date_str= '%4d-%02d-%02d' % (dt.year, dt.month, dt.day)
+        date_str = '%4d-%02d-%02d' % (dt.year, dt.month, dt.day)
         self.time_left = pd.to_datetime(date_str + ' 08:50:00')
         self.time_mid = pd.to_datetime(date_str + ' 12:00:00')
         self.time_right = pd.to_datetime(date_str + ' 15:10:00')
@@ -163,14 +163,16 @@ class Example(QTabWidget):
         print(price_time, price_value)
 
         # _____________________________________________________________________
-        # Chart
+        # Update chart
         self.chart.clearAxes()
         df1 = self.df.loc[self.df.index[self.df.index < self.time_mid]]
         df2 = self.df.loc[self.df.index[self.df.index > self.time_mid]]
+
         if len(df1) > 0:
             self.chart.ax.plot(df1, c='C0')
         if len(df2) > 0:
             self.chart.ax.plot(df2, c='C0')
+
         self.chart.ax.set_xlim(self.time_left, self.time_right)
         self.chart.ax.grid()
         self.chart.refreshDraw()
