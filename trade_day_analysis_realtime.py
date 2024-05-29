@@ -136,8 +136,8 @@ class Example(QTabWidget):
 
         if content == self.content_prev:
             return
-
         self.content_prev = content
+
         m = self.pattern_price.match(content)
         if not m:
             print('*** no match ***')
@@ -173,6 +173,10 @@ class Example(QTabWidget):
         if len(df2) > 0:
             self.chart.ax.plot(df2, c='C0')
 
+        if len(self.df) > 0:
+            df0 = self.df.tail(1)
+            self.chart.ax.plot(df0, c='C1', marker='o')
+
         self.chart.ax.set_xlim(self.time_left, self.time_right)
         self.chart.ax.grid()
         self.chart.refreshDraw()
@@ -187,7 +191,7 @@ class Example(QTabWidget):
 
     def timer_start(self):
         self.timer.timeout.connect(self.web_reload)
-        self.timer.start(10000)
+        self.timer.start(6000)
         print('timer started')
 
     def web_reload(self):
