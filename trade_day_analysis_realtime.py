@@ -56,7 +56,9 @@ class Example(QTabWidget):
         self.time_left = pd.to_datetime(date_str + ' 08:50:00')
         self.time_mid = pd.to_datetime(date_str + ' 12:00:00')
         self.time_right = pd.to_datetime(date_str + ' 15:10:00')
+
         self.chart.ax.set_xlim(self.time_left, self.time_right)
+        self.chart.ax.grid()
 
         # _____________________________________________________________________
         self.resize(1300, 800)
