@@ -8,7 +8,7 @@ from ui.dock_items import DockItems
 from widgets.areas import ScrollAreaVertical, Container
 from widgets.buttons import TickerButton
 from widgets.labels import DockImgTitle
-from widgets.layouts import VBoxLayout, HBoxLayout
+from widgets.layouts import VBoxLayout
 from widgets.pads import VPad
 from widgets.tab_panels import TabPanelMain
 

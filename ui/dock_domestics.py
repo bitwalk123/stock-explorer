@@ -15,8 +15,7 @@ from widgets.areas import (
 )
 from widgets.buttons import TickerButton
 from widgets.labels import DockImgTitle
-from widgets.layouts import HBoxLayout, VBoxLayout
-from widgets.pads import VPad
+from widgets.layouts import VBoxLayout
 
 
 class DockDomesticTickers(DockItems):

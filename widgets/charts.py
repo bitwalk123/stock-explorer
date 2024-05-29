@@ -31,10 +31,9 @@ class Trend(ChartAbstract):
     def __init__(self, gtype='Candle'):
         super().__init__()
         self.ax = None
-        self.ax = None
         self.ax2 = None
 
-        if gtype=='Candle':
+        if gtype == 'Candle':
             self.initCandleStick()
         else:
             self.initTrend()
@@ -68,3 +67,26 @@ class Trend(ChartAbstract):
         for ax in axs:
             ax.remove()
         self.gtype = None
+
+
+class ChartRealtime(ChartAbstract):
+    def __init__(self):
+        super().__init__()
+        self.ax = None
+
+        self.initTrend()
+
+    def initTrend(self):
+        self.ax = self.fig.add_subplot(111)
+        self.ax.tick_params(axis='x', labelsize=12)
+
+    def clearAxes(self):
+        self.ax.cla()
+
+    def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()
