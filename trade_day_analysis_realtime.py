@@ -16,7 +16,7 @@ from snippets.web_login import get_login_info
 from widgets.charts import ChartRealtime
 
 
-class Example(QTabWidget):
+class TradeDayAnalysisRealtime(QTabWidget):
     url_login = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
 
     def __init__(self):
@@ -175,7 +175,13 @@ class Example(QTabWidget):
 
         if len(self.df) > 0:
             df0 = self.df.tail(1)
-            self.chart.ax.plot(df0, c='C1', marker='o')
+            self.chart.ax.plot(df0, c='red', marker='o', markersize=3)
+            self.chart.ax.annotate(
+                ' %s' % str1,
+                xy=(df0.index[0], df0.iloc[0, 0]),
+                size=9,
+                color='#800'
+            )
 
         self.chart.ax.set_xlim(self.time_left, self.time_right)
         self.chart.ax.grid()
@@ -220,7 +226,7 @@ class Example(QTabWidget):
 
 def main():
     app = QApplication()
-    ex = Example()
+    ex = TradeDayAnalysisRealtime()
     ex.show()
     sys.exit(app.exec())
 
