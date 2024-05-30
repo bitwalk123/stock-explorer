@@ -129,7 +129,7 @@ class BrowserTraiding(QMainWindow):
         page.titleChanged.connect(self.setWindowTitle)
         page.urlChanged.connect(self.url_changed)
 
-        self.resize(1300, 1000)
+        self.resize(1305, 1000)
 
     def back(self):
         page: QWebEnginePage = self.view.page()
