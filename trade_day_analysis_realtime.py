@@ -142,7 +142,6 @@ class TradeDayAnalysisRealtime(QTabWidget):
         if not m:
             print('*** no match ***')
             return
-
         str1 = m.group(1)
         str2 = m.group(2)
 
@@ -161,31 +160,9 @@ class TradeDayAnalysisRealtime(QTabWidget):
             self.df.loc[price_time] = price_value
 
         print(price_time, price_value)
-
         # _____________________________________________________________________
         # Update chart
-        self.chart.clearAxes()
-        df1 = self.df.loc[self.df.index[self.df.index < self.time_mid]]
-        df2 = self.df.loc[self.df.index[self.df.index > self.time_mid]]
-
-        if len(df1) > 0:
-            self.chart.ax.plot(df1, c='C0')
-        if len(df2) > 0:
-            self.chart.ax.plot(df2, c='C0')
-
-        if len(self.df) > 0:
-            df0 = self.df.tail(1)
-            self.chart.ax.plot(df0, marker='o', markersize=3, c='#f00')
-            self.chart.ax.annotate(
-                ' %s' % str1,
-                xy=(df0.index[0], df0.iloc[0, 0]),
-                size=9,
-                color='#800'
-            )
-
-        self.chart.ax.set_xlim(self.time_left, self.time_right)
-        self.chart.ax.grid()
-        self.chart.refreshDraw()
+        self.update_chart(str1)
 
     def run_javascript(self, jscript):
         page: QWebEnginePage = self.browser.page()
@@ -199,6 +176,29 @@ class TradeDayAnalysisRealtime(QTabWidget):
         self.timer.timeout.connect(self.web_reload)
         self.timer.start(6000)
         print('timer started')
+
+    def update_chart(self, price_str: str):
+        self.chart.clearAxes()
+        df1 = self.df.loc[self.df.index[self.df.index < self.time_mid]]
+        df2 = self.df.loc[self.df.index[self.df.index > self.time_mid]]
+
+        if len(df1) > 0:
+            self.chart.ax.plot(df1, c='C0')
+        if len(df2) > 0:
+            self.chart.ax.plot(df2, c='C0')
+        if len(self.df) > 0:
+            df0 = self.df.tail(1)
+            self.chart.ax.plot(df0, marker='o', markersize=3, c='#f00')
+            self.chart.ax.annotate(
+                ' %s' % price_str,
+                xy=(df0.index[0], df0.iloc[0, 0]),
+                size=9,
+                color='#800'
+            )
+
+        self.chart.ax.set_xlim(self.time_left, self.time_right)
+        self.chart.ax.grid()
+        self.chart.refreshDraw()
 
     def web_reload(self):
         ts = get_timestamp()
