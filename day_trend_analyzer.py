@@ -47,6 +47,22 @@ class DayTrendAnalyzer(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
+    def draw_chart(self, x, y, xs, ys):
+        chart: QWidget | ChartForAnalysis = self.centralWidget()
+        chart.clearAxes()
+        chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+        chart.ax.set_xlabel('Tokyo Market Open [sec]')
+        chart.ax.set_ylabel('Standardized Price')
+        chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
+        chart.ax.set_ylim(-4, 4)
+
+        chart.ax.scatter(x, y, s=2, c='gray')
+        chart.ax.plot(xs, ys, lw=1, c='C1')
+
+        chart.ax.grid()
+        # chart.ax.legend(loc='best')
+        chart.refreshDraw()
+
     def on_open(self):
         dialog = QFileDialog()
         if dialog.exec():
@@ -75,30 +91,17 @@ class DayTrendAnalyzer(QMainWindow):
         x = df0.index
         y = stats.zscore(df0['Price'])
 
+        # _____________________________________________________________________
+        # Smoothing Spline
         t_start_0 = 0
         t_end_0 = 18000
-        t_interval_0 = 30
+        t_interval_0 = 1
 
-        spl = make_smoothing_spline(x, y)
+        spl = make_smoothing_spline(x, y, lam=1)
         xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
+        ys = spl(xs)
 
-        chart: QWidget | ChartForAnalysis = self.centralWidget()
-        chart.clearAxes()
-
-        chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-
-        chart.ax.set_xlabel('Tokyo Market Open [sec]')
-        chart.ax.set_ylabel('Standardized Price')
-
-        chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
-        chart.ax.set_ylim(-4, 4)
-
-        # chart.ax.scatter(x, y, s=1, c='gray')
-        chart.ax.plot(xs, spl(xs), lw=1)
-        chart.ax.grid()
-        # chart.ax.legend(loc='best')
-
-        chart.refreshDraw()
+        self.draw_chart(x, y, xs, ys)
 
 
 def main():
