@@ -9,7 +9,11 @@ import sys
 from PySide6.QtCore import QUrl, QTimer
 from PySide6.QtWebEngineCore import QWebEnginePage
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QApplication, QMainWindow, QTabWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QTabWidget,
+)
 
 from funcs.tide import get_timestamp
 from snippets.web_login import get_login_info

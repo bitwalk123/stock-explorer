@@ -90,3 +90,25 @@ class ChartRealtime(ChartAbstract):
         axs = self.fig.axes
         for ax in axs:
             ax.remove()
+
+
+class ChartForAnalysis(ChartAbstract):
+    def __init__(self):
+        super().__init__()
+        self.ax = None
+
+        self.initTrend()
+
+    def initTrend(self):
+        self.ax = self.fig.add_subplot(111)
+
+    def clearAxes(self):
+        self.ax.cla()
+
+    def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()
