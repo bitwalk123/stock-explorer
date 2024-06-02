@@ -94,9 +94,10 @@ class DayTrendAnalyzer(QMainWindow):
         p_rt = re.compile(r'.+/(.{4})_(\d{4}-\d{2}-\d{2})\.pkl$')
         m = p_rt.match(filename)
         if m:
+            dtatype = DTAType.REALTIME
             ticker = m.group(1)
             date_str = m.group(2)
-            dtaobj = DTAObj(DTAType.REALTIME, ticker, date_str, df)
+            dtaobj = DTAObj(dtatype, ticker, date_str, df)
             self.list_dtaobj.append(dtaobj)
 
 
