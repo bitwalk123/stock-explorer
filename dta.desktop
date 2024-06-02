@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=DTA
+Comment=DTA
+Keywords=trading;
+Keywords[ja]=trading;株式;取引;
+Exec=/home/bitwalk/MyProjects/stock-explorer/dta.sh
+Icon=/home/bitwalk/MyProjects/stock-explorer/images/trends.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;

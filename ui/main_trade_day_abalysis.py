@@ -37,6 +37,9 @@ class MainTradeDayAnalysis(QMainWindow):
         self.toolbar = None
         self.dock_bottom = None
 
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'trend.png'))
+        self.setWindowIcon(icon)
         self.setWindowTitle('Day Trade Analysis')
         self.resize(1200, 700)
 

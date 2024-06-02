@@ -3,9 +3,7 @@ import re
 import sys
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
 from PySide6.QtGui import QIcon
-from scipy.interpolate import make_smoothing_spline
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -31,7 +29,7 @@ class DayTrendAnalyzer(QMainWindow):
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
         self.setWindowIcon(icon)
-        self.setWindowTitle('DayTrendAnalyzer')
+        self.setWindowTitle('DTA, DayTrendAnalyzer')
         self.setMinimumSize(1000, 600)
 
         # _____________________________________________________________________
