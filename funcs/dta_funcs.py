@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats as stats
 from scipy.interpolate import make_smoothing_spline
+from sklearn.preprocessing import robust_scale
 
 
 def dta_get_ref_times(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp]:
@@ -61,7 +62,8 @@ def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
     df0 = pd.concat([df11, df21])
 
     array_x = np.array([x for x in df0.index])
-    array_y = np.array([y for y in stats.zscore(df0['Price'])])
+    #array_y = np.array([y for y in stats.zscore(df0['Price'])])
+    array_y = np.array([y for y in robust_scale(df0['Price'])])
 
     return array_x, array_y
 

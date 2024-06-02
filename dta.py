@@ -65,7 +65,7 @@ class DayTrendAnalyzer(QMainWindow):
 
         chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
         chart.ax.set_xlabel('Tokyo Market Open [sec]')
-        chart.ax.set_ylabel('Standardized Price')
+        chart.ax.set_ylabel('Scaled Price')
         chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
         chart.ax.set_ylim(-4, 4)
 
