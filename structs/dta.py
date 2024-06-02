@@ -25,8 +25,8 @@ class DTAObj:
         self.date_str = date_str
         self.df = df
 
-        self.array_x = np.array(list())
-        self.array_y = np.array(list())
+        self.array_x = np.empty(0)
+        self.array_y = np.empty(0)
 
         if dtatype == DTAType.REALTIME:
             self.array_x, self.array_y = dta_prep_realtime(self.date_str, self.df)

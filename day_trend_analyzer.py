@@ -33,6 +33,7 @@ class DayTrendAnalyzer(QMainWindow):
         toolbar = DTAToolBar()
         toolbar.clickedOpen.connect(self.on_open)
         toolbar.clickedPlot.connect(self.on_plot)
+        toolbar.clickedClear.connect(self.on_clear)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
 
         # _____________________________________________________________________
@@ -49,6 +50,10 @@ class DayTrendAnalyzer(QMainWindow):
         # StatusBar
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
+
+    def on_clear(self):
+        self.list_dtaobj = list()
+        self.on_plot()
 
     def on_plot(self):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
@@ -71,7 +76,9 @@ class DayTrendAnalyzer(QMainWindow):
             chart.ax.plot(xs, ys, lw=1, label=date_str)
 
         chart.ax.grid()
-        chart.ax.legend(loc='best')
+        if len(self.list_dtaobj) > 0:
+            chart.ax.legend(loc='best')
+
         chart.refreshDraw()
 
     def on_open(self):
