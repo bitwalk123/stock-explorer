@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Day Analysis
-Comment=Day Analysis
+Name=News
+Comment=News
 Keywords=trading;
 Keywords[ja]=trading;株式;取引;
 Exec=/home/bitwalk/MyProjects/stock-explorer/news.sh
