@@ -95,11 +95,19 @@ class ChartRealtime(ChartAbstract):
 class ChartForAnalysis(ChartAbstract):
     def __init__(self):
         super().__init__()
+        plt.rcParams['font.size'] = 12
+        plt.rcParams['legend.fontsize'] = 8
         self.ax = None
 
         self.initTrend()
 
     def initTrend(self):
+        self.fig.subplots_adjust(
+            top=0.98,
+            bottom=0.1,
+            left=0.07,
+            right=0.995
+        )
         self.ax = self.fig.add_subplot(111)
 
     def clearAxes(self):

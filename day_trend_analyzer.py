@@ -1,8 +1,10 @@
+import os
 import re
 import sys
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
+from PySide6.QtGui import QIcon
 from scipy.interpolate import make_smoothing_spline
 
 from PySide6.QtCore import Qt
@@ -17,6 +19,7 @@ from PySide6.QtWidgets import (
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from structs.dta import DTAObj, DTAType
+from structs.res import AppRes
 from ui.toolbar_dta import DTAToolBar
 from widgets.charts import ChartForAnalysis
 
@@ -25,8 +28,11 @@ class DayTrendAnalyzer(QMainWindow):
     def __init__(self):
         super().__init__()
         self.list_dtaobj = list()
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
+        self.setWindowIcon(icon)
         self.setWindowTitle('DayTrendAnalyzer')
-        self.setMinimumSize(1000, 400)
+        self.setMinimumSize(1000, 600)
 
         # _____________________________________________________________________
         # Toolbar
@@ -66,15 +72,14 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax.set_ylim(-4, 4)
 
         for dtaobj in self.list_dtaobj:
+            ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
-            """
+            legend_str = '%s : %s' % (ticker, date_str)
             x = dtaobj.getX()
             y = dtaobj.getY()
-            #chart.ax.scatter(x, y, s=2, c='gray', label=date_str)
-            chart.ax.scatter(x, y, s=2, label=date_str)
-            """
+            chart.ax.scatter(x, y, s=2, c='gray')
             xs, ys = dtaobj.getSmoothingSpline()
-            chart.ax.plot(xs, ys, lw=1, label=date_str)
+            chart.ax.plot(xs, ys, lw=1, label=legend_str)
 
         chart.ax.grid()
         if len(self.list_dtaobj) > 0:
