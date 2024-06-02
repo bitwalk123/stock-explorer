@@ -70,7 +70,8 @@ class DayTrendAnalyzer(QMainWindow):
             """
             x = dtaobj.getX()
             y = dtaobj.getY()
-            chart.ax.scatter(x, y, s=2, c='gray')
+            #chart.ax.scatter(x, y, s=2, c='gray', label=date_str)
+            chart.ax.scatter(x, y, s=2, label=date_str)
             """
             xs, ys = dtaobj.getSmoothingSpline()
             chart.ax.plot(xs, ys, lw=1, label=date_str)
@@ -99,6 +100,18 @@ class DayTrendAnalyzer(QMainWindow):
             date_str = m.group(2)
             dtaobj = DTAObj(dtatype, ticker, date_str, df)
             self.list_dtaobj.append(dtaobj)
+            return
+        # _____________________________________________________________________
+        # check if filename is for candle in 1 minute
+        p_c1m = re.compile(r'.*/(.+)_(\d{4}-\d{2}-\d{2})_\d{4}-\d{2}-\d{2}_1m\.pkl')
+        m = p_c1m.match(filename)
+        if m:
+            dtatype = DTAType.CANDLE1M
+            ticker = m.group(1)
+            date_str = m.group(2)
+            dtaobj = DTAObj(dtatype, ticker, date_str, df)
+            self.list_dtaobj.append(dtaobj)
+            return
 
 
 def main():

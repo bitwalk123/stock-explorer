@@ -3,7 +3,11 @@ from enum import Enum
 import numpy as np
 import pandas as pd
 
-from funcs.dta_funcs import dta_prep_realtime, dta_smoothing_spline
+from funcs.dta_funcs import (
+    dta_prep_candle1m,
+    dta_prep_realtime,
+    dta_smoothing_spline,
+)
 
 
 class DTAType(Enum):
@@ -30,6 +34,8 @@ class DTAObj:
 
         if dtatype == DTAType.REALTIME:
             self.array_x, self.array_y = dta_prep_realtime(self.date_str, self.df)
+        elif dtatype == DTAType.CANDLE1M:
+            self.array_x, self.array_y = dta_prep_candle1m(self.date_str, self.df)
 
     def getDataFrame(self) -> pd.DataFrame:
         return self.df

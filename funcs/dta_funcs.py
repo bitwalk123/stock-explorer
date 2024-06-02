@@ -6,26 +6,57 @@ from scipy.interpolate import make_smoothing_spline
 
 def dta_get_ref_times(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp]:
     # for morning session
-    t_origin_1 = pd.to_datetime(date_str + ' 09:00:00')
+    t1 = pd.to_datetime(date_str + ' 09:00:00')
     # for afternoon session
-    t_origin_2 = pd.to_datetime(date_str + ' 10:00:00')
+    t2 = pd.to_datetime(date_str + ' 10:00:00')
     # middle of lunchtime
-    t_origin_3 = pd.to_datetime(date_str + ' 12:00:00')
+    t3 = pd.to_datetime(date_str + ' 12:00:00')
 
-    return t_origin_1, t_origin_2, t_origin_3
+    return t1, t2, t3
+
+
+def dta_get_ref_times_JST(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp, pd.Timestamp]:
+    # for morning session
+    t1_origin = pd.to_datetime(date_str + ' 09:00:00+09:00')
+    t1_end = pd.to_datetime(date_str + ' 11:30:00+09:00')
+    # for afternoon session
+    t2_origin = pd.to_datetime(date_str + ' 09:59:00+09:00')
+    t2_start = pd.to_datetime(date_str + ' 12:30:00+09:00')
+
+    return t1_origin, t1_end, t2_origin, t2_start
+
+
+def dta_prep_candle1m(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.array]:
+    t1_origin, t1_end, t2_origin, t2_start = dta_get_ref_times_JST(date_str)
+
+    df1 = df.loc[df.index[df.index <= t1_end]]
+    df2 = df.loc[df.index[df.index >= t2_start]]
+
+    df11 = df1.copy()
+    df11.index = [(t - t1_origin).total_seconds() for t in df1.index]
+
+    df21 = df2.copy()
+    df21.index = [(t - t2_origin).total_seconds() for t in df2.index]
+
+    df0 = pd.concat([df11, df21])
+
+    array_x = np.array([x for x in df0.index])
+    array_y = np.array([y for y in stats.zscore(df0['Close'])])
+
+    return array_x, array_y
 
 
 def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.array]:
-    t_start_1, t_start_2, t_mid = dta_get_ref_times(date_str)
+    t1, t2, t_mid = dta_get_ref_times(date_str)
 
     df1 = df.loc[df.index[df.index < t_mid]]
     df2 = df.loc[df.index[df.index > t_mid]]
 
     df11 = df1.copy()
-    df11.index = [(t - t_start_1).total_seconds() for t in df1.index]
+    df11.index = [(t - t1).total_seconds() for t in df1.index]
 
     df21 = df2.copy()
-    df21.index = [(t - t_start_2).total_seconds() for t in df2.index]
+    df21.index = [(t - t2).total_seconds() for t in df2.index]
 
     df0 = pd.concat([df11, df21])
 
