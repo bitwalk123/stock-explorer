@@ -1,6 +1,9 @@
 from enum import Enum
 
+import numpy as np
 import pandas as pd
+
+from funcs.dta_funcs import dta_prep_realtime, dta_smoothing_spline
 
 
 class DTAType(Enum):
@@ -22,6 +25,12 @@ class DTAObj:
         self.date_str = date_str
         self.df = df
 
+        self.array_x = np.array(list())
+        self.array_y = np.array(list())
+
+        if dtatype == DTAType.REALTIME:
+            self.array_x, self.array_y = dta_prep_realtime(self.date_str, self.df)
+
     def getDataFrame(self) -> pd.DataFrame:
         return self.df
 
@@ -33,3 +42,12 @@ class DTAObj:
 
     def getTicker(self) -> str:
         return self.ticker
+
+    def getSmoothingSpline(self) -> tuple[np.ndarray, np.ndarray]:
+        return dta_smoothing_spline(self.array_x, self.array_y)
+
+    def getX(self) -> np.ndarray:
+        return self.array_x
+
+    def getY(self) -> np.ndarray:
+        return self.array_y
