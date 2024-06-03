@@ -192,7 +192,7 @@ class TradeDayAnalysisRealtime(QTabWidget):
             self.chart.ax.plot(df2, c='C0')
         if len(self.df) > 0:
             df0 = self.df.tail(1)
-            self.chart.ax.plot(df0, marker='o', markersize=3, c='#f00')
+            self.chart.ax.plot(df0, marker='o', markersize=3, lw=1, c='#f00')
             self.chart.ax.annotate(
                 ' %s' % price_str,
                 xy=(df0.index[0], df0.iloc[0, 0]),
