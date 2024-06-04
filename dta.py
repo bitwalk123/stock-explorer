@@ -75,7 +75,7 @@ class DayTrendAnalyzer(QMainWindow):
             legend_str = '%s : %s' % (ticker, date_str)
             x = dtaobj.getX()
             y = dtaobj.getY()
-            chart.ax.scatter(x, y, s=2, c='gray')
+            chart.ax.scatter(x, y, s=1, c='black')
             xs, ys = dtaobj.getSmoothingSpline()
             chart.ax.plot(xs, ys, lw=1, label=legend_str)
 
