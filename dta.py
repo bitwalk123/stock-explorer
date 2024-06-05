@@ -86,9 +86,6 @@ class DayTrendAnalyzer(QMainWindow):
         chart.refreshDraw()
 
     def on_open(self):
-        #dialog = QFileDialog()
-        #if dialog.exec():
-        #    filename = dialog.selectedFiles()[0]
         filenames, _ = QFileDialog.getOpenFileNames(
             None,
             'Select Day Trend Files',
