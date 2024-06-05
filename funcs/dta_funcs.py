@@ -62,7 +62,7 @@ def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
     df0 = pd.concat([df11, df21])
 
     array_x = np.array([x for x in df0.index])
-    #array_y = np.array([y for y in stats.zscore(df0['Price'])])
+    # array_y = np.array([y for y in stats.zscore(df0['Price'])])
     array_y = np.array([y for y in robust_scale(df0['Price'])])
 
     return array_x, array_y

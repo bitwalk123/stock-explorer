@@ -86,10 +86,19 @@ class DayTrendAnalyzer(QMainWindow):
         chart.refreshDraw()
 
     def on_open(self):
-        dialog = QFileDialog()
-        if dialog.exec():
-            filename = dialog.selectedFiles()[0]
-            self.preprocess(filename)
+        #dialog = QFileDialog()
+        #if dialog.exec():
+        #    filename = dialog.selectedFiles()[0]
+        filenames, _ = QFileDialog.getOpenFileNames(
+            None,
+            'Select Day Trend Files',
+            '',
+            'All Files (*);;Pickle Files (*.pkl)',
+        )
+        if filenames:
+            for filename in filenames:
+                self.preprocess(filename)
+                self.on_plot()
 
     def preprocess(self, filename: str):
         df = pd.read_pickle(filename)
@@ -101,8 +110,7 @@ class DayTrendAnalyzer(QMainWindow):
             dtatype = DTAType.REALTIME
             ticker = m.group(1)
             date_str = m.group(2)
-            dtaobj = DTAObj(dtatype, ticker, date_str, df)
-            self.list_dtaobj.append(dtaobj)
+            self.proprocess_append(dtatype, ticker, date_str, df)
             return
         # _____________________________________________________________________
         # check if filename is for candle in 1 minute
@@ -112,9 +120,13 @@ class DayTrendAnalyzer(QMainWindow):
             dtatype = DTAType.CANDLE1M
             ticker = m.group(1)
             date_str = m.group(2)
-            dtaobj = DTAObj(dtatype, ticker, date_str, df)
-            self.list_dtaobj.append(dtaobj)
+            self.proprocess_append(dtatype, ticker, date_str, df)
             return
+
+    def proprocess_append(self, dtatype, ticker, date_str, df):
+        dtaobj = DTAObj(dtatype, ticker, date_str, df)
+        self.list_dtaobj.append(dtaobj)
+        self.list_dtaobj.sort(key=lambda dtaobj: dtaobj.getDateStr())
 
 
 def main():
