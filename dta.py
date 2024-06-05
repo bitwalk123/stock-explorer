@@ -90,7 +90,7 @@ class DayTrendAnalyzer(QMainWindow):
             None,
             'Select Day Trend Files',
             '',
-            'All Files (*);;Pickle Files (*.pkl)',
+            'Pickle Files (*.pkl);;All Files (*)',
         )
         if filenames:
             for filename in filenames:
