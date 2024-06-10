@@ -59,7 +59,17 @@ def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
     df21 = df2.copy()
     df21.index = [(t - t2).total_seconds() for t in df2.index]
 
-    df0 = pd.concat([df11, df21])
+    # Sometimes, same timestamp exists such as 11:30, 15:30.
+    # Such duplicates are avoided here.
+    df3 = pd.concat([df11, df21])
+    dict_data = dict()
+    n = len(df3)
+    for idx in range(n):
+        series = df3.iloc[idx]
+        value = series.iloc[0]
+        key = series.name
+        dict_data[key] = value
+    df0 = pd.DataFrame({'Price': dict_data.values()}, index=list(dict_data.keys()))
 
     array_x = np.array([x for x in df0.index])
     # array_y = np.array([y for y in stats.zscore(df0['Price'])])

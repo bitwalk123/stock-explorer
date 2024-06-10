@@ -59,6 +59,18 @@ class DayTrendAnalyzer(QMainWindow):
         self.list_dtaobj = list()
         self.on_plot()
 
+    def on_open(self):
+        filenames, _ = QFileDialog.getOpenFileNames(
+            None,
+            'Select Day Trend Files',
+            '',
+            'Pickle Files (*.pkl);;All Files (*)',
+        )
+        if filenames:
+            for filename in filenames:
+                self.preprocess(filename)
+                self.on_plot()
+
     def on_plot(self):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
         chart.clearAxes()
@@ -84,18 +96,6 @@ class DayTrendAnalyzer(QMainWindow):
             chart.ax.legend(loc='best')
 
         chart.refreshDraw()
-
-    def on_open(self):
-        filenames, _ = QFileDialog.getOpenFileNames(
-            None,
-            'Select Day Trend Files',
-            '',
-            'Pickle Files (*.pkl);;All Files (*)',
-        )
-        if filenames:
-            for filename in filenames:
-                self.preprocess(filename)
-                self.on_plot()
 
     def preprocess(self, filename: str):
         df = pd.read_pickle(filename)
