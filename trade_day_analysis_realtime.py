@@ -65,7 +65,7 @@ class TradeDayAnalysisRealtime(QTabWidget):
         self.chart.ax.grid()
 
         # _____________________________________________________________________
-        self.resize(1300, 800)
+        self.resize(1350, 800)
 
     def get_pkl_fine(self) -> str:
         return 'tmp/%s_%s.pkl' % (self.ticker, str(get_timestamp().date()))
