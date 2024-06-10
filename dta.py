@@ -29,7 +29,7 @@ class DayTrendAnalyzer(QMainWindow):
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
         self.setWindowIcon(icon)
-        self.setWindowTitle('DTA, DayTrendAnalyzer')
+        self.setWindowTitle('Day Trend Analyzer, DTA')
         self.setMinimumSize(1000, 600)
 
         # _____________________________________________________________________
@@ -44,6 +44,7 @@ class DayTrendAnalyzer(QMainWindow):
         # Chart
         chart = ChartForAnalysis()
         self.setCentralWidget(chart)
+        self.on_plot()
 
         # _____________________________________________________________________
         # Navigation Toolbar at Bottom
@@ -75,8 +76,9 @@ class DayTrendAnalyzer(QMainWindow):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
         chart.clearAxes()
 
+        chart.ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-        chart.ax.set_xlabel('Tokyo Market Open [sec]')
+        chart.ax.set_xlabel('Tokyo Market Opening [sec]')
         chart.ax.set_ylabel('Scaled Price')
         chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
         chart.ax.set_ylim(-4, 4)
