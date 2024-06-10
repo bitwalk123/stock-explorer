@@ -1,5 +1,8 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QToolBar, QCheckBox
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QToolBar,
+)
 
 from widgets.buttons import ToolButton
 
