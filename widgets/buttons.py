@@ -2,7 +2,7 @@ import os
 import re
 
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QPushButton, QCheckBox, QSizePolicy
+from PySide6.QtWidgets import QPushButton, QCheckBox, QSizePolicy, QToolButton, QStyle
 
 from structs.res import AppRes
 
@@ -54,7 +54,6 @@ class TradingButton(QPushButton):
             self.setStyleSheet(self.cssShort())
         elif func == 'order':
             self.setStyleSheet(self.cssOrder())
-
 
     def getFunc(self, func: str) -> str:
         return self.func
@@ -175,6 +174,7 @@ class IndexButton(TickerButton):
     def getText(self):
         return self.iticker
 
+
 class LockButton(QPushButton):
     def __init__(self):
         super().__init__()
@@ -184,3 +184,16 @@ class LockButton(QPushButton):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         icon_lock = QIcon(os.path.join(res.getImagePath(), 'lock.png'))
         self.setIcon(icon_lock)
+
+
+class ToolButton(QToolButton):
+    def __init__(self, pixmap: str, tooltip: str):
+        super().__init__()
+        icon = self.get_pixmap_icon(pixmap)
+        self.setIcon(icon)
+        self.setToolTip(tooltip)
+
+    def get_pixmap_icon(self, name: str) -> QIcon:
+        pixmap_icon = getattr(QStyle.StandardPixmap, name)
+        icon = self.style().standardIcon(pixmap_icon)
+        return icon

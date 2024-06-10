@@ -1,51 +1,59 @@
 from PySide6.QtCore import Signal
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (
-    QStyle,
-    QToolBar,
-    QToolButton,
-)
+from PySide6.QtWidgets import QToolBar
+
+from widgets.buttons import ToolButton
 
 
 class DTAToolBar(QToolBar):
+    clickedBack = Signal()
     clickedClear = Signal()
+    clickedForward = Signal()
     clickedOpen = Signal()
     clickedPlot = Signal()
 
     def __init__(self):
         super().__init__()
 
-        but_open = QToolButton()
-        name = 'SP_DirIcon'
-        icon = self.get_pixmap_icon(name)
-        but_open.setIcon(icon)
-        but_open.setToolTip('Open file')
+        pixmap = 'SP_DirIcon'
+        tooltip = 'Open file'
+        but_open = ToolButton(pixmap, tooltip)
         but_open.clicked.connect(self.on_open)
         self.addWidget(but_open)
 
-        but_plot = QToolButton()
-        name = 'SP_MediaPlay'
-        icon = self.get_pixmap_icon(name)
-        but_plot.setIcon(icon)
-        but_plot.setToolTip('Plot data')
+        pixmap = 'SP_MediaPlay'
+        tooltip = 'Plot data'
+        but_plot = ToolButton(pixmap, tooltip)
         but_plot.clicked.connect(self.on_plot)
         self.addWidget(but_plot)
 
-        but_clear = QToolButton()
-        name = 'SP_DialogResetButton'
-        icon = self.get_pixmap_icon(name)
-        but_clear.setIcon(icon)
-        but_clear.setToolTip('Clear data')
+        pixmap = 'SP_DialogResetButton'
+        tooltip = 'Clear data'
+        but_clear = ToolButton(pixmap, tooltip)
         but_clear.clicked.connect(self.on_clear)
         self.addWidget(but_clear)
 
-    def get_pixmap_icon(self, name: str) -> QIcon:
-        pixmap_icon = getattr(QStyle.StandardPixmap, name)
-        icon = self.style().standardIcon(pixmap_icon)
-        return icon
+        self.addSeparator()
+
+        pixmap = 'SP_ArrowBack'
+        tooltip = 'Previous data'
+        but_back = ToolButton(pixmap, tooltip)
+        but_back.clicked.connect(self.on_back)
+        self.addWidget(but_back)
+
+        pixmap = 'SP_ArrowForward'
+        tooltip = 'Next data'
+        but_forward = ToolButton(pixmap, tooltip)
+        but_forward.clicked.connect(self.on_forward)
+        self.addWidget(but_forward)
+
+    def on_back(self):
+        self.clickedBack.emit()
 
     def on_clear(self):
         self.clickedClear.emit()
+
+    def on_forward(self):
+        self.clickedForward.emit()
 
     def on_open(self):
         self.clickedOpen.emit()
