@@ -35,9 +35,11 @@ class DayTrendAnalyzer(QMainWindow):
         # _____________________________________________________________________
         # Toolbar
         toolbar = DTAToolBar()
+        toolbar.clickedBack.connect(self.on_back)
+        toolbar.clickedClear.connect(self.on_clear)
+        toolbar.clickedForward.connect(self.on_forward)
         toolbar.clickedOpen.connect(self.on_open)
         toolbar.clickedPlot.connect(self.on_plot)
-        toolbar.clickedClear.connect(self.on_clear)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
 
         # _____________________________________________________________________
@@ -56,9 +58,15 @@ class DayTrendAnalyzer(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
+    def on_back(self):
+        pass
+
     def on_clear(self):
         self.list_dtaobj = list()
         self.on_plot()
+
+    def on_forward(self):
+        pass
 
     def on_open(self):
         filenames, _ = QFileDialog.getOpenFileNames(

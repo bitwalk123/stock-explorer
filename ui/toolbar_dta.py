@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QToolBar
+from PySide6.QtWidgets import QToolBar, QCheckBox
 
 from widgets.buttons import ToolButton
 
@@ -31,6 +31,12 @@ class DTAToolBar(QToolBar):
         but_clear = ToolButton(pixmap, tooltip)
         but_clear.clicked.connect(self.on_clear)
         self.addWidget(but_clear)
+
+        self.addSeparator()
+
+        self.cb_robust = cb_robust = QCheckBox('Robust')
+        cb_robust.setChecked(True)
+        self.addWidget(cb_robust)
 
         self.addSeparator()
 
