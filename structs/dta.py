@@ -29,8 +29,8 @@ class DTAObj:
         self.date_str = date_str
         self.df = df
 
-        #self.array_x = np.empty(0)
-        #self.array_y = np.empty(0)
+        # self.array_x = np.empty(0)
+        # self.array_y = np.empty(0)
 
         if dtatype == DTAType.REALTIME:
             self.array_x, self.array_y = dta_prep_realtime(self.date_str, self.df)
@@ -49,16 +49,19 @@ class DTAObj:
     def getDTAType(self) -> DTAType:
         return self.dtatype
 
+    def getIQR(self) -> float:
+        return self.iqr
+
     def getTicker(self) -> str:
         return self.ticker
 
-    def getSmoothingSpline(self) -> tuple[np.ndarray, np.ndarray]:
+    def getSmoothingSpline(self, iqr:float) -> tuple[np.ndarray, np.ndarray]:
         t_start_0 = 0
         t_end_0 = 18000
         t_interval_0 = 1
         lam = 1
 
-        spl = make_smoothing_spline(self.array_x, self.getYScaleed(), lam=lam)
+        spl = make_smoothing_spline(self.array_x, self.getYScaleed(iqr), lam=lam)
         array_xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         array_ys = spl(array_xs)
 
@@ -67,8 +70,10 @@ class DTAObj:
     def getX(self) -> np.ndarray:
         return self.array_x
 
-    def getY(self) -> np.ndarray:
-        return self.getYScaleed()
+    def getY(self, iqr:float) -> np.ndarray:
+        return self.getYScaleed(iqr)
 
-    def getYScaleed(self):
-        return np.array([(y - self.y_median) / self.iqr for y in self.array_y])
+    def getYScaleed(self, iqr:float):
+        if iqr == 0:
+            iqr = self.iqr
+        return np.array([(y - self.y_median) / iqr for y in self.array_y])

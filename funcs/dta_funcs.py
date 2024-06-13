@@ -42,7 +42,7 @@ def dta_prep_candle1m(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
     df0 = pd.concat([df11, df21])
 
     array_x = np.array([x for x in df0.index])
-    array_y = np.array([y for y in stats.zscore(df0['Close'])])
+    array_y = np.array(df0['Close'])
 
     return array_x, array_y
 
@@ -69,7 +69,11 @@ def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
         value = series.iloc[0]
         key = series.name
         dict_data[key] = value
-    df0 = pd.DataFrame({'Price': dict_data.values()}, index=list(dict_data.keys()))
+
+    df0 = pd.DataFrame(
+        {'Price': dict_data.values()},
+        index=list(dict_data.keys())
+    )
 
     array_x = np.array([x for x in df0.index])
     array_y = np.array(df0['Price'])

@@ -76,9 +76,11 @@ class DayTrendAnalyzer(QMainWindow):
             'Pickle Files (*.pkl);;All Files (*)',
         )
         if filenames:
+            # add object
             for filename in filenames:
                 self.preprocess(filename)
-                self.on_plot()
+            # plot chart
+            self.on_plot()
 
     def on_plot(self):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
@@ -91,14 +93,22 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
         chart.ax.set_ylim(-4, 4)
 
+        if len(self.list_dtaobj) > 0:
+            dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getIQR())
+            iqr_max = dtaobj_max.getIQR()
+        else:
+            iqr_max = 0
+
+        print('IQR(max)', iqr_max)
+
         for dtaobj in self.list_dtaobj:
             ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
             legend_str = '%s : %s' % (ticker, date_str)
             x = dtaobj.getX()
-            y = dtaobj.getY()
+            y = dtaobj.getY(iqr_max)
             chart.ax.scatter(x, y, s=1, c='black')
-            xs, ys = dtaobj.getSmoothingSpline()
+            xs, ys = dtaobj.getSmoothingSpline(iqr_max)
             chart.ax.plot(xs, ys, lw=1, label=legend_str)
 
         chart.ax.grid()
