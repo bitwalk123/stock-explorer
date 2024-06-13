@@ -99,7 +99,7 @@ class DayTrendAnalyzer(QMainWindow):
         else:
             iqr_max = 0
 
-        print('IQR(max)', iqr_max)
+        # print('IQR(max)', iqr_max)
 
         for dtaobj in self.list_dtaobj:
             ticker = dtaobj.getTicker()
@@ -114,6 +114,13 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax.grid()
         if len(self.list_dtaobj) > 0:
             chart.ax.legend(loc='best')
+            obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
+            obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
+            y_min = obj_min.getYMin()
+            y_max = obj_max.getYMax()
+            y_pad = (y_max - y_min) * 0.025
+            chart.ax.set_ylim(y_min - y_pad, y_max + y_pad)
+            # print(obj_min.getYMin(), obj_max.getYMax())
 
         chart.refreshDraw()
 
