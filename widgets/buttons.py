@@ -197,3 +197,12 @@ class ToolButton(QToolButton):
         pixmap_icon = getattr(QStyle.StandardPixmap, name)
         icon = self.style().standardIcon(pixmap_icon)
         return icon
+
+
+class ToolButtonIcon(QToolButton):
+    def __init__(self, name_icon: str, tooltip: str):
+        super().__init__()
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), name_icon))
+        self.setIcon(icon)
+        self.setToolTip(tooltip)

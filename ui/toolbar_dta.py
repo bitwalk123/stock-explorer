@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QToolBar,
 )
 
-from widgets.buttons import ToolButton
+from widgets.buttons import ToolButton, ToolButtonIcon
 
 
 class DTAToolBar(QToolBar):
@@ -16,6 +16,7 @@ class DTAToolBar(QToolBar):
 
     def __init__(self):
         super().__init__()
+        #res = AppRes()
 
         pixmap = 'SP_DirIcon'
         tooltip = 'Open file'
@@ -29,9 +30,13 @@ class DTAToolBar(QToolBar):
         but_plot.clicked.connect(self.on_plot)
         self.addWidget(but_plot)
 
-        pixmap = 'SP_DialogResetButton'
+        # pixmap = 'SP_DialogResetButton'
+        name_icon = 'eraser.png'
         tooltip = 'Clear data'
-        but_clear = ToolButton(pixmap, tooltip)
+        # but_clear = ToolButton(pixmap, tooltip)
+        but_clear = ToolButtonIcon(name_icon, tooltip)
+        # but_clear.setIcon(icon)
+        # but_clear.setToolTip(tooltip)
         but_clear.clicked.connect(self.on_clear)
         self.addWidget(but_clear)
 
