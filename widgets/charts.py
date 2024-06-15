@@ -96,6 +96,8 @@ class ChartForAnalysis(ChartAbstract):
     def __init__(self):
         super().__init__()
         plt.rcParams['font.size'] = 12
+        plt.rcParams['xtick.labelsize']=10
+        plt.rcParams['ytick.labelsize']=9
         plt.rcParams['legend.fontsize'] = 8
         self.ax1 = None
         self.ax2 = None
@@ -116,7 +118,9 @@ class ChartForAnalysis(ChartAbstract):
         self.ax3 = self.fig.add_subplot(4, 1, 4)  # 4x3の4つめ
 
     def clearAxes(self):
-        self.ax1.cla()
+        axs = self.fig.axes
+        for ax in axs:
+            ax.cla()
 
     def refreshDraw(self):
         self.fig.canvas.draw()

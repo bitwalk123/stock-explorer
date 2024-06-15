@@ -3,6 +3,7 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
+from scipy import interpolate
 from scipy.interpolate import make_smoothing_spline
 
 from funcs.dta_funcs import (
@@ -58,7 +59,7 @@ class DTAObj:
     def getTicker(self) -> str:
         return self.ticker
 
-    def getSmoothingSpline(self, iqr: float) -> tuple[np.ndarray, np.ndarray]:
+    def getSmoothingSpline(self, iqr: float) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         t_start_0 = 0
         t_end_0 = 18000
         t_interval_0 = 1
@@ -68,7 +69,10 @@ class DTAObj:
         array_xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         array_ys = spl(array_xs)
 
-        return array_xs, array_ys
+        array_dy1s = interpolate.splev(array_xs, spl, der=1)
+        array_dy2s = interpolate.splev(array_xs, spl, der=2)
+
+        return array_xs, array_ys, array_dy1s, array_dy2s
 
     def getX(self) -> np.ndarray:
         return self.array_x
