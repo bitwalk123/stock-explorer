@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import numpy as np
 import pandas as pd
 from PySide6.QtGui import QIcon
 
@@ -14,12 +13,13 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+#import matplotlib as mpl
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
 from ui.toolbar_dta import DTAToolBar
-from widgets.charts import ChartForAnalysis
+from widgets.charts import ChartForAnalysis, yaxis_fraction
 
 
 class DayTrendAnalyzer(QMainWindow):
@@ -89,16 +89,20 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax3.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+
         chart.ax1.axvline(x=9000, linestyle='dotted', lw=1, c='red')
         chart.ax2.axvline(x=9000, linestyle='dotted', lw=1, c='red')
         chart.ax3.axvline(x=9000, linestyle='dotted', lw=1, c='red')
 
         chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
-        chart.ax1.set_ylabel('Scaled Price')
 
-        chart.ax1.xaxis.set_ticks(np.arange(0, 18001, 1800))
-        chart.ax2.xaxis.set_ticks(np.arange(0, 18001, 1800))
-        chart.ax3.xaxis.set_ticks(np.arange(0, 18001, 1800))
+        chart.ax1.set_ylabel('Scaled Price')
+        chart.ax2.set_ylabel('$dy$')
+        chart.ax3.set_ylabel('$dy^2$')
+
+        #chart.ax1.xaxis.set_ticks(np.arange(0, 18001, 900))
+        #chart.ax2.xaxis.set_ticks(np.arange(0, 18001, 900))
+        #chart.ax3.xaxis.set_ticks(np.arange(0, 18001, 900))
 
         chart.ax1.set_ylim(-4, 4)
 
@@ -113,14 +117,16 @@ class DayTrendAnalyzer(QMainWindow):
             y = dtaobj.getY(iqr_max)
             chart.ax1.scatter(x, y, s=1, c='black')
 
-            ticker = dtaobj.getTicker()
+            stock_ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
-            legend_str = '%s : %s' % (ticker, date_str)
+            legend_str = '%s : %s' % (stock_ticker, date_str)
 
             xs, ys, dy1s, dy2s = dtaobj.getSmoothingSpline(iqr_max)
             chart.ax1.plot(xs, ys, lw=1, label=legend_str)
             chart.ax2.plot(xs, dy1s, lw=1)
+            yaxis_fraction(chart.ax2)
             chart.ax3.plot(xs, dy2s, lw=1)
+            yaxis_fraction(chart.ax3)
 
         if len(self.list_dtaobj) > 0:
             chart.ax1.legend(loc='best')

@@ -1,10 +1,26 @@
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import ticker
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 FONT_PATH = 'fonts/GenShinGothic-Monospace-Regular.ttf'
+
+
+def yaxis_fraction(ax):
+    yfmt = ticker.ScalarFormatter(useMathText=True)
+    yfmt.set_powerlimits((3, 4))
+    ax.yaxis.set_major_formatter(yfmt)
+    ax.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+    ax.get_yaxis().get_offset_text().set_visible(False)
+    ax_max = max(ax.get_yticks())
+    exponent_axis = np.floor(np.log10(ax_max)).astype(int)
+    ax.annotate(
+        r'$\times$10$^{%i}$' % (exponent_axis),
+        xy=(0, .875),
+        xycoords='axes fraction', fontsize=9)
 
 
 class ChartAbstract(FigureCanvas):
@@ -96,9 +112,11 @@ class ChartForAnalysis(ChartAbstract):
     def __init__(self):
         super().__init__()
         plt.rcParams['font.size'] = 12
-        plt.rcParams['xtick.labelsize']=10
-        plt.rcParams['ytick.labelsize']=9
+        plt.rcParams['axes.labelsize'] = 10
+        plt.rcParams['xtick.labelsize'] = 10
+        plt.rcParams['ytick.labelsize'] = 9
         plt.rcParams['legend.fontsize'] = 8
+
         self.ax1 = None
         self.ax2 = None
         self.ax3 = None
@@ -113,9 +131,12 @@ class ChartForAnalysis(ChartAbstract):
             right=0.995,
             hspace=0,
         )
-        self.ax1 = self.fig.add_subplot(4, 1, (1, 2))  # 4x1の1つめと2つめ
-        self.ax2 = self.fig.add_subplot(4, 1, 3)  # 4x2の3つめ
-        self.ax3 = self.fig.add_subplot(4, 1, 4)  # 4x3の4つめ
+        self.ax1 = self.fig.add_subplot(5, 1, (1, 3))  # 5x1の1つめと2つめと3つめ
+        self.ax2 = self.fig.add_subplot(5, 1, 4)  # 5x2の4つめ
+        self.ax3 = self.fig.add_subplot(5, 1, 5)  # 5x3の5つめ
+
+        self.ax2.sharex(self.ax1)
+        self.ax3.sharex(self.ax1)
 
     def clearAxes(self):
         axs = self.fig.axes
