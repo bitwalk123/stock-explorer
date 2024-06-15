@@ -111,9 +111,9 @@ class ChartForAnalysis(ChartAbstract):
             right=0.995,
             hspace=0,
         )
-        self.ax1 = self.fig.add_subplot(4, 1, (1, 2))  # 3x1の1つめ
-        self.ax2 = self.fig.add_subplot(4, 1, 3)  # 3x2の2つめ
-        self.ax3 = self.fig.add_subplot(4, 1, 4)  # 3x3の3つめ
+        self.ax1 = self.fig.add_subplot(4, 1, (1, 2))  # 4x1の1つめと2つめ
+        self.ax2 = self.fig.add_subplot(4, 1, 3)  # 4x2の3つめ
+        self.ax3 = self.fig.add_subplot(4, 1, 4)  # 4x3の4つめ
 
     def clearAxes(self):
         self.ax1.cla()
