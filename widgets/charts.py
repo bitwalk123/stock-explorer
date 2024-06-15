@@ -97,7 +97,9 @@ class ChartForAnalysis(ChartAbstract):
         super().__init__()
         plt.rcParams['font.size'] = 12
         plt.rcParams['legend.fontsize'] = 8
-        self.ax = None
+        self.ax1 = None
+        self.ax2 = None
+        self.ax3 = None
 
         self.initTrend()
 
@@ -106,12 +108,15 @@ class ChartForAnalysis(ChartAbstract):
             top=0.98,
             bottom=0.1,
             left=0.07,
-            right=0.995
+            right=0.995,
+            hspace=0,
         )
-        self.ax = self.fig.add_subplot(111)
+        self.ax1 = self.fig.add_subplot(311)  # 3x1の1つめ
+        self.ax2 = self.fig.add_subplot(312)  # 3x2の2つめ
+        self.ax3 = self.fig.add_subplot(313)  # 3x3の3つめ
 
     def clearAxes(self):
-        self.ax.cla()
+        self.ax1.cla()
 
     def refreshDraw(self):
         self.fig.canvas.draw()

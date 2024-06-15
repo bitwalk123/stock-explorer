@@ -80,7 +80,7 @@ class MainTradeDay(TabPanelMain):
     def add_previous_close(chart, info):
         close_prev = info.getPrevClose()
         if type(close_prev) is not None:
-            chart.ax.axhline(
+            chart.ax1.axhline(
                 y=close_prev,
                 color='r',
                 linewidth=1,

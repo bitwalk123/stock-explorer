@@ -30,7 +30,7 @@ class DayTrendAnalyzer(QMainWindow):
         icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Analyzer, DTA')
-        self.setMinimumSize(1000, 600)
+        self.setMinimumSize(1000, 700)
 
         # _____________________________________________________________________
         # Toolbar
@@ -86,12 +86,12 @@ class DayTrendAnalyzer(QMainWindow):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
         chart.clearAxes()
 
-        chart.ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-        chart.ax.set_xlabel('Tokyo Market Opening [sec]')
-        chart.ax.set_ylabel('Scaled Price')
-        chart.ax.xaxis.set_ticks(np.arange(0, 18001, 1800))
-        chart.ax.set_ylim(-4, 4)
+        chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+        chart.ax1.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+        chart.ax1.set_xlabel('Tokyo Market Opening [sec]')
+        chart.ax1.set_ylabel('Scaled Price')
+        chart.ax1.xaxis.set_ticks(np.arange(0, 18001, 1800))
+        chart.ax1.set_ylim(-4, 4)
 
         if len(self.list_dtaobj) > 0:
             dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getIQR())
@@ -107,19 +107,19 @@ class DayTrendAnalyzer(QMainWindow):
             legend_str = '%s : %s' % (ticker, date_str)
             x = dtaobj.getX()
             y = dtaobj.getY(iqr_max)
-            chart.ax.scatter(x, y, s=1, c='black')
+            chart.ax1.scatter(x, y, s=1, c='black')
             xs, ys = dtaobj.getSmoothingSpline(iqr_max)
-            chart.ax.plot(xs, ys, lw=1, label=legend_str)
+            chart.ax1.plot(xs, ys, lw=1, label=legend_str)
 
-        chart.ax.grid()
+        chart.ax1.grid()
         if len(self.list_dtaobj) > 0:
-            chart.ax.legend(loc='best')
+            chart.ax1.legend(loc='best')
             obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
             obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
             y_min = obj_min.getYMin()
             y_max = obj_max.getYMax()
             y_pad = (y_max - y_min) * 0.025
-            chart.ax.set_ylim(y_min - y_pad, y_max + y_pad)
+            chart.ax1.set_ylim(y_min - y_pad, y_max + y_pad)
             # print(obj_min.getYMin(), obj_max.getYMax())
 
         chart.refreshDraw()
