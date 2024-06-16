@@ -12,9 +12,8 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QWidget,
 )
-from matplotlib.axes import Axes
 
-# import matplotlib as mpl
+from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from structs.dta import DTAObj, DTAType
@@ -59,7 +58,7 @@ class DayTrendAnalyzer(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
-    def get_ax1_ylim(self):
+    def get_ax1_ylim(self) -> tuple[float, float]:
         obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
         obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
 
