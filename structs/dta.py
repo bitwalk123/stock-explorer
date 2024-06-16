@@ -95,3 +95,31 @@ class DTAObj:
         self.y_min = np.min(y_array)
 
         return y_array
+
+    def getPlotData(self, iqr: float) -> dict:
+        if iqr == 0:
+            iqr = self.iqr
+
+        # X data
+        dist_data = dict()
+        dist_data['x'] = self.array_x
+
+        # Scaled Y data
+        y_scaked = np.array([(y - self.y_median) / iqr for y in self.array_y])
+        self.y_max = np.max(y_scaked)
+        self.y_min = np.min(y_scaked)
+        dist_data['y_scaled'] = y_scaked
+
+        # Smoothing Spline
+        t_start_0 = 0
+        t_end_0 = 18000
+        t_interval_0 = 1
+        lam = 1
+
+        spl = make_smoothing_spline(self.array_x, y_scaked, lam=lam)
+        dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
+        dist_data['ys'] = spl(xs)
+        dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
+        dist_data['dy2s'] = interpolate.splev(xs, spl, der=2)
+
+        return dist_data

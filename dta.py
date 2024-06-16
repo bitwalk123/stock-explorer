@@ -113,19 +113,23 @@ class DayTrendAnalyzer(QMainWindow):
             iqr_max = 0
 
         for dtaobj in self.list_dtaobj:
-            x = dtaobj.getX()
-            y = dtaobj.getY(iqr_max)
-            chart.ax1.scatter(x, y, s=1, c='black')
-
+            data = dtaobj.getPlotData(iqr_max)
+            # _________________________________________________________________
+            # Scaled
+            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='black')
             stock_ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
             legend_str = '%s : %s' % (stock_ticker, date_str)
-
-            xs, ys, dy1s, dy2s = dtaobj.getSmoothingSpline(iqr_max)
-            chart.ax1.plot(xs, ys, lw=1, label=legend_str)
-            chart.ax2.plot(xs, dy1s, lw=1)
+            # _________________________________________________________________
+            # Smoothing Spline
+            chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
+            # _________________________________________________________________
+            # 1st Derivatives
+            chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
             yaxis_fraction(chart.ax2)
-            chart.ax3.plot(xs, dy2s, lw=1)
+            # _________________________________________________________________
+            # 2nd Derivatives
+            chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
             yaxis_fraction(chart.ax3)
 
         if len(self.list_dtaobj) > 0:
