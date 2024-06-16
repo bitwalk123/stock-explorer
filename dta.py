@@ -12,8 +12,9 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QWidget,
 )
+from matplotlib.axes import Axes
 
-#import matplotlib as mpl
+# import matplotlib as mpl
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from structs.dta import DTAObj, DTAType
@@ -58,6 +59,24 @@ class DayTrendAnalyzer(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
+    def get_ax1_ylim(self):
+        obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
+        obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
+
+        y_min = obj_min.getYMin()
+        y_max = obj_max.getYMax()
+        y_pad = (y_max - y_min) * 0.025
+
+        ax1_ylim_min = y_min - y_pad
+        ax1_ylim_max = y_max + y_pad
+
+        return ax1_ylim_min, ax1_ylim_max
+
+    def get_iqr_max(self) -> float:
+        dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getIQR())
+        iqr_max = dtaobj_max.getIQR()
+        return iqr_max
+
     def on_back(self):
         pass
 
@@ -86,13 +105,9 @@ class DayTrendAnalyzer(QMainWindow):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
         chart.clearAxes()
 
-        chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        chart.ax3.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-
-        chart.ax1.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-        chart.ax2.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-        chart.ax3.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+        for ax in [chart.ax1, chart.ax2, chart.ax3]:
+            self.set_hvlines(ax)
+            ax.grid()
 
         chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
 
@@ -100,15 +115,10 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax2.set_ylabel('$dy$')
         chart.ax3.set_ylabel('$dy^2$')
 
-        #chart.ax1.xaxis.set_ticks(np.arange(0, 18001, 900))
-        #chart.ax2.xaxis.set_ticks(np.arange(0, 18001, 900))
-        #chart.ax3.xaxis.set_ticks(np.arange(0, 18001, 900))
-
         chart.ax1.set_ylim(-4, 4)
 
         if len(self.list_dtaobj) > 0:
-            dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getIQR())
-            iqr_max = dtaobj_max.getIQR()
+            iqr_max = self.get_iqr_max()
         else:
             iqr_max = 0
 
@@ -134,17 +144,13 @@ class DayTrendAnalyzer(QMainWindow):
 
         if len(self.list_dtaobj) > 0:
             chart.ax1.legend(loc='best')
-            obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
-            obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
-            y_min = obj_min.getYMin()
-            y_max = obj_max.getYMax()
-            y_pad = (y_max - y_min) * 0.025
-            chart.ax1.set_ylim(y_min - y_pad, y_max + y_pad)
+            chart.ax1.set_ylim(self.get_ax1_ylim())
 
-        chart.ax1.grid()
-        chart.ax2.grid()
-        chart.ax3.grid()
         chart.refreshDraw()
+
+    def set_hvlines(self, ax: Axes):
+        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
 
     def preprocess(self, filename: str):
         df = pd.read_pickle(filename)

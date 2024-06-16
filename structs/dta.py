@@ -59,42 +59,12 @@ class DTAObj:
     def getTicker(self) -> str:
         return self.ticker
 
-    def getSmoothingSpline(self, iqr: float) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        t_start_0 = 0
-        t_end_0 = 18000
-        t_interval_0 = 1
-        lam = 1
-
-        spl = make_smoothing_spline(self.array_x, self.getYScaleed(iqr), lam=lam)
-        array_xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
-        array_ys = spl(array_xs)
-
-        array_dy1s = interpolate.splev(array_xs, spl, der=1)
-        array_dy2s = interpolate.splev(array_xs, spl, der=2)
-
-        return array_xs, array_ys, array_dy1s, array_dy2s
-
-    def getX(self) -> np.ndarray:
-        return self.array_x
-
-    def getY(self, iqr: float) -> np.ndarray:
-        return self.getYScaleed(iqr)
-
     def getYMax(self) -> Union[float, None]:
         return self.y_max
 
     def getYMin(self) -> Union[float, None]:
         return self.y_min
 
-    def getYScaleed(self, iqr: float):
-        if iqr == 0:
-            iqr = self.iqr
-
-        y_array = np.array([(y - self.y_median) / iqr for y in self.array_y])
-        self.y_max = np.max(y_array)
-        self.y_min = np.min(y_array)
-
-        return y_array
 
     def getPlotData(self, iqr: float) -> dict:
         if iqr == 0:
@@ -105,10 +75,10 @@ class DTAObj:
         dist_data['x'] = self.array_x
 
         # Scaled Y data
-        y_scaked = np.array([(y - self.y_median) / iqr for y in self.array_y])
-        self.y_max = np.max(y_scaked)
-        self.y_min = np.min(y_scaked)
-        dist_data['y_scaled'] = y_scaked
+        y_scaled = np.array([(y - self.y_median) / iqr for y in self.array_y])
+        self.y_max = np.max(y_scaled)
+        self.y_min = np.min(y_scaled)
+        dist_data['y_scaled'] = y_scaled
 
         # Smoothing Spline
         t_start_0 = 0
@@ -116,7 +86,7 @@ class DTAObj:
         t_interval_0 = 1
         lam = 1
 
-        spl = make_smoothing_spline(self.array_x, y_scaked, lam=lam)
+        spl = make_smoothing_spline(self.array_x, y_scaled, lam=lam)
         dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         dist_data['ys'] = spl(xs)
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
