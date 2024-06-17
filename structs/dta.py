@@ -33,16 +33,13 @@ class DTAObj:
         self.y_max = None
         self.y_min = None
 
-        # self.array_x = np.empty(0)
-        # self.array_y = np.empty(0)
-
         if dtatype == DTAType.REALTIME:
-            self.array_x, self.array_y = dta_prep_realtime(self.date_str, self.df)
+            self.x_array, self.y_array = dta_prep_realtime(self.date_str, self.df)
         elif dtatype == DTAType.CANDLE1M:
-            self.array_x, self.array_y = dta_prep_candle1m(self.date_str, self.df)
+            self.x_array, self.y_array = dta_prep_candle1m(self.date_str, self.df)
 
-        self.y_median = np.median(self.array_y)
-        self.iqr = np.subtract(*np.percentile(self.array_y, [75, 25]))
+        self.y_median = np.median(self.y_array)
+        self.iqr = np.subtract(*np.percentile(self.y_array, [75, 25]))
 
     def getDataFrame(self) -> pd.DataFrame:
         return self.df
@@ -71,10 +68,10 @@ class DTAObj:
 
         # X data
         dist_data = dict()
-        dist_data['x'] = self.array_x
+        dist_data['x'] = self.x_array
 
         # Scaled Y data
-        y_scaled = np.array([(y - self.y_median) / iqr for y in self.array_y])
+        y_scaled = np.array([(y - self.y_median) / iqr for y in self.y_array])
         self.y_max = np.max(y_scaled)
         self.y_min = np.min(y_scaled)
         dist_data['y_scaled'] = y_scaled
@@ -87,7 +84,7 @@ class DTAObj:
 
         # lam : float, (:math:`\lambda \geq 0`)
         #             Regularization parameter.
-        spl = make_smoothing_spline(self.array_x, y_scaled, lam=lam)
+        spl = make_smoothing_spline(self.x_array, y_scaled, lam=lam)
         # spl = make_smoothing_spline(self.array_x, y_scaled)
         dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         dist_data['ys'] = spl(xs)
