@@ -83,7 +83,7 @@ class DTAObj:
         t_start_0 = 0
         t_end_0 = 18000
         t_interval_0 = 1
-        lam = 10 ** 6
+        lam = 10 ** 5
 
         # lam : float, (:math:`\lambda \geq 0`)
         #             Regularization parameter.

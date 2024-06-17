@@ -125,7 +125,7 @@ class DayTrendAnalyzer(QMainWindow):
             data = dtaobj.getPlotData(iqr_max)
             # _________________________________________________________________
             # Scaled
-            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='black')
+            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
             stock_ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
             legend_str = '%s : %s' % (stock_ticker, date_str)
