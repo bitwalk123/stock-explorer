@@ -83,12 +83,12 @@ class DTAObj:
         t_start_0 = 0
         t_end_0 = 18000
         t_interval_0 = 1
-        lam = 1
+        lam = 10**6
 
         # lam : float, (:math:`\lambda \geq 0`)
         #             Regularization parameter.
-        # spl = make_smoothing_spline(self.array_x, y_scaled, lam=lam)
-        spl = make_smoothing_spline(self.array_x, y_scaled)
+        spl = make_smoothing_spline(self.array_x, y_scaled, lam=lam)
+        #spl = make_smoothing_spline(self.array_x, y_scaled)
         dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         dist_data['ys'] = spl(xs)
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
