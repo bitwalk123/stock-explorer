@@ -34,7 +34,7 @@ class DayTrendAnalyzer(QMainWindow):
 
         # _____________________________________________________________________
         # Toolbar
-        toolbar = DTAToolBar()
+        self.toolbar = toolbar = DTAToolBar()
         toolbar.clickedBack.connect(self.on_back)
         toolbar.clickedClear.connect(self.on_clear)
         toolbar.clickedForward.connect(self.on_forward)
@@ -58,6 +58,9 @@ class DayTrendAnalyzer(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
+    def is_robust(self) -> bool:
+        return self.toolbar.isRobust()
+
     def get_ax1_ylim(self) -> tuple[float, float]:
         obj_min = min(self.list_dtaobj, key=lambda obj: obj.getYMin())
         obj_max = max(self.list_dtaobj, key=lambda obj: obj.getYMax())
@@ -75,6 +78,11 @@ class DayTrendAnalyzer(QMainWindow):
         dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getIQR())
         iqr_max = dtaobj_max.getIQR()
         return iqr_max
+
+    def get_std_max(self) -> float:
+        dtaobj_max: DTAObj = max(self.list_dtaobj, key=lambda obj: obj.getSTD())
+        std_max = dtaobj_max.getSTD()
+        return std_max
 
     def on_back(self):
         pass
@@ -117,12 +125,15 @@ class DayTrendAnalyzer(QMainWindow):
         chart.ax1.set_ylim(-4, 4)
 
         if len(self.list_dtaobj) > 0:
-            iqr_max = self.get_iqr_max()
+            if self.is_robust():
+                sigma_max = self.get_iqr_max()
+            else:
+                sigma_max = self.get_std_max()
         else:
-            iqr_max = 0
+            sigma_max = 0
 
         for dtaobj in self.list_dtaobj:
-            data = dtaobj.getPlotData(iqr_max)
+            data = dtaobj.getPlotData(sigma_max, robust=self.is_robust())
             # _________________________________________________________________
             # Scaled
             chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')

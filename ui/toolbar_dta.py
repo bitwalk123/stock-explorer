@@ -16,7 +16,7 @@ class DTAToolBar(QToolBar):
 
     def __init__(self):
         super().__init__()
-        #res = AppRes()
+        # res = AppRes()
 
         pixmap = 'SP_DirIcon'
         tooltip = 'Open file'
@@ -59,6 +59,9 @@ class DTAToolBar(QToolBar):
         but_forward = ToolButton(pixmap, tooltip)
         but_forward.clicked.connect(self.on_forward)
         self.addWidget(but_forward)
+
+    def isRobust(self) -> bool:
+        return self.cb_robust.isChecked()
 
     def on_back(self):
         self.clickedBack.emit()
