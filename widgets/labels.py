@@ -58,6 +58,14 @@ class LabelFlat(Label):
         }
         """)
 
+class LabelStatus(QLabel):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet("""
+        QLabel {
+            font-family: monospace;
+        }
+        """)
 
 class LabelTitle(Label):
     def __init__(self, title: str):

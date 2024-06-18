@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
     QMainWindow,
-    QStatusBar,
     QWidget,
 )
 
@@ -18,6 +17,7 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 
 from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
+from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBar
 from widgets.charts import ChartForAnalysis, yaxis_fraction
 
@@ -56,8 +56,8 @@ class DayTrendAnalyzer(QMainWindow):
 
         # _____________________________________________________________________
         # StatusBar
-        statusbar = QStatusBar()
-        self.setStatusBar(statusbar)
+        self.statusbar = DTAStatusBar()
+        self.setStatusBar(self.statusbar)
 
     def is_robust(self) -> bool:
         return self.toolbar.isRobust()
@@ -190,8 +190,12 @@ class DayTrendAnalyzer(QMainWindow):
 
     def proprocess_append(self, dtatype, ticker, date_str, df):
         dtaobj = DTAObj(dtatype, ticker, date_str, df)
+        dtaobj.updateMSG.connect(self.updateStatus)
         self.list_dtaobj.append(dtaobj)
         self.list_dtaobj.sort(key=lambda dtaobj: dtaobj.getDateStr())
+
+    def updateStatus(self, msg: str):
+        self.statusbar.setStatusMSG(msg)
 
 
 def main():

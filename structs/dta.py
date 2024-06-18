@@ -3,6 +3,7 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
+from PySide6.QtCore import Signal, QObject
 from scipy import interpolate
 from scipy.interpolate import make_smoothing_spline
 
@@ -18,7 +19,9 @@ class DTAType(Enum):
     CANDLE5M = 3
 
 
-class DTAObj:
+class DTAObj(QObject):
+    updateMSG = Signal(str)
+
     def __init__(
             self,
             dtatype: DTAType,
@@ -26,6 +29,7 @@ class DTAObj:
             date_str: str,
             df: pd.DataFrame
     ):
+        super().__init__()
         self.dtatype = dtatype
         self.ticker = ticker
         self.date_str = date_str
@@ -112,7 +116,7 @@ class DTAObj:
             else:
                 sum_afternoon += h
             count += 1
-        print('sum', round(sum_morning), round(sum_afternoon))
+        self.updateMSG.emit('Area = (%d, %d)' % (round(sum_morning), round(sum_afternoon)))
         # _____________________________________________________________________
         # Derivatives
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
