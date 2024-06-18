@@ -116,7 +116,9 @@ class DTAObj(QObject):
             else:
                 sum_afternoon += h
             count += 1
-        self.updateMSG.emit('Area = (%d, %d)' % (round(sum_morning), round(sum_afternoon)))
+        self.updateMSG.emit(
+            'Area = (%d, %d)' % (round(sum_morning), round(sum_afternoon))
+        )
         # _____________________________________________________________________
         # Derivatives
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
