@@ -39,7 +39,9 @@ class DTAObj:
             self.x_array, self.y_array = dta_prep_candle1m(self.date_str, self.df)
 
         self.y_median = np.median(self.y_array)
+        self.y_mean = np.mean(self.y_array)
         self.iqr = np.subtract(*np.percentile(self.y_array, [75, 25]))
+        self.std = np.std(self.y_array)
 
     def getDataFrame(self) -> pd.DataFrame:
         return self.df
@@ -49,6 +51,9 @@ class DTAObj:
 
     def getDTAType(self) -> DTAType:
         return self.dtatype
+
+    def getSTD(self) -> float:
+        return self.std
 
     def getIQR(self) -> float:
         return self.iqr
