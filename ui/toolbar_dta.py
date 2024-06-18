@@ -8,6 +8,7 @@ from widgets.buttons import ToolButton, ToolButtonIcon
 
 
 class DTAToolBar(QToolBar):
+    checkChanged = Signal()
     clickedBack = Signal()
     clickedClear = Signal()
     clickedForward = Signal()
@@ -44,6 +45,7 @@ class DTAToolBar(QToolBar):
 
         self.cb_robust = cb_robust = QCheckBox('Robust')
         cb_robust.setChecked(True)
+        cb_robust.checkStateChanged.connect(self.on_check_changed)
         self.addWidget(cb_robust)
 
         self.addSeparator()
@@ -65,6 +67,9 @@ class DTAToolBar(QToolBar):
 
     def on_back(self):
         self.clickedBack.emit()
+
+    def on_check_changed(self, state):
+        self.checkChanged.emit()
 
     def on_clear(self):
         self.clickedClear.emit()

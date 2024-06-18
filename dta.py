@@ -35,6 +35,7 @@ class DayTrendAnalyzer(QMainWindow):
         # _____________________________________________________________________
         # Toolbar
         self.toolbar = toolbar = DTAToolBar()
+        toolbar.checkChanged.connect(self.on_plot)
         toolbar.clickedBack.connect(self.on_back)
         toolbar.clickedClear.connect(self.on_clear)
         toolbar.clickedForward.connect(self.on_forward)
@@ -118,7 +119,6 @@ class DayTrendAnalyzer(QMainWindow):
 
         chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
 
-        chart.ax1.set_ylabel('Scaled Price')
         chart.ax2.set_ylabel('$dy$')
         chart.ax3.set_ylabel('$dy^2$')
 
@@ -127,10 +127,13 @@ class DayTrendAnalyzer(QMainWindow):
         if len(self.list_dtaobj) > 0:
             if self.is_robust():
                 sigma_max = self.get_iqr_max()
+                chart.ax1.set_ylabel('Robust Scaled Price')
             else:
                 sigma_max = self.get_std_max()
+                chart.ax1.set_ylabel('Standardized Price')
         else:
             sigma_max = 0
+            chart.ax1.set_ylabel('Price')
 
         for dtaobj in self.list_dtaobj:
             data = dtaobj.getPlotData(sigma_max, robust=self.is_robust())
