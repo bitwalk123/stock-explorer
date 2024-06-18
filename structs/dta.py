@@ -88,6 +88,18 @@ class DTAObj:
         # spl = make_smoothing_spline(self.array_x, y_scaled)
         dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         dist_data['ys'] = spl(xs)
+
+        count = 0
+        sum1 = 0
+        sum2 = 0
+        for h in dist_data['ys']:
+            if count < t_end_0 / 2:
+                sum1 += h
+            else:
+                sum2 += h
+            count += 1
+        print('sum', round(sum1), round(sum2))
+
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
         dist_data['dy2s'] = interpolate.splev(xs, spl, der=2)
 
