@@ -94,10 +94,10 @@ class DayTrendAnalyzer(QMainWindow):
             'Pickle Files (*.pkl);;All Files (*)',
         )
         if filenames:
-            # add object
+            # Add object
             for filename in filenames:
                 self.preprocess(filename)
-            # plot chart
+            # Plot chart
             self.on_plot()
 
     def on_plot(self):

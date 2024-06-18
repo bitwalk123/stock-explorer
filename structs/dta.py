@@ -67,20 +67,28 @@ class DTAObj:
     def getYMin(self) -> Union[float, None]:
         return self.y_min
 
-    def getPlotData(self, iqr: float) -> dict:
-        if iqr == 0:
-            iqr = self.iqr
-
+    def getPlotData(self, sigma: float, robust=True) -> dict:
+        # _____________________________________________________________________
         # X data
         dist_data = dict()
         dist_data['x'] = self.x_array
-
+        # _____________________________________________________________________
         # Scaled Y data
-        y_scaled = np.array([(y - self.y_median) / iqr for y in self.y_array])
+        if robust:
+            if sigma == 0:
+                sigma = self.iqr
+            # Robust Scaling with median and IQR
+            y_scaled = np.array([(y - self.y_median) / sigma for y in self.y_array])
+        else:
+            if sigma == 0:
+                sigma = self.std
+            # Standard Scaling with mean and standard deviation
+            y_scaled = np.array([(y - self.y_mean) / sigma for y in self.y_array])
+
         self.y_max = np.max(y_scaled)
         self.y_min = np.min(y_scaled)
         dist_data['y_scaled'] = y_scaled
-
+        # _____________________________________________________________________
         # Smoothing Spline
         t_start_0 = 0
         t_end_0 = 18000
@@ -93,18 +101,20 @@ class DTAObj:
         # spl = make_smoothing_spline(self.array_x, y_scaled)
         dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
         dist_data['ys'] = spl(xs)
-
+        # _____________________________________________________________________
+        # Integrals for Morning and Afternoon
         count = 0
-        sum1 = 0
-        sum2 = 0
+        sum_morning = 0
+        sum_afternoon = 0
         for h in dist_data['ys']:
             if count < t_end_0 / 2:
-                sum1 += h
+                sum_morning += h
             else:
-                sum2 += h
+                sum_afternoon += h
             count += 1
-        print('sum', round(sum1), round(sum2))
-
+        print('sum', round(sum_morning), round(sum_afternoon))
+        # _____________________________________________________________________
+        # Derivatives
         dist_data['dy1s'] = interpolate.splev(xs, spl, der=1)
         dist_data['dy2s'] = interpolate.splev(xs, spl, der=2)
 
