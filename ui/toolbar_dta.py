@@ -34,17 +34,14 @@ class DTAToolBar(QToolBar):
         # pixmap = 'SP_DialogResetButton'
         name_icon = 'eraser.png'
         tooltip = 'Clear data'
-        # but_clear = ToolButton(pixmap, tooltip)
         but_clear = ToolButtonIcon(name_icon, tooltip)
-        # but_clear.setIcon(icon)
-        # but_clear.setToolTip(tooltip)
         but_clear.clicked.connect(self.on_clear)
         self.addWidget(but_clear)
 
         self.addSeparator()
 
         self.cb_robust = cb_robust = QCheckBox('Robust')
-        cb_robust.setChecked(True)
+        cb_robust.setChecked(False)
         cb_robust.checkStateChanged.connect(self.on_check_changed)
         self.addWidget(cb_robust)
 
