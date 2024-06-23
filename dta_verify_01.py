@@ -56,12 +56,6 @@ class DTAVerify(QMainWindow):
                 y_scaled = np.array([(y - y_mean) / std for y in y_array])
                 # _____________________________________________________________________
                 # Smoothing Spline
-                """
-                t_start = 0
-                t_end = 18000
-                t_interval = 1
-                lam = 10 ** 6
-                """
                 param = ParamSmoothing()
                 t_start = param.start
                 t_end = param.end
