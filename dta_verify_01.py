@@ -9,9 +9,10 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow, QWidget,
 )
-from scipy.interpolate import make_smoothing_spline, make_interp_spline, make_lsq_spline
+from scipy.interpolate import make_smoothing_spline
 
 from funcs.dta_funcs import dta_prep_candle1m
+from structs.param import ParamSmoothing
 from ui.toolbar_dta import DTAVerifyToolBar
 from widgets.charts import ChartForVerify01
 
@@ -55,14 +56,19 @@ class DTAVerify(QMainWindow):
                 y_scaled = np.array([(y - y_mean) / std for y in y_array])
                 # _____________________________________________________________________
                 # Smoothing Spline
-                t_start_0 = 0
-                t_end_0 = 18000
-                t_interval_0 = 1
+                """
+                t_start = 0
+                t_end = 18000
+                t_interval = 1
                 lam = 10 ** 6
+                """
+                param = ParamSmoothing()
+                t_start = param.start
+                t_end = param.end
+                t_interval = param.interval
+                lam = param.lam
                 spl = make_smoothing_spline(x_array, y_scaled, lam=lam)
-                # spl = make_interp_spline(x_array, y_scaled)
-                # spl = make_lsq_spline(x_array, y_scaled, t=3)
-                xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
+                xs = np.linspace(t_start, t_end, int((t_end - t_start) / t_interval))
                 ys = spl(xs)
                 # _____________________________________________________________________
                 # Integrals for Morning and Afternoon
@@ -71,9 +77,9 @@ class DTAVerify(QMainWindow):
                 sum_afternoon = 0
                 noon = 0
                 for h in ys:
-                    if count == int(t_end_0 / 2):
+                    if count == int(t_end / 2):
                         noon = h
-                    elif count < t_end_0 / 2:
+                    elif count < t_end / 2:
                         sum_morning += h
                     else:
                         sum_afternoon += h

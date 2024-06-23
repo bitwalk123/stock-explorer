@@ -11,6 +11,7 @@ from funcs.dta_funcs import (
     dta_prep_candle1m,
     dta_prep_realtime,
 )
+from structs.param import ParamSmoothing
 
 
 class DTAType(Enum):
@@ -94,12 +95,13 @@ class DTAObj(QObject):
         dist_data['y_scaled'] = y_scaled
         # _____________________________________________________________________
         # Smoothing Spline
-        t_start_0 = 0
-        t_end_0 = 18000
-        t_interval_0 = 1
-        lam = 10 ** 6
+        param = ParamSmoothing()
+        t_start = param.start
+        t_end = param.end
+        t_interval = param.interval
+        lam = param.lam
         spl = make_smoothing_spline(self.x_array, y_scaled, lam=lam)
-        dist_data['xs'] = xs = np.linspace(t_start_0, t_end_0, int((t_end_0 - t_start_0) / t_interval_0))
+        dist_data['xs'] = xs = np.linspace(t_start, t_end, int((t_end - t_start) / t_interval))
         dist_data['ys'] = spl(xs)
         # _____________________________________________________________________
         # Integrals for Morning and Afternoon
@@ -107,7 +109,7 @@ class DTAObj(QObject):
         sum_morning = 0
         sum_afternoon = 0
         for h in dist_data['ys']:
-            if count < t_end_0 / 2:
+            if count < t_end / 2:
                 sum_morning += h
             else:
                 sum_afternoon += h
