@@ -150,3 +150,37 @@ class ChartForAnalysis(ChartAbstract):
         axs = self.fig.axes
         for ax in axs:
             ax.remove()
+
+
+class ChartForVerify01(ChartAbstract):
+    def __init__(self):
+        super().__init__()
+        self.fig.subplots_adjust(
+            top=0.98,
+            bottom=0.1,
+            left=0.07,
+            right=0.995,
+            hspace=0,
+        )
+        self.ax1 = self.fig.add_subplot(2, 1, 1)
+        self.ax2 = self.fig.add_subplot(2, 1, 2)
+
+        self.ax1.tick_params(axis='x', labelsize=10)
+        self.ax1.tick_params(axis='y', labelsize=10)
+
+        self.ax2.tick_params(axis='x', labelsize=10)
+        self.ax2.tick_params(axis='y', labelsize=10)
+        self.ax2.sharex(self.ax1)
+
+    def clearAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.cla()
+
+    def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()

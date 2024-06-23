@@ -79,3 +79,18 @@ class DTAToolBar(QToolBar):
 
     def on_plot(self):
         self.clickedPlot.emit()
+
+
+class DTAVerifyToolBar(QToolBar):
+    clickedStart = Signal()
+    def __init__(self):
+        super().__init__()
+
+        pixmap = 'SP_MediaPlay'
+        tooltip = 'Start verification'
+        but_start = ToolButton(pixmap, tooltip)
+        but_start.clicked.connect(self.on_start)
+        self.addWidget(but_start)
+
+    def on_start(self):
+        self.clickedStart.emit()
