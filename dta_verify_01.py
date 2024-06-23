@@ -32,7 +32,7 @@ class DTAVerify(QMainWindow):
         self.setCentralWidget(chart)
 
     def start_verification(self):
-        ticker = '8035'
+        ticker = self.toolbar.getTicker()
         list_filename = self.get_filelist(ticker)
         # print(list_filename)
 
@@ -102,6 +102,7 @@ class DTAVerify(QMainWindow):
 
         chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax1.axhline(y=np.mean(df1['noon']), linestyle='dashed', lw=1, c='red')
+        chart.ax1.set_ylabel('Close of the Morning')
 
         chart.ax1.grid()
 
@@ -109,6 +110,7 @@ class DTAVerify(QMainWindow):
         chart.ax2.bar(x=df1.index, height=df1['afternoon'], color='C1')
 
         chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+        chart.ax2.set_ylabel('Volume of the Mornint/Afternoon')
 
         chart.ax2.grid()
 

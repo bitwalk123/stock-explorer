@@ -155,6 +155,7 @@ class ChartForAnalysis(ChartAbstract):
 class ChartForVerify01(ChartAbstract):
     def __init__(self):
         super().__init__()
+        plt.rcParams['axes.labelsize'] = 10
         self.fig.subplots_adjust(
             top=0.98,
             bottom=0.1,

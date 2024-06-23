@@ -1,7 +1,7 @@
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QCheckBox,
-    QToolBar,
+    QToolBar, QComboBox,
 )
 
 from widgets.buttons import ToolButton, ToolButtonIcon
@@ -83,14 +83,22 @@ class DTAToolBar(QToolBar):
 
 class DTAVerifyToolBar(QToolBar):
     clickedStart = Signal()
+
     def __init__(self):
         super().__init__()
+
+        self.combo = combo = QComboBox()
+        combo.addItems(['8035', '7735', '6920', '6857', '6525', '6146'])
+        self.addWidget(combo)
 
         pixmap = 'SP_MediaPlay'
         tooltip = 'Start verification'
         but_start = ToolButton(pixmap, tooltip)
         but_start.clicked.connect(self.on_start)
         self.addWidget(but_start)
+
+    def getTicker(self) -> str:
+        return self.combo.currentText()
 
     def on_start(self):
         self.clickedStart.emit()
