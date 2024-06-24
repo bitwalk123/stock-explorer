@@ -9,6 +9,9 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow, QWidget,
 )
+from matplotlib.backends.backend_qtagg import (
+    NavigationToolbar2QT as NavigationToolbar,
+)
 from scipy.interpolate import make_smoothing_spline
 
 from funcs.dta_funcs import dta_prep_candle1m
@@ -21,7 +24,7 @@ class DTAVerify(QMainWindow):
     def __init__(self):
         super().__init__()
         # _____________________________________________________________________
-        # Toolbar
+        # Top Toolbar
         self.toolbar = toolbar = DTAVerifyToolBar()
         toolbar.clickedStart.connect(self.start_verification)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
@@ -30,6 +33,11 @@ class DTAVerify(QMainWindow):
         # Chart
         chart = ChartForVerify01()
         self.setCentralWidget(chart)
+
+        # _____________________________________________________________________
+        # Bottom Toolbar
+        navbar = NavigationToolbar(chart, self)
+        self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navbar)
 
     def start_verification(self):
         ticker = self.toolbar.getTicker()
@@ -102,7 +110,7 @@ class DTAVerify(QMainWindow):
 
         chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax1.axhline(y=np.mean(df1['noon']), linestyle='dashed', lw=1, c='red')
-        chart.ax1.set_ylabel('Morning Close')
+        chart.ax1.set_ylabel('Scaled Morning Close')
 
         chart.ax1.grid()
 
@@ -110,7 +118,7 @@ class DTAVerify(QMainWindow):
         chart.ax2.bar(x=df1.index, height=df1['afternoon'], color='C1')
 
         chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        chart.ax2.set_ylabel('Morning/Afternoon Volumes')
+        chart.ax2.set_ylabel('Morning/Afternoon Integral')
 
         chart.ax2.grid()
 
