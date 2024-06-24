@@ -6,7 +6,8 @@ from matplotlib import ticker
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-FONT_PATH = 'fonts/GenShinGothic-Monospace-Regular.ttf'
+FONT_PATH1 = 'fonts/GenShinGothic-Monospace-Regular.ttf'
+FONT_PATH2 = 'fonts/RictyDiminished-Regular.ttf'
 
 
 def yaxis_fraction(ax):
@@ -25,9 +26,8 @@ def yaxis_fraction(ax):
 
 class ChartAbstract(FigureCanvas):
     def __init__(self):
-        fm.fontManager.addfont(FONT_PATH)
-        font_prop = fm.FontProperties(fname=FONT_PATH)
-
+        fm.fontManager.addfont(FONT_PATH1)
+        font_prop = fm.FontProperties(fname=FONT_PATH1)
         plt.rcParams['font.family'] = font_prop.get_name()
         plt.rcParams['font.size'] = 14
 
@@ -111,10 +111,13 @@ class ChartRealtime(ChartAbstract):
 class ChartForAnalysis(ChartAbstract):
     def __init__(self):
         super().__init__()
-        plt.rcParams['font.size'] = 12
-        plt.rcParams['axes.labelsize'] = 10
-        plt.rcParams['xtick.labelsize'] = 10
-        plt.rcParams['ytick.labelsize'] = 9
+        fm.fontManager.addfont(FONT_PATH2)
+        font_prop = fm.FontProperties(fname=FONT_PATH2)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 14
+        plt.rcParams['axes.labelsize'] = 12
+        plt.rcParams['xtick.labelsize'] = 11
+        plt.rcParams['ytick.labelsize'] = 11
         plt.rcParams['legend.fontsize'] = 8
 
         self.ax1 = None
@@ -155,6 +158,10 @@ class ChartForAnalysis(ChartAbstract):
 class ChartForVerify01(ChartAbstract):
     def __init__(self):
         super().__init__()
+        fm.fontManager.addfont(FONT_PATH2)
+        font_prop = fm.FontProperties(fname=FONT_PATH2)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 14
         plt.rcParams['axes.labelsize'] = 10
         self.fig.subplots_adjust(
             top=0.98,
@@ -189,10 +196,13 @@ class ChartForVerify01(ChartAbstract):
 class ChartForVerify02(ChartAbstract):
     def __init__(self):
         super().__init__()
-        plt.rcParams['font.size'] = 12
-        plt.rcParams['axes.labelsize'] = 10
+        fm.fontManager.addfont(FONT_PATH2)
+        font_prop = fm.FontProperties(fname=FONT_PATH2)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 14
+        plt.rcParams['axes.labelsize'] = 12
         plt.rcParams['xtick.labelsize'] = 10
-        plt.rcParams['ytick.labelsize'] = 9
+        plt.rcParams['ytick.labelsize'] = 10
         plt.rcParams['legend.fontsize'] = 8
 
         self.fig.subplots_adjust(
