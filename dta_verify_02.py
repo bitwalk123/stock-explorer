@@ -130,25 +130,13 @@ class DayTrendAnalyzer(QMainWindow):
             data = dtaobj.getPlotData(sigma_max, robust=self.is_robust())
             # _________________________________________________________________
             # Scaled
-            chart.ax.bar(
-                data['xs'],
-                data['ys']
-            )
-            for i, delta in enumerate(data['ys']):
-                if delta > 0:
-                    color = '#eef'
-                elif delta < 0:
-                    color = '#fee'
-                else:
-                    color = 'gray'
-                chart.ax.get_children()[i].set_color(color)
-
             chart.ax.scatter(data['x'], data['y_scaled'], s=1, c='#444')
             stock_ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
             legend_str = '%s : %s' % (stock_ticker, date_str)
             # _________________________________________________________________
             # Smoothing Spline
+            chart.ax.fill_between(data['xs'], data['ys'], alpha=0.05)
             chart.ax.plot(data['xs'], data['ys'], lw=0.75, label=legend_str)
 
         if len(self.list_dtaobj) > 0:

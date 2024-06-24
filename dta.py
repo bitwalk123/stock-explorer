@@ -145,21 +145,8 @@ class DayTrendAnalyzer(QMainWindow):
             legend_str = '%s : %s' % (stock_ticker, date_str)
             # _________________________________________________________________
             # Smoothing Spline
+            chart.ax1.fill_between(data['xs'], data['ys'], alpha=0.05)
             chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
-            """
-            chart.ax1.bar(
-                data['xs'],
-                data['ys']
-            )
-            for i, delta in enumerate(data['ys']):
-                if delta > 0:
-                    color = 'C0'
-                elif delta < 0:
-                    color = 'C1'
-                else:
-                    color = 'gray'
-                chart.ax1.get_children()[i].set_color(color)
-            """
 
             # _________________________________________________________________
             # 1st Derivatives
