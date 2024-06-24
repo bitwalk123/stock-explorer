@@ -113,9 +113,6 @@ class DayTrendAnalyzer(QMainWindow):
         chart: QWidget | ChartForAnalysis = self.centralWidget()
         chart.clearAxes()
 
-        for ax in [chart.ax1, chart.ax2, chart.ax3]:
-            self.set_hvlines(ax)
-            ax.grid()
 
         chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
 
@@ -139,27 +136,26 @@ class DayTrendAnalyzer(QMainWindow):
             data = dtaobj.getPlotData(sigma_max, robust=self.is_robust())
             # _________________________________________________________________
             # Scaled
-            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
-            stock_ticker = dtaobj.getTicker()
-            date_str = dtaobj.getDateStr()
-            legend_str = '%s : %s' % (stock_ticker, date_str)
-            # _________________________________________________________________
-            # Smoothing Spline
-            chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
-            """
             chart.ax1.bar(
                 data['xs'],
                 data['ys']
             )
             for i, delta in enumerate(data['ys']):
                 if delta > 0:
-                    color = 'C0'
+                    color = '#eef'
                 elif delta < 0:
-                    color = 'C1'
+                    color = '#fee'
                 else:
                     color = 'gray'
                 chart.ax1.get_children()[i].set_color(color)
-            """
+
+            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
+            stock_ticker = dtaobj.getTicker()
+            date_str = dtaobj.getDateStr()
+            legend_str = '%s : %s' % (stock_ticker, date_str)
+            # _________________________________________________________________
+            # Smoothing Spline
+            chart.ax1.plot(data['xs'], data['ys'], lw=0.75, label=legend_str)
 
             # _________________________________________________________________
             # 1st Derivatives
@@ -173,6 +169,10 @@ class DayTrendAnalyzer(QMainWindow):
         if len(self.list_dtaobj) > 0:
             chart.ax1.legend(loc='best')
             chart.ax1.set_ylim(self.get_ax1_ylim())
+
+            for ax in [chart.ax1, chart.ax2, chart.ax3]:
+                self.set_hvlines(ax)
+                ax.grid()
 
         chart.refreshDraw()
 
