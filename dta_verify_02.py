@@ -12,14 +12,13 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBar
-from widgets.charts import ChartForAnalysis, yaxis_fraction
+from widgets.charts import ChartForVerify02
 
 
 class DayTrendAnalyzer(QMainWindow):
@@ -30,7 +29,7 @@ class DayTrendAnalyzer(QMainWindow):
         icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Analyzer, DTA')
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(1000, 400)
 
         # _____________________________________________________________________
         # Toolbar
@@ -45,7 +44,7 @@ class DayTrendAnalyzer(QMainWindow):
 
         # _____________________________________________________________________
         # Chart
-        chart = ChartForAnalysis()
+        chart = ChartForVerify02()
         self.setCentralWidget(chart)
         self.on_plot()
 
@@ -110,33 +109,28 @@ class DayTrendAnalyzer(QMainWindow):
             self.on_plot()
 
     def on_plot(self):
-        chart: QWidget | ChartForAnalysis = self.centralWidget()
+        chart: QWidget | ChartForVerify02 = self.centralWidget()
         chart.clearAxes()
 
-
-        chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
-
-        chart.ax2.set_ylabel('$dy$')
-        chart.ax3.set_ylabel('$dy^2$')
-
-        chart.ax1.set_ylim(-4, 4)
+        chart.ax.set_xlabel('Tokyo Market Opening [sec]')
+        chart.ax.set_ylim(-4, 4)
 
         if len(self.list_dtaobj) > 0:
             if self.is_robust():
                 sigma_max = self.get_iqr_max()
-                chart.ax1.set_ylabel('Robust Scaled Price')
+                chart.ax.set_ylabel('Robust Scaled Price')
             else:
                 sigma_max = self.get_std_max()
-                chart.ax1.set_ylabel('Standardized Price')
+                chart.ax.set_ylabel('Standardized Price')
         else:
             sigma_max = 0
-            chart.ax1.set_ylabel('Price')
+            chart.ax.set_ylabel('Price')
 
         for dtaobj in self.list_dtaobj:
             data = dtaobj.getPlotData(sigma_max, robust=self.is_robust())
             # _________________________________________________________________
             # Scaled
-            chart.ax1.bar(
+            chart.ax.bar(
                 data['xs'],
                 data['ys']
             )
@@ -147,38 +141,24 @@ class DayTrendAnalyzer(QMainWindow):
                     color = '#fee'
                 else:
                     color = 'gray'
-                chart.ax1.get_children()[i].set_color(color)
+                chart.ax.get_children()[i].set_color(color)
 
-            chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
+            chart.ax.scatter(data['x'], data['y_scaled'], s=1, c='#444')
             stock_ticker = dtaobj.getTicker()
             date_str = dtaobj.getDateStr()
             legend_str = '%s : %s' % (stock_ticker, date_str)
             # _________________________________________________________________
             # Smoothing Spline
-            chart.ax1.plot(data['xs'], data['ys'], lw=0.75, label=legend_str)
-
-            # _________________________________________________________________
-            # 1st Derivatives
-            chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
-            yaxis_fraction(chart.ax2)
-            # _________________________________________________________________
-            # 2nd Derivatives
-            chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
-            yaxis_fraction(chart.ax3)
+            chart.ax.plot(data['xs'], data['ys'], lw=0.75, label=legend_str)
 
         if len(self.list_dtaobj) > 0:
-            chart.ax1.legend(loc='best')
-            chart.ax1.set_ylim(self.get_ax1_ylim())
-
-            for ax in [chart.ax1, chart.ax2, chart.ax3]:
-                self.set_hvlines(ax)
-                ax.grid()
+            chart.ax.legend(loc='best')
+            chart.ax.set_ylim(self.get_ax1_ylim())
+            chart.ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+            chart.ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+            chart.ax.grid()
 
         chart.refreshDraw()
-
-    def set_hvlines(self, ax: Axes):
-        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
 
     def preprocess(self, filename: str):
         df = pd.read_pickle(filename)
