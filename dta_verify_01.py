@@ -97,12 +97,12 @@ class DTAVerify(QMainWindow):
         chart: QWidget | ChartForVerify01 = self.centralWidget()
         chart.clearAxes()
 
-        chart.ax1.plot(df1.index, df1['noon'], lw=1, c='C0')
-        chart.ax1.scatter(df1.index, df1['noon'], s=10, c='C0')
+        chart.ax1.plot(df1.index, df1['noon'], lw=0.75, c='C0')
+        chart.ax1.scatter(df1.index, df1['noon'], s=5, c='C0')
 
         chart.ax1.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax1.axhline(y=np.mean(df1['noon']), linestyle='dashed', lw=1, c='red')
-        chart.ax1.set_ylabel('Close of the Morning')
+        chart.ax1.set_ylabel('Morning Close')
 
         chart.ax1.grid()
 
@@ -110,7 +110,7 @@ class DTAVerify(QMainWindow):
         chart.ax2.bar(x=df1.index, height=df1['afternoon'], color='C1')
 
         chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        chart.ax2.set_ylabel('Volume of the Mornint/Afternoon')
+        chart.ax2.set_ylabel('Morning/Afternoon Volumes')
 
         chart.ax2.grid()
 
