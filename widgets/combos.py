@@ -49,7 +49,7 @@ class ComboBookmarkAll(ComboBookmark):
             'TSMC': ['TSM', False],
             'Micron': ['MU', False],
             'Intel': ['INTC', False],
-            'Tokyo Electron Ltd.': ['TOELY', False],
+            'Tokyo Electron Ltd. (ADR)': ['TOELY', False],
             'Lam Research': ['LRCX', False],
             'Applied Materials': ['AMAT', False],
             'ASML Holding N.V.': ['ASML', False],
