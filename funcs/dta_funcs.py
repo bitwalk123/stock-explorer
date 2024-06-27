@@ -1,3 +1,6 @@
+import os
+import re
+
 import numpy as np
 import pandas as pd
 from scipy import stats as stats
@@ -25,6 +28,25 @@ def dta_get_ref_times_JST(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Time
     t2_start = pd.to_datetime(date_str + ' 12:30:00+09:00')
 
     return t1_origin, t1_end, t2_origin, t2_start
+
+
+def dta_get_ticker_filelist(ticker: str):
+    dir_path = 'cache'
+    pattern = re.compile(r'%s/%s.+\.pkl$' % (dir_path, ticker))
+    # print(pattern)
+    list_file = [
+        os.path.join(dir_path, f) for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))
+    ]
+    # print(list_file)
+    list_target = list()
+    for f in list_file:
+        if pattern.match(f):
+            list_target.append(f)
+    list_target.sort()
+    # print(list_target)
+
+    # list_target = [list_target[0]]
+    return list_target
 
 
 def dta_prep_candle1m(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.array]:

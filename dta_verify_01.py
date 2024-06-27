@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import pandas as pd
 import re
 import sys
@@ -14,7 +13,7 @@ from matplotlib.backends.backend_qtagg import (
 )
 from scipy.interpolate import make_smoothing_spline
 
-from funcs.dta_funcs import dta_prep_candle1m
+from funcs.dta_funcs import dta_prep_candle1m, dta_get_ticker_filelist
 from structs.param import ParamSmoothing
 from ui.toolbar_dta import DTAVerifyToolBar
 from widgets.charts import ChartForVerify01
@@ -28,12 +27,10 @@ class DTAVerify(QMainWindow):
         self.toolbar = toolbar = DTAVerifyToolBar()
         toolbar.clickedStart.connect(self.start_verification)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
-
         # _____________________________________________________________________
         # Chart
         chart = ChartForVerify01()
         self.setCentralWidget(chart)
-
         # _____________________________________________________________________
         # Bottom Toolbar
         navbar = NavigationToolbar(chart, self)
@@ -41,7 +38,7 @@ class DTAVerify(QMainWindow):
 
     def start_verification(self):
         ticker = self.toolbar.getTicker()
-        list_filename = self.get_filelist(ticker)
+        list_filename = dta_get_ticker_filelist(ticker)
         # print(list_filename)
 
         ts_list = list()
@@ -124,24 +121,6 @@ class DTAVerify(QMainWindow):
         chart.ax2.grid()
 
         chart.refreshDraw()
-
-    def get_filelist(self, ticker: str):
-        dir_path = 'cache'
-        pattern = re.compile(r'%s/%s.+\.pkl$' % (dir_path, ticker))
-        # print(pattern)
-        list_file = [
-            os.path.join(dir_path, f) for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))
-        ]
-        # print(list_file)
-        list_target = list()
-        for f in list_file:
-            if pattern.match(f):
-                list_target.append(f)
-        list_target.sort()
-        # print(list_target)
-
-        # list_target = [list_target[0]]
-        return list_target
 
 
 def main():
