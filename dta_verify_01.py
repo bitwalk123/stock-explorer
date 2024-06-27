@@ -79,9 +79,10 @@ class DTAVerify(QMainWindow):
                 sum_afternoon = 0
                 noon = 0
                 for h in ys:
-                    if count == int(t_end / 2):
+                    if count == int(t_end / 2) - 1:
                         noon = h
-                    elif count < t_end / 2:
+
+                    if count <= t_end / 2:
                         sum_morning += h
                     else:
                         sum_afternoon += h
