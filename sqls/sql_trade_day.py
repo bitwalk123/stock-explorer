@@ -152,12 +152,11 @@ def sql_sel_all_from_trade1m_with_dates_id_code_datetimes(id_code: int, start: i
     return sql
 
 
-def sql_sel_id_trade1m_from_trade1m_with_datetimes_id_code(id_code: int, start: int, end: int) -> str:
+def sql_sel_id_trade1m_from_trade1m_with_datetimes_id_code(id_code: int, timestamp: int) -> str:
     sql = """
         SELECT "id_trade1m" FROM trade1m
-        WHERE "id_code" = %d AND "Datetime" => %d AND "Datetime" < %d;
-        ORDER BY "Datetime" ASC;
-    """ % (id_code, start, end)
+        WHERE "id_code" = %d AND "Datetime" = %d;
+    """ % (id_code, timestamp)
     return sql
 
 
