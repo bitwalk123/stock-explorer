@@ -1,10 +1,16 @@
-from PySide6.QtCore import Signal
+import os
+
+from PySide6.QtCore import Signal, QDate
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QCheckBox,
-    QToolBar, QComboBox,
+    QToolBar, QComboBox, QToolButton, QCalendarWidget,
 )
 
+from funcs.tide import get_ymd
+from structs.res import AppRes
 from widgets.buttons import ToolButton, ToolButtonIcon
+from widgets.entries import EntryDate
 
 
 class DTAToolBar(QToolBar):
@@ -79,6 +85,53 @@ class DTAToolBar(QToolBar):
 
     def on_plot(self):
         self.clickedPlot.emit()
+
+
+class DTAToolBarPlus(QToolBar):
+    def __init__(self):
+        super().__init__()
+        self.calendar = None
+        res = AppRes()
+
+        self.ent_date = ent_date = EntryDate()
+        ent_date.setEnabled(False)
+        ent_date.setContentsMargins(0, 0, 0, 0)
+        self.addWidget(ent_date)
+
+        but_calendar = QToolButton()
+        but_calendar.setContentsMargins(0, 0, 0, 0)
+        but_calendar.setToolTip('Calendar')
+        icon_calendar = QIcon(os.path.join(res.getImagePath(), 'calendar.png'))
+        but_calendar.setIcon(icon_calendar)
+        but_calendar.clicked.connect(self.on_calendar_selected)
+        self.addWidget(but_calendar)
+
+        self.addSeparator()
+
+        pixmap = 'SP_MediaPlay'
+        tooltip = 'Plot chart'
+        but_plot = ToolButton(pixmap, tooltip)
+        but_plot.clicked.connect(self.on_plot)
+        self.addWidget(but_plot)
+
+    def on_calendar_selected(self):
+        self.calendar = calendar = QCalendarWidget()
+        calendar.setMaximumDate(QDate(*get_ymd()))
+        date = self.ent_date.getDate()
+        if date is not None:
+            calendar.setSelectedDate(date)
+        calendar.activated.connect(self.on_activated)
+        calendar.show()
+
+    def on_activated(self, qdate: QDate):
+        self.ent_date.setDate(qdate)
+
+        calendar: QCalendarWidget = self.sender()
+        calendar.hide()
+        calendar.deleteLater()
+
+    def on_plot(self):
+        pass
 
 
 class DTAVerifyToolBar(QToolBar):

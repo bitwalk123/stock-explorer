@@ -1,10 +1,12 @@
 import os
 import sys
 
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QMainWindow, QApplication
 
 from structs.res import AppRes
+from ui.toolbar_dta import DTAToolBarPlus
 
 
 class DayTrendAnalyzer(QMainWindow):
@@ -16,6 +18,11 @@ class DayTrendAnalyzer(QMainWindow):
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Analyzer (widh DB), DTA')
         self.setMinimumSize(1000, 700)
+
+        # _____________________________________________________________________
+        # Toolbar
+        self.toolbar = toolbar = DTAToolBarPlus()
+        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
 
 
 def main():
