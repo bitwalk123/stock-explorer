@@ -9,8 +9,11 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 from funcs.tbl_ticker import get_dict_id_code
 from snippets.set_env import set_env
-from sqls.sql_trade_day import sql_sel_id_trade1m_from_trade1m_with_datetimes_id_code, sql_upd_trade1m_values, \
-    sql_ins_into_trade1m_values
+from sqls.sql_trade_day import (
+    sql_ins_into_trade1m_values,
+    sql_sel_id_trade1m_from_trade1m_with_datetime_id_code,
+    sql_upd_trade1m_values,
+)
 from structs.db_info import DBInfo
 from ui.toolbar_dta import DTAUploaderToolBar
 
@@ -54,7 +57,7 @@ class DTAUploader1m(QMainWindow):
                     # print(series)
                     # print(row)
                     query = QSqlQuery()
-                    sql = sql_sel_id_trade1m_from_trade1m_with_datetimes_id_code(id_code, timestamp)
+                    sql = sql_sel_id_trade1m_from_trade1m_with_datetime_id_code(id_code, timestamp)
                     query.exec(sql)
                     if query.next():
                         id_trade = query.value(0)
