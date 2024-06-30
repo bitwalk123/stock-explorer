@@ -66,13 +66,14 @@ class DayTrendAnalyzer(QMainWindow):
         dict_id_code = get_dict_id_code()
         code = self.toolbar.getCode()
         id_code = dict_id_code[code]
-
-        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
-
         start = get_day_timestamp(qdate)
         end = get_day_timestamp(qdate.addDays(1))
         df = dta_get_data_from_db1m(id_code, start, end)
+        if len(df) == 0:
+            return
+
         dtatype = DTAType.CANDLE1M
+        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
         dtaobj = DTAObj(dtatype, code, date_str, df)
         dtaobj.updateMSG.connect(self.updateStatus)
         data = dtaobj.getPlotData(0, robust=False)
