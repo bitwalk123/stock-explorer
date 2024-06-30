@@ -13,12 +13,12 @@ class DTADockSlider(QDockWidget):
         layout = QHBoxLayout()
         base.setLayout(layout)
 
-        self.lab = lab = QLabel()
-        lab.setSizePolicy(
+        self.lab = label = QLabel()
+        label.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Preferred
         )
-        layout.addWidget(lab)
+        layout.addWidget(label)
 
         slider = QSlider()
         slider.setRange(0, 18000)
