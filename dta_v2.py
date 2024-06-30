@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication
 
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from funcs.dta_funcs import dta_get_data_from_db1m
+from funcs.dta_funcs import dta_get_data_from_db1m, dta_prep_candle1m
 from funcs.tbl_ticker import get_dict_id_code
 from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
@@ -58,7 +58,11 @@ class DayTrendAnalyzer(QMainWindow):
         end = get_day_timestamp(qdate.addDays(1))
 
         df = dta_get_data_from_db1m(id_code, start, end)
-        print(df)
+        # print(df)
+        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
+        x_array, y_array = dta_prep_candle1m(date_str, df)
+        # print(x_array)
+        # print(y_array)
 
 
 def main():
