@@ -3,18 +3,20 @@ import sys
 
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QMainWindow, QApplication
+from PySide6.QtWidgets import QMainWindow, QApplication, QWidget
 
+from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 from funcs.dta_funcs import dta_get_data_from_db1m, dta_prep_candle1m
 from funcs.tbl_ticker import get_dict_id_code
 from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
+from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBarPlus
-from widgets.charts import ChartForAnalysis
+from widgets.charts import ChartForAnalysis, yaxis_fraction
 
 
 class DayTrendAnalyzer(QMainWindow):
@@ -49,20 +51,77 @@ class DayTrendAnalyzer(QMainWindow):
         self.statusbar = DTAStatusBar()
         self.setStatusBar(self.statusbar)
 
+    @staticmethod
+    def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
+        y_min = dtaobj.getYMin()
+        y_max = dtaobj.getYMax()
+        y_pad = (y_max - y_min) * 0.025
+
+        ylim_min = y_min - y_pad
+        ylim_max = y_max + y_pad
+
+        return ylim_min, ylim_max
+
     def on_plot(self, qdate: QDate):
         dict_id_code = get_dict_id_code()
         code = self.toolbar.getCode()
         id_code = dict_id_code[code]
 
+        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
+
         start = get_day_timestamp(qdate)
         end = get_day_timestamp(qdate.addDays(1))
-
         df = dta_get_data_from_db1m(id_code, start, end)
-        # print(df)
-        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
-        x_array, y_array = dta_prep_candle1m(date_str, df)
-        # print(x_array)
-        # print(y_array)
+        dtatype = DTAType.CANDLE1M
+        dtaobj = DTAObj(dtatype, code, date_str, df)
+        dtaobj.updateMSG.connect(self.updateStatus)
+        data = dtaobj.getPlotData(0, robust=False)
+
+        chart: QWidget | ChartForAnalysis = self.centralWidget()
+        chart.clearAxes()
+
+        for ax in [chart.ax1, chart.ax2, chart.ax3]:
+            self.set_hvlines(ax)
+            ax.grid()
+
+        chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
+
+        chart.ax1.set_ylabel('Standardized Price')
+        chart.ax1.set_ylim(-4, 4)
+        chart.ax2.set_ylabel('$dy$')
+        chart.ax3.set_ylabel('$dy^2$')
+
+        # _____________________________________________________________________
+        # Scaled
+        chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
+        stock_ticker = dtaobj.getTicker()
+        date_str = dtaobj.getDateStr()
+        legend_str = '%s : %s' % (stock_ticker, date_str)
+        # _____________________________________________________________________
+        # Smoothing Spline
+        chart.ax1.fill_between(data['xs'], data['ys'], alpha=0.05)
+        chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
+        chart.ax1.set_ylim(self.get_ylim(dtaobj))
+        chart.ax1.legend(loc='best')
+
+        # _____________________________________________________________________
+        # 1st Derivatives
+        chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
+        yaxis_fraction(chart.ax2)
+
+        # _____________________________________________________________________
+        # 2nd Derivatives
+        chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
+        yaxis_fraction(chart.ax3)
+
+        chart.refreshDraw()
+
+    def set_hvlines(self, ax: Axes):
+        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+
+    def updateStatus(self, msg: str):
+        self.statusbar.setStatusMSG(msg)
 
 
 def main():
