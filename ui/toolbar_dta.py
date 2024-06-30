@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 from funcs.tide import get_ymd
 from structs.res import AppRes
 from widgets.buttons import ToolButton, ToolButtonIcon
+from widgets.combos import ComboBookmark2
 from widgets.entries import EntryDate
 
 
@@ -95,6 +96,11 @@ class DTAToolBarPlus(QToolBar):
         self.calendar = None
         res = AppRes()
 
+        # Bookmark for Ticker
+        self.combo = ComboBookmark2()
+        # self.combo_bookmark.currentIndexChanged.connect(self.on_bookmark_updated)
+        self.addWidget(self.combo)
+
         self.ent_date = ent_date = EntryDate()
         ent_date.setEnabled(False)
         ent_date.setContentsMargins(0, 0, 0, 0)
@@ -115,6 +121,10 @@ class DTAToolBarPlus(QToolBar):
         but_plot = ToolButton(pixmap, tooltip)
         but_plot.clicked.connect(self.on_plot)
         self.addWidget(but_plot)
+
+    def getCode(self) -> str:
+        ticker = self.combo.currentText()
+        return self.combo.getCode(ticker)
 
     def on_calendar_selected(self):
         self.calendar = calendar = QCalendarWidget()

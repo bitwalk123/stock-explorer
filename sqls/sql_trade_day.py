@@ -163,7 +163,7 @@ def sql_sel_id_trade1m_from_trade1m_with_datetime_id_code(id_code: int, timestam
 def sql_sel_id_trade1m_from_trade1m_with_datetimes_id_code(id_code: int, start: int, end: int) -> str:
     sql = """
         SELECT "id_trade1m" FROM trade1m
-        WHERE "id_code" = %d AND "Datetime" => %d AND "Datetime" < %d;
+        WHERE "id_code" = %d AND "Datetime" >= %d AND "Datetime" < %d
         ORDER BY "Datetime" ASC;
     """ % (id_code, start, end)
     return sql

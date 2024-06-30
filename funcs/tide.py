@@ -69,6 +69,12 @@ def conv_timestamp2year(timestamp: int) -> int:
         return 0
 
 
+def get_day_timestamp(qdate) -> int:
+    date_str = '%s-%s-%s 00:00:00+09:00' % (qdate.year(), qdate.month(), qdate.day())
+    ts = pd.to_datetime(date_str)
+    return (int(ts.timestamp()))
+
+
 def get_elapsed(time_start: float) -> float:
     """Get elapsed time in second.
 

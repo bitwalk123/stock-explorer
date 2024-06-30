@@ -15,6 +15,9 @@ class ComboBookmark(QComboBox):
         key = self.getName(idx)
         return self.tickers[key]
 
+    def getCode(self, key: str) -> str:
+        return self.tickers[key]
+
     def getTickerList(self) -> dict:
         return {
             '東京エレクトロン': '8035.T',
@@ -23,6 +26,21 @@ class ComboBookmark(QComboBox):
             'レーザーテック': '6920.T',
             'ディスコ': '6146.T',
             'KOKUSAI ELECTRIC': '6525.T',
+        }
+
+
+class ComboBookmark2(ComboBookmark):
+    def __init__(self):
+        super().__init__()
+
+    def getTickerList(self) -> dict:
+        return {
+            '東京エレクトロン': '8035',
+            'スクリーン': '7735',
+            'アドバンテスト': '6857',
+            'レーザーテック': '6920',
+            'ディスコ': '6146',
+            'KOKUSAI ELECTRIC': '6525',
         }
 
 
