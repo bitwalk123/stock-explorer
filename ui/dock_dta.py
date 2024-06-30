@@ -16,7 +16,11 @@ class DTADockSlider(QDockWidget):
         base.setLayout(layout)
 
         self.label = label = QLabel()
+        label.setStyleSheet("""
+            QLabel {font-family: monospace;}
+        """)
         label.setMinimumWidth(50)
+        label.setAlignment(Qt.AlignmentFlag.AlignRight)
         label.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Preferred
@@ -38,6 +42,8 @@ class DTADockSlider(QDockWidget):
         )
         slider.valueChanged.connect(self.value_changed)
         layout.addWidget(slider)
+
+        self.value_changed(slider.value())
 
     def value_changed(self, value: int):
         self.label.setText(str(value))
