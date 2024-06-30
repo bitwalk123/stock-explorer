@@ -9,6 +9,7 @@ class DTADockSlider(QDockWidget):
 
         slider = QSlider()
         slider.setOrientation(Qt.Orientation.Horizontal)
+        slider.setTickPosition(QSlider.TickPosition.TicksBothSides)
         self.setWidget(slider)
 
 
