@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QWidget
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from funcs.dta_funcs import dta_get_data_from_db1m, dta_prep_candle1m
+from funcs.dta_funcs import dta_get_data_from_db1m
 from funcs.tbl_ticker import get_dict_id_code
 from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
@@ -27,7 +27,7 @@ class DayTrendAnalyzer(QMainWindow):
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
         self.setWindowIcon(icon)
-        self.setWindowTitle('Day Trend Analyzer (widh DB), DTA')
+        self.setWindowTitle('Day Trend Analyzer (with DB), DTA')
         self.setMinimumSize(1000, 700)
 
         # _____________________________________________________________________
