@@ -3,7 +3,7 @@ import sys
 
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QMainWindow, QApplication, QWidget
+from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QDockWidget, QSlider
 
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -46,6 +46,13 @@ class DayTrendAnalyzer(QMainWindow):
         navbar = NavigationToolbar(chart, self)
         self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navbar)
 
+        # _____________________________________________________________________
+        # Dock
+        dock = QDockWidget()
+        slider = QSlider()
+        slider.setOrientation(Qt.Orientation.Horizontal)
+        dock.setWidget(slider)
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
         # _____________________________________________________________________
         # StatusBar
         self.statusbar = DTAStatusBar()
