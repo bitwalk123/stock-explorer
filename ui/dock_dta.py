@@ -12,6 +12,8 @@ class DTADockSlider(QDockWidget):
         slider.setOrientation(Qt.Orientation.Horizontal)
         slider.setTickPosition(QSlider.TickPosition.TicksBothSides)
         slider.setTickInterval(600)
+        slider.valueChanged.connect(self.value_changed)
         self.setWidget(slider)
 
-
+    def value_changed(self, value: int):
+        print(value)
