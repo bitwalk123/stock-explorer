@@ -17,6 +17,7 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 
 from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
+from ui.dock_dta import DTADockSlider
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBar
 from widgets.charts import ChartForAnalysis, yaxis_fraction
@@ -48,6 +49,11 @@ class DayTrendAnalyzer(QMainWindow):
         chart = ChartForAnalysis()
         self.setCentralWidget(chart)
         self.on_plot()
+
+        # _____________________________________________________________________
+        # Dock
+        dock = DTADockSlider()
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
 
         # _____________________________________________________________________
         # Navigation Toolbar at Bottom

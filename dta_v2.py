@@ -3,10 +3,16 @@ import sys
 
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QDockWidget, QSlider
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+)
 
 from matplotlib.axes import Axes
-from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qtagg import (
+    NavigationToolbar2QT as NavigationToolbar,
+)
 
 from funcs.dta_funcs import dta_get_data_from_db1m
 from funcs.tbl_ticker import get_dict_id_code
@@ -14,6 +20,7 @@ from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
 from structs.dta import DTAObj, DTAType
 from structs.res import AppRes
+from ui.dock_dta import DTADockSlider
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBarPlus
 from widgets.charts import ChartForAnalysis, yaxis_fraction
@@ -42,17 +49,15 @@ class DayTrendAnalyzer(QMainWindow):
         self.setCentralWidget(chart)
 
         # _____________________________________________________________________
+        # Dock
+        dock = DTADockSlider()
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
+
+        # _____________________________________________________________________
         # Navigation Toolbar at Bottom
         navbar = NavigationToolbar(chart, self)
         self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navbar)
 
-        # _____________________________________________________________________
-        # Dock
-        dock = QDockWidget()
-        slider = QSlider()
-        slider.setOrientation(Qt.Orientation.Horizontal)
-        dock.setWidget(slider)
-        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
         # _____________________________________________________________________
         # StatusBar
         self.statusbar = DTAStatusBar()
