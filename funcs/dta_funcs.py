@@ -1,11 +1,40 @@
+import datetime
 import os
 import re
 
 import numpy as np
 import pandas as pd
-from scipy import stats as stats
-from scipy.interpolate import make_smoothing_spline
-from sklearn.preprocessing import robust_scale
+from PySide6.QtSql import QSqlQuery
+
+from sqls.sql_trade_day import sql_sel_all_from_trade1m_with_dates_id_code_datetimes
+from structs.db_info import DBInfo
+
+
+def dta_get_data_from_db1m(id_code: int, start: int, end: int) -> pd.DataFrame:
+    list_series = list()
+    con = DBInfo.get_connection()
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_sel_all_from_trade1m_with_dates_id_code_datetimes(id_code, start, end)
+        query.exec(sql)
+        while query.next():
+            date_time = query.value(0)  # "Datetime"
+            dict_stock = dict()
+            dict_stock['Open'] = query.value(1)  # "Open"
+            dict_stock['High'] = query.value(2)  # "High"
+            dict_stock['Low'] = query.value(3)  # "Low"
+            dict_stock['Close'] = query.value(4)  # "Close"
+            dict_stock['Volume'] = query.value(5)  # "Volume"
+            series = pd.Series(data=dict_stock, name=date_time)
+            list_series.append(series)
+        con.close()
+
+    if len(list_series) > 0:
+        df = dta_prep_df_for1m(list_series)
+    else:
+        df = dta_prep_df_for1m_blank()
+
+    return df
 
 
 def dta_get_ref_times(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp]:
@@ -67,6 +96,23 @@ def dta_prep_candle1m(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
     array_y = np.array(df0['Close'])
 
     return array_x, array_y
+
+
+def dta_prep_df_for1m(list_series: list) -> pd.DataFrame:
+    df = pd.concat(list_series, axis=1).T
+    list_dt = [datetime.datetime.fromtimestamp(ts, datetime.timezone.utc) for ts in df.index]
+    list_dt_jst = [dt.astimezone(datetime.timezone(datetime.timedelta(hours=9))) for dt in list_dt]
+    df.index = list_dt_jst
+    df.index.name = 'Datetime'
+
+    return df
+
+
+def dta_prep_df_for1m_blank() -> pd.DataFrame:
+    df = pd.DataFrame({'Open': [], 'Low': [], 'High': [], 'Close': [], 'Volume': []})
+    df.index.name = 'Datetime'
+
+    return df
 
 
 def dta_prep_realtime(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.array]:
