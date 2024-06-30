@@ -16,6 +16,7 @@ class DTADockSlider(QDockWidget):
         base.setLayout(layout)
 
         self.label = label = QLabel()
+        label.setMinimumWidth(50)
         label.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Preferred
