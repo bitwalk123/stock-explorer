@@ -1,7 +1,8 @@
 import os
+import pandas as pd
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QMainWindow, QApplication
 
@@ -22,7 +23,17 @@ class DayTrendAnalyzer(QMainWindow):
         # _____________________________________________________________________
         # Toolbar
         self.toolbar = toolbar = DTAToolBarPlus()
+        toolbar.clickedPlot.connect(self.on_plot)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
+
+    def getTimeStamp(self, qdate) -> pd.Timestamp:
+        date_str = '%s-%s-%s 00:00:00+09:00' % (qdate.year(), qdate.month(), qdate.day())
+        return pd.to_datetime(date_str)
+
+    def on_plot(self, qdate: QDate):
+        d1 = self.getTimeStamp(qdate)
+        d2 = self.getTimeStamp(qdate.addDays(1))
+        print(d1, d2)
 
 
 def main():

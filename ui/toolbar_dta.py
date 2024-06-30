@@ -88,6 +88,8 @@ class DTAToolBar(QToolBar):
 
 
 class DTAToolBarPlus(QToolBar):
+    clickedPlot = Signal(QDate)
+
     def __init__(self):
         super().__init__()
         self.calendar = None
@@ -131,7 +133,7 @@ class DTAToolBarPlus(QToolBar):
         calendar.deleteLater()
 
     def on_plot(self):
-        pass
+        self.clickedPlot.emit(self.ent_date.getDate())
 
 
 class DTAVerifyToolBar(QToolBar):
