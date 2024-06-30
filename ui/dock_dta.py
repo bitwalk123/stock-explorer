@@ -15,7 +15,7 @@ class DTADockSlider(QDockWidget):
         layout = QHBoxLayout()
         base.setLayout(layout)
 
-        self.lab = label = QLabel()
+        self.label = label = QLabel()
         label.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Preferred
@@ -39,4 +39,4 @@ class DTADockSlider(QDockWidget):
         layout.addWidget(slider)
 
     def value_changed(self, value: int):
-        self.lab.setText(str(value))
+        self.label.setText(str(value))
