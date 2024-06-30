@@ -8,8 +8,10 @@ class DTADockSlider(QDockWidget):
         self.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
 
         slider = QSlider()
+        slider.setRange(0, 18000)
         slider.setOrientation(Qt.Orientation.Horizontal)
         slider.setTickPosition(QSlider.TickPosition.TicksBothSides)
+        slider.setTickInterval(600)
         self.setWidget(slider)
 
 
