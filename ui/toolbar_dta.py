@@ -122,6 +122,12 @@ class DTAToolBarPlus(QToolBar):
         but_plot.clicked.connect(self.on_plot)
         self.addWidget(but_plot)
 
+        pixmap = 'SP_MediaSeekForward'
+        tooltip = 'Simulation'
+        but_simulate = ToolButton(pixmap, tooltip)
+        but_simulate.clicked.connect(self.on_simulate)
+        self.addWidget(but_simulate)
+
     def getCode(self) -> str:
         ticker = self.combo.currentText()
         return self.combo.getCode(ticker)
@@ -145,6 +151,8 @@ class DTAToolBarPlus(QToolBar):
     def on_plot(self):
         self.clickedPlot.emit(self.ent_date.getDate())
 
+    def on_simulate(self):
+        pass
 
 class DTAVerifyToolBar(QToolBar):
     clickedStart = Signal()
