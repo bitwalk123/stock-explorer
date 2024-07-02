@@ -90,6 +90,7 @@ class DTAToolBar(QToolBar):
 
 class DTAToolBarPlus(QToolBar):
     clickedPlot = Signal(QDate)
+    clickedSimulate = Signal()
 
     def __init__(self):
         super().__init__()
@@ -152,7 +153,7 @@ class DTAToolBarPlus(QToolBar):
         self.clickedPlot.emit(self.ent_date.getDate())
 
     def on_simulate(self):
-        pass
+        self.clickedSimulate.emit()
 
 class DTAVerifyToolBar(QToolBar):
     clickedStart = Signal()

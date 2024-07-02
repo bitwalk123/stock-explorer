@@ -41,6 +41,7 @@ class DayTrendAnalyzer(QMainWindow):
         # Toolbar
         self.toolbar = toolbar = DTAToolBarPlus()
         toolbar.clickedPlot.connect(self.on_plot)
+        toolbar.clickedSimulate.connect(self.on_simulate)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
 
         # _____________________________________________________________________
@@ -128,6 +129,9 @@ class DayTrendAnalyzer(QMainWindow):
         yaxis_fraction(chart.ax3)
 
         chart.refreshDraw()
+
+    def on_simulate(self):
+        print('DEBUG!')
 
     def set_hvlines(self, ax: Axes):
         ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')

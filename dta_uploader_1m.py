@@ -36,6 +36,8 @@ class DTAUploader1m(QMainWindow):
         list_file = [
             os.path.join(self.dir, f) for f in os.listdir(self.dir) if os.path.isfile(os.path.join(self.dir, f))
         ]
+        list_file.sort()
+
         con = DBInfo.get_connection()
         if con.open():
             for file in list_file:
@@ -67,6 +69,7 @@ class DTAUploader1m(QMainWindow):
                     if not query.exec(sql):
                         print(query.lastError())
             con.close()
+            print('Completed!')
             return True
         else:
             print('database can not be opened!')
