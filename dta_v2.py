@@ -164,7 +164,11 @@ class DayTrendAnalyzer(QMainWindow):
             return None
         else:
             dtatype = DTAType.CANDLE1M
-            date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
+            date_str = '%04d-%02d-%02d' % (
+                qdate.year(),
+                qdate.month(),
+                qdate.day()
+            )
             dtaobj = DTAObj(dtatype, code, date_str, df)
             return dtaobj
 
