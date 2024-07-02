@@ -33,41 +33,65 @@ class DTAPlotBase:
 
     def draw(self):
         self.chart.clearAxes()
-
-        data = self.dtaobj.getPlotData(0, robust=False)
-
-        for ax in [self.chart.ax1, self.chart.ax2, self.chart.ax3]:
+        for ax in self.chart.fig.axes:
             self.set_hvlines(ax)
             ax.grid()
 
+        # _____________________________________________________________________
+        # X axis label
         self.chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
 
+        # _____________________________________________________________________
+        # Y axes label
         self.chart.ax1.set_ylabel('Standardized Price')
-        self.chart.ax1.set_ylim(-4, 4)
         self.chart.ax2.set_ylabel('$dy$')
         self.chart.ax3.set_ylabel('$dy^2$')
 
+        # Data disctionary
+        dict_data = self.dtaobj.getPlotData(0, robust=False)
         # _____________________________________________________________________
         # Scaled
-        self.chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
+        self.chart.ax1.scatter(
+            dict_data['x'],
+            dict_data['y_scaled'],
+            s=1,
+            c='#444'
+        )
         stock_ticker = self.dtaobj.getTicker()
         date_str = self.dtaobj.getDateStr()
         legend_str = '%s : %s' % (stock_ticker, date_str)
         # _____________________________________________________________________
         # Smoothing Spline
-        self.chart.ax1.fill_between(data['xs'], data['ys'], alpha=0.05)
-        self.chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
+        self.chart.ax1.fill_between(
+            dict_data['xs'],
+            dict_data['ys'],
+            alpha=0.05
+        )
+        self.chart.ax1.plot(
+            dict_data['xs'],
+            dict_data['ys'],
+            lw=1,
+            label=legend_str
+        )
         self.chart.ax1.set_ylim(self.get_ylim(self.dtaobj))
         self.chart.ax1.legend(loc='best')
 
         # _____________________________________________________________________
         # 1st Derivatives
-        self.chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
+        self.chart.ax2.plot(
+            dict_data['xs'],
+            dict_data['dy1s'],
+            lw=1
+        )
         yaxis_fraction(self.chart.ax2)
 
         # _____________________________________________________________________
         # 2nd Derivatives
-        self.chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
+        self.chart.ax3.plot(
+            dict_data['xs'],
+            dict_data['dy2s'],
+            lw=1
+        )
         yaxis_fraction(self.chart.ax3)
 
         self.chart.refreshDraw()
@@ -76,7 +100,7 @@ class DTAPlotBase:
     def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
         y_min = dtaobj.getYMin()
         y_max = dtaobj.getYMax()
-        y_pad = (y_max - y_min) * 0.025
+        y_pad = (y_max - y_min) * 0.05
 
         ylim_min = y_min - y_pad
         ylim_max = y_max + y_pad
