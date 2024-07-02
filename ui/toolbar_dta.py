@@ -89,7 +89,7 @@ class DTAToolBar(QToolBar):
 
 
 class DTAToolBarPlus(QToolBar):
-    clickedPlot = Signal(QDate)
+    clickedPlot = Signal()
     clickedSimulate = Signal()
 
     def __init__(self):
@@ -133,6 +133,13 @@ class DTAToolBarPlus(QToolBar):
         ticker = self.combo.currentText()
         return self.combo.getCode(ticker)
 
+    def on_activated(self, qdate: QDate):
+        self.ent_date.setDate(qdate)
+
+        calendar: QCalendarWidget = self.sender()
+        calendar.hide()
+        calendar.deleteLater()
+
     def on_calendar_selected(self):
         self.calendar = calendar = QCalendarWidget()
         calendar.setMaximumDate(QDate(*get_ymd()))
@@ -142,18 +149,15 @@ class DTAToolBarPlus(QToolBar):
         calendar.activated.connect(self.on_activated)
         calendar.show()
 
-    def on_activated(self, qdate: QDate):
-        self.ent_date.setDate(qdate)
-
-        calendar: QCalendarWidget = self.sender()
-        calendar.hide()
-        calendar.deleteLater()
+    def getDate(self) -> QDate:
+        return self.ent_date.getDate()
 
     def on_plot(self):
-        self.clickedPlot.emit(self.ent_date.getDate())
+        self.clickedPlot.emit()
 
     def on_simulate(self):
         self.clickedSimulate.emit()
+
 
 class DTAVerifyToolBar(QToolBar):
     clickedStart = Signal()

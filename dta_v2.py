@@ -64,6 +64,23 @@ class DayTrendAnalyzer(QMainWindow):
         self.statusbar = DTAStatusBar()
         self.setStatusBar(self.statusbar)
 
+    def get_dtaobj(self) -> DTAObj | None:
+        dict_id_code = get_dict_id_code()
+        code = self.toolbar.getCode()
+        id_code = dict_id_code[code]
+        qdate = self.toolbar.getDate()
+        start = get_day_timestamp(qdate)
+        end = get_day_timestamp(qdate.addDays(1))
+        df = dta_get_data_from_db1m(id_code, start, end)
+
+        if len(df) == 0:
+            return None
+        else:
+            dtatype = DTAType.CANDLE1M
+            date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
+            dtaobj = DTAObj(dtatype, code, date_str, df)
+            return dtaobj
+
     @staticmethod
     def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
         y_min = dtaobj.getYMin()
@@ -75,19 +92,11 @@ class DayTrendAnalyzer(QMainWindow):
 
         return ylim_min, ylim_max
 
-    def on_plot(self, qdate: QDate):
-        dict_id_code = get_dict_id_code()
-        code = self.toolbar.getCode()
-        id_code = dict_id_code[code]
-        start = get_day_timestamp(qdate)
-        end = get_day_timestamp(qdate.addDays(1))
-        df = dta_get_data_from_db1m(id_code, start, end)
-        if len(df) == 0:
+    def on_plot(self):
+        dtaobj = self.get_dtaobj()
+        if dtaobj is None:
+            print('No data!')
             return
-
-        dtatype = DTAType.CANDLE1M
-        date_str = '%s-%s-%s' % (qdate.year(), qdate.month(), qdate.day())
-        dtaobj = DTAObj(dtatype, code, date_str, df)
         dtaobj.updateMSG.connect(self.updateStatus)
         data = dtaobj.getPlotData(0, robust=False)
 
@@ -131,7 +140,11 @@ class DayTrendAnalyzer(QMainWindow):
         chart.refreshDraw()
 
     def on_simulate(self):
+        chart: QWidget | ChartForAnalysis = self.centralWidget()
+        chart.clearAxes()
+
         print('DEBUG!')
+        chart.refreshDraw()
 
     def set_hvlines(self, ax: Axes):
         ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
