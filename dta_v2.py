@@ -30,23 +30,9 @@ class DTAPlotBase:
     def __init__(self, chart: ChartForAnalysis, dtaobj: DTAObj):
         self.chart = chart
         self.dtaobj = dtaobj
+        self.init_chart()
 
     def draw(self):
-        self.chart.clearAxes()
-        for ax in self.chart.fig.axes:
-            self.set_hvlines(ax)
-            ax.grid()
-
-        # _____________________________________________________________________
-        # X axis label
-        self.chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
-
-        # _____________________________________________________________________
-        # Y axes label
-        self.chart.ax1.set_ylabel('Standardized Price')
-        self.chart.ax2.set_ylabel('$dy$')
-        self.chart.ax3.set_ylabel('$dy^2$')
-
         # Data disctionary
         dict_data = self.dtaobj.getPlotData(0, robust=False)
         # _____________________________________________________________________
@@ -93,8 +79,22 @@ class DTAPlotBase:
             lw=1
         )
         yaxis_fraction(self.chart.ax3)
-
+        # refresh
         self.chart.refreshDraw()
+
+    def init_chart(self):
+        self.chart.clearAxes()
+        for ax in self.chart.fig.axes:
+            self.set_hvlines(ax)
+            ax.grid()
+        # _____________________________________________________________________
+        # X axis label
+        self.chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
+        # _____________________________________________________________________
+        # Y axes label
+        self.chart.ax1.set_ylabel('Standardized Price')
+        self.chart.ax2.set_ylabel('$dy$')
+        self.chart.ax3.set_ylabel('$dy^2$')
 
     @staticmethod
     def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
@@ -138,8 +138,8 @@ class DayTrendAnalyzer(QMainWindow):
 
         # _____________________________________________________________________
         # Dock
-        dock = DTADockSlider()
-        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
+        self.dock = DTADockSlider()
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.dock)
 
         # _____________________________________________________________________
         # Navigation Toolbar at Bottom
