@@ -114,6 +114,7 @@ class DTAVerify(QMainWindow):
 
         chart.ax2.bar(x=df1.index, height=df1['morning'], color='C0')
         chart.ax2.bar(x=df1.index, height=df1['afternoon'], color='C1')
+        chart.ax2.set_ylim(-9000, 9000)
 
         chart.ax2.axhline(y=0, linestyle='solid', lw=0.75, c='black')
         chart.ax2.set_ylabel('Morning/Afternoon Integral')

@@ -60,7 +60,7 @@ def dta_get_ref_times_JST(date_str) -> tuple[pd.Timestamp, pd.Timestamp, pd.Time
 
 
 def dta_get_ticker_filelist(ticker: str):
-    dir_path = 'cache'
+    dir_path = 'cache/old'
     pattern = re.compile(r'%s/%s.+\.pkl$' % (dir_path, ticker))
     # print(pattern)
     list_file = [
