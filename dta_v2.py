@@ -26,6 +26,69 @@ from ui.toolbar_dta import DTAToolBarPlus
 from widgets.charts import ChartForAnalysis, yaxis_fraction
 
 
+class DTAPlotBase:
+    def __init__(self, chart: ChartForAnalysis, dtaobj: DTAObj):
+        self.chart = chart
+        self.dtaobj = dtaobj
+
+    def draw(self):
+        self.chart.clearAxes()
+
+        data = self.dtaobj.getPlotData(0, robust=False)
+
+        for ax in [self.chart.ax1, self.chart.ax2, self.chart.ax3]:
+            self.set_hvlines(ax)
+            ax.grid()
+
+        self.chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
+
+        self.chart.ax1.set_ylabel('Standardized Price')
+        self.chart.ax1.set_ylim(-4, 4)
+        self.chart.ax2.set_ylabel('$dy$')
+        self.chart.ax3.set_ylabel('$dy^2$')
+
+        # _____________________________________________________________________
+        # Scaled
+        self.chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
+        stock_ticker = self.dtaobj.getTicker()
+        date_str = self.dtaobj.getDateStr()
+        legend_str = '%s : %s' % (stock_ticker, date_str)
+        # _____________________________________________________________________
+        # Smoothing Spline
+        self.chart.ax1.fill_between(data['xs'], data['ys'], alpha=0.05)
+        self.chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
+        self.chart.ax1.set_ylim(self.get_ylim(self.dtaobj))
+        self.chart.ax1.legend(loc='best')
+
+        # _____________________________________________________________________
+        # 1st Derivatives
+        self.chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
+        yaxis_fraction(self.chart.ax2)
+
+        # _____________________________________________________________________
+        # 2nd Derivatives
+        self.chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
+        yaxis_fraction(self.chart.ax3)
+
+        self.chart.refreshDraw()
+
+    @staticmethod
+    def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
+        y_min = dtaobj.getYMin()
+        y_max = dtaobj.getYMax()
+        y_pad = (y_max - y_min) * 0.025
+
+        ylim_min = y_min - y_pad
+        ylim_max = y_max + y_pad
+
+        return ylim_min, ylim_max
+
+    @staticmethod
+    def set_hvlines(ax: Axes):
+        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
+        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
+
+
 class DayTrendAnalyzer(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -81,74 +144,23 @@ class DayTrendAnalyzer(QMainWindow):
             dtaobj = DTAObj(dtatype, code, date_str, df)
             return dtaobj
 
-    @staticmethod
-    def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
-        y_min = dtaobj.getYMin()
-        y_max = dtaobj.getYMax()
-        y_pad = (y_max - y_min) * 0.025
-
-        ylim_min = y_min - y_pad
-        ylim_max = y_max + y_pad
-
-        return ylim_min, ylim_max
-
     def on_plot(self):
         dtaobj = self.get_dtaobj()
         if dtaobj is None:
             print('No data!')
             return
         dtaobj.updateMSG.connect(self.updateStatus)
-        data = dtaobj.getPlotData(0, robust=False)
-
         chart: QWidget | ChartForAnalysis = self.centralWidget()
-        chart.clearAxes()
-
-        for ax in [chart.ax1, chart.ax2, chart.ax3]:
-            self.set_hvlines(ax)
-            ax.grid()
-
-        chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
-
-        chart.ax1.set_ylabel('Standardized Price')
-        chart.ax1.set_ylim(-4, 4)
-        chart.ax2.set_ylabel('$dy$')
-        chart.ax3.set_ylabel('$dy^2$')
-
-        # _____________________________________________________________________
-        # Scaled
-        chart.ax1.scatter(data['x'], data['y_scaled'], s=1, c='#444')
-        stock_ticker = dtaobj.getTicker()
-        date_str = dtaobj.getDateStr()
-        legend_str = '%s : %s' % (stock_ticker, date_str)
-        # _____________________________________________________________________
-        # Smoothing Spline
-        chart.ax1.fill_between(data['xs'], data['ys'], alpha=0.05)
-        chart.ax1.plot(data['xs'], data['ys'], lw=1, label=legend_str)
-        chart.ax1.set_ylim(self.get_ylim(dtaobj))
-        chart.ax1.legend(loc='best')
-
-        # _____________________________________________________________________
-        # 1st Derivatives
-        chart.ax2.plot(data['xs'], data['dy1s'], lw=1)
-        yaxis_fraction(chart.ax2)
-
-        # _____________________________________________________________________
-        # 2nd Derivatives
-        chart.ax3.plot(data['xs'], data['dy2s'], lw=1)
-        yaxis_fraction(chart.ax3)
-
-        chart.refreshDraw()
+        plotobj = DTAPlotBase(chart, dtaobj)
+        plotobj.draw()
 
     def on_simulate(self):
-        chart: QWidget | ChartForAnalysis = self.centralWidget()
-        chart.clearAxes()
-
+        dtaobj = self.get_dtaobj()
+        if dtaobj is None:
+            print('No data!')
+            return
+        dtaobj.updateMSG.connect(self.updateStatus)
         print('DEBUG!')
-        chart.refreshDraw()
-
-    def set_hvlines(self, ax: Axes):
-        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
 
     def updateStatus(self, msg: str):
         self.statusbar.setStatusMSG(msg)
