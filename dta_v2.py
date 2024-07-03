@@ -113,6 +113,18 @@ class DTAPlotBase:
         ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
 
 
+class DTAPlotSim(DTAPlotBase):
+    def __init__(self, chart: ChartForAnalysis, dtaobj: DTAObj):
+        super().__init__(chart, dtaobj)
+
+    def draw(self):
+        # Data disctionary
+        dict_data = self.dtaobj.getPlotData(0, robust=False)
+
+        # refresh
+        self.chart.refreshDraw()
+
+
 class DayTrendAnalyzer(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -188,7 +200,9 @@ class DayTrendAnalyzer(QMainWindow):
             print('No data!')
             return
         dtaobj.updateMSG.connect(self.updateStatus)
-        print('DEBUG!')
+        chart: QWidget | ChartForAnalysis = self.centralWidget()
+        plotobj = DTAPlotSim(chart, dtaobj)
+        plotobj.draw()
 
     def updateStatus(self, msg: str):
         self.statusbar.setStatusMSG(msg)
