@@ -1,7 +1,7 @@
 import os
 import sys
 
-from PySide6.QtCore import Qt, QDate
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import (
     NavigationToolbar2QT as NavigationToolbar,
 )
@@ -23,106 +22,8 @@ from structs.res import AppRes
 from ui.dock_dta import DTADockSlider
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBarPlus
-from widgets.charts import ChartForAnalysis, yaxis_fraction
-
-
-class DTAPlotBase:
-    def __init__(self, chart: ChartForAnalysis, dtaobj: DTAObj):
-        self.chart = chart
-        self.dtaobj = dtaobj
-        self.init_chart()
-
-    def draw(self):
-        # Data disctionary
-        dict_data = self.dtaobj.getPlotData(0, robust=False)
-        # _____________________________________________________________________
-        # Scaled
-        self.chart.ax1.scatter(
-            dict_data['x'],
-            dict_data['y_scaled'],
-            s=1,
-            c='#444'
-        )
-        stock_ticker = self.dtaobj.getTicker()
-        date_str = self.dtaobj.getDateStr()
-        legend_str = '%s : %s' % (stock_ticker, date_str)
-        # _____________________________________________________________________
-        # Smoothing Spline
-        self.chart.ax1.fill_between(
-            dict_data['xs'],
-            dict_data['ys'],
-            alpha=0.05
-        )
-        self.chart.ax1.plot(
-            dict_data['xs'],
-            dict_data['ys'],
-            lw=1,
-            label=legend_str
-        )
-        self.chart.ax1.set_ylim(self.get_ylim(self.dtaobj))
-        self.chart.ax1.legend(loc='best')
-
-        # _____________________________________________________________________
-        # 1st Derivatives
-        self.chart.ax2.plot(
-            dict_data['xs'],
-            dict_data['dy1s'],
-            lw=1
-        )
-        yaxis_fraction(self.chart.ax2)
-
-        # _____________________________________________________________________
-        # 2nd Derivatives
-        self.chart.ax3.plot(
-            dict_data['xs'],
-            dict_data['dy2s'],
-            lw=1
-        )
-        yaxis_fraction(self.chart.ax3)
-        # refresh
-        self.chart.refreshDraw()
-
-    def init_chart(self):
-        self.chart.clearAxes()
-        for ax in self.chart.fig.axes:
-            self.set_hvlines(ax)
-            ax.grid()
-        # _____________________________________________________________________
-        # X axis label
-        self.chart.ax3.set_xlabel('Tokyo Market Opening [sec]')
-        # _____________________________________________________________________
-        # Y axes label
-        self.chart.ax1.set_ylabel('Standardized Price')
-        self.chart.ax2.set_ylabel('$dy$')
-        self.chart.ax3.set_ylabel('$dy^2$')
-
-    @staticmethod
-    def get_ylim(dtaobj: DTAObj) -> tuple[float, float]:
-        y_min = dtaobj.getYMin()
-        y_max = dtaobj.getYMax()
-        y_pad = (y_max - y_min) * 0.05
-
-        ylim_min = y_min - y_pad
-        ylim_max = y_max + y_pad
-
-        return ylim_min, ylim_max
-
-    @staticmethod
-    def set_hvlines(ax: Axes):
-        ax.axhline(y=0, linestyle='solid', lw=0.75, c='black')
-        ax.axvline(x=9000, linestyle='dotted', lw=1, c='red')
-
-
-class DTAPlotSim(DTAPlotBase):
-    def __init__(self, chart: ChartForAnalysis, dtaobj: DTAObj):
-        super().__init__(chart, dtaobj)
-
-    def draw(self):
-        # Data disctionary
-        dict_data = self.dtaobj.getPlotData(0, robust=False)
-
-        # refresh
-        self.chart.refreshDraw()
+from widgets.charts import ChartForAnalysis
+from widgets.dtaplot import DTAPlotBase, DTAPlotSim
 
 
 class DayTrendAnalyzer(QMainWindow):
@@ -135,6 +36,8 @@ class DayTrendAnalyzer(QMainWindow):
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Analyzer (with DB), DTA')
         self.setMinimumSize(1000, 700)
+
+        self.timer = QTimer()
 
         # _____________________________________________________________________
         # Toolbar
@@ -201,8 +104,16 @@ class DayTrendAnalyzer(QMainWindow):
             return
         dtaobj.updateMSG.connect(self.updateStatus)
         chart: QWidget | ChartForAnalysis = self.centralWidget()
-        plotobj = DTAPlotSim(chart, dtaobj)
+        self.plotobj = plotobj = DTAPlotSim(chart, dtaobj)
         plotobj.draw()
+        self.timer.timeout.connect(self.update_data)
+        self.timer.start(100)
+
+    def update_data(self):
+        if self.plotobj.shouldStopTimer():
+            self.timer.stop()
+        else:
+            self.plotobj.update_data()
 
     def updateStatus(self, msg: str):
         self.statusbar.setStatusMSG(msg)
