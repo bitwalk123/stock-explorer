@@ -99,7 +99,14 @@ class DTAObj(QObject):
         t_start = param.start
         t_end = param.end
         t_interval = param.interval
-        lam = param.lam
+
+        if self.dtatype == DTAType.REALTIME:
+            lam = param.lam2
+        elif self.dtatype == DTAType.CANDLE1M:
+            lam = param.lam
+        else:
+            lam = param.lam
+
         spl = make_smoothing_spline(self.x_array, y_scaled, lam=lam)
         dist_data['xs'] = xs = np.linspace(t_start, t_end, int((t_end - t_start) / t_interval))
         dist_data['ys'] = spl(xs)
