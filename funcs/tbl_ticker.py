@@ -163,6 +163,40 @@ def update_tbl_ticker(tse: str) -> bool:
         return False
 
 
+def update_tbl_ticker_test(tse: str) -> bool:
+    list_market = [
+        'グロース（内国株式）',
+        'スタンダード（内国株式）',
+        'プライム（内国株式）',
+    ]
+    df_all = get_excel_from_url(tse)
+
+    df_stock0 = df_all[df_all['市場・商品区分'].isin(list_market)]
+    df_stock = df_stock0[[len(str(p)) == 4 for p in df_stock0['コード']]].reset_index(drop=True)
+    df_stock['コード'] = df_stock['コード'].astype(str)
+
+    list_row = list(df_stock.index)
+
+    con = DBInfo.get_connection()
+    if con.open():
+        query = QSqlQuery()
+        # ____________________________________________________________________
+        # get current list of ticker code
+        list_code_current = update_tbl_ticker_procs_1(query)
+        # ____________________________________________________________________
+        # overwrite/update/insert tickers
+        update_tbl_ticker_procs_2(df_stock, list_row, query)
+        # ____________________________________________________________________
+        # check code already de-listed
+        update_tbl_ticker_procs_3(df_stock, list_code_current, query)
+
+        con.close()
+        return True
+    else:
+        print('database can not be opened!')
+        return False
+
+
 def update_tbl_ticker_procs_1(query):
     # get current list of ticker code
     list_code_current = list()

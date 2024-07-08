@@ -38,7 +38,7 @@ def sql_ins_into_ticker_vals(series: pd.Series) -> str:
     sql = """
         INSERT INTO ticker
         VALUES(
-            default, %d, %s, '%s', '%s', %d, '%s', %d, '%s', '%s', '%s'
+            default, %d, '%s', '%s', '%s', %d, '%s', %d, '%s', '%s', '%s'
         );
     """ % (
         series['日付'],
