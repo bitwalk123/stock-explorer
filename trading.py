@@ -38,8 +38,8 @@ class TradingConsole(QMainWindow):
 
         self.dict_ticker = {
             '東京エレクトロン': '8035',
+            'ＮＦ日経レバ': '1570',
             'ＳＣＲＥＥＮホールディングス': '7735',
-            'アドバンテスト': '6857',
         }
 
         # Constants for spin boxes
