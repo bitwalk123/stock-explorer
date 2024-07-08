@@ -55,6 +55,7 @@ class ComboBookmarkAll(ComboBookmark):
     def getTickerList(self) -> dict:
         return {
             '日経平均株価（日経225）': ['^N225', False],
+            'ＮＦ日経レバ': ['1570.T', False],
             '東京エレクトロン': ['8035', True],
             'スクリーン': ['7735', True],
             'アドバンテスト': ['6857', True],
