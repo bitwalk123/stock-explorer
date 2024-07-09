@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PySide6.QtCore import (
@@ -5,6 +6,7 @@ from PySide6.QtCore import (
     Qt,
     Signal,
 )
+from PySide6.QtGui import QIcon
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import (
     QApplication,
@@ -18,6 +20,7 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.scraping import get_news_kabuyoho, get_news_8035
+from structs.res import AppRes
 from widgets.labels import (
     LabelLogo,
     LabelNewsDate,
@@ -59,6 +62,9 @@ class ToolBarNews(QToolBar):
 class News(QMainWindow):
     def __init__(self):
         super().__init__()
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'news.png'))
+        self.setWindowIcon(icon)
         self.setWindowTitle('News')
         self.resize(600, 300)
 
