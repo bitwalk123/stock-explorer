@@ -27,6 +27,8 @@ from widgets.dtaplot import DTAPlotBase, DTAPlotSim
 
 
 class DayTrendAnalyzer(QMainWindow):
+    app_var = '2.0.0'
+
     def __init__(self):
         super().__init__()
         dict_info = set_env()
