@@ -21,6 +21,7 @@ from widgets.charts import ChartRealtime
 
 
 class TradeDayAnalysisRealtime(QTabWidget):
+    app_ver = '1.0.0'
     url_login = QUrl('https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html')
 
     def __init__(self):
