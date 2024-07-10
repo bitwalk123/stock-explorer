@@ -90,12 +90,19 @@ class TradeDayAnalysisRealtime(QTabWidget):
         return True
 
     def op_domestic(self):
-        jscript = """
+        jscript1 = """
+            $.cookie(autoLogoutStsCookieKey, "0");
+            autoLogout = false;
+            autoLogoutUsed = true;
+        """
+        self.run_javascript(jscript1)
+
+        jscript2 = """
             var element1 = document.getElementById('gmenu_domestic_stock');
             var element2 = element1.getElementsByClassName('pcm-gl-nav-01__button')[0];
             element2.onclick.apply();
         """
-        self.run_javascript(jscript)
+        self.run_javascript(jscript2)
 
     def op_login(self):
         loginid = self.obj_login.getLoginID()
