@@ -223,12 +223,18 @@ class TradeDayAnalysisRealtime(QTabWidget):
 
         if ts > self.time_close:
             # print('after market close')
-            pkl = self.get_pkl_fine()
-            if not os.path.exists(pkl):
-                self.df.to_pickle(pkl)
-                print('saved %s' % pkl)
-                self.timer.stop()
-                print('timer stopped')
+            if len(self.df) > 1:
+                pkl = self.get_pkl_fine()
+                if not os.path.exists(pkl):
+                    self.df.to_pickle(pkl)
+                    print('saved %s' % pkl)
+                else:
+                    print('already path %s exists!' % pkl)
+            else:
+                print('not saved due to no data!')
+
+            self.timer.stop()
+            print('timer stopped')
 
             return
         # RELOAD
