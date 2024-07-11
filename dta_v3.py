@@ -91,7 +91,7 @@ class DayTrendAnalyzerRT(QMainWindow):
         if len(df2) > 0:
             chart.ax.plot(df2, c='C0', lw=1)
 
-        chart.ax.axhline(y=rtobj.mean(), c='r', lw=1, ls='-')
+        chart.ax.axhline(y=rtobj.mean(), c='r', lw=0.75, ls='-')
 
         chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))

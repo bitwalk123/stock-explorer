@@ -126,7 +126,7 @@ class ChartRealtimePlus(ChartAbstract):
             top=0.98,
             bottom=0.05,
             left=0.075,
-            right=0.995,
+            right=0.925,
             hspace=0,
         )
 

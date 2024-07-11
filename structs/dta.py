@@ -144,7 +144,8 @@ class RTObj(QObject):
     def area(self, df: pd.DataFrame, mean: float, sigma: float) -> float:
         x = np.array([t.timestamp() for t in df.index])
         y = np.array([(v - mean) / sigma for v in df['Price']])
-        return integrate.simpson(y, x=x)
+        # return integrate.simpson(y, x=x)
+        return integrate.trapezoid(y, x=x)
 
     def getDF1(self) -> pd.DataFrame:
         return self.df.loc[self.df.index[self.df.index < self.time_mid]]
@@ -166,4 +167,3 @@ class RTObj(QObject):
 
     def stdev(self) -> float:
         return np.std(self.df['Price'])
-
