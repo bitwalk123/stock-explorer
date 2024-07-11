@@ -19,10 +19,11 @@ from funcs.dta_funcs import dta_get_data_from_dbrt
 from funcs.tbl_ticker import get_dict_id_code
 from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
+from structs.dta import RTObj
 from structs.res import AppRes
 from ui.statusbar_dta import DTAStatusBar
 from ui.toolbar_dta import DTAToolBarRT
-from widgets.charts import ChartRealtime
+from widgets.charts import ChartRealtimePlus
 
 
 class DayTrendAnalyzerRT(QMainWindow):
@@ -31,15 +32,12 @@ class DayTrendAnalyzerRT(QMainWindow):
     def __init__(self):
         super().__init__()
         dict_info = set_env()
-        mpl.rcParams['timezone']= 'Asia/Tokyo'
-
-        self.date_str = None
 
         res = AppRes()
-        icon = QIcon(os.path.join(res.getImagePath(), 'trends.png'))
+        icon = QIcon(os.path.join(res.getImagePath(), 'trend_realtime.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Analyzer (RT with DB)')
-        self.setMinimumSize(1000, 800)
+        self.setMinimumSize(1000, 700)
 
         # _____________________________________________________________________
         # Toolbar
@@ -50,7 +48,7 @@ class DayTrendAnalyzerRT(QMainWindow):
 
         # _____________________________________________________________________
         # Chart
-        chart = ChartRealtime()
+        chart = ChartRealtimePlus()
         self.setCentralWidget(chart)
 
         # _____________________________________________________________________
@@ -63,42 +61,48 @@ class DayTrendAnalyzerRT(QMainWindow):
         self.statusbar = DTAStatusBar()
         self.setStatusBar(self.statusbar)
 
-    def get_dataframe(self) -> pd.DataFrame:
+    def get_dataframe(self) -> tuple[str, pd.DataFrame]:
         dict_id_code = get_dict_id_code()
         code = self.toolbar.getCode()
         id_code = dict_id_code[code]
         qdate = self.toolbar.getDate()
-        self.date_str = '%4d-%02d-%02d' % (qdate.year(), qdate.month(), qdate.day())
         start = get_day_timestamp(qdate)
         end = get_day_timestamp(qdate.addDays(1))
         df = dta_get_data_from_dbrt(id_code, start, end)
-        return df
+        date_str = '%4d-%02d-%02d' % (qdate.year(), qdate.month(), qdate.day())
+        return date_str, df
 
     def on_plot(self):
-        df = self.get_dataframe()
+        date_str, df = self.get_dataframe()
         if len(df) == 0:
             print('No data!')
             return
+        rtobj = RTObj(date_str, df)
 
-        print(df)
-        chart: QWidget | ChartRealtime = self.centralWidget()
-        time_left = pd.to_datetime(self.date_str + ' 08:50:00+09:00')
-        time_mid = pd.to_datetime(self.date_str + ' 12:00:00+09:00')
-        time_right = pd.to_datetime(self.date_str + ' 15:10:00+09:00')
+        # print(df)
+        chart: QWidget | ChartRealtimePlus = self.centralWidget()
 
         chart.clearAxes()
-        df1 = df.loc[df.index[df.index < time_mid]]
-        df2 = df.loc[df.index[df.index > time_mid]]
 
+        df1 = rtobj.getDF1()
+        df2 = rtobj.getDF2()
         if len(df1) > 0:
             chart.ax.plot(df1, c='C0', lw=1)
         if len(df2) > 0:
             chart.ax.plot(df2, c='C0', lw=1)
 
-        chart.ax.set_xlim(time_left, time_right)
+        chart.ax.axhline(y=rtobj.mean(), c='r', lw=1, ls='-')
+
+        chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        chart.ax.grid()
+        chart.ax.grid(axis='x')
         chart.refreshDraw()
+
+        mean = rtobj.mean()
+        sigma = rtobj.stdev()
+        area1 = rtobj.area(df1, mean, sigma)
+        area2 = rtobj.area(df2, mean, sigma)
+        print('mean: %.1f, sigma: %.1f, morning: %.1f, afternoon: %.1f' % (mean, sigma, area1, area2))
 
     def on_simulate(self):
         pass

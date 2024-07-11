@@ -4,7 +4,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 from PySide6.QtCore import Signal, QObject
-from scipy import interpolate
+from scipy import integrate, interpolate
 from scipy.interpolate import make_smoothing_spline
 
 from funcs.dta_funcs import (
@@ -130,3 +130,40 @@ class DTAObj(QObject):
         dist_data['dy2s'] = interpolate.splev(xs, spl, der=2)
 
         return dist_data
+
+
+class RTObj(QObject):
+    def __init__(self, date_str: str, df: pd.DataFrame):
+        super().__init__()
+        self.date_str = date_str
+        self.df = df
+        self.time_left = pd.to_datetime(date_str + ' 08:50:00+09:00')
+        self.time_mid = pd.to_datetime(date_str + ' 12:00:00+09:00')
+        self.time_right = pd.to_datetime(date_str + ' 15:10:00+09:00')
+
+    def area(self, df: pd.DataFrame, mean: float, sigma: float) -> float:
+        x = np.array([t.timestamp() for t in df.index])
+        y = np.array([(v - mean) / sigma for v in df['Price']])
+        return integrate.simpson(y, x=x)
+
+    def getDF1(self) -> pd.DataFrame:
+        return self.df.loc[self.df.index[self.df.index < self.time_mid]]
+
+    def getDF2(self) -> pd.DataFrame:
+        return self.df.loc[self.df.index[self.df.index > self.time_mid]]
+
+    def getXAxisRange(self) -> tuple[pd.Timestamp, pd.Timestamp]:
+        return self.time_left, self.time_right
+
+    def iqr(self) -> float:
+        return np.subtract(*np.percentile(self.df['Price'], [75, 25]))
+
+    def mean(self) -> float:
+        return np.mean(self.df['Price'])
+
+    def median(self) -> float:
+        return np.median(self.df['Price'])
+
+    def stdev(self) -> float:
+        return np.std(self.df['Price'])
+

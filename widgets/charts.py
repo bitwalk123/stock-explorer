@@ -1,8 +1,9 @@
+import matplotlib as mpl
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import ticker
 
+from matplotlib import ticker
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -108,6 +109,46 @@ class ChartRealtime(ChartAbstract):
             ax.remove()
 
 
+class ChartRealtimePlus(ChartAbstract):
+    def __init__(self):
+        super().__init__()
+        mpl.rcParams['timezone'] = 'Asia/Tokyo'
+        fm.fontManager.addfont(FONT_PATH2)
+        font_prop = fm.FontProperties(fname=FONT_PATH2)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 14
+        plt.rcParams['axes.labelsize'] = 12
+        plt.rcParams['xtick.labelsize'] = 12
+        plt.rcParams['ytick.labelsize'] = 12
+        plt.rcParams['legend.fontsize'] = 8
+
+        self.fig.subplots_adjust(
+            top=0.98,
+            bottom=0.05,
+            left=0.075,
+            right=0.995,
+            hspace=0,
+        )
+
+        self.ax = None
+        self.initTrend()
+
+    def initTrend(self):
+        self.ax = self.fig.add_subplot(111)
+        self.ax.tick_params(axis='x', labelsize=12)
+
+    def clearAxes(self):
+        self.ax.cla()
+
+    def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()
+
+
 class ChartForAnalysis(ChartAbstract):
     def __init__(self):
         super().__init__()
@@ -193,6 +234,7 @@ class ChartForVerify01(ChartAbstract):
         for ax in axs:
             ax.remove()
 
+
 class ChartForVerify02(ChartAbstract):
     def __init__(self):
         super().__init__()
@@ -226,4 +268,3 @@ class ChartForVerify02(ChartAbstract):
         axs = self.fig.axes
         for ax in axs:
             ax.remove()
-
