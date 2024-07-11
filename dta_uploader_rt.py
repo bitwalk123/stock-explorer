@@ -20,6 +20,8 @@ from ui.toolbar_dta import DTAUploaderToolBar
 
 
 class DTAUploaderRT(QMainWindow):
+    tz_delta = 9 * 60 * 60
+
     def __init__(self):
         super().__init__()
         dict_info = set_env()
@@ -59,11 +61,13 @@ class DTAUploaderRT(QMainWindow):
                 id_code = dict_id_code[code]
                 # print(id_code)
                 df = pd.read_pickle(file)
-                #print(df)
-                #break
+                # print(df)
+                # break
 
                 for row in df.index:
-                    timestamp = int(row.timestamp())
+                    # The df of RT does NOT have timezone info.
+                    # Convert timestamp as UTC.
+                    timestamp = int(row.timestamp() - self.tz_delta)
                     series = df.loc[row].copy()
                     series['Datetime'] = timestamp
                     # print(series)

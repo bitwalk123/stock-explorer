@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 from PySide6.QtSql import QSqlQuery
 
-from sqls.sql_trade_day import sql_sel_all_from_trade1m_with_dates_id_code_datetimes
+from sqls.sql_trade_day import sql_sel_all_from_trade1m_with_dates_id_code_datetimes, \
+    sql_sel_all_from_tradert_with_dates_id_code_datetimes
 from structs.db_info import DBInfo
 
 
@@ -33,6 +34,30 @@ def dta_get_data_from_db1m(id_code: int, start: int, end: int) -> pd.DataFrame:
         df = dta_prep_df_for1m(list_series)
     else:
         df = dta_prep_df_for1m_blank()
+
+    return df
+
+
+def dta_get_data_from_dbrt(id_code: int, start: int, end: int) -> pd.DataFrame:
+    list_series = list()
+    con = DBInfo.get_connection()
+    if con.open():
+        query = QSqlQuery()
+        sql = sql_sel_all_from_tradert_with_dates_id_code_datetimes(id_code, start, end)
+        print(sql)
+        query.exec(sql)
+        while query.next():
+            date_time = query.value(0)  # "Datetime"
+            dict_stock = dict()
+            dict_stock['Price'] = query.value(1)  # "Price"
+            series = pd.Series(data=dict_stock, name=date_time)
+            list_series.append(series)
+        con.close()
+
+    if len(list_series) > 0:
+        df = dta_prep_df_forrt(list_series)
+    else:
+        df = dta_prep_df_forrt_blank()
 
     return df
 
@@ -101,6 +126,17 @@ def dta_prep_candle1m(date_str: str, df: pd.DataFrame) -> tuple[np.array, np.arr
 def dta_prep_df_for1m(list_series: list) -> pd.DataFrame:
     df = pd.concat(list_series, axis=1).T
     list_dt = [datetime.datetime.fromtimestamp(ts, datetime.timezone.utc) for ts in df.index]
+    #df.index = list_dt
+    list_dt_jst = [dt.astimezone(datetime.timezone(datetime.timedelta(hours=9))) for dt in list_dt]
+    df.index = list_dt_jst
+    df.index.name = 'Datetime'
+
+    return df
+
+
+def dta_prep_df_forrt(list_series: list) -> pd.DataFrame:
+    df = pd.concat(list_series, axis=1).T
+    list_dt = [datetime.datetime.fromtimestamp(ts, datetime.timezone.utc) for ts in df.index]
     list_dt_jst = [dt.astimezone(datetime.timezone(datetime.timedelta(hours=9))) for dt in list_dt]
     df.index = list_dt_jst
     df.index.name = 'Datetime'
@@ -110,6 +146,13 @@ def dta_prep_df_for1m(list_series: list) -> pd.DataFrame:
 
 def dta_prep_df_for1m_blank() -> pd.DataFrame:
     df = pd.DataFrame({'Open': [], 'Low': [], 'High': [], 'Close': [], 'Volume': []})
+    df.index.name = 'Datetime'
+
+    return df
+
+
+def dta_prep_df_forrt_blank() -> pd.DataFrame:
+    df = pd.DataFrame({'Price': []})
     df.index.name = 'Datetime'
 
     return df
