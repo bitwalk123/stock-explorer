@@ -88,8 +88,10 @@ class DayTrendAnalyzerRT(QMainWindow):
         df2 = rtobj.getDF2()
         if len(df1) > 0:
             chart.ax.plot(df1, c='C0', lw=1)
+            chart.ax.fill_between(df1.index, df1['Price'], rtobj.mean(), color='C0', alpha=0.1)
         if len(df2) > 0:
             chart.ax.plot(df2, c='C0', lw=1)
+            chart.ax.fill_between(df2.index, df2['Price'], rtobj.mean(), color='C0', alpha=0.1)
 
         chart.ax.axhline(y=rtobj.mean(), c='r', lw=0.75, ls='-')
 
