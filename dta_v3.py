@@ -111,21 +111,19 @@ class DayTrendAnalyzerRT(QMainWindow):
         chart.ax2.set_ylim(chart.ax.get_ylim())
         chart.ax2.set_yticks([])
 
-        extraticks2 = [mean]
-        chart.ax2.set_yticks(list(chart.ax2.get_yticks()) + extraticks2)
+        value_mean = [mean]
+        chart.ax2.set_yticks(list(chart.ax2.get_yticks()) + value_mean)
         # Label for second y axis
         labels2 = [item.get_text() for item in chart.ax2.get_yticklabels()]
         n = len(labels2)
         labels2[n - 1] = '0'
         chart.ax2.set_yticklabels(labels2)
         # Color for second y axis
-        yticklabels2 = chart.ax2.get_yticklabels()
-        n = len(yticklabels2)
-        yticklabels2[n - 1].set_color('red')
-
+        y2ticklabels = chart.ax2.get_yticklabels()
+        n = len(y2ticklabels)
+        y2ticklabels[n - 1].set_color('red')
 
         chart.refreshDraw()
-
 
     def on_simulate(self):
         pass
