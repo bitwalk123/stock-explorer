@@ -80,31 +80,31 @@ class DayTrendAnalyzerRT(QMainWindow):
         rtobj = RTObj(date_str, df)
 
         # print(df)
-        chart: QWidget | ChartRealtimePlus = self.centralWidget()
 
-        chart.clearAxes()
-
+        mean = rtobj.mean()
+        sigma = rtobj.stdev()
         df1 = rtobj.getDF1()
         df2 = rtobj.getDF2()
+        area1 = rtobj.area(df1, mean, sigma)
+        area2 = rtobj.area(df2, mean, sigma)
+        print('mean: %.1f, sigma: %.1f, morning: %.1f, afternoon: %.1f' % (mean, sigma, area1, area2))
+
+        chart: QWidget | ChartRealtimePlus = self.centralWidget()
+        chart.clearAxes()
         if len(df1) > 0:
             chart.ax.plot(df1, c='C0', lw=1)
-            chart.ax.fill_between(df1.index, df1['Price'], rtobj.mean(), color='C0', alpha=0.1)
+            chart.ax.fill_between(df1.index, df1['Price'], mean, color='C0', alpha=0.1)
         if len(df2) > 0:
             chart.ax.plot(df2, c='C0', lw=1)
-            chart.ax.fill_between(df2.index, df2['Price'], rtobj.mean(), color='C0', alpha=0.1)
+            chart.ax.fill_between(df2.index, df2['Price'], mean, color='C0', alpha=0.1)
 
-        chart.ax.axhline(y=rtobj.mean(), c='r', lw=0.75, ls='-')
+        chart.ax.axhline(y=mean, c='r', lw=0.75, ls='-')
 
         chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         chart.ax.grid(axis='x')
         chart.refreshDraw()
 
-        mean = rtobj.mean()
-        sigma = rtobj.stdev()
-        area1 = rtobj.area(df1, mean, sigma)
-        area2 = rtobj.area(df2, mean, sigma)
-        print('mean: %.1f, sigma: %.1f, morning: %.1f, afternoon: %.1f' % (mean, sigma, area1, area2))
 
     def on_simulate(self):
         pass
