@@ -44,7 +44,6 @@ def dta_get_data_from_dbrt(id_code: int, start: int, end: int) -> pd.DataFrame:
     if con.open():
         query = QSqlQuery()
         sql = sql_sel_all_from_tradert_with_dates_id_code_datetimes(id_code, start, end)
-        print(sql)
         query.exec(sql)
         while query.next():
             date_time = query.value(0)  # "Datetime"
