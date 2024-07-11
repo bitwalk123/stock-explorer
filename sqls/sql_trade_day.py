@@ -189,3 +189,82 @@ def sql_upd_trade1m_values(id_trade1m: int, series: pd.Series) -> str:
         id_trade1m
     )
     return sql
+
+
+# _____________________________________________________________________________
+# for realtime chart
+def sql_create_tbl_tradert() -> str:
+    """Create 'tradert' table
+    """
+    sql = """
+        CREATE TABLE tradert
+        (
+            id_tradert serial,
+            id_code integer,
+            "Datetime" integer,
+            "Price" real,
+            PRIMARY KEY (id_tradert)
+        );
+    """
+    return sql
+
+
+def sql_drop_tbl_tradert() -> str:
+    sql = 'DROP TABLE IF EXISTS tradert;'
+    return sql
+
+
+def sql_ins_into_tradert_values(id_code: int, series: pd.Series) -> str:
+    sql = 'INSERT INTO tradert VALUES(default, %d, %d, %f);' % (
+        id_code,
+        int(series['Datetime']),
+        series['Price']
+    )
+    return sql
+
+
+def sql_sel_all_from_tradert_with_datetime_id_code_datetime(id_code: int, datetime: int) -> str:
+    sql = """
+        SELECT "Datetime", "Price" FROM tradert
+        WHERE id_code = %d AND "Datetime" = %d
+        ORDER BY "Datetime" ASC;
+    """ % (id_code, datetime)
+    return sql
+
+
+def sql_sel_all_from_tradert_with_dates_id_code_datetimes(id_code: int, start: int, end: int) -> str:
+    sql = """
+        SELECT "Datetime", "Price" FROM tradert
+        WHERE id_code = %d AND "Datetime" >= %d AND "Datetime" < %d
+        ORDER BY "Datetime" ASC;
+    """ % (id_code, start, end)
+    return sql
+
+
+def sql_sel_id_tradert_from_tradert_with_datetime_id_code(id_code: int, timestamp: int) -> str:
+    sql = """
+        SELECT "id_tradert" FROM tradert
+        WHERE "id_code" = %d AND "Datetime" = %d;
+    """ % (id_code, timestamp)
+    return sql
+
+
+def sql_sel_id_tradert_from_tradert_with_datetimes_id_code(id_code: int, start: int, end: int) -> str:
+    sql = """
+        SELECT "id_tradert" FROM tradert
+        WHERE "id_code" = %d AND "Datetime" >= %d AND "Datetime" < %d
+        ORDER BY "Datetime" ASC;
+    """ % (id_code, start, end)
+    return sql
+
+
+def sql_upd_tradert_values(id_tradert: int, series: pd.Series) -> str:
+    sql = """
+        UPDATE tradert
+        SET "Price" = %f
+        WHERE "id_tradert" = %d;
+    """ % (
+        series['Price'],
+        id_tradert
+    )
+    return sql
