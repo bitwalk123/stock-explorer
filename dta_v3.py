@@ -14,6 +14,7 @@ from matplotlib import dates as mdates
 from matplotlib.backends.backend_qtagg import (
     NavigationToolbar2QT as NavigationToolbar,
 )
+from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 
 from funcs.dta_funcs import dta_get_data_from_dbrt
 from funcs.tbl_ticker import get_dict_id_code
@@ -102,7 +103,9 @@ class DayTrendAnalyzerRT(QMainWindow):
 
         chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        chart.ax.grid(axis='x')
+        chart.ax.xaxis.set_minor_locator(AutoMinorLocator())
+        chart.ax.grid(axis='x', which='major', linestyle='-', color='gray')
+        chart.ax.grid(axis='x', which='minor', linestyle='--', color='lightgray')
         chart.refreshDraw()
 
 
