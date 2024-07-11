@@ -106,6 +106,24 @@ class DayTrendAnalyzerRT(QMainWindow):
         chart.ax.xaxis.set_minor_locator(AutoMinorLocator())
         chart.ax.grid(axis='x', which='major', linestyle='-', color='gray')
         chart.ax.grid(axis='x', which='minor', linestyle='--', color='lightgray')
+
+        chart.ax2 = chart.ax.twinx()
+        chart.ax2.set_ylim(chart.ax.get_ylim())
+        chart.ax2.set_yticks([])
+
+        extraticks2 = [mean]
+        chart.ax2.set_yticks(list(chart.ax2.get_yticks()) + extraticks2)
+        # Label for second y axis
+        labels2 = [item.get_text() for item in chart.ax2.get_yticklabels()]
+        n = len(labels2)
+        labels2[n - 1] = '0'
+        chart.ax2.set_yticklabels(labels2)
+        # Color for second y axis
+        yticklabels2 = chart.ax2.get_yticklabels()
+        n = len(yticklabels2)
+        yticklabels2[n - 1].set_color('red')
+
+
         chart.refreshDraw()
 
 
