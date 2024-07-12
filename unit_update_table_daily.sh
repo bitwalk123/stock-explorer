@@ -11,7 +11,7 @@ python unit_update_table_trade_daily.py
 python report_correlation_8306.py
 
 # python report_sector_close_daily.py
-python report_sector_close_open_daily.py
+# python report_sector_close_open_daily.py
 python report_sector_change_ratio_daily.py
 cd /home/bitwalk/MyProjects/stock || exit
 git pull
