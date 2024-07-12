@@ -80,8 +80,6 @@ class DayTrendAnalyzerRT(QMainWindow):
             return
         rtobj = RTObj(date_str, df)
 
-        # print(df)
-
         mean = rtobj.mean()
         sigma = rtobj.stdev()
         df1 = rtobj.getDF1()
@@ -92,6 +90,7 @@ class DayTrendAnalyzerRT(QMainWindow):
 
         chart: QWidget | ChartRealtimePlus = self.centralWidget()
         chart.clearAxes()
+
         if len(df1) > 0:
             chart.ax.plot(df1, c='C0', lw=1)
             chart.ax.fill_between(df1.index, df1['Price'], mean, color='C0', alpha=0.1)
@@ -99,29 +98,40 @@ class DayTrendAnalyzerRT(QMainWindow):
             chart.ax.plot(df2, c='C0', lw=1)
             chart.ax.fill_between(df2.index, df2['Price'], mean, color='C0', alpha=0.1)
 
-        chart.ax.axhline(y=mean, c='r', lw=0.75, ls='-')
-
         chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         chart.ax.xaxis.set_minor_locator(AutoMinorLocator())
+
         chart.ax.grid(axis='x', which='major', linestyle='-', color='gray')
         chart.ax.grid(axis='x', which='minor', linestyle='--', color='lightgray')
 
-        chart.ax2 = chart.ax.twinx()
-        chart.ax2.set_ylim(chart.ax.get_ylim())
+        ylim = chart.ax.get_ylim()
+        ylim_low = ylim[0]
+        ylim_high = ylim[1]
+        chart.ax2.set_ylim(ylim)
         chart.ax2.set_yticks([])
 
-        value_mean = [mean]
-        chart.ax2.set_yticks(list(chart.ax2.get_yticks()) + value_mean)
-        # Label for second y axis
-        labels2 = [item.get_text() for item in chart.ax2.get_yticklabels()]
-        n = len(labels2)
-        labels2[n - 1] = '0'
-        chart.ax2.set_yticklabels(labels2)
-        # Color for second y axis
-        y2ticklabels = chart.ax2.get_yticklabels()
-        n = len(y2ticklabels)
-        y2ticklabels[n - 1].set_color('red')
+        label_mean = '0'
+        color_mean = 'red'
+        chart.add_y2_tick_label(mean, label_mean, color_mean)
+
+        zscore = 1
+        while zscore < 10:
+            value = mean - zscore * sigma
+            if value >= ylim_low:
+                chart.add_y2_tick_label(value, str(-zscore), 'gray')
+                zscore += 1
+            else:
+                break
+
+        zscore = 1
+        while zscore < 10:
+            value = mean + zscore * sigma
+            if value <= ylim_high:
+                chart.add_y2_tick_label(value, str(zscore), 'gray')
+                zscore += 1
+            else:
+                break
 
         chart.refreshDraw()
 

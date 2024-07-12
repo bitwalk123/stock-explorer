@@ -126,19 +126,41 @@ class ChartRealtimePlus(ChartAbstract):
             top=0.98,
             bottom=0.05,
             left=0.075,
-            right=0.925,
+            right=0.950,
             hspace=0,
         )
 
-        self.ax = None
-        self.initTrend()
-
-    def initTrend(self):
         self.ax = self.fig.add_subplot(111)
         self.ax.tick_params(axis='x', labelsize=12)
+        self.ax2 = self.ax.twinx()
+
+    def add_y2_tick_label(self, value: float, vlabel: str, vcolor: str):
+        self.ax.axhline(y=value, c=vcolor, lw=0.75, ls='-')
+
+        list_y2tick = list(self.ax2.get_yticks())
+        list_y2tick.append(value)
+        self.ax2.set_yticks(list_y2tick)
+        #vlist = [value]
+        #self.ax2.set_yticks(list(self.ax2.get_yticks()) + vlist)
+
+        # Label for second y axis
+        y2labels = [item.get_text() for item in self.ax2.get_yticklabels()]
+        n = len(y2labels)
+        y2labels[n - 1] = vlabel
+        self.ax2.set_yticklabels(y2labels)
+
+        # Color for second y axis
+        """
+        y2ticklabels = self.ax2.get_yticklabels()
+        n = len(y2ticklabels)
+        y2ticklabels[n - 1].set_color(vcolor)
+        """
+
 
     def clearAxes(self):
-        self.ax.cla()
+        axs = self.fig.axes
+        for ax in axs:
+            ax.cla()
 
     def refreshDraw(self):
         self.fig.canvas.draw()
