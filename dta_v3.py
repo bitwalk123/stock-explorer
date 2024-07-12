@@ -92,11 +92,9 @@ class DayTrendAnalyzerRT(QMainWindow):
         chart.clearAxes()
 
         if len(df1) > 0:
-            chart.ax.plot(df1, c='C0', lw=1)
-            chart.ax.fill_between(df1.index, df1['Price'], mean, color='C0', alpha=0.1)
+            chart.drawChart(df1, mean)
         if len(df2) > 0:
-            chart.ax.plot(df2, c='C0', lw=1)
-            chart.ax.fill_between(df2.index, df2['Price'], mean, color='C0', alpha=0.1)
+            chart.drawChart(df2, mean)
 
         chart.ax.set_xlim(rtobj.getXAxisRange())
         chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
@@ -111,9 +109,7 @@ class DayTrendAnalyzerRT(QMainWindow):
         chart.ax2.set_ylim(ylim)
         chart.ax2.set_yticks([])
 
-        label_mean = '0'
-        color_mean = 'red'
-        chart.add_y2_tick_label(mean, label_mean, color_mean)
+        chart.add_y2_tick_label(mean, '0', 'red')
 
         zscore = 1
         while zscore < 10:

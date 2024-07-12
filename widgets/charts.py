@@ -2,6 +2,7 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from matplotlib import ticker
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -140,8 +141,8 @@ class ChartRealtimePlus(ChartAbstract):
         list_y2tick = list(self.ax2.get_yticks())
         list_y2tick.append(value)
         self.ax2.set_yticks(list_y2tick)
-        #vlist = [value]
-        #self.ax2.set_yticks(list(self.ax2.get_yticks()) + vlist)
+        # vlist = [value]
+        # self.ax2.set_yticks(list(self.ax2.get_yticks()) + vlist)
 
         # Label for second y axis
         y2labels = [item.get_text() for item in self.ax2.get_yticklabels()]
@@ -156,11 +157,14 @@ class ChartRealtimePlus(ChartAbstract):
         y2ticklabels[n - 1].set_color(vcolor)
         """
 
-
     def clearAxes(self):
         axs = self.fig.axes
         for ax in axs:
             ax.cla()
+
+    def drawChart(self, df: pd.DataFrame, mean: float):
+        self.ax.plot(df, c='C0', lw=1)
+        self.ax.fill_between(df.index, df['Price'], mean, color='C0', alpha=0.1)
 
     def refreshDraw(self):
         self.fig.canvas.draw()
