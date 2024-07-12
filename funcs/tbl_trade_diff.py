@@ -154,3 +154,70 @@ def diff_close_open_by_sector(latest_date: int) -> Union[SectorDelta, None]:
     else:
         print('Cannot open database')
         return None
+
+
+def change_ratio_by_sector(latest_date: int) -> Union[SectorDelta, None]:
+    pkl_co = 'pool/change_ratio_%d.pkl' % latest_date
+    if os.path.isfile(pkl_co):
+        with open(pkl_co, 'rb') as f:
+            sd: SectorDelta = pickle.load(f)
+        return sd
+
+    change_ratio_sector_dist = dict()
+    dict_sector_price = dict()
+    # dictionary for id_code with key of code
+    dict_id_code = get_dict_id_code()
+
+    con = DBInfo.get_connection()
+    if con.open():
+        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+        # Initialize dictionary for 33業種区分
+        set_13sector = set()
+        sql = sql_sel_13sector_from_ticker()
+        query = QSqlQuery(sql)
+        while query.next():
+            set_13sector.add(query.value(0))
+        list_13sector = list(sorted(set_13sector))
+        for sector in list_13sector:
+            change_ratio_sector_dist[sector] = list()
+            dict_sector_price[sector] = list()
+
+        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+        # Loop by code
+        for code in dict_id_code.keys():
+            print(code)
+            # _________________________________________________________________
+            # 33業種区分
+            name_13sector = ''
+            sql = sql_sel_13sector_from_ticker_with_code(code)
+            query = QSqlQuery(sql)
+            if query.next():
+                name_13sector = query.value(0)
+            # _________________________________________________________________
+            # latest day
+            sql = sql_sel_open_close_from_trade_with_id_code_date(
+                dict_id_code[code], latest_date
+            )
+            query = QSqlQuery(sql)
+            if query.next():
+                price_open = query.value(0)
+                price_close = query.value(1)
+            else:
+                continue
+
+            change_ratio = 200.0 * (price_close - price_open) / (price_close + price_open)
+            change_ratio_sector_dist[name_13sector].append(change_ratio)
+            pair_price = [price_open, price_close]
+            dict_sector_price[name_13sector].append(pair_price)
+        con.close()
+
+        sd = SectorDelta(change_ratio_sector_dist, dict_sector_price)
+        if not os.path.isdir('pool'):
+            os.mkdir('pool')
+        with open(pkl_co, 'wb') as f:
+            pickle.dump(sd, f)
+
+        return sd
+    else:
+        print('Cannot open database')
+        return None
