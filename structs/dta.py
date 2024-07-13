@@ -97,6 +97,9 @@ class DTAObj(QObject):
         # Smoothing Spline
         param = ParamSmoothing()
         t_start = param.start
+        #print('t_start', t_start, 'self.x_array[0]', self.x_array[0])
+        if t_start < self.x_array[0]:
+            t_start = self.x_array[0]
         t_end = param.end
         t_interval = param.interval
 

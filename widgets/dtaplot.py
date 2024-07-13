@@ -1,3 +1,5 @@
+import numpy as np
+
 from matplotlib.axes import Axes
 
 from structs.dta import DTAObj
@@ -29,7 +31,7 @@ class DTAPlotBase():
         self.chart.ax1.fill_between(
             dict_data['xs'],
             dict_data['ys'],
-            alpha=0.05
+            alpha=0.1
         )
         self.chart.ax1.plot(
             dict_data['xs'],
@@ -37,6 +39,8 @@ class DTAPlotBase():
             lw=1,
             label=legend_str
         )
+        self.chart.ax1.xaxis.set_ticks(np.arange(0, 18000, 1800))
+        self.chart.ax1.set_xlim(0, 18000)
         self.chart.ax1.set_ylim(self.get_ylim(self.dtaobj))
         self.chart.ax1.legend(loc='best')
 
