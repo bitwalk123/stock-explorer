@@ -86,7 +86,7 @@ class DayTrendAnalyzerRT(QMainWindow):
         df2 = rtobj.getDF2()
         area1 = rtobj.area(df1, mean, sigma)
         area2 = rtobj.area(df2, mean, sigma)
-        msg = 'mean: %.1f, sigma: %.1f, morning: %.1f, afternoon: %.1f' % (mean, sigma, area1, area2)
+        msg = '> mean: %.1f, sigma: %.1f, morning: %.1f, afternoon: %.1f' % (mean, sigma, area1, area2)
         self.statusbar.setStatusMSG(msg)
 
         chart: QWidget | ChartRealtimePlus = self.centralWidget()
