@@ -1,8 +1,10 @@
 import datetime as dt
+import os
 import sys
 import yfinance as yf
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QFrame,
@@ -13,10 +15,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from structs.res import AppRes
+
 
 class MktReview(QMainWindow):
     def __init__(self):
         super().__init__()
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'summary.png'))
+        self.setWindowIcon(icon)
         self.setWindowTitle('Market Review')
 
         area = QScrollArea()
