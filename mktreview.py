@@ -5,7 +5,12 @@ import yfinance as yf
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
-    QMainWindow, QScrollArea, QWidget, QGridLayout, QLabel, QFrame,
+    QFrame,
+    QGridLayout,
+    QLabel,
+    QMainWindow,
+    QScrollArea,
+    QWidget,
 )
 
 
