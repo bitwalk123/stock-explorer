@@ -127,7 +127,6 @@ class MktReview(QMainWindow):
         name_ticker = '英 FTSE 指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
-
         row += 1
         ticker = '^GDAXI'
         name_ticker = '独 DAX 指数'
@@ -162,7 +161,6 @@ class MktReview(QMainWindow):
         ticker = '^N225'
         name_ticker = '日経平均株価（日経225）'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
-
 
     def add_header(self, layout: QGridLayout, row: int):
         lab_title = LabelHeader('銘柄・指数')
