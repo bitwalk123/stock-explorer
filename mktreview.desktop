@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Market Review
+Comment=Market Review
+Keywords=trading;
+Keywords[ja]=trading;株式;取引;
+Exec=/home/bitwalk/MyProjects/stock-explorer/mktreview.sh
+Icon=/home/bitwalk/MyProjects/stock-explorer/images/summary.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;
