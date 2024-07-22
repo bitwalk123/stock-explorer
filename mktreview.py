@@ -141,7 +141,7 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = '^BSESN'
-        name_ticker = 'ムンバイSENSEX30'
+        name_ticker = 'ムンバイ S&P BSE SENSEX'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
     def add_row(self, layout, row, date_start, date_end, ticker, name_ticker):
