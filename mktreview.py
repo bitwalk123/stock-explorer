@@ -124,7 +124,7 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = '^FTSE'
-        name_ticker = '英 FTSE 指数'
+        name_ticker = '英 FTSE 100 指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
