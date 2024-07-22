@@ -139,6 +139,11 @@ class MktReview(QMainWindow):
         name_ticker = 'Tokyo Electron Ltd. (ADR)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
+        row += 1
+        ticker = '^BSESN'
+        name_ticker = 'ムンバイSENSEX30'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
     def add_row(self, layout, row, date_start, date_end, ticker, name_ticker):
         date_prev, price_close, delta, bcolor = self.get_latest(ticker, date_start, date_end)
 
