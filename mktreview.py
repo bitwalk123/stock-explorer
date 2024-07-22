@@ -1,22 +1,26 @@
 import datetime as dt
 import os
 import sys
+
 import yfinance as yf
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
-    QFrame,
     QGridLayout,
-    QLabel,
     QMainWindow,
     QScrollArea,
     QWidget,
 )
 
 from structs.res import AppRes
-from widgets.labels import LabelHeader
+from widgets.labels import (
+    LabelDateStr,
+    LabelHeader,
+    LabelTicker,
+    LabelValueStr,
+)
 
 
 class MktReview(QMainWindow):
@@ -147,37 +151,16 @@ class MktReview(QMainWindow):
     ):
         date_prev, price_close, delta, bcolor = self.get_latest(ticker, date_start, date_end)
 
-        lab_title = QLabel(name_ticker)
-        lab_title.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        lab_title.setLineWidth(1)
-        lab_title.setStyleSheet("""
-            QLabel {
-                padding-left: 0.1em;
-                padding-right: 0.1em;
-                font-family: monospace;
-                background-color: %s;
-            }
-        """ % bcolor)
+        lab_title = LabelTicker(name_ticker, bcolor)
         layout.addWidget(lab_title, row, 0)
 
-        lab_date = QLabel(date_prev)
-        lab_date.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        lab_date.setLineWidth(1)
-        lab_date.setStyleSheet('QLabel{font-family: monospace; background-color: %s}' % bcolor)
+        lab_date = LabelDateStr(date_prev, bcolor)
         layout.addWidget(lab_date, row, 1)
 
-        lab_close = QLabel(price_close)
-        lab_close.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        lab_close.setLineWidth(1)
-        lab_close.setStyleSheet('QLabel{font-family: monospace; background-color: %s}' % bcolor)
-        lab_close.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        lab_close = LabelValueStr(price_close, bcolor)
         layout.addWidget(lab_close, row, 2)
 
-        lab_delta = QLabel(delta)
-        lab_delta.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
-        lab_delta.setLineWidth(1)
-        lab_delta.setStyleSheet('QLabel{font-family: monospace; background-color: %s}' % bcolor)
-        lab_delta.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        lab_delta = LabelValueStr(delta, bcolor)
         layout.addWidget(lab_delta, row, 3)
 
     def get_latest(self, ticker, date_start, date_end):

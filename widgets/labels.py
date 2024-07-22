@@ -46,6 +46,19 @@ class Label(QLabel):
         self.setContentsMargins(0, 0, 0, 0)
 
 
+class LabelDateStr(QLabel):
+    def __init__(self, dtdate: str, bcolor: str):
+        super().__init__(dtdate)
+        self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        self.setLineWidth(1)
+        self.setStyleSheet("""
+            QLabel{
+                font-family: monospace;
+                 background-color: %s;
+            }
+        """ % bcolor)
+
+
 class LabelFlat(Label):
     def __init__(self, title: str):
         super().__init__(title)
@@ -117,6 +130,21 @@ class LabelStatus(QLabel):
         """)
 
 
+class LabelTicker(QLabel):
+    def __init__(self, ticker: str, bcolor: str):
+        super().__init__(ticker)
+        self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        self.setLineWidth(1)
+        self.setStyleSheet("""
+            QLabel {
+                padding-left: 0.1em;
+                padding-right: 0.1em;
+                font-family: monospace;
+                background-color: %s;
+            }
+        """ % bcolor)
+
+
 class LabelTitle(Label):
     def __init__(self, title: str):
         super().__init__(title)
@@ -159,3 +187,17 @@ class LabelDate(LabelValue):
         self.timestamp = timestamp
         date = conv_timestamp2date(timestamp)
         self.setText(str(date))
+
+
+class LabelValueStr(QLabel):
+    def __init__(self, value_str: str, bcolor: str):
+        super().__init__(value_str)
+        self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
+        self.setLineWidth(1)
+        self.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.setStyleSheet("""
+            QLabel{
+                font-family: monospace;
+                background-color: %s;
+            }
+        """ % bcolor)
