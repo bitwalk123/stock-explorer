@@ -158,13 +158,13 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
-        ticker = '^KS11'
-        name_ticker = '韓国 総合指数'
+        ticker = '^TWII'
+        name_ticker = '台湾加権指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
-        ticker = '^TWII'
-        name_ticker = '台湾加権指数'
+        ticker = '^KS11'
+        name_ticker = '韓国 総合指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
