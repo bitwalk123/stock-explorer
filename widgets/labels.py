@@ -1,5 +1,6 @@
 import os
 
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QFrame,
@@ -58,6 +59,54 @@ class LabelFlat(Label):
         }
         """)
 
+
+class LabelHeader(QLabel):
+    def __init__(self, title: str):
+        super().__init__(title)
+        self.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
+        self.setLineWidth(1)
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
+        self.setStyleSheet('QLabel {font-family: monospace;}')
+
+
+class LabelLogo(QLabel):
+    def __init__(self, logo: str):
+        super().__init__()
+        pixmap = QPixmap(logo).scaledToHeight(16)
+        self.setPixmap(pixmap)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
+
+
+class LabelNewsDate(QLabel):
+    def __init__(self, date: str):
+        super().__init__()
+        self.setText(date)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
+        self.setStyleSheet("""
+        QLabel {
+            background-color: white;
+            font-family: monospace;
+        }
+        """)
+
+
+class LabelNewsMsg(QLabel):
+    def __init__(self, url: str, msg: str):
+        super().__init__()
+        self.setText('<a href="%s">%s</a>' % (url, msg))
+        self.setOpenExternalLinks(False)
+        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
+        self.setLineWidth(2)
+        self.setStyleSheet("""
+        QLabel {
+            background-color: white;
+            font-family: monospace;
+        }
+        """)
+
+
 class LabelStatus(QLabel):
     def __init__(self):
         super().__init__()
@@ -66,6 +115,7 @@ class LabelStatus(QLabel):
             font-family: monospace;
         }
         """)
+
 
 class LabelTitle(Label):
     def __init__(self, title: str):
@@ -109,41 +159,3 @@ class LabelDate(LabelValue):
         self.timestamp = timestamp
         date = conv_timestamp2date(timestamp)
         self.setText(str(date))
-
-
-class LabelNewsDate(QLabel):
-    def __init__(self, date: str):
-        super().__init__()
-        self.setText(date)
-        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
-        self.setLineWidth(2)
-        self.setStyleSheet("""
-        QLabel {
-            background-color: white;
-            font-family: monospace;
-        }
-        """)
-
-
-class LabelNewsMsg(QLabel):
-    def __init__(self, url: str, msg: str):
-        super().__init__()
-        self.setText('<a href="%s">%s</a>' % (url, msg))
-        self.setOpenExternalLinks(False)
-        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
-        self.setLineWidth(2)
-        self.setStyleSheet("""
-        QLabel {
-            background-color: white;
-            font-family: monospace;
-        }
-        """)
-
-
-class LabelLogo(QLabel):
-    def __init__(self, logo: str):
-        super().__init__()
-        pixmap = QPixmap(logo).scaledToHeight(16)
-        self.setPixmap(pixmap)
-        self.setFrameStyle(QFrame.Shape.StyledPanel | QFrame.Shadow.Plain)
-        self.setLineWidth(2)

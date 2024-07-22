@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from structs.res import AppRes
+from widgets.labels import LabelHeader
 
 
 class MktReview(QMainWindow):
@@ -45,29 +46,7 @@ class MktReview(QMainWindow):
         date_start = date_end + dt.timedelta(days=-14)
 
         row = 0
-        lab_title = QLabel('銘柄・指数')
-        lab_title.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        lab_title.setLineWidth(1)
-        lab_title.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(lab_title, row, 0)
-
-        lab_date = QLabel('取引日')
-        lab_date.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        lab_date.setLineWidth(1)
-        lab_date.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(lab_date, row, 1)
-
-        lab_close = QLabel('終値')
-        lab_close.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        lab_close.setLineWidth(1)
-        lab_close.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(lab_close, row, 2)
-
-        lab_delta = QLabel('前日差')
-        lab_delta.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Raised)
-        lab_delta.setLineWidth(1)
-        lab_delta.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(lab_delta, row, 3)
+        self.add_header(layout, row)
 
         row += 1
         ticker = '^DJI'
@@ -144,13 +123,41 @@ class MktReview(QMainWindow):
         name_ticker = 'ムンバイ S&P BSE SENSEX'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
-    def add_row(self, layout, row, date_start, date_end, ticker, name_ticker):
+    def add_header(self, layout: QGridLayout, row: int):
+        lab_title = LabelHeader('銘柄・指数')
+        layout.addWidget(lab_title, row, 0)
+
+        lab_date = LabelHeader('取引日')
+        layout.addWidget(lab_date, row, 1)
+
+        lab_close = LabelHeader('終値')
+        layout.addWidget(lab_close, row, 2)
+
+        lab_delta = LabelHeader('前日差')
+        layout.addWidget(lab_delta, row, 3)
+
+    def add_row(
+            self,
+            layout: QGridLayout,
+            row: int,
+            date_start: dt.date,
+            date_end: dt.date,
+            ticker: str,
+            name_ticker: str
+    ):
         date_prev, price_close, delta, bcolor = self.get_latest(ticker, date_start, date_end)
 
         lab_title = QLabel(name_ticker)
         lab_title.setFrameStyle(QFrame.Shape.Panel | QFrame.Shadow.Sunken)
         lab_title.setLineWidth(1)
-        lab_title.setStyleSheet('QLabel{background-color: %s}' % bcolor)
+        lab_title.setStyleSheet("""
+            QLabel {
+                padding-left: 0.1em;
+                padding-right: 0.1em;
+                font-family: monospace;
+                background-color: %s;
+            }
+        """ % bcolor)
         layout.addWidget(lab_title, row, 0)
 
         lab_date = QLabel(date_prev)
