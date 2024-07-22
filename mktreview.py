@@ -74,12 +74,12 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = 'NVDA'
-        name_ticker = 'NVIDIA'
+        name_ticker = 'NVIDIA Corporation'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = 'AAPL'
-        name_ticker = 'Apple'
+        name_ticker = 'Apple Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
@@ -89,7 +89,7 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = 'TSM'
-        name_ticker = 'TSMC'
+        name_ticker = 'TSMC Limited'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
@@ -99,22 +99,27 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = 'MU'
-        name_ticker = 'Micron'
+        name_ticker = 'Micron Technology, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = 'INTC'
-        name_ticker = 'Intel'
+        name_ticker = 'Intel Corporation'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
+        ticker = 'AMD'
+        name_ticker = 'Advanced Micro Devices, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = 'AMAT'
-        name_ticker = 'Applied Materials'
+        name_ticker = 'Applied Materials, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = 'LRCX'
-        name_ticker = 'Lam Research'
+        name_ticker = 'Lam Research Corporation'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
@@ -150,6 +155,11 @@ class MktReview(QMainWindow):
         row += 1
         ticker = '^HSI'
         name_ticker = '香港ハンセン指数'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
+        ticker = '^KS11'
+        name_ticker = '韓国 総合指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
