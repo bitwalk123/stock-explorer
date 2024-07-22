@@ -69,7 +69,7 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = '^SOX'
-        name_ticker = 'PHLX Semiconductor'
+        name_ticker = 'PHLX Semiconductor (SOX)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
