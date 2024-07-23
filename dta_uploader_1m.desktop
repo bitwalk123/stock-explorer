@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=DTA Uploader for 1m
+Comment=DTA Uploader for 1m
+Keywords=trading;
+Keywords[ja]=trading;株式;取引;
+Exec=/home/bitwalk/MyProjects/stock-explorer/dta_uploader_1m.sh
+Icon=/home/bitwalk/MyProjects/stock-explorer/images/uploader.png
+Terminal=true
+Type=Application
+StartupNotify=true
+Categories=Utility;
