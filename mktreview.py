@@ -148,6 +148,11 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
+        ticker = '^NSEI'
+        name_ticker = 'NIFTY 50'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
         ticker = '000001.SS'
         name_ticker = '上海総合指数'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
