@@ -54,12 +54,12 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = '^DJI'
-        name_ticker = 'ダウ工業株30種平均'
+        name_ticker = 'Dow Jones Industrial Average'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = '^IXIC'
-        name_ticker = 'ナスダック総合指数'
+        name_ticker = 'NASDAQ Composite'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
@@ -113,6 +113,11 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
+        ticker = 'ON'
+        name_ticker = 'ON Semiconductor Corporation'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
         ticker = 'AMD'
         name_ticker = 'Advanced Micro Devices, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
@@ -159,22 +164,22 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = '000001.SS'
-        name_ticker = '上海総合指数'
+        name_ticker = '上海総合指数 (SSE Composite Index)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = '^HSI'
-        name_ticker = '香港ハンセン指数'
+        name_ticker = '香港ハンセン指数 (HANG SENG INDEX)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = '^TWII'
-        name_ticker = '台湾加権指数'
+        name_ticker = '台湾加権指数 (TSEC weighted index)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = '^KS11'
-        name_ticker = '韓国 総合指数'
+        name_ticker = '韓国総合指数 (KOSPI Composite Index)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
