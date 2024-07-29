@@ -73,13 +73,18 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
-        ticker = 'NVDA'
-        name_ticker = 'NVIDIA Corporation'
+        ticker = 'AAPL'
+        name_ticker = 'Apple Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
-        ticker = 'AAPL'
-        name_ticker = 'Apple Inc.'
+        ticker = 'MSFT'
+        name_ticker = 'Microsoft Corporation'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
+        ticker = 'NVDA'
+        name_ticker = 'NVIDIA Corporation'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
