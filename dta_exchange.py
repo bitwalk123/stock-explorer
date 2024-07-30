@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 )
 
 from structs.res import AppRes
+from ui.toolbar_dta import DTAExchangeToolBar
 from widgets.charts import ChartExchange
 
 
@@ -26,6 +27,10 @@ class DayTrendAnalyzerExchange(QMainWindow):
         self.setWindowIcon(icon)
         self.setWindowTitle('DTA - Exchange')
         self.setFixedSize(1000, 400)
+
+        toolbar = DTAExchangeToolBar()
+        toolbar.clickedUpdate.connect(self.on_update)
+        self.addToolBar(toolbar)
 
         self.chart = chart = ChartExchange()
         self.setCentralWidget(chart)
@@ -40,9 +45,9 @@ class DayTrendAnalyzerExchange(QMainWindow):
             df,
             type='candle',
             style='binance',
-            ylabel='USD - JPY',
             ax=self.chart.ax,
         )
+        self.chart.ax.set_ylabel('USD - JPY')
         self.chart.ax.grid()
 
     def get_exchange(self) -> pd.DataFrame:
@@ -54,9 +59,11 @@ class DayTrendAnalyzerExchange(QMainWindow):
         df = yf.download(ticker, start, end, interval='1m')
         df.index = df.index.tz_convert('Asia/Tokyo')
         df1 = df.tail(6 * 60)
-        print(df1.tail(10)[['Open', 'High', 'Low', 'Close']])
+        print(df1.tail(5)[['Open', 'High', 'Low', 'Close']])
         return df1
 
+    def on_update(self):
+        self.draw_chart()
 
 def main():
     app = QApplication()

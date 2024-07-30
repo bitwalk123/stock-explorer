@@ -267,3 +267,19 @@ class DTAUploaderToolBar(QToolBar):
 
     def on_start(self):
         self.clickedStart.emit()
+
+
+class DTAExchangeToolBar(QToolBar):
+    clickedUpdate = Signal()
+
+    def __init__(self):
+        super().__init__()
+
+        pixmap = 'SP_BrowserReload'
+        tooltip = 'Update chart'
+        but_update = ToolButton(pixmap, tooltip)
+        but_update.clicked.connect(self.on_update)
+        self.addWidget(but_update)
+
+    def on_update(self):
+        self.clickedUpdate.emit()
