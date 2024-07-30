@@ -1,0 +1,69 @@
+import datetime as dt
+import os
+
+import matplotlib.pyplot as plt
+import mplfinance as mpf
+import sys
+
+import pandas as pd
+import yfinance as yf
+from PySide6.QtGui import QIcon
+
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+)
+
+from structs.res import AppRes
+from widgets.charts import ChartExchange
+
+
+class DayTrendAnalyzerExchange(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        res = AppRes()
+        icon = QIcon(os.path.join(res.getImagePath(), 'budget.png'))
+        self.setWindowIcon(icon)
+        self.setWindowTitle('DTA - Exchange')
+        self.setFixedSize(1000, 400)
+
+        self.chart = chart = ChartExchange()
+        self.setCentralWidget(chart)
+        self.draw_chart()
+
+    def draw_chart(self):
+        df = self.get_exchange()
+
+        self.chart.clearAxes()
+        plt.rcParams['font.family'] = 'monospace'
+        mpf.plot(
+            df,
+            type='candle',
+            style='binance',
+            ylabel='USD - JPY',
+            ax=self.chart.ax,
+        )
+        self.chart.ax.grid()
+
+    def get_exchange(self) -> pd.DataFrame:
+        end = dt.date.today()
+        delta = dt.timedelta(days=1)
+        start = end - delta
+
+        ticker = 'USDJPY=X'
+        df = yf.download(ticker, start, end, interval='1m')
+        df.index = df.index.tz_convert('Asia/Tokyo')
+        df1 = df.tail(6 * 60)
+        print(df1.tail(10)[['Open', 'High', 'Low', 'Close']])
+        return df1
+
+
+def main():
+    app = QApplication()
+    ex = DayTrendAnalyzerExchange()
+    ex.show()
+    sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()

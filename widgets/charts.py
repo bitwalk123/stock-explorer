@@ -294,3 +294,38 @@ class ChartForVerify02(ChartAbstract):
         axs = self.fig.axes
         for ax in axs:
             ax.remove()
+
+
+class ChartExchange(ChartAbstract):
+    def __init__(self):
+        super().__init__()
+        fm.fontManager.addfont(FONT_PATH2)
+        font_prop = fm.FontProperties(fname=FONT_PATH2)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        plt.rcParams['font.size'] = 14
+        plt.rcParams['axes.labelsize'] = 14
+        plt.rcParams['xtick.labelsize'] = 10
+        plt.rcParams['ytick.labelsize'] = 10
+        plt.rcParams['legend.fontsize'] = 8
+
+        self.fig.subplots_adjust(
+            top=0.98,
+            bottom=0.15,
+            left=0.08,
+            right=0.995,
+            hspace=0,
+        )
+        self.ax = self.fig.add_subplot(111)
+
+    def clearAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.cla()
+
+    def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()
