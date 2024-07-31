@@ -40,7 +40,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
 
         timer = QTimer(self)
         timer.timeout.connect(self.draw_chart)
-        timer.start(30000)
+        timer.start(20000)
 
     def draw_chart(self):
         df = self.get_exchange()
