@@ -2,6 +2,7 @@ import datetime as dt
 import os
 
 import matplotlib.pyplot as plt
+from matplotlib import dates as mdates
 import mplfinance as mpf
 import sys
 
@@ -39,13 +40,12 @@ class DayTrendAnalyzerExchange(QMainWindow):
 
         timer = QTimer(self)
         timer.timeout.connect(self.draw_chart)
-        timer.start(10000)
+        timer.start(30000)
 
     def draw_chart(self):
         df = self.get_exchange()
 
         self.chart.clearAxes()
-        plt.rcParams['font.family'] = 'monospace'
         mpf.plot(
             df,
             type='candle',
@@ -57,6 +57,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
         title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
         self.chart.ax.set_title(title)
 
+        self.chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         self.chart.ax.set_ylabel('USD - JPY')
         self.chart.ax.grid()
         self.chart.refreshDraw()
