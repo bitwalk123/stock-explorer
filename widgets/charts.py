@@ -309,7 +309,7 @@ class ChartExchange(ChartAbstract):
         plt.rcParams['legend.fontsize'] = 8
 
         self.fig.subplots_adjust(
-            top=0.98,
+            top=0.9,
             bottom=0.15,
             left=0.08,
             right=0.995,

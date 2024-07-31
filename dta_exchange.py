@@ -47,8 +47,14 @@ class DayTrendAnalyzerExchange(QMainWindow):
             style='binance',
             ax=self.chart.ax,
         )
+
+        df0 = df.tail(1)
+        title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0]))
+        self.chart.ax.set_title(title)
+
         self.chart.ax.set_ylabel('USD - JPY')
         self.chart.ax.grid()
+        self.chart.refreshDraw()
 
     def get_exchange(self) -> pd.DataFrame:
         delta = dt.timedelta(days=1)
@@ -59,11 +65,12 @@ class DayTrendAnalyzerExchange(QMainWindow):
         df = yf.download(ticker, start, end, interval='1m')
         df.index = df.index.tz_convert('Asia/Tokyo')
         df1 = df.tail(6 * 60)
-        print(df1.tail(5)[['Open', 'High', 'Low', 'Close']])
+        # print(df1.tail(5)[['Open', 'High', 'Low', 'Close']])
         return df1
 
     def on_update(self):
         self.draw_chart()
+
 
 def main():
     app = QApplication()
