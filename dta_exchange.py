@@ -7,6 +7,7 @@ import sys
 
 import pandas as pd
 import yfinance as yf
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QIcon
 
 from PySide6.QtWidgets import (
@@ -35,6 +36,10 @@ class DayTrendAnalyzerExchange(QMainWindow):
         self.chart = chart = ChartExchange()
         self.setCentralWidget(chart)
         self.draw_chart()
+
+        timer = QTimer(self)
+        timer.timeout.connect(self.draw_chart)
+        timer.start(10000)
 
     def draw_chart(self):
         df = self.get_exchange()
