@@ -54,7 +54,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
         )
 
         df0 = df.tail(1)
-        title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0]))
+        title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
         self.chart.ax.set_title(title)
 
         self.chart.ax.set_ylabel('USD - JPY')
