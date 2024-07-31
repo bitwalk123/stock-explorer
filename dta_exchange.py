@@ -51,9 +51,9 @@ class DayTrendAnalyzerExchange(QMainWindow):
         self.chart.ax.grid()
 
     def get_exchange(self) -> pd.DataFrame:
-        end = dt.date.today()
         delta = dt.timedelta(days=1)
-        start = end - delta
+        end = dt.date.today() + delta
+        start = end - 2 * delta
 
         ticker = 'USDJPY=X'
         df = yf.download(ticker, start, end, interval='1m')
