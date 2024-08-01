@@ -59,7 +59,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
         title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
         self.chart.ax.set_title(title)
 
-        self.chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+        # self.chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         self.chart.ax.set_ylabel('USD - JPY')
         self.chart.ax.grid()
         self.chart.refreshDraw()
