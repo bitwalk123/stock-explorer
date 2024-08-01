@@ -24,6 +24,8 @@ from widgets.charts import ChartExchange
 class DayTrendAnalyzerExchange(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.ticker = yf.Ticker('USDJPY=X')
+
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'budget.png'))
         self.setWindowIcon(icon)
@@ -63,16 +65,13 @@ class DayTrendAnalyzerExchange(QMainWindow):
         self.chart.refreshDraw()
 
     def get_exchange(self) -> pd.DataFrame:
-        delta = dt.timedelta(days=1)
-        end = dt.date.today() + delta
-        start = end - 2 * delta
+        end = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
+        delta = dt.timedelta(hours=6)
+        start = end - delta
 
-        ticker = 'USDJPY=X'
-        df = yf.download(ticker, start, end, interval='1m')
+        df = self.ticker.history(start=start, end=end, interval='1m')
         df.index = df.index.tz_convert('Asia/Tokyo')
-        df1 = df.tail(6 * 60)
-        # print(df1.tail(5)[['Open', 'High', 'Low', 'Close']])
-        return df1
+        return df
 
     def on_update(self):
         self.draw_chart()
