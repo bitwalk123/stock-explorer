@@ -311,7 +311,7 @@ class ChartExchange(ChartAbstract):
         self.fig.subplots_adjust(
             top=0.9,
             bottom=0.15,
-            left=0.08,
+            left=0.175,
             right=0.995,
             hspace=0,
         )

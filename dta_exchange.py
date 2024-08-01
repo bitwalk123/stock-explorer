@@ -30,7 +30,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
         icon = QIcon(os.path.join(res.getImagePath(), 'budget.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('DTA - Exchange')
-        self.setFixedSize(1000, 400)
+        self.setFixedSize(400, 400)
 
         toolbar = DTAExchangeToolBar()
         toolbar.clickedUpdate.connect(self.on_update)
@@ -66,7 +66,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
 
     def get_exchange(self) -> pd.DataFrame:
         end = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
-        delta = dt.timedelta(hours=6)
+        delta = dt.timedelta(hours=3)
         start = end - delta
 
         df = self.ticker.history(start=start, end=end, interval='1m')
