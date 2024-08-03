@@ -46,6 +46,8 @@ class DayTrendAnalyzerExchange(QMainWindow):
 
     def draw_chart(self):
         df = self.get_exchange()
+        if len(df) == 0:
+            return
 
         self.chart.clearAxes()
         mpf.plot(
@@ -70,7 +72,9 @@ class DayTrendAnalyzerExchange(QMainWindow):
         start = end - delta
 
         df = self.ticker.history(start=start, end=end, interval='1m')
-        df.index = df.index.tz_convert('Asia/Tokyo')
+        if len(df) > 0:
+            df.index = df.index.tz_convert('Asia/Tokyo')
+
         return df
 
     def on_update(self):
