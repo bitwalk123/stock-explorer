@@ -29,6 +29,8 @@ def get_day_trade(info: DayTrade) -> pd.DataFrame:
         if len(df) > 0:
             if info.isFullDataSet(df):
                 df.to_pickle(file_cache)
+            else:
+                print(df)
 
     return df
 
