@@ -131,7 +131,6 @@ def get_id_code_from_code(code: str) -> Union[int, None]:
 
 def update_tbl_ticker(tse: str) -> bool:
     list_market = [
-        'ETF・ETN',
         'グロース（内国株式）',
         'スタンダード（内国株式）',
         'プライム（内国株式）',
