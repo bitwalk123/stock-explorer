@@ -1,8 +1,6 @@
 import datetime as dt
 import os
 
-import matplotlib.pyplot as plt
-from matplotlib import dates as mdates
 import mplfinance as mpf
 import sys
 
@@ -17,7 +15,6 @@ from PySide6.QtWidgets import (
 )
 
 from structs.res import AppRes
-from ui.toolbar_dta import DTAExchangeToolBar
 from widgets.charts import ChartExchange
 
 
@@ -31,10 +28,6 @@ class DayTrendAnalyzerExchange(QMainWindow):
         self.setWindowIcon(icon)
         self.setWindowTitle('DTA - Exchange')
         self.setFixedSize(400, 400)
-
-        toolbar = DTAExchangeToolBar()
-        toolbar.clickedUpdate.connect(self.on_update)
-        self.addToolBar(toolbar)
 
         self.chart = chart = ChartExchange()
         self.setCentralWidget(chart)
@@ -61,7 +54,6 @@ class DayTrendAnalyzerExchange(QMainWindow):
         title = '%.3f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
         self.chart.ax.set_title(title)
 
-        # self.chart.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         self.chart.ax.set_ylabel('USD - JPY')
         self.chart.ax.grid()
         self.chart.refreshDraw()
