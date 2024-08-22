@@ -25,7 +25,11 @@ class DayTrendSimulator(QMainWindow):
         # _____________________________________________________________________
         # Toolbar
         self.toolbar = toolbar = DTSToolBar()
+        toolbar.dbClicked.connect(self.db_check)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
+
+    def db_check(self):
+        print('DEBUG!')
 
 
 def main():
