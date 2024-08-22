@@ -1,8 +1,15 @@
 import os
 import re
 
+from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QPushButton, QCheckBox, QSizePolicy, QToolButton, QStyle
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QPushButton,
+    QSizePolicy,
+    QStyle,
+    QToolButton,
+)
 
 from structs.res import AppRes
 
@@ -205,4 +212,10 @@ class ToolButtonIcon(QToolButton):
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), name_icon))
         self.setIcon(icon)
+        self.setIconSize(QSize(24, 24))
         self.setToolTip(tooltip)
+
+class ToolButtonDB(ToolButtonIcon):
+    def __init__(self, tooltip='Database access'):
+        name_icon = 'db.png'
+        super().__init__(name_icon, tooltip)
