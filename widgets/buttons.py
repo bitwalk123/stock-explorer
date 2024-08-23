@@ -219,3 +219,8 @@ class ToolButtonDB(ToolButtonIcon):
     def __init__(self, tooltip='Database access'):
         name_icon = 'db.png'
         super().__init__(name_icon, tooltip)
+
+class ToolButtonFolder(ToolButtonIcon):
+    def __init__(self, tooltip='Open file'):
+        name_icon = 'folder.png'
+        super().__init__(name_icon, tooltip)
