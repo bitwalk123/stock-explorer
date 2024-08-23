@@ -16,7 +16,7 @@ from structs.res import AppRes
 from ui.toolbar_dts import DTSToolBar
 
 
-class MyTrade:
+class AutoTrade:
     def __init__(self):
         self.result = 0
 
@@ -49,7 +49,7 @@ class DayTrendSimulator(QMainWindow):
             self.simulation(df)
 
     def simulation(self, df: pd.DataFrame):
-        trade = MyTrade()
+        trade = AutoTrade()
         for t in df.index:
             price = df.loc[t]['Price']
             trade.update(t, price)
