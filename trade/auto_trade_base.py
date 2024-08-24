@@ -69,12 +69,6 @@ class AutoTradeBase(QObject):
         ...
 
     # _________________________________________________________________________
-    def calcDelta(self, t: pd.Timestamp, price: np.float64):
-        delta = price - self.price0
-        self.t0 = t
-        self.price0 = price
-        return delta
-
     def dispCurrent(self, t: pd.Timestamp, price: np.float64, title: str):
         print(t, title, self.price_own, self.price_limit, price, self.result)
 
@@ -83,6 +77,12 @@ class AutoTradeBase(QObject):
         self.price_own = 0
         self.price_limit = 0
         self.status = self.getHoldStatus(t)
+
+    def getDelta(self, t: pd.Timestamp, price: np.float64):
+        delta = price - self.price0
+        self.t0 = t
+        self.price0 = price
+        return delta
 
     def getHoldStatus(self, t: pd.Timestamp) -> TradeStatus:
         if self.t1 < t < self.t_noon:
@@ -94,6 +94,16 @@ class AutoTradeBase(QObject):
 
     def getResult(self) -> float:
         return self.result
+
+    def isFirstDeal(self, t: pd.Timestamp, price: np.float64):
+        if (self.status == TradeStatus.PRE) or (self.status == TradeStatus.BREAK):
+            self.status = TradeStatus.HOLD
+            self.t0 = t
+            self.price0 = price
+            self.dispCurrent(t, price, 'HOLD')
+            return True
+        else:
+            return False
 
     def isValidTime(self, t: pd.Timestamp) -> bool:
         if self.t1 < t < self.t_noon:
