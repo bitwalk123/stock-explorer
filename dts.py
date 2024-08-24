@@ -35,13 +35,15 @@ class DayTrendSimulator(QMainWindow):
 
     def on_open(self, QStringList=None):
         dialog = QFileDialog()
+        dialog.setNameFilters(['Pickle files (*.pkl)'])
         if dialog.exec():
-            filename = dialog.selectedFiles()[0]
-            df = pd.read_pickle(filename)
+            pklfile = dialog.selectedFiles()[0]
+            df = pd.read_pickle(pklfile)
             self.simulation(df)
 
     def simulation(self, df: pd.DataFrame):
-        trade = AutoTrade01()
+        t = df.index[0]
+        trade = AutoTrade01(t)
         end = len(df.index) - 1
         for t in df.index[:end]:
             price = df.loc[t]['Price']
