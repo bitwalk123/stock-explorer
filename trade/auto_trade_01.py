@@ -13,16 +13,20 @@ class AutoTrade01(AutoTrade):
         super().__init__(t)
 
     def update(self, t: pd.Timestamp, price: np.float64):
-        delta = self.calcDelta(t, price)
-
         if self.status == TradeStatus.PRE:
             self.status = TradeStatus.HOLD
             self.t0 = t
             self.price0 = price
+
+        delta = self.calcDelta(t, price)
 
         if not self.isValidTime(t):
             if self.status != TradeStatus.HOLD:
                 self.transaction(t, price, force=True)
             return
 
-        print(t, price, delta)
+        if self.status == TradeStatus.HOLD:
+            if delta > 0:
+                self.buy(t, price)
+            elif delta < 0:
+                self.sell(t, price)

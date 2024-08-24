@@ -9,12 +9,11 @@ from PySide6.QtWidgets import (
     QMainWindow, QWidget,
 )
 
-import matplotlib as mpl
 from matplotlib import dates as mdates
 from matplotlib.backends.backend_qtagg import (
     NavigationToolbar2QT as NavigationToolbar,
 )
-from matplotlib.ticker import MultipleLocator, AutoMinorLocator
+from matplotlib.ticker import AutoMinorLocator
 
 from funcs.dta_funcs import dta_get_data_from_dbrt
 from funcs.tbl_ticker import get_dict_id_code
