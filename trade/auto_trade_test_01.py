@@ -37,7 +37,7 @@ class AutoTradeTest01(AutoTradeBase):
                 self.sell(t, price)
                 self.dispCurrent(t, price, 'SOLD')
             else:
-                self.dispCurrent(t, price, 'hold/stay')
+                self.dispCurrent(t, price, 'HOLD/stay')
             return
 
         if self.status == TradeStatus.BOUGHT:
