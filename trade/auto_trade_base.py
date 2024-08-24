@@ -5,7 +5,7 @@ from PySide6.QtCore import QObject, Signal
 from structs.trade_status import TradeStatus
 
 
-class AutoTrade(QObject):
+class AutoTradeBase(QObject):
     madeContract = Signal()
 
     def __init__(self, t: pd.Timestamp):
@@ -26,9 +26,6 @@ class AutoTrade(QObject):
         # Previous values
         self.t0 = 0
         self.price0 = 0
-
-    def disp_current(self, t: pd.Timestamp, price: np.float64, title: str):
-        print(t, title, self.price_own, self.price_limit, price, self.result)
 
     def hold(self, t: pd.Timestamp, price: np.float64):
         ...
@@ -57,10 +54,7 @@ class AutoTrade(QObject):
                 delta = price - self.price_own
             else:
                 delta = self.price_limit - self.price_own
-            self.result += delta * self.unit
-            self.price_own = 0
-            self.price_limit = 0
-            self.status = TradeStatus.HOLD
+            self.doTransaction(t, delta)
             return
 
         if self.status == TradeStatus.SOLD:
@@ -68,10 +62,7 @@ class AutoTrade(QObject):
                 delta = self.price_own - price
             else:
                 delta = self.price_own - self.price_limit
-            self.result += delta * self.unit
-            self.price_own = 0
-            self.price_limit = 0
-            self.status = TradeStatus.HOLD
+            self.doTransaction(t, delta)
             return
 
     def update(self, t: pd.Timestamp, price: np.float64):
@@ -84,10 +75,27 @@ class AutoTrade(QObject):
         self.price0 = price
         return delta
 
+    def dispCurrent(self, t: pd.Timestamp, price: np.float64, title: str):
+        print(t, title, self.price_own, self.price_limit, price, self.result)
+
+    def doTransaction(self, t: pd.Timestamp, delta: float):
+        self.result += delta * self.unit
+        self.price_own = 0
+        self.price_limit = 0
+        self.status = self.getHoldStatus(t)
+
+    def getHoldStatus(self, t: pd.Timestamp) -> TradeStatus:
+        if self.t1 < t < self.t_noon:
+            return TradeStatus.BREAK
+        elif self.t2 < t:
+            return TradeStatus.END
+        else:
+            return TradeStatus.HOLD
+
     def getResult(self) -> float:
         return self.result
 
-    def isValidTime(self, t: pd.Timestamp):
+    def isValidTime(self, t: pd.Timestamp) -> bool:
         if self.t1 < t < self.t_noon:
             return False
         elif self.t2 < t:

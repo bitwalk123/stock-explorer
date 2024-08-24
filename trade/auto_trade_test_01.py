@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 
 from structs.trade_status import TradeStatus
-from trade.auto_trade import AutoTrade
+from trade.auto_trade_base import AutoTradeBase
 
 
-class AutoTrade01(AutoTrade):
+class AutoTradeTest01(AutoTradeBase):
     """
     成行売買で、呼値 (tick) で売却・買戻
     損切り (Loss-cut) 条件無し
@@ -14,50 +14,50 @@ class AutoTrade01(AutoTrade):
     def __init__(self, t: pd.Timestamp):
         super().__init__(t)
 
-
     def update(self, t: pd.Timestamp, price: np.float64):
         if (self.status == TradeStatus.PRE) or (self.status == TradeStatus.BREAK):
             self.status = TradeStatus.HOLD
             self.t0 = t
             self.price0 = price
+            self.dispCurrent(t, price, 'HOLD')
             return
 
         delta = self.calcDelta(t, price)
 
         if not self.isValidTime(t):
-            if self.status != TradeStatus.HOLD:
-                self.disp_current(t, price, 'transaction/force')
+            if (self.status == TradeStatus.BOUGHT) or (self.status == TradeStatus.SOLD):
+                self.dispCurrent(t, price, 'TRANSACTION/force')
                 self.transaction(t, price, force=True)
-                self.disp_current(t, price, 'transaction/end')
+                self.dispCurrent(t, price, 'TRANSACTION/end')
             return
 
         if self.status == TradeStatus.HOLD:
             if delta > 0:
-                self.disp_current(t, price, 'buy')
+                self.dispCurrent(t, price, 'BUY')
                 self.buy(t, price)
-                self.disp_current(t, price, 'bought')
+                self.dispCurrent(t, price, 'BOUGHT')
             elif delta < 0:
-                self.disp_current(t, price, 'sell')
+                self.dispCurrent(t, price, 'SELL')
                 self.sell(t, price)
-                self.disp_current(t, price, 'sold')
+                self.dispCurrent(t, price, 'SOLD')
             else:
-                self.disp_current(t, price, 'hold/stay')
+                self.dispCurrent(t, price, 'hold/stay')
             return
 
         if self.status == TradeStatus.BOUGHT:
             if self.price_limit < price:
-                self.disp_current(t, price, 'transaction/match')
+                self.dispCurrent(t, price, 'TRANSACTION/match')
                 self.transaction(t, price)
-                self.disp_current(t, price, 'transaction/end')
+                self.dispCurrent(t, price, 'TRANSACTION/end')
             else:
-                self.disp_current(t, price, 'bought/stay')
+                self.dispCurrent(t, price, 'BOUGHT/stay')
             return
 
         if self.status == TradeStatus.SOLD:
             if price < self.price_limit:
-                self.disp_current(t, price, 'transaction/match')
+                self.dispCurrent(t, price, 'TRANSACTION/match')
                 self.transaction(t, price)
-                self.disp_current(t, price, 'transaction/end')
+                self.dispCurrent(t, price, 'TRANSACTION/end')
             else:
-                self.disp_current(t, price, 'sold/stay')
+                self.dispCurrent(t, price, 'SOLD/stay')
             return
