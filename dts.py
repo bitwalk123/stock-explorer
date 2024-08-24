@@ -2,18 +2,17 @@ import os
 import pandas as pd
 import sys
 
-from PySide6.QtCore import Qt, QDate
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
+    QFileDialog,
     QMainWindow,
 )
 
-from funcs.dta_funcs import dta_get_data_from_dbrt
-from funcs.tbl_ticker import get_dict_id_code
-from funcs.tide import get_day_timestamp
 from snippets.set_env import set_env
 from structs.res import AppRes
+from trade.auto_trade_01 import AutoTrade01
 from ui.toolbar_dts import DTSToolBar
 
 
@@ -31,11 +30,24 @@ class DayTrendSimulator(QMainWindow):
         # _____________________________________________________________________
         # Toolbar
         self.toolbar = toolbar = DTSToolBar()
-        self.toolbar.folderClicked.connect(self.open_file)
+        self.toolbar.folderClicked.connect(self.on_open)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
 
-    def open_file(self):
-        print('DEBUG!')
+    def on_open(self, QStringList=None):
+        dialog = QFileDialog()
+        if dialog.exec():
+            filename = dialog.selectedFiles()[0]
+            df = pd.read_pickle(filename)
+            self.simulation(df)
+
+    def simulation(self, df: pd.DataFrame):
+        trade = AutoTrade01()
+        end = len(df.index) - 1
+        for t in df.index[:end]:
+            price = df.loc[t]['Price']
+            trade.update(t, price)
+
+        print(trade.getResult())
 
 
 def main():
