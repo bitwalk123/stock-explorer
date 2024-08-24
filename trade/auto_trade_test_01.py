@@ -15,14 +15,10 @@ class AutoTradeTest01(AutoTradeBase):
         super().__init__(t)
 
     def update(self, t: pd.Timestamp, price: np.float64):
-        if (self.status == TradeStatus.PRE) or (self.status == TradeStatus.BREAK):
-            self.status = TradeStatus.HOLD
-            self.t0 = t
-            self.price0 = price
-            self.dispCurrent(t, price, 'HOLD')
+        if self.isFirstDeal(t, price):
             return
 
-        delta = self.calcDelta(t, price)
+        delta = self.getDelta(t, price)
 
         if not self.isValidTime(t):
             if (self.status == TradeStatus.BOUGHT) or (self.status == TradeStatus.SOLD):
