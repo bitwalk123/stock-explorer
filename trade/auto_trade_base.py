@@ -27,6 +27,10 @@ class AutoTradeBase(QObject):
         self.t0 = 0
         self.price0 = 0
 
+        # サマリ用データフレーム
+        self.headers = ['時刻', '処理', '所持金額', '指値', '現在価格', '取得金額']
+        self.df_summary = pd.DataFrame()
+
     def hold(self, t: pd.Timestamp, price: np.float64):
         ...
 
@@ -70,7 +74,13 @@ class AutoTradeBase(QObject):
 
     # _________________________________________________________________________
     def dispCurrent(self, t: pd.Timestamp, price: np.float64, title: str):
-        print(t, title, self.price_own, self.price_limit, price, self.result)
+        line = [t, title, self.price_own, self.price_limit, price, self.result]
+        # print(*line)
+        s = pd.Series(line, index=self.headers)
+        if len(self.df_summary) > 0:
+            self.df_summary = pd.concat([self.df_summary, s.to_frame().T])
+        else:
+            self.df_summary = s.to_frame().T
 
     def doTransaction(self, t: pd.Timestamp, delta: float):
         self.result += delta * self.unit
@@ -94,6 +104,10 @@ class AutoTradeBase(QObject):
 
     def getResult(self) -> float:
         return self.result
+
+    def getSummary(self) -> pd.DataFrame:
+        self.df_summary.reset_index(inplace=True, drop=True)
+        return self.df_summary
 
     def isFirstDeal(self, t: pd.Timestamp, price: np.float64):
         if (self.status == TradeStatus.PRE) or (self.status == TradeStatus.BREAK):

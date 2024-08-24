@@ -101,6 +101,7 @@ class DayTrendSimulator(QMainWindow):
             price = df.loc[t]['Price']
             trade.update(t, price)
 
+        print(trade.getSummary())
         print(trade.getResult())
 
 
