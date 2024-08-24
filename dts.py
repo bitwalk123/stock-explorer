@@ -1,9 +1,8 @@
 import os
-import numpy as np
 import pandas as pd
 import sys
 
-from PySide6.QtCore import Qt, QDate, QDir
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -13,15 +12,8 @@ from PySide6.QtWidgets import (
 
 from snippets.set_env import set_env
 from structs.res import AppRes
+from trade.auto_trade_01 import AutoTrade01
 from ui.toolbar_dts import DTSToolBar
-
-
-class AutoTrade:
-    def __init__(self):
-        self.result = 0
-
-    def update(self, t: pd.Timestamp, price: np.float64):
-        print(t, price)
 
 
 class DayTrendSimulator(QMainWindow):
@@ -49,10 +41,13 @@ class DayTrendSimulator(QMainWindow):
             self.simulation(df)
 
     def simulation(self, df: pd.DataFrame):
-        trade = AutoTrade()
-        for t in df.index:
+        trade = AutoTrade01()
+        end = len(df.index) - 1
+        for t in df.index[:end]:
             price = df.loc[t]['Price']
             trade.update(t, price)
+
+        print(trade.getResult())
 
 
 def main():
