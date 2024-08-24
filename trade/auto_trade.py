@@ -11,7 +11,7 @@ class AutoTrade(QObject):
     def __init__(self, t: pd.Timestamp):
         super().__init__()
         self.unit = 100  # 単元株数
-        self.tick = 5  # 呼値
+        self.tick = 10  # 呼値
         self.own = 0  # 所持価格
         self.price_limit = 0  # 指値価格
         self.result = 0.0
