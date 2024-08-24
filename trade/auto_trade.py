@@ -12,7 +12,7 @@ class AutoTrade(QObject):
         super().__init__()
         self.unit = 100  # 単元株数
         self.tick = 10  # 呼値
-        self.own = 0  # 所持価格
+        self.price_own = 0  # 所持価格
         self.price_limit = 0  # 指値価格
         self.result = 0.0
         self.status = TradeStatus.PRE
@@ -34,41 +34,43 @@ class AutoTrade(QObject):
         ...
 
     def buy(self, t: pd.Timestamp, price: np.float64):
-        if self.own != 0:
+        if self.price_own != 0:
             print('ERROR!')
             return
 
-        self.own = price
+        self.price_own = price
         self.price_limit = price + self.tick
         self.status = TradeStatus.BOUGHT
 
     def sell(self, t: pd.Timestamp, price: np.float64):
-        if self.own != 0:
+        if self.price_own != 0:
             print('ERROR!')
             return
 
-        self.own = price
+        self.price_own = price
         self.price_limit = price - self.tick
         self.status = TradeStatus.SOLD
 
     def transaction(self, t: pd.Timestamp, price: np.float64, force=False):
         if self.status == TradeStatus.BOUGHT:
             if force:
-                delta = price - self.own
+                delta = price - self.price_own
             else:
-                delta = self.price_limit - self.own
-            self.result += delta
-            self.own = 0
+                delta = self.price_limit - self.price_own
+            self.result += delta * self.unit
+            self.price_own = 0
+            self.price_limit = 0
             self.status = TradeStatus.HOLD
             return
 
         if self.status == TradeStatus.SOLD:
             if force:
-                delta = self.own - price
+                delta = self.price_own - price
             else:
-                delta = self.own - self.price_limit
+                delta = self.price_own - self.price_limit
             self.result += delta * self.unit
-            self.own = 0
+            self.price_own = 0
+            self.price_limit = 0
             self.status = TradeStatus.HOLD
             return
 
