@@ -27,8 +27,8 @@ class AutoTrade(QObject):
         self.t0 = 0
         self.price0 = 0
 
-    def update(self, t: pd.Timestamp, price: np.float64):
-        ...
+    def disp_current(self, t: pd.Timestamp, price: np.float64, title: str):
+        print(t, title, self.price_own, self.price_limit, price, self.result)
 
     def hold(self, t: pd.Timestamp, price: np.float64):
         ...
@@ -74,6 +74,10 @@ class AutoTrade(QObject):
             self.status = TradeStatus.HOLD
             return
 
+    def update(self, t: pd.Timestamp, price: np.float64):
+        ...
+
+    # _________________________________________________________________________
     def calcDelta(self, t: pd.Timestamp, price: np.float64):
         delta = price - self.price0
         self.t0 = t

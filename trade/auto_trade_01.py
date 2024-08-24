@@ -14,11 +14,9 @@ class AutoTrade01(AutoTrade):
     def __init__(self, t: pd.Timestamp):
         super().__init__(t)
 
-    def disp_current(self, t: pd.Timestamp, price: np.float64, delta: float, title: str):
-        print(t, title, self.price_own, self.price_limit, price, delta, self.result)
 
     def update(self, t: pd.Timestamp, price: np.float64):
-        if self.status == TradeStatus.PRE:
+        if (self.status == TradeStatus.PRE) or (self.status == TradeStatus.BREAK):
             self.status = TradeStatus.HOLD
             self.t0 = t
             self.price0 = price
@@ -28,49 +26,38 @@ class AutoTrade01(AutoTrade):
 
         if not self.isValidTime(t):
             if self.status != TradeStatus.HOLD:
-                self.disp_current(t, price, delta, 'transaction/force')
+                self.disp_current(t, price, 'transaction/force')
                 self.transaction(t, price, force=True)
-                self.disp_current(t, price, delta, 'transaction/end')
+                self.disp_current(t, price, 'transaction/end')
             return
 
         if self.status == TradeStatus.HOLD:
             if delta > 0:
-                #print(t, 'buy', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'buy')
+                self.disp_current(t, price, 'buy')
                 self.buy(t, price)
-                #print(t, 'bought', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'bought')
+                self.disp_current(t, price, 'bought')
             elif delta < 0:
-                #print(t, 'sell', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'sell')
+                self.disp_current(t, price, 'sell')
                 self.sell(t, price)
-                #print(t, 'sold', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'sold')
+                self.disp_current(t, price, 'sold')
             else:
-                #print(t, 'hold/stay', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'hold/stay')
+                self.disp_current(t, price, 'hold/stay')
             return
 
         if self.status == TradeStatus.BOUGHT:
             if self.price_limit < price:
-                #print(t, 'transaction/match', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'transaction/match')
+                self.disp_current(t, price, 'transaction/match')
                 self.transaction(t, price)
-                #print(t, 'transaction/end', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'transaction/end')
+                self.disp_current(t, price, 'transaction/end')
             else:
-                #print(t, 'bought/stay', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'bought/stay')
+                self.disp_current(t, price, 'bought/stay')
             return
 
         if self.status == TradeStatus.SOLD:
             if price < self.price_limit:
-                #print(t, 'transaction/match', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'transaction/match')
+                self.disp_current(t, price, 'transaction/match')
                 self.transaction(t, price)
-                #print(t, 'transaction/end', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'transaction/end')
+                self.disp_current(t, price, 'transaction/end')
             else:
-                #print(t, 'sold/stay', self.price_own, self.price_limit, price, delta, self.result)
-                self.disp_current(t, price, delta, 'sold/stay')
+                self.disp_current(t, price, 'sold/stay')
             return
