@@ -37,8 +37,8 @@ class DayTrendSimulator(QMainWindow):
         dialog = QFileDialog()
         dialog.setNameFilters(['Pickle files (*.pkl)'])
         if dialog.exec():
-            filename = dialog.selectedFiles()[0]
-            df = pd.read_pickle(filename)
+            pklfile = dialog.selectedFiles()[0]
+            df = pd.read_pickle(pklfile)
             self.simulation(df)
 
     def simulation(self, df: pd.DataFrame):
