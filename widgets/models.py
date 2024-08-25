@@ -11,8 +11,6 @@ from PySide6.QtCore import (
 
 
 class PandasModel(QAbstractTableModel):
-    __version__ = '0.0.1'
-
     def __init__(self, df: pd.DataFrame):
         super().__init__()
         self._df = df
@@ -28,12 +26,14 @@ class PandasModel(QAbstractTableModel):
         row = index.row()
         col = index.column()
         value = self._df.iloc[row, col]
+        if type(value) is int:
+            value = float(value)
 
         if role == Qt.ItemDataRole.DisplayRole:
             return str(value)
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
-            if (type(value) is np.int64) | (type(value) is np.float64):
+            if (type(value) is np.int64) | (type(value) is np.float64) | (type(value) is float):
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             else:
                 return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter

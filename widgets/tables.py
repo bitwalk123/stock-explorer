@@ -1,7 +1,13 @@
 from typing import Union
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QTableView, QHeaderView, QAbstractButton, QVBoxLayout, QLabel
+from PySide6.QtWidgets import (
+    QAbstractButton,
+    QHeaderView,
+    QLabel,
+    QTableView,
+    QVBoxLayout,
+)
 
 
 class TableView(QTableView):
@@ -22,6 +28,7 @@ class TableView(QTableView):
     def getLabel(self) -> str:
         return self.label
 
+
 def add_label(but: QAbstractButton):
     layout = QVBoxLayout()
     layout.setContentsMargins(0, 0, 0, 0)
@@ -29,12 +36,11 @@ def add_label(but: QAbstractButton):
     label = QLabel()
     label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     layout.addWidget(label)
+
     return label
 
 
 class PandasTableView(QTableView):
-    __version__ = '0.0.1'
-
     def __init__(self):
         super().__init__()
         self.setStyleSheet("""
