@@ -20,7 +20,7 @@ from trade.auto_trade_test_01 import AutoTradeTest01
 from ui.toolbar_dts import DTSToolBar
 
 
-class ChartSimlator(FigureCanvas):
+class ChartSimulator(FigureCanvas):
     fig = Figure()
 
     def __init__(self):
@@ -34,12 +34,13 @@ class ChartSimlator(FigureCanvas):
         )
         self.ax = self.fig.add_subplot(111)
 
-
     def clearAxes(self):
         self.ax.cla()
 
     def refreshDraw(self):
-        self.ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+        self.ax.xaxis.set_major_formatter(
+            mdates.DateFormatter("%H:%M")
+        )
         self.ax.grid()
         self.fig.canvas.draw()
 
@@ -73,16 +74,16 @@ class DayTrendSimulator(QMainWindow):
 
         # _____________________________________________________________________
         # Chart
-        self.chart = chart = ChartSimlator()
+        self.chart = chart = ChartSimulator()
         self.setCentralWidget(chart)
 
-    def on_draw(self, df: pd.DataFrame, title:str):
+    def on_draw(self, df: pd.DataFrame, title: str):
         self.chart.clearAxes()
         t = df.index[0]
         set_ymd = (t.year, t.month, t.day)
         t_noon = pd.to_datetime('%4d-%02d-%02d 12:00:00' % set_ymd)
         df1 = df[df.index < t_noon]
-        df2 =df[df.index > t_noon]
+        df2 = df[df.index > t_noon]
         self.chart.ax.plot(df1, color='C0', alpha=0.5, linewidth=1)
         self.chart.ax.plot(df2, color='C0', alpha=0.5, linewidth=1)
         self.chart.ax.set_title(title)
