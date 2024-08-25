@@ -18,6 +18,8 @@ from snippets.set_env import set_env
 from structs.res import AppRes
 from trade.auto_trade_test_01 import AutoTradeTest01
 from ui.toolbar_dts import DTSToolBar
+from widgets.models import PandasModel
+from widgets.tables import PandasTableView
 
 
 class ChartSimulator(FigureCanvas):
@@ -119,6 +121,11 @@ class DayTrendSimulator(QMainWindow):
         self.win_result = win_result = QMainWindow()
         win_result.setWindowTitle('取引詳細')
         win_result.show()
+
+        tbl = PandasTableView()
+        win_result.setCentralWidget(tbl)
+        model = PandasModel(df)
+        tbl.setModel(model)
 
 
 def main():
