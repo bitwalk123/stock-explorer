@@ -11,7 +11,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
-    QMainWindow,
+    QMainWindow, QStatusBar,
 )
 
 from snippets.set_env import set_env
@@ -65,6 +65,11 @@ class DayTrendSimulator(QMainWindow):
         self.toolbar = toolbar = DTSToolBar()
         self.toolbar.folderClicked.connect(self.on_open)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
+
+        # _____________________________________________________________________
+        # StatusBar
+        self.statusbar = statusbar = QStatusBar()
+        self.setStatusBar(statusbar)
 
         # _____________________________________________________________________
         # Chart
