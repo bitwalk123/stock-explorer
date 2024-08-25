@@ -45,6 +45,10 @@ class AutoTradeTest01(AutoTradeBase):
                 self.dispCurrent(t, price, 'TRANSACTION/match')
                 self.transaction(t, price)
                 self.dispCurrent(t, price, 'TRANSACTION/end')
+            elif price < self.price_own:
+                self.dispCurrent(t, price, 'TRANSACTION/force')
+                self.transaction(t, price, force=True)
+                self.dispCurrent(t, price, 'TRANSACTION/end')
             else:
                 self.dispCurrent(t, price, 'BOUGHT/stay')
             return
@@ -53,6 +57,10 @@ class AutoTradeTest01(AutoTradeBase):
             if price < self.price_limit:
                 self.dispCurrent(t, price, 'TRANSACTION/match')
                 self.transaction(t, price)
+                self.dispCurrent(t, price, 'TRANSACTION/end')
+            elif self.price_own < price:
+                self.dispCurrent(t, price, 'TRANSACTION/force')
+                self.transaction(t, price, force=True)
                 self.dispCurrent(t, price, 'TRANSACTION/end')
             else:
                 self.dispCurrent(t, price, 'SOLD/stay')

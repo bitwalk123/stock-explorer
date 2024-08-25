@@ -57,6 +57,9 @@ class DayTrendSimulator(QMainWindow):
         super().__init__()
         dict_info = set_env()
         res = AppRes()
+
+        self.win_result = None
+
         icon = QIcon(os.path.join(res.getImagePath(), 'simulator.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('Day Trend Simulator, DTS')
@@ -107,8 +110,15 @@ class DayTrendSimulator(QMainWindow):
             price = df.loc[t]['Price']
             trade.update(t, price)
 
-        print(trade.getSummary())
         print(trade.getResult())
+
+        df = trade.getSummary()
+        self.show_result(df)
+
+    def show_result(self, df: pd.DataFrame):
+        self.win_result = win_result = QMainWindow()
+        win_result.setWindowTitle('取引詳細')
+        win_result.show()
 
 
 def main():
