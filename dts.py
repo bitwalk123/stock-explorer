@@ -2,10 +2,6 @@ import os
 import pandas as pd
 import sys
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib import dates as mdates
-
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
@@ -16,41 +12,11 @@ from PySide6.QtWidgets import (
 
 from snippets.set_env import set_env
 from structs.res import AppRes
-from trade.auto_trade_test_01 import AutoTradeTest01
 from trade.auto_trade_test_02 import AutoTradeTest02
 from ui.toolbar_dts import DTSToolBar
+from widgets.charts import ChartSimulator
 from widgets.models import PandasModel
 from widgets.tables import PandasTableView
-
-
-class ChartSimulator(FigureCanvas):
-    fig = Figure()
-
-    def __init__(self):
-        super().__init__(self.fig)
-        self.fig.subplots_adjust(
-            top=0.94,
-            bottom=0.06,
-            left=0.1,
-            right=0.99,
-            hspace=0,
-        )
-        self.ax = self.fig.add_subplot(111)
-
-    def clearAxes(self):
-        self.ax.cla()
-
-    def refreshDraw(self):
-        self.ax.xaxis.set_major_formatter(
-            mdates.DateFormatter("%H:%M")
-        )
-        self.ax.grid()
-        self.fig.canvas.draw()
-
-    def removeAxes(self):
-        axs = self.fig.axes
-        for ax in axs:
-            ax.remove()
 
 
 class DayTrendSimulator(QMainWindow):
@@ -107,7 +73,7 @@ class DayTrendSimulator(QMainWindow):
 
     def simulation(self, df: pd.DataFrame):
         t = df.index[0]
-        trade = AutoTradeTest01(t)
+        trade = AutoTradeTest02(t)
         end = len(df.index) - 1
         for t in df.index[:end]:
             price = df.loc[t]['Price']
