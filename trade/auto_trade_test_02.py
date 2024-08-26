@@ -8,10 +8,9 @@ from trade.auto_trade_base import AutoTradeBase
 class AutoTradeTest02(AutoTradeBase):
     """
     成行売買
-        単純に値が増加して入れ歯買い、減少していれば売り
-        呼値 (tick) ２つ分高ければ売却（買建）・低ければ買戻（売建）
+        売買の判断基準にMACDを導入してみた。
     損切り (Loss-cut) :
-        取得価格より呼値分低い（売却）あるいは高い（買戻）場合に、即、損切り
+        検討中
     """
 
     def __init__(self, t: pd.Timestamp):
@@ -33,11 +32,11 @@ class AutoTradeTest02(AutoTradeBase):
         if self.status == TradeStatus.HOLD:
             if delta > 0:
                 self.dispCurrent(t, price, 'BUY')
-                self.buy(t, price, 2)
+                self.buy(t, price)
                 self.dispCurrent(t, price, 'BOUGHT')
             elif delta < 0:
                 self.dispCurrent(t, price, 'SELL')
-                self.sell(t, price, 2)
+                self.sell(t, price)
                 self.dispCurrent(t, price, 'SOLD')
             else:
                 self.dispCurrent(t, price, 'HOLD/stay')

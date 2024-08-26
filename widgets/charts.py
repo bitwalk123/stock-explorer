@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from matplotlib import ticker
+from matplotlib import ticker, dates as mdates
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -323,6 +323,36 @@ class ChartExchange(ChartAbstract):
             ax.cla()
 
     def refreshDraw(self):
+        self.fig.canvas.draw()
+
+    def removeAxes(self):
+        axs = self.fig.axes
+        for ax in axs:
+            ax.remove()
+
+
+class ChartSimulator(FigureCanvas):
+    fig = Figure()
+
+    def __init__(self):
+        super().__init__(self.fig)
+        self.fig.subplots_adjust(
+            top=0.94,
+            bottom=0.06,
+            left=0.1,
+            right=0.99,
+            hspace=0,
+        )
+        self.ax = self.fig.add_subplot(111)
+
+    def clearAxes(self):
+        self.ax.cla()
+
+    def refreshDraw(self):
+        self.ax.xaxis.set_major_formatter(
+            mdates.DateFormatter("%H:%M")
+        )
+        self.ax.grid()
         self.fig.canvas.draw()
 
     def removeAxes(self):
