@@ -34,22 +34,22 @@ class AutoTradeBase(QObject):
     def hold(self, t: pd.Timestamp, price: np.float64):
         ...
 
-    def buy(self, t: pd.Timestamp, price: np.float64):
+    def buy(self, t: pd.Timestamp, price: np.float64, mag=1):
         if self.price_own != 0:
             print('ERROR!')
             return
 
         self.price_own = price
-        self.price_limit = price + self.tick
+        self.price_limit = price + self.tick * mag
         self.status = TradeStatus.BOUGHT
 
-    def sell(self, t: pd.Timestamp, price: np.float64):
+    def sell(self, t: pd.Timestamp, price: np.float64, mag=1):
         if self.price_own != 0:
             print('ERROR!')
             return
 
         self.price_own = price
-        self.price_limit = price - self.tick
+        self.price_limit = price - self.tick * mag
         self.status = TradeStatus.SOLD
 
     def transaction(self, t: pd.Timestamp, price: np.float64, force=False):
