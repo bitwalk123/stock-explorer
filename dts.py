@@ -107,7 +107,7 @@ class DayTrendSimulator(QMainWindow):
 
     def simulation(self, df: pd.DataFrame):
         t = df.index[0]
-        trade = AutoTradeTest02(t)
+        trade = AutoTradeTest01(t)
         end = len(df.index) - 1
         for t in df.index[:end]:
             price = df.loc[t]['Price']
@@ -120,7 +120,10 @@ class DayTrendSimulator(QMainWindow):
 
     def show_result(self, df: pd.DataFrame):
         self.win_result = win_result = QMainWindow()
+        statusbar = QStatusBar()
+        win_result.setStatusBar(statusbar)
         win_result.setWindowTitle('取引詳細')
+        win_result.resize(800, 400)
         win_result.show()
 
         tbl = PandasTableView()
