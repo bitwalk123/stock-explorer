@@ -113,7 +113,7 @@ class DayTrendSimulator(QMainWindow):
             price = df.loc[t]['Price']
             trade.update(t, price)
 
-        print(trade.getResult())
+        print('Total earning:', trade.getResult())
 
         df = trade.getSummary()
         self.show_result(df)
