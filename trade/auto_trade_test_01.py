@@ -7,8 +7,10 @@ from trade.auto_trade_base import AutoTradeBase
 
 class AutoTradeTest01(AutoTradeBase):
     """
-    成行売買で、呼値 (tick) で売却・買戻
-    損切り (Loss-cut) 条件無し
+    成行売買
+        呼値 (tick) 分で高ければ売却（買建）・低ければ買戻（売建）
+    損切り (Loss-cut) :
+        取得価格より呼値分低い（売却）あるいは高い（買戻）場合に、即、損切り
     """
 
     def __init__(self, t: pd.Timestamp):
