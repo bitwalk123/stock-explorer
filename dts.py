@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 from snippets.set_env import set_env
 from structs.res import AppRes
 from trade.auto_trade_test_01 import AutoTradeTest01
+from trade.auto_trade_test_02 import AutoTradeTest02
 from ui.toolbar_dts import DTSToolBar
 from widgets.models import PandasModel
 from widgets.tables import PandasTableView
@@ -106,7 +107,7 @@ class DayTrendSimulator(QMainWindow):
 
     def simulation(self, df: pd.DataFrame):
         t = df.index[0]
-        trade = AutoTradeTest01(t)
+        trade = AutoTradeTest02(t)
         end = len(df.index) - 1
         for t in df.index[:end]:
             price = df.loc[t]['Price']

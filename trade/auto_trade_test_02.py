@@ -5,7 +5,7 @@ from structs.trade_status import TradeStatus
 from trade.auto_trade_base import AutoTradeBase
 
 
-class AutoTradeTest01(AutoTradeBase):
+class AutoTradeTest02(AutoTradeBase):
     """
     成行売買
         単純に値が増加して入れ歯買い、減少していれば売り
@@ -33,11 +33,11 @@ class AutoTradeTest01(AutoTradeBase):
         if self.status == TradeStatus.HOLD:
             if delta > 0:
                 self.dispCurrent(t, price, 'BUY')
-                self.buy(t, price)
+                self.buy(t, price, 2)
                 self.dispCurrent(t, price, 'BOUGHT')
             elif delta < 0:
                 self.dispCurrent(t, price, 'SELL')
-                self.sell(t, price)
+                self.sell(t, price, 2)
                 self.dispCurrent(t, price, 'SOLD')
             else:
                 self.dispCurrent(t, price, 'HOLD/stay')
