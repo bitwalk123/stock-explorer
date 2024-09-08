@@ -69,7 +69,7 @@ class DayTrendSimulator(QMainWindow):
             df = pd.read_pickle(pklfile)
             title = os.path.splitext(os.path.basename(pklfile))[0]
             self.on_draw(df, title)
-            self.simulation(df)
+            # self.simulation(df)
 
     def simulation(self, df: pd.DataFrame):
         t = df.index[0]
