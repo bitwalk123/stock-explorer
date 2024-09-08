@@ -26,7 +26,7 @@ class DayTrendAnalyzerExchange(QMainWindow):
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'budget.png'))
         self.setWindowIcon(icon)
-        self.setWindowTitle('DTA - Exchange')
+        self.setWindowTitle('為替レート')
         self.setFixedSize(400, 400)
 
         self.chart = chart = ChartExchange()
