@@ -107,10 +107,12 @@ class MktReview(QMainWindow):
         name_ticker = 'Micron Technology, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
+        """
         row += 1
         ticker = 'INTC'
         name_ticker = 'Intel Corporation'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+        """
 
         row += 1
         ticker = 'ON'
