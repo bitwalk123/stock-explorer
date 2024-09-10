@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
-from base.psar import PSAR
+from funcs.parabolic import psar
 from structs.res import AppRes
 from widgets.charts import ChartTrade
 
@@ -45,10 +45,33 @@ class DayTrendAnalyzerTrade(QMainWindow):
             return
 
         self.chart.clearAxes()
+        dict_psar = psar(df)
+        apds = [
+            mpf.make_addplot(
+                dict_psar['bear'],
+                type='scatter',
+                marker='o',
+                markersize=5,
+                color='magenta',
+                label='downtrend',
+                ax=self.chart.ax,
+            ),
+            mpf.make_addplot(
+                dict_psar['bull'],
+                type='scatter',
+                marker='o',
+                markersize=5,
+                color='darkcyan',
+                label='uptrend',
+                ax=self.chart.ax,
+            ),
+        ]
+
         mpf.plot(
             df,
             type='candle',
             style='binance',
+            addplot=apds,
             ax=self.chart.ax,
         )
 
