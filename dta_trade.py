@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 
+from base.psar import PSAR
 from structs.res import AppRes
 from widgets.charts import ChartTrade
 
