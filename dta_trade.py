@@ -72,11 +72,12 @@ class DayTrendAnalyzerTrade(QMainWindow):
             type='candle',
             style='binance',
             addplot=apds,
+            xrotation=0,
             ax=self.chart.ax,
         )
 
         df0 = df.tail(1)
-        title = '%f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
+        title = '%.f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
         self.chart.ax.set_title(title)
 
         self.chart.ax.set_ylabel('Price')
@@ -84,13 +85,14 @@ class DayTrendAnalyzerTrade(QMainWindow):
         self.chart.refreshDraw()
 
     def get_dataframe(self) -> pd.DataFrame:
-        end = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
-        delta = dt.timedelta(hours=6)
-        start = end - delta
+        #end = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
+        #delta = dt.timedelta(hours=6)
+        #start = end - delta
 
-        df = self.ticker.history(start=start, end=end, interval='1m')
-        if len(df) > 0:
-            df.index = df.index.tz_convert('Asia/Tokyo')
+        #df = self.ticker.history(start=start, end=end, interval='1m')
+        df = self.ticker.history(period='1d', interval='1m')
+        #if len(df) > 0:
+        #    df.index = df.index.tz_convert('Asia/Tokyo')
 
         return df
 
