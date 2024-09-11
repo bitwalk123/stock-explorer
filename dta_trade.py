@@ -72,6 +72,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
             type='candle',
             style='binance',
             addplot=apds,
+            xrotation=0,
             ax=self.chart.ax,
         )
 
