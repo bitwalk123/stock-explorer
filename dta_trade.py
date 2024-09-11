@@ -1,11 +1,12 @@
 import datetime as dt
-import os
-
 import mplfinance as mpf
-import sys
-
+import numpy as np
+import os
 import pandas as pd
+import sys
 import yfinance as yf
+from zoneinfo import ZoneInfo
+
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QIcon
 
@@ -25,6 +26,32 @@ class DayTrendAnalyzerTrade(QMainWindow):
         symbol = '8035.T'
         self.ticker = yf.Ticker(symbol)
 
+        dt_now = dt.datetime.now(ZoneInfo("Asia/Tokyo"))
+        y = dt_now.year
+        m = dt_now.month
+        d = dt_now.day
+        self.dt_start_1 = dt_start_1 = pd.to_datetime('%4d-%02d-%02d 09:00:00+09:00' % (y, m, d))
+        self.dt_end_1 = dt_end_1 = pd.to_datetime('%4d-%02d-%02d 11:30:00+09:00' % (y, m, d))
+        self.dt_start_2 = dt_start_2 = pd.to_datetime('%4d-%02d-%02d 12:30:00+09:00' % (y, m, d))
+        self.dt_end_2 = dt_end_2 = pd.to_datetime('%4d-%02d-%02d 15:00:00+09:00' % (y, m, d))
+
+        dt_list_0 = pd.date_range(dt_start_1, periods=360, freq='min')
+        dt_list = dt_list_0[(dt_list_0 <= dt_end_1) | (dt_list_0 >= dt_start_2)]
+        n = len(dt_list)
+        self.df = pd.DataFrame(
+            {
+                'Open': [np.nan] * n,
+                'High': [np.nan] * n,
+                'Low': [np.nan] * n,
+                'Close': [np.nan] * n,
+                'Volume': [np.nan] * n,
+                'Dividends': [np.nan] * n,
+                'Stock Splits': [np.nan] * n,
+            },
+            index=dt_list,
+        )
+        self.df.index.name = 'Datetime'
+
         res = AppRes()
         icon = QIcon(os.path.join(res.getImagePath(), 'chart.png'))
         self.setWindowIcon(icon)
@@ -33,19 +60,15 @@ class DayTrendAnalyzerTrade(QMainWindow):
 
         self.chart = chart = ChartTrade()
         self.setCentralWidget(chart)
-        self.draw_chart()
+        # self.draw_chart()
 
         timer = QTimer(self)
-        timer.timeout.connect(self.draw_chart)
+        timer.timeout.connect(self.on_update)
         timer.start(60000)
 
     def draw_chart(self):
-        df = self.get_dataframe()
-        if len(df) == 0:
-            return
-
         self.chart.clearAxes()
-        dict_psar = psar(df)
+        dict_psar = psar(self.df)
         apds = [
             mpf.make_addplot(
                 dict_psar['bear'],
@@ -68,7 +91,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
         ]
 
         mpf.plot(
-            df,
+            self.df,
             type='candle',
             style='binance',
             addplot=apds,
@@ -76,8 +99,11 @@ class DayTrendAnalyzerTrade(QMainWindow):
             ax=self.chart.ax,
         )
 
-        df0 = df.tail(1)
-        title = '%.f JPY at %s' % (df0['Close'].iloc[0], str(df0.index[0].time()))
+        df_bottom = self.df.tail(1)
+        title = '%.f JPY at %s' % (
+            df_bottom['Close'].iloc[0],
+            str(df_bottom.index[0].time())
+        )
         self.chart.ax.set_title(title)
 
         self.chart.ax.set_ylabel('Price')
@@ -85,18 +111,23 @@ class DayTrendAnalyzerTrade(QMainWindow):
         self.chart.refreshDraw()
 
     def get_dataframe(self) -> pd.DataFrame:
-        #end = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
-        #delta = dt.timedelta(hours=6)
-        #start = end - delta
-
-        #df = self.ticker.history(start=start, end=end, interval='1m')
         df = self.ticker.history(period='1d', interval='1m')
-        #if len(df) > 0:
-        #    df.index = df.index.tz_convert('Asia/Tokyo')
 
         return df
 
     def on_update(self):
+        dt_now = dt.datetime.now(ZoneInfo("Asia/Tokyo"))
+        if dt_now < self.dt_start_1:
+            print('before market starting @', dt_now)
+            return
+
+        df = self.get_dataframe()
+        if len(df) == 0:
+            return
+
+        for t in df.index[(df.index <= self.dt_end_1) | (df.index >= self.dt_start_2)]:
+            self.df.loc[t] = df.loc[t]
+
         self.draw_chart()
 
 
