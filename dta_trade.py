@@ -22,11 +22,38 @@ from widgets.charts import ChartTrade
 
 def draw_chart(chart: ChartTrade, df: pd.DataFrame):
     chart.clearAxes()
-    dict_psar = psar(df)
-    print(dict_psar)
+
+    row_total = len(df)
+    nan_top = 0
+    for flag in df['Close'].isna():
+        if not flag:
+            break
+        nan_top += 1
+
+    df2 = df.dropna()
+    df_bottom = df2.tail(1)
+    title = '%.f JPY at %s' % (
+        df_bottom['Close'].iloc[0],
+        str(df_bottom.index[0].time())
+    )
+    dict_psar = psar(df2)
+
+    bear = dict_psar['bear']
+    nan_rest = row_total - nan_top - len(bear)
+    downtrend = np.array(
+        [None] * nan_top + bear + [None] * nan_rest,
+        dtype='float64'
+    )
+    bull = dict_psar['bull']
+    nan_rest = row_total - nan_top - len(bull)
+    uptrend = np.array(
+        [None] * nan_top + bull + [None] * nan_rest,
+        dtype='float64'
+    )
+
     apds = [
         mpf.make_addplot(
-            dict_psar['bear'],
+            downtrend,
             type='scatter',
             marker='o',
             markersize=5,
@@ -35,7 +62,7 @@ def draw_chart(chart: ChartTrade, df: pd.DataFrame):
             ax=chart.ax,
         ),
         mpf.make_addplot(
-            dict_psar['bull'],
+            uptrend,
             type='scatter',
             marker='o',
             markersize=5,
@@ -52,12 +79,6 @@ def draw_chart(chart: ChartTrade, df: pd.DataFrame):
         addplot=apds,
         xrotation=0,
         ax=chart.ax,
-    )
-
-    df_bottom = df.tail(1)
-    title = '%.f JPY at %s' % (
-        df_bottom['Close'].iloc[0],
-        str(df_bottom.index[0].time())
     )
     chart.ax.set_title(title)
 

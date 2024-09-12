@@ -63,7 +63,14 @@ def psar(ohlc: pd.DataFrame, iaf: float = 0.02, maxaf: float = 0.2) -> dict:
         else:
             psarbear[i] = psar[i]
 
+    """
     return {
         'bear': np.array(psarbear, dtype='float64'),
         'bull': np.array(psarbull, dtype='float64'),
+    }
+    """
+
+    return {
+        'bear': psarbear,
+        'bull': psarbull,
     }
