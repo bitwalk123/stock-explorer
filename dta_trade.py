@@ -20,6 +20,73 @@ from structs.res import AppRes
 from widgets.charts import ChartTrade
 
 
+def draw_chart(chart: ChartTrade, df: pd.DataFrame):
+    chart.clearAxes()
+
+    row_total = len(df)
+    nan_top = 0
+    for flag in df['Close'].isna():
+        if not flag:
+            break
+        nan_top += 1
+
+    df2 = df.dropna()
+    df_bottom = df2.tail(1)
+    title = '%.f JPY at %s' % (
+        df_bottom['Close'].iloc[0],
+        str(df_bottom.index[0].time())
+    )
+    dict_psar = psar(df2)
+
+    bear = dict_psar['bear']
+    nan_rest = row_total - nan_top - len(bear)
+    downtrend = np.array(
+        [None] * nan_top + bear + [None] * nan_rest,
+        dtype='float64'
+    )
+    bull = dict_psar['bull']
+    nan_rest = row_total - nan_top - len(bull)
+    uptrend = np.array(
+        [None] * nan_top + bull + [None] * nan_rest,
+        dtype='float64'
+    )
+
+    apds = [
+        mpf.make_addplot(
+            downtrend,
+            type='scatter',
+            marker='o',
+            markersize=5,
+            color='magenta',
+            label='downtrend',
+            ax=chart.ax,
+        ),
+        mpf.make_addplot(
+            uptrend,
+            type='scatter',
+            marker='o',
+            markersize=5,
+            color='darkcyan',
+            label='uptrend',
+            ax=chart.ax,
+        ),
+    ]
+
+    mpf.plot(
+        df,
+        type='candle',
+        style='binance',
+        addplot=apds,
+        xrotation=0,
+        ax=chart.ax,
+    )
+    chart.ax.set_title(title)
+
+    chart.ax.set_ylabel('Price')
+    chart.ax.grid()
+    chart.refreshDraw()
+
+
 class DayTrendAnalyzerTrade(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -66,50 +133,6 @@ class DayTrendAnalyzerTrade(QMainWindow):
         timer.timeout.connect(self.on_update)
         timer.start(60000)
 
-    def draw_chart(self):
-        self.chart.clearAxes()
-        dict_psar = psar(self.df)
-        apds = [
-            mpf.make_addplot(
-                dict_psar['bear'],
-                type='scatter',
-                marker='o',
-                markersize=5,
-                color='magenta',
-                label='downtrend',
-                ax=self.chart.ax,
-            ),
-            mpf.make_addplot(
-                dict_psar['bull'],
-                type='scatter',
-                marker='o',
-                markersize=5,
-                color='darkcyan',
-                label='uptrend',
-                ax=self.chart.ax,
-            ),
-        ]
-
-        mpf.plot(
-            self.df,
-            type='candle',
-            style='binance',
-            addplot=apds,
-            xrotation=0,
-            ax=self.chart.ax,
-        )
-
-        df_bottom = self.df.tail(1)
-        title = '%.f JPY at %s' % (
-            df_bottom['Close'].iloc[0],
-            str(df_bottom.index[0].time())
-        )
-        self.chart.ax.set_title(title)
-
-        self.chart.ax.set_ylabel('Price')
-        self.chart.ax.grid()
-        self.chart.refreshDraw()
-
     def get_dataframe(self) -> pd.DataFrame:
         df = self.ticker.history(period='1d', interval='1m')
 
@@ -128,7 +151,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
         for t in df.index[(df.index <= self.dt_end_1) | (df.index >= self.dt_start_2)]:
             self.df.loc[t] = df.loc[t]
 
-        self.draw_chart()
+        draw_chart(self.chart, self.df)
 
 
 def main():
