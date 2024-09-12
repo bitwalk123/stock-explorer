@@ -66,9 +66,10 @@ class DayTrendAnalyzerTrade(QMainWindow):
         timer.timeout.connect(self.on_update)
         timer.start(60000)
 
-    def draw_chart(self):
+    def draw_chart(self, df: pd.DataFrame):
         self.chart.clearAxes()
-        dict_psar = psar(self.df)
+        dict_psar = psar(df)
+        print(dict_psar)
         apds = [
             mpf.make_addplot(
                 dict_psar['bear'],
@@ -91,7 +92,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
         ]
 
         mpf.plot(
-            self.df,
+            df,
             type='candle',
             style='binance',
             addplot=apds,
@@ -99,7 +100,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
             ax=self.chart.ax,
         )
 
-        df_bottom = self.df.tail(1)
+        df_bottom = df.tail(1)
         title = '%.f JPY at %s' % (
             df_bottom['Close'].iloc[0],
             str(df_bottom.index[0].time())
@@ -128,7 +129,7 @@ class DayTrendAnalyzerTrade(QMainWindow):
         for t in df.index[(df.index <= self.dt_end_1) | (df.index >= self.dt_start_2)]:
             self.df.loc[t] = df.loc[t]
 
-        self.draw_chart()
+        self.draw_chart(self.df)
 
 
 def main():
