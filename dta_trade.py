@@ -44,6 +44,7 @@ def draw_chart(chart: ChartTrade, df: pd.DataFrame):
         [None] * nan_top + bear + [None] * nan_rest,
         dtype='float64'
     )
+
     bull = dict_psar['bull']
     nan_rest = row_total - nan_top - len(bull)
     uptrend = np.array(
