@@ -89,12 +89,12 @@ class MktReview(QMainWindow):
 
         row += 1
         ticker = 'ASML'
-        name_ticker = 'ASML Holding N.V.'
+        name_ticker = 'ASML Holding N.V. (ADR)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
         ticker = 'TSM'
-        name_ticker = 'TSMC Limited'
+        name_ticker = 'TSMC Limited (ADR)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
