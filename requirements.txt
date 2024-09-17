@@ -16,7 +16,7 @@ plotly
 pmdarima
 prophet
 psycopg2-binary
-pyside6
+pyside6==6.6.3.1
 pysocks
 seaborn
 selenium
