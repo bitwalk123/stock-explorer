@@ -10,7 +10,6 @@ jsonpointer
 jupyterlab
 lightgbm
 mplfinance
-ordered-set
 pip-chill
 pip-review
 plotly
@@ -18,7 +17,9 @@ pmdarima
 prophet
 psycopg2-binary
 pyside6
+pysocks
 seaborn
+selenium
 tomli
 uri-template
 webcolors
