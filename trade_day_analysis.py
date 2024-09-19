@@ -2,7 +2,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 
-from ui.main_trade_day_abalysis import MainTradeDayAnalysis
+from ui.main_trade_day_analysis import MainTradeDayAnalysis
 
 
 def main():
