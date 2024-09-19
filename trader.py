@@ -19,18 +19,18 @@ from snippets.web_login import get_login_info
 from structs.res import AppRes
 from widgets.buttons import TradingButton
 
-"""
-print(driver.title)
-"""
-
 
 class Trader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
+    dict_id = {
+        'login': 'form-login-id',  # ログイン・アカウント
+        'passwd': 'form-login-pass',  # ログイン・パスワード
+        'login-button': 'login-btn',  # ログイン・ボタン
+    }
 
     def __init__(self):
         super().__init__()
         res = AppRes()
-        self.obj_login = get_login_info()
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Main panel
@@ -60,19 +60,26 @@ class Trader(QMainWindow):
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Browser initialization
         self.driver = driver = webdriver.Firefox()
-        name_id = 'form-login-pass'
-        if self.show_url(driver, self.url_login, name_id):
-            self.activate_login_button()
+        self.show_url_login()
 
     def activate_login_button(self):
         self.but_login.setEnabled(True)
 
     def op_login(self):
-        loginid = self.obj_login.getLoginID()
-        password = self.obj_login.getPassword()
+        obj_login = get_login_info()
 
-    def show_url(self, driver: webdriver.Chrome | webdriver.Firefox, url: str, name_id: str) -> bool:
-        driver.get(url)
+        entry_login = self.driver.find_element('id', self.dict_id['login'])
+        entry_login.clear()
+        entry_login.send_keys(obj_login.getLoginID())
+
+        entry_passwd = self.driver.find_element('id', self.dict_id['passwd'])
+        entry_passwd.clear()
+        entry_passwd.send_keys(obj_login.getPassword())
+
+        button_login = self.driver.find_element('id', self.dict_id['login-button'])
+        button_login.submit()
+
+    def show_url(self, driver: webdriver.Chrome | webdriver.Firefox, name_id: str) -> bool:
         delay = 5  # seconds
 
         try:
@@ -86,6 +93,11 @@ class Trader(QMainWindow):
         except TimeoutException:
             print('Loading took too much time!')
             return False
+
+    def show_url_login(self):
+        self.driver.get(self.url_login)
+        if self.show_url(self.driver, self.dict_id['passwd']):
+            self.activate_login_button()
 
 
 def main():
