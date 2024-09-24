@@ -41,11 +41,17 @@ class Trader(QMainWindow):
         layout.setSpacing(2)
         base.setLayout(layout)
 
-        # Row 1
+        # Login
         self.but_login = but_login = TradingButton('ログイン')
         but_login.setFunc('login')
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
+
+        # Logout
+        self.but_logout = but_logout = TradingButton('ログアウト')
+        but_logout.setFunc('logout')
+        but_logout.clicked.connect(self.op_logout)
+        layout.addWidget(but_logout)
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Frame decoration
@@ -62,8 +68,8 @@ class Trader(QMainWindow):
         self.driver = driver = webdriver.Firefox()
         self.show_url_login()
 
-    def activate_login_button(self):
-        self.but_login.setEnabled(True)
+    def change_status_login_button(self, status: bool = True):
+        self.but_login.setEnabled(status)
 
     def op_login(self):
         obj_login = get_login_info()
@@ -78,6 +84,9 @@ class Trader(QMainWindow):
 
         button_login = self.driver.find_element('id', self.dict_id['login-button'])
         button_login.submit()
+
+    def op_logout(self):
+        pass
 
     def show_url(self, driver: webdriver.Chrome | webdriver.Firefox, name_id: str) -> bool:
         delay = 5  # seconds
@@ -97,7 +106,7 @@ class Trader(QMainWindow):
     def show_url_login(self):
         self.driver.get(self.url_login)
         if self.show_url(self.driver, self.dict_id['passwd']):
-            self.activate_login_button()
+            self.change_status_login_button()
 
 
 def main():
