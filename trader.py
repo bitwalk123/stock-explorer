@@ -126,28 +126,42 @@ class Trader(QMainWindow):
     def op_login(self):
         obj_login = get_login_info()
 
-        entry_login = self.driver.find_element('id', self.dict_id['login'])
+        entry_login = self.driver.find_element(
+            By.ID,
+            self.dict_id['login']
+        )
         entry_login.clear()
         entry_login.send_keys(obj_login.getLoginID())
 
-        entry_passwd = self.driver.find_element('id', self.dict_id['passwd'])
+        entry_passwd = self.driver.find_element(
+            By.ID,
+            self.dict_id['passwd']
+        )
         entry_passwd.clear()
         entry_passwd.send_keys(obj_login.getPassword())
 
-        button_login = self.driver.find_element('id', self.dict_id['login-button'])
+        button_login = self.driver.find_element(
+            By.ID,
+            self.dict_id['login-button']
+        )
         button_login.submit()
-
+        # check page title
         wait_page_title(self.driver, self.dict_title['home'])
 
+        """
         print(self.driver.title)
         print(self.driver.current_url)
-
+        """
         if show_url_class(self.driver, self.dict_class['logout-button']):
             self.set_status_login_button(status=False)
             self.set_status_logout_button()
 
     def op_logout(self):
-        pass
+        button_logout = self.driver.find_element(
+            By.CLASS_NAME,
+            self.dict_class['logout-button']
+        )
+        button_logout.send_keys(Keys.ENTER)
 
     def set_status_login_button(self, status: bool = True):
         self.but_login.setEnabled(status)
