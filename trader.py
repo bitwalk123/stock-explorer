@@ -25,7 +25,6 @@ def show_url(
         name_id: str
 ) -> bool:
     delay = 5  # seconds
-
     try:
         WebDriverWait(driver, delay).until(
             EC.presence_of_element_located(
