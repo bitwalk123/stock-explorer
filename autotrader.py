@@ -72,7 +72,7 @@ def set_button_status(button: QAbstractButton, status: bool = True):
     button.setEnabled(status)
 
 
-class Trader(QMainWindow):
+class AutoTrader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
     dict_id = {
         'login': 'form-login-id',  # ログイン・アカウント
@@ -80,6 +80,7 @@ class Trader(QMainWindow):
         'login-button': 'login-btn',  # ログイン・ボタン
     }
     dict_class = {
+        'auto-logout-button': 'pcm-gl-auto-logout-btn',  # 自動ログアウト ON/OFF
         'logout-button': 'pcm-gl-s-header-logout__btn',
     }
     dict_title = {
@@ -106,12 +107,6 @@ class Trader(QMainWindow):
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
 
-        # Auto Logout ON/OFF
-        self.but_autologout = but_autologout = TradingButton('自動ログアウト')
-        but_autologout.setFunc('logout')
-        but_autologout.clicked.connect(self.op_autologout)
-        layout.addWidget(but_autologout)
-
         # Logout
         self.but_logout = but_logout = TradingButton('ログアウト')
         but_logout.setFunc('logout')
@@ -123,14 +118,15 @@ class Trader(QMainWindow):
         self.setStyleSheet("""
             QMainWindow{background-color: #321;}
         """)
-        self.setWindowTitle('Trader')
+        self.setWindowTitle('AutoTrader')
         icon = QIcon(os.path.join(res.getImagePath(), 'rakuten.png'))
         self.setWindowIcon(icon)
         # self.setFixedSize(self.sizeHint())
 
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Browser initialization
-        self.driver = driver = webdriver.Firefox()
+        #self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
         self.site_login()
 
     def closeEvent(self, event):
@@ -139,7 +135,16 @@ class Trader(QMainWindow):
         event.accept()  # let the window close
 
     def op_autologout(self):
-        pass
+        button_autologout = self.driver.find_element(
+            By.CLASS_NAME,
+            self.dict_class['auto-logout-button']
+        )
+        button_autologout.click()
+
+        # popup alert
+        wait = WebDriverWait(self.driver, timeout=2)
+        alert = wait.until(lambda d: d.switch_to.alert)
+        alert.accept()
 
     def op_login(self):
         obj_login = get_login_info()
@@ -165,14 +170,16 @@ class Trader(QMainWindow):
         button_login.submit()
         # check page title
         wait_page_title(self.driver, self.dict_title['home'])
+        if not show_url_class(self.driver, self.dict_class['logout-button']):
+            print('ERROR!')
+            return
 
-        """
-        print(self.driver.title)
-        print(self.driver.current_url)
-        """
-        if show_url_class(self.driver, self.dict_class['logout-button']):
-            set_button_status(self.but_login, status=False)
-            set_button_status(self.but_logout)
+        # disable auto logout
+        self.op_autologout()
+
+        # enable/disable buttons
+        set_button_status(self.but_login, status=False)
+        set_button_status(self.but_logout)
 
     def op_logout(self):
         button_logout = self.driver.find_element(
@@ -181,13 +188,10 @@ class Trader(QMainWindow):
         )
         button_logout.send_keys(Keys.ENTER)
 
+        # popup alert
         wait = WebDriverWait(self.driver, timeout=2)
         alert = wait.until(lambda d: d.switch_to.alert)
-        text = alert.text
-        if text == 'ログアウトしますか？':
-            alert.accept()
-        else:
-            print('text does not match!!')
+        alert.accept()
 
     def site_login(self):
         self.driver.get(self.url_login)
@@ -197,7 +201,7 @@ class Trader(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    win = Trader()
+    win = AutoTrader()
     win.show()
     sys.exit(app.exec())
 
