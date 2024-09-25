@@ -2,6 +2,7 @@ import os
 import sys
 
 from PySide6.QtGui import QIcon
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -20,12 +21,11 @@ from structs.res import AppRes
 from widgets.buttons import TradingButton
 
 
-def show_url(
+def show_url_id(
         driver: webdriver.Chrome | webdriver.Firefox,
         name_id: str
 ) -> bool:
     delay = 5  # seconds
-
     try:
         WebDriverWait(driver, delay).until(
             EC.presence_of_element_located(
@@ -39,12 +39,48 @@ def show_url(
         return False
 
 
+def show_url_class(
+        driver: webdriver.Chrome | webdriver.Firefox,
+        name_class: str
+) -> bool:
+    delay = 5  # seconds
+    try:
+        WebDriverWait(driver, delay).until(
+            EC.presence_of_element_located(
+                (By.CLASS_NAME, name_class)
+            )
+        )
+        print('Page is ready!')
+        return True
+    except TimeoutException:
+        print('Loading took too much time!')
+        return False
+
+
+def wait_page_title(
+        driver: webdriver.Chrome | webdriver.Firefox,
+        page_title: str
+):
+    max = 100
+    count = 0
+    while (driver.title != page_title) & (count < max):
+        count += 1
+        QTest.qWait(100)
+
+
 class Trader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
     dict_id = {
         'login': 'form-login-id',  # ログイン・アカウント
         'passwd': 'form-login-pass',  # ログイン・パスワード
         'login-button': 'login-btn',  # ログイン・ボタン
+    }
+    dict_class = {
+        'logout-button': 'pcm-gl-s-header-logout__btn',
+    }
+    dict_title = {
+        'login': '総合口座ログイン | 楽天証券',
+        'home': 'ホーム | 楽天証券[PC]',
     }
 
     def __init__(self):
@@ -87,9 +123,6 @@ class Trader(QMainWindow):
         self.driver = driver = webdriver.Firefox()
         self.site_login()
 
-    def change_status_login_button(self, status: bool = True):
-        self.but_login.setEnabled(status)
-
     def op_login(self):
         obj_login = get_login_info()
 
@@ -104,13 +137,28 @@ class Trader(QMainWindow):
         button_login = self.driver.find_element('id', self.dict_id['login-button'])
         button_login.submit()
 
+        wait_page_title(self.driver, self.dict_title['home'])
+
+        print(self.driver.title)
+        print(self.driver.current_url)
+
+        if show_url_class(self.driver, self.dict_class['logout-button']):
+            self.set_status_login_button(status=False)
+            self.set_status_logout_button()
+
     def op_logout(self):
         pass
 
+    def set_status_login_button(self, status: bool = True):
+        self.but_login.setEnabled(status)
+
+    def set_status_logout_button(self, status: bool = True):
+        self.but_logout.setEnabled(status)
+
     def site_login(self):
         self.driver.get(self.url_login)
-        if show_url(self.driver, self.dict_id['passwd']):
-            self.change_status_login_button()
+        if show_url_id(self.driver, self.dict_id['passwd']):
+            self.set_status_login_button()
 
 
 def main():
