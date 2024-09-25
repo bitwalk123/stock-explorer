@@ -66,10 +66,15 @@ class Trader(QMainWindow):
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Browser initialization
         self.driver = driver = webdriver.Firefox()
-        self.show_url_login()
+        self.disp_url_login()
 
     def change_status_login_button(self, status: bool = True):
         self.but_login.setEnabled(status)
+
+    def disp_url_login(self):
+        self.driver.get(self.url_login)
+        if self.show_url(self.driver, self.dict_id['passwd']):
+            self.change_status_login_button()
 
     def op_login(self):
         obj_login = get_login_info()
@@ -102,11 +107,6 @@ class Trader(QMainWindow):
         except TimeoutException:
             print('Loading took too much time!')
             return False
-
-    def show_url_login(self):
-        self.driver.get(self.url_login)
-        if self.show_url(self.driver, self.dict_id['passwd']):
-            self.change_status_login_button()
 
 
 def main():
