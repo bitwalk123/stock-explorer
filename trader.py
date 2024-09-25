@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QVBoxLayout,
-    QWidget,
+    QWidget, QAbstractButton,
 )
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -68,6 +68,10 @@ def wait_page_title(
         QTest.qWait(100)
 
 
+def set_button_status(button: QAbstractButton, status: bool = True):
+    button.setEnabled(status)
+
+
 class Trader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
     dict_id = {
@@ -102,6 +106,12 @@ class Trader(QMainWindow):
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
 
+        # Auto Logout ON/OFF
+        self.but_autologout = but_autologout = TradingButton('自動ログアウト')
+        but_autologout.setFunc('logout')
+        but_autologout.clicked.connect(self.op_autologout)
+        layout.addWidget(but_autologout)
+
         # Logout
         self.but_logout = but_logout = TradingButton('ログアウト')
         but_logout.setFunc('logout')
@@ -122,6 +132,14 @@ class Trader(QMainWindow):
         # Browser initialization
         self.driver = driver = webdriver.Firefox()
         self.site_login()
+
+    def closeEvent(self, event):
+        print('アプリケーションを終了します。')
+        self.driver.close()
+        event.accept()  # let the window close
+
+    def op_autologout(self):
+        pass
 
     def op_login(self):
         obj_login = get_login_info()
@@ -153,8 +171,8 @@ class Trader(QMainWindow):
         print(self.driver.current_url)
         """
         if show_url_class(self.driver, self.dict_class['logout-button']):
-            self.set_status_login_button(status=False)
-            self.set_status_logout_button()
+            set_button_status(self.but_login, status=False)
+            set_button_status(self.but_logout)
 
     def op_logout(self):
         button_logout = self.driver.find_element(
@@ -171,16 +189,10 @@ class Trader(QMainWindow):
         else:
             print('text does not match!!')
 
-    def set_status_login_button(self, status: bool = True):
-        self.but_login.setEnabled(status)
-
-    def set_status_logout_button(self, status: bool = True):
-        self.but_logout.setEnabled(status)
-
     def site_login(self):
         self.driver.get(self.url_login)
         if show_url_id(self.driver, self.dict_id['passwd']):
-            self.set_status_login_button()
+            set_button_status(self.but_login)
 
 
 def main():
