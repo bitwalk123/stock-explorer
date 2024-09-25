@@ -193,6 +193,9 @@ class AutoTrader(QMainWindow):
         alert = wait.until(lambda d: d.switch_to.alert)
         alert.accept()
 
+        # go to login site
+        self.site_login()
+
     def site_login(self):
         self.driver.get(self.url_login)
         if show_url_id(self.driver, self.dict_id['passwd']):
