@@ -115,11 +115,8 @@ class TradingButton(QPushButton):
     def cssLogout(self) -> str:
         return """
             TradingButton {
-                color: white;
-                background-color: #bf0000;
                 font-family: monospace;
-                font-weight: bold;
-                padding: 0.5em;
+                padding: 0.1em;
             }        
             TradingButton:disabled {
                 color: gray;
