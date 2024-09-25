@@ -20,6 +20,25 @@ from structs.res import AppRes
 from widgets.buttons import TradingButton
 
 
+def show_url(
+        driver: webdriver.Chrome | webdriver.Firefox,
+        name_id: str
+) -> bool:
+    delay = 5  # seconds
+
+    try:
+        WebDriverWait(driver, delay).until(
+            EC.presence_of_element_located(
+                (By.ID, name_id)
+            )
+        )
+        print('Page is ready!')
+        return True
+    except TimeoutException:
+        print('Loading took too much time!')
+        return False
+
+
 class Trader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
     dict_id = {
@@ -66,15 +85,10 @@ class Trader(QMainWindow):
         # /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         # Browser initialization
         self.driver = driver = webdriver.Firefox()
-        self.disp_url_login()
+        self.site_login()
 
     def change_status_login_button(self, status: bool = True):
         self.but_login.setEnabled(status)
-
-    def disp_url_login(self):
-        self.driver.get(self.url_login)
-        if self.show_url(self.driver, self.dict_id['passwd']):
-            self.change_status_login_button()
 
     def op_login(self):
         obj_login = get_login_info()
@@ -93,20 +107,10 @@ class Trader(QMainWindow):
     def op_logout(self):
         pass
 
-    def show_url(self, driver: webdriver.Chrome | webdriver.Firefox, name_id: str) -> bool:
-        delay = 5  # seconds
-
-        try:
-            WebDriverWait(driver, delay).until(
-                EC.presence_of_element_located(
-                    (By.ID, name_id)
-                )
-            )
-            print('Page is ready!')
-            return True
-        except TimeoutException:
-            print('Loading took too much time!')
-            return False
+    def site_login(self):
+        self.driver.get(self.url_login)
+        if show_url(self.driver, self.dict_id['passwd']):
+            self.change_status_login_button()
 
 
 def main():
