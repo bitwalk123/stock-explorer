@@ -49,6 +49,8 @@ class TradingButton(QPushButton):
         self.func = func
         if func == 'login':
             self.setStyleSheet(self.cssLogin())
+        elif func == 'logout':
+            self.setStyleSheet(self.cssLogout())
         elif func == 'domestic':
             self.setStyleSheet(self.cssDomestic())
         elif func == 'search':
@@ -79,6 +81,21 @@ class TradingButton(QPushButton):
             }
         """
 
+    def cssDomestic(self) -> str:
+        return """
+            TradingButton {
+                color: #212;
+                background-color: #fef;
+                font-family: monospace;
+                padding: 0.5em;
+            }        
+            TradingButton:disabled {
+                color: gray;
+                background-color: lightgray;
+                font-weight: normal;
+            }
+        """
+
     def cssLogin(self) -> str:
         return """
             TradingButton {
@@ -95,12 +112,13 @@ class TradingButton(QPushButton):
             }
         """
 
-    def cssDomestic(self) -> str:
+    def cssLogout(self) -> str:
         return """
             TradingButton {
-                color: #212;
-                background-color: #fef;
+                color: white;
+                background-color: #bf0000;
                 font-family: monospace;
+                font-weight: bold;
                 padding: 0.5em;
             }        
             TradingButton:disabled {
