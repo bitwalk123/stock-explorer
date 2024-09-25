@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QVBoxLayout,
-    QWidget,
+    QWidget, QAbstractButton,
 )
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -68,6 +68,10 @@ def wait_page_title(
         QTest.qWait(100)
 
 
+def set_button_status(button: QAbstractButton, status: bool = True):
+    button.setEnabled(status)
+
+
 class Trader(QMainWindow):
     url_login = 'https://www.rakuten-sec.co.jp/ITS/V_ACT_Login.html'
     dict_id = {
@@ -102,6 +106,12 @@ class Trader(QMainWindow):
         but_login.clicked.connect(self.op_login)
         layout.addWidget(but_login)
 
+        # Auto Logout ON/OFF
+        self.but_autologout = but_autologout = TradingButton('自動ログアウト')
+        but_autologout.setFunc('logout')
+        but_autologout.clicked.connect(self.op_autologout)
+        layout.addWidget(but_autologout)
+
         # Logout
         self.but_logout = but_logout = TradingButton('ログアウト')
         but_logout.setFunc('logout')
@@ -123,42 +133,66 @@ class Trader(QMainWindow):
         self.driver = driver = webdriver.Firefox()
         self.site_login()
 
+    def closeEvent(self, event):
+        print('アプリケーションを終了します。')
+        self.driver.close()
+        event.accept()  # let the window close
+
+    def op_autologout(self):
+        pass
+
     def op_login(self):
         obj_login = get_login_info()
 
-        entry_login = self.driver.find_element('id', self.dict_id['login'])
+        entry_login = self.driver.find_element(
+            By.ID,
+            self.dict_id['login']
+        )
         entry_login.clear()
         entry_login.send_keys(obj_login.getLoginID())
 
-        entry_passwd = self.driver.find_element('id', self.dict_id['passwd'])
+        entry_passwd = self.driver.find_element(
+            By.ID,
+            self.dict_id['passwd']
+        )
         entry_passwd.clear()
         entry_passwd.send_keys(obj_login.getPassword())
 
-        button_login = self.driver.find_element('id', self.dict_id['login-button'])
+        button_login = self.driver.find_element(
+            By.ID,
+            self.dict_id['login-button']
+        )
         button_login.submit()
-
+        # check page title
         wait_page_title(self.driver, self.dict_title['home'])
 
+        """
         print(self.driver.title)
         print(self.driver.current_url)
-
+        """
         if show_url_class(self.driver, self.dict_class['logout-button']):
-            self.set_status_login_button(status=False)
-            self.set_status_logout_button()
+            set_button_status(self.but_login, status=False)
+            set_button_status(self.but_logout)
 
     def op_logout(self):
-        pass
+        button_logout = self.driver.find_element(
+            By.CLASS_NAME,
+            self.dict_class['logout-button']
+        )
+        button_logout.send_keys(Keys.ENTER)
 
-    def set_status_login_button(self, status: bool = True):
-        self.but_login.setEnabled(status)
-
-    def set_status_logout_button(self, status: bool = True):
-        self.but_logout.setEnabled(status)
+        wait = WebDriverWait(self.driver, timeout=2)
+        alert = wait.until(lambda d: d.switch_to.alert)
+        text = alert.text
+        if text == 'ログアウトしますか？':
+            alert.accept()
+        else:
+            print('text does not match!!')
 
     def site_login(self):
         self.driver.get(self.url_login)
         if show_url_id(self.driver, self.dict_id['passwd']):
-            self.set_status_login_button()
+            set_button_status(self.but_login)
 
 
 def main():
