@@ -163,6 +163,14 @@ class Trader(QMainWindow):
         )
         button_logout.send_keys(Keys.ENTER)
 
+        wait = WebDriverWait(self.driver, timeout=2)
+        alert = wait.until(lambda d: d.switch_to.alert)
+        text = alert.text
+        if text == 'ログアウトしますか？':
+            alert.accept()
+        else:
+            print('text does not match!!')
+
     def set_status_login_button(self, status: bool = True):
         self.but_login.setEnabled(status)
 
