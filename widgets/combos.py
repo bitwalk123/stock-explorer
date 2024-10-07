@@ -26,6 +26,7 @@ class ComboBookmark(QComboBox):
             'レーザーテック': '6920.T',
             'ディスコ': '6146.T',
             'KOKUSAI ELECTRIC': '6525.T',
+            '日産自動車': '7201.T',
         }
 
 
@@ -41,7 +42,6 @@ class ComboBookmark2(ComboBookmark):
             'レーザーテック': '6920',
             'ディスコ': '6146',
             'KOKUSAI ELECTRIC': '6525',
-            '日産自動車': '7201',
         }
 
 
