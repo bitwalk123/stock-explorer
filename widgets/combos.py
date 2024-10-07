@@ -41,6 +41,7 @@ class ComboBookmark2(ComboBookmark):
             'レーザーテック': '6920',
             'ディスコ': '6146',
             'KOKUSAI ELECTRIC': '6525',
+            '日産自動車': '7201',
         }
 
 
