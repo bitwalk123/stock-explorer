@@ -68,7 +68,7 @@ class TradeDayAnalysisRealtime(QTabWidget):
         # _____________________________________________________________________
         self.resize(1350, 800)
 
-    def get_pkl_fine(self) -> str:
+    def get_pkl_file(self) -> str:
         return 'tmp/%s_%s.pkl' % (self.ticker, str(get_timestamp().date()))
 
     def on_load_finished(self, flag: bool) -> bool:
@@ -225,7 +225,7 @@ class TradeDayAnalysisRealtime(QTabWidget):
         if ts > self.time_close:
             # print('after market close')
             if len(self.df) > 1:
-                pkl = self.get_pkl_fine()
+                pkl = self.get_pkl_file()
                 if not os.path.exists(pkl):
                     self.df.to_pickle(pkl)
                     print('saved %s' % pkl)
