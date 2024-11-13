@@ -88,6 +88,11 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
+        ticker = 'QCOM'
+        name_ticker = 'QUALCOMM Incorporated'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
         ticker = 'ASML'
         name_ticker = 'ASML Holding N.V. (ADR)'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
@@ -114,10 +119,12 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
         """
 
+        """
         row += 1
         ticker = 'ON'
         name_ticker = 'ON Semiconductor Corporation'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+        """
 
         row += 1
         ticker = 'AMD'
