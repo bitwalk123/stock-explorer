@@ -62,7 +62,7 @@ class DayTrade:
         return title
 
     def isFullDataSet(self, df: pd.DataFrame) -> bool:
-        if str(max(df.index)) == self.start + ' 14:59:00+09:00':
+        if max(df.index) >= pd.to_datetime(self.start + ' 15:24:00+09:00'):
             return True
         else:
             return False
