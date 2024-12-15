@@ -108,6 +108,11 @@ class MktReview(QMainWindow):
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
 
         row += 1
+        ticker = 'AVGO'
+        name_ticker = 'Broadcom Inc.'
+        self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
+
+        row += 1
         ticker = 'MU'
         name_ticker = 'Micron Technology, Inc.'
         self.add_row(layout, row, date_start, date_end, ticker, name_ticker)
