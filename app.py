@@ -43,7 +43,6 @@ class StockExplorer(QTabWidget):
                 self.__version__, dict_info['host']
             )
         )
-        # self.resize(1200, 700)
         self.resize(self.size_init)
 
     def closeEvent(self, event):
