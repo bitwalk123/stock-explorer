@@ -19,6 +19,7 @@ from funcs.plots import (
     refreshDraw,
 )
 from structs.res import AppRes
+from widgets.dialogs import DialogError
 
 
 class CandleStick(FigureCanvas):
@@ -56,8 +57,11 @@ class CandleStick(FigureCanvas):
         try:
             df: pd.DataFrame = ticker.history(period='1y', interval='1d')
         except Exception as e:
+            list_msg = list()
             for msg in e.args:
-                print(msg)
+                list_msg.append(msg)
+            dlg = DialogError('\n'.join(list_msg))
+            dlg.exec()
             return
 
         mpf.plot(
