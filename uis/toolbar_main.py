@@ -1,4 +1,5 @@
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import QToolBar
 
 from structs.res import AppRes
@@ -20,20 +21,19 @@ class ToolBarMain(QToolBar):
 
         self.combo_code = combo_code = ComboBox()
         combo_code.setEditable(True)
+        combo_code.setInsertPolicy(ComboBox.InsertPolicy.InsertAlphabetically)
         self.addWidget(combo_code)
-        # QShortcut(QKeySequence(Qt.Key.Key_Return), combo_code, self.on_clicked_code)
 
         but_code = ToolButton()
         icon = res.getBuiltinIcon(self, 'DialogApplyButton')
         but_code.setIcon(icon)
-        but_code.clicked.connect(self.on_clicked_code)
+        but_code.clicked.connect(self.on_clicked_symbol)
         self.addWidget(but_code)
 
-    def on_clicked_code(self):
-        code = self.combo_code.currentText()
-        if len(code) == 0:
+    def on_clicked_symbol(self):
+        symbol = self.combo_code.currentText()
+        if len(symbol) == 0:
             dlg = DialogWarning('銘柄コードが入力されていません。')
             dlg.exec()
         else:
-            symbol = '%s.T' % code
             self.enteredSymbol.emit(symbol)
