@@ -2,8 +2,10 @@ backports.tarfile
 importlib-metadata
 jaraco.collections
 mplfinance
+openpyxl
 pip-chill
 pip-review
 pyside6
 tomli
+xlrd
 yfinance
