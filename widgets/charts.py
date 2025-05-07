@@ -1,8 +1,10 @@
 import os
+import sys
 
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import mplfinance as mpf
+import pandas as pd
 import yfinance as yf
 
 from matplotlib.backends.backend_qtagg import (
@@ -51,7 +53,12 @@ class CandleStick(FigureCanvas):
         # 消去
         clearAxes(self.fig)
 
-        df = ticker.history(period='1y', interval='1d')
+        try:
+            df: pd.DataFrame = ticker.history(period='1y', interval='1d')
+        except Exception as e:
+            for msg in e.args:
+                print(msg)
+            return
 
         mpf.plot(
             df,
