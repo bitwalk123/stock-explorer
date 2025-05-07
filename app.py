@@ -31,9 +31,11 @@ class StockExplorer(QMainWindow):
         toolbar.enteredSymbol.connect(self.on_select_symbol)
         self.addToolBar(toolbar)
 
+        # プロット用キャンバス
         canvas = Canvas(res)
         self.setCentralWidget(canvas)
 
+        # ツールバー（チャートのナビゲーション用）
         navtoolbar = ChartNavigation(canvas)
         self.addToolBar(Qt.ToolBarArea.BottomToolBarArea, navtoolbar)
 
