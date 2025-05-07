@@ -2,6 +2,9 @@ import os
 
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
+import mplfinance as mpf
+import yfinance as yf
+
 from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar,
@@ -16,7 +19,7 @@ from funcs.plots import (
 from structs.res import AppRes
 
 
-class Canvas(FigureCanvas):
+class CandleStick(FigureCanvas):
     def __init__(self, res: AppRes):
         self.fig = Figure()
         super().__init__(self.fig)
@@ -41,19 +44,35 @@ class Canvas(FigureCanvas):
         else:
             self.ax[0] = self.fig.add_subplot(111)
 
-        self.fig.subplots_adjust(left=0.07, right=0.98, top=0.92, bottom=0.06)
+        self.fig.subplots_adjust(left=0.075, right=0.995, top=0.95, bottom=0.06)
 
-    def plot(self, dict_plot: dict):
-        """
-        プロット
-        :param dict_plot:
-        """
+    def plot(self, ticker: yf.Ticker):
 
         # 消去
         clearAxes(self.fig)
 
+        df = ticker.history(period='1y', interval='1d')
+
+        mpf.plot(
+            df,
+            type='candle',
+            style='default',
+            volume=self.ax[1],
+            datetime_format='%y-%m-%d',
+            xrotation=0,
+            ax=self.ax[0],
+        )
+
         # グリッド線
         drawGrid(self.fig)
+
+        if 'longName' in ticker.info.keys():
+            title = 'Daily chart for %s (%s)' % (ticker.info["longName"], ticker.ticker)
+        elif 'shortName' in ticker.info.keys():
+            title = 'Daily chart for %s (%s)' % (ticker.info["shortName"], ticker.ticker)
+        else:
+            title = 'Daily chart for %s' % ticker.ticker
+        self.ax[0].set_title(title)
 
         # 再描画
         refreshDraw(self.fig)
