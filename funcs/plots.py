@@ -1,8 +1,8 @@
-import pandas as pd
+import yfinance as yf
 from matplotlib.figure import Figure
 
 
-def clearAxes(fig: Figure):
+def clear_axes(fig: Figure):
     """
     チャートの消去
     :param fig:
@@ -13,7 +13,7 @@ def clearAxes(fig: Figure):
         ax.cla()
 
 
-def drawGrid(fig: Figure):
+def draw_grid(fig: Figure):
     """
     チャートのグリッド
     :param fig:
@@ -25,5 +25,21 @@ def drawGrid(fig: Figure):
         ax.grid(which='minor', linestyle='dotted')
 
 
-def refreshDraw(fig: Figure):
+def get_chart_title(ticker: yf.Ticker) -> str:
+    """
+    チャートのタイトル
+    :param ticker:
+    :return:
+    """
+    if 'longName' in ticker.info.keys():
+        title = 'Daily chart for %s (%s)' % (ticker.info["longName"], ticker.ticker)
+    elif 'shortName' in ticker.info.keys():
+        title = 'Daily chart for %s (%s)' % (ticker.info["shortName"], ticker.ticker)
+    else:
+        title = 'Daily chart for %s' % ticker.ticker
+
+    return title
+
+
+def refresh_draw(fig: Figure):
     fig.canvas.draw()
