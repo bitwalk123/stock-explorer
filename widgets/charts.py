@@ -28,7 +28,8 @@ class CandleStick(FigureCanvas):
         super().__init__(self.fig)
 
         # 　過去 1 年分のデータの分離用
-        self.tdelta_1y = datetime.timedelta(days=366)
+        #self.tdelta_1y = datetime.timedelta(days=366)
+        self.tdelta_1y = datetime.timedelta(days=280)
         # for Bollinger bands
         self.period = 20
 
