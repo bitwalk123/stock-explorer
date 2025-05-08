@@ -32,6 +32,13 @@ class CandleStick(FigureCanvas):
         # for Bollinger bands
         self.period = 20
 
+        # yfinance.Ticker インスタンス
+        self.ticker: yf.Ticker | None = None
+
+        # データフレーム
+        self.df_long = pd.DataFrame()
+        self.df = pd.DataFrame()
+
         font = os.path.join(res.dir_font, 'RictyDiminished-Regular.ttf')
         fm.fontManager.addfont(font)
         font_prop = fm.FontProperties(fname=font)
@@ -60,43 +67,75 @@ class CandleStick(FigureCanvas):
         :param ticker:
         :return:
         """
-
+        self.ticker = ticker
         try:
-            # 日足で過去 2 年分のデータを取得
-            df0: pd.DataFrame = ticker.history(period='2y', interval='1d')
+            # 日足で過去データを取得
+            self.df_long: pd.DataFrame = self.ticker.history(period='5y', interval='1d')
         except Exception as e:
             list_msg = list()
             for msg in e.args:
                 list_msg.append(msg)
+            # エラー・ダイアログ
             dlg = DialogError('\n'.join(list_msg))
             dlg.exec()
             return
 
         # ローソク足のチャートには、そのうち過去 1 年分のみ使用する
-        dt_last = df0.index[len(df0) - 1]
-        df = df0[dt_last - self.tdelta_1y <= df0.index]
+        dt_last = self.df_long.index[len(self.df_long) - 1]
+        self.df = self.df_long[dt_last - self.tdelta_1y <= self.df_long.index]
 
-        apds = list()
-        ax0 = self.ax[0]
-        list_dt = df.index
+        # プロット
+        self.plot_main()
 
+    def plot_add_robust_bollinger(self, ax: plt.Axes, list_plot: list):
+        """
+        Robust Bollinger bands
+        :param ax:
+        :param list_plot:
+        :return:
+        """
+        list_dt = self.df.index
+        ser_close = self.df_long['Close']
+
+        mv_med = ser_close.rolling(self.period).median()[list_dt]
+        mv_q1 = ser_close.rolling(self.period).quantile(0.25)[list_dt]
+        mv_q3 = ser_close.rolling(self.period).quantile(0.75)[list_dt]
+        mv_iqr = mv_q3 - mv_q1
+        mv_lower = mv_q1 - mv_iqr * 1.5
+        mv_upper = mv_q3 + mv_iqr * 1.5
+
+        l1 = mpf.make_addplot(mv_upper, width=1.3, color='C3', linestyle='dotted', label='Upper bound', ax=ax)
+        l2 = mpf.make_addplot(mv_q3, width=1, color='C1', linestyle='dashed', label='Q3 (75%)', ax=ax)
+        l3 = mpf.make_addplot(mv_med, width=0.9, color='C0', label='Median', ax=ax)
+        l4 = mpf.make_addplot(mv_q1, width=1, color='C1', linestyle='dashed', label='Q1 (25%)', ax=ax)
+        l5 = mpf.make_addplot(mv_lower, width=1.3, color='C3', linestyle='dotted', label='Lower bound', ax=ax)
+        list_plot.extend([l1, l2, l3, l4, l5])
+
+    def plot_main(self):
+        """
+        プロット（メイン）
+        :return:
+        """
+        list_plot = list()
         # Robust Bollinger bands
-        self.add_robust_bollinger(apds, ax0, df0, list_dt)
+        self.plot_add_robust_bollinger(self.ax[0], list_plot)
 
         # 消去
         clear_axes(self.fig)
 
+        # ローソク足
         mpf.plot(
-            df,
+            self.df,
             type='candle',
             style='default',
-            volume=self.ax[1],
-            addplot=apds,
+            addplot=list_plot,
             datetime_format='%y-%m-%d',
             xrotation=0,
             ax=self.ax[0],
+            volume=self.ax[1],
         )
 
+        # テクニカル指標の追加によって、下限がマイナスになってしまう場合があるため
         y_lower, y_upper = self.ax[0].get_ylim()
         if y_lower < 0:
             self.ax[0].set_ylim(0, y_upper)
@@ -108,34 +147,11 @@ class CandleStick(FigureCanvas):
         self.ax[0].legend(loc='best', fontsize=8)
 
         # チャート・タイトル
-        title = get_chart_title(ticker)
+        title = get_chart_title(self.ticker)
         self.ax[0].set_title(title)
 
         # 再描画
         refresh_draw(self.fig)
-
-    def add_robust_bollinger(self, apds, ax, df, list_dt):
-        """
-        Robust Bollinger bands
-        :param apds:
-        :param ax:
-        :param df:
-        :param list_dt:
-        :return:
-        """
-        mv_med = df["Close"].rolling(self.period).median()[list_dt]
-        mv_q1 = df["Close"].rolling(self.period).quantile(0.25)[list_dt]
-        mv_q3 = df["Close"].rolling(self.period).quantile(0.75)[list_dt]
-        mv_iqr = mv_q3 - mv_q1
-        mv_lower = mv_q1 - mv_iqr * 1.5
-        mv_upper = mv_q3 + mv_iqr * 1.5
-
-        l1 = mpf.make_addplot(mv_upper, width=1.3, color='C1', linestyle='dotted', label='Upper bound', ax=ax)
-        l2 = mpf.make_addplot(mv_q3, width=1, color='C2', linestyle='dashed', label='Q3 (75%)', ax=ax)
-        l3 = mpf.make_addplot(mv_med, width=0.9, color='C3', label='Median', ax=ax)
-        l4 = mpf.make_addplot(mv_q1, width=1, color='C4', linestyle='dashed', label='Q1 (25%)', ax=ax)
-        l5 = mpf.make_addplot(mv_lower, width=1.3, color='C5', linestyle='dotted', label='Lower bound', ax=ax)
-        apds.extend([l1, l2, l3, l4, l5])
 
     def save(self, filename):
         self.fig.savefig(filename)

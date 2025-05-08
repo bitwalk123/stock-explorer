@@ -22,18 +22,8 @@ class ToolBarMain(QToolBar):
         self.combo_code = combo_code = ComboBox()
         combo_code.setEditable(True)
         combo_code.setInsertPolicy(ComboBox.InsertPolicy.InsertAlphabetically)
+        combo_code.textActivated.connect(self.on_text_activated)
         self.addWidget(combo_code)
 
-        but_code = ToolButton()
-        icon = res.getBuiltinIcon(self, 'DialogApplyButton')
-        but_code.setIcon(icon)
-        but_code.clicked.connect(self.on_clicked_symbol)
-        self.addWidget(but_code)
-
-    def on_clicked_symbol(self):
-        symbol = self.combo_code.currentText()
-        if len(symbol) == 0:
-            dlg = DialogWarning('銘柄コードが入力されていません。')
-            dlg.exec()
-        else:
-            self.enteredSymbol.emit(symbol)
+    def on_text_activated(self, symbol: str):
+        self.enteredSymbol.emit(symbol)
