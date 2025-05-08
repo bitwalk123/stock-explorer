@@ -97,6 +97,7 @@ class CandleStick(FigureCanvas):
         list_dt = self.df.index
         ser_close = self.df_long['Close']
 
+        # 移動メジアン等を算出
         mv_med = ser_close.rolling(self.period).median()[list_dt]
         mv_q1 = ser_close.rolling(self.period).quantile(0.25)[list_dt]
         mv_q3 = ser_close.rolling(self.period).quantile(0.75)[list_dt]
@@ -105,9 +106,9 @@ class CandleStick(FigureCanvas):
         mv_upper = mv_q3 + mv_iqr * 1.5
 
         l1 = mpf.make_addplot(mv_upper, width=1.3, color='C3', linestyle='dotted', label='Upper bound', ax=ax)
-        l2 = mpf.make_addplot(mv_q3, width=1, color='C1', linestyle='dashed', label='Q3 (75%)', ax=ax)
+        l2 = mpf.make_addplot(mv_q3, width=1, color='C2', linestyle='dashed', label='Q3 (75%)', ax=ax)
         l3 = mpf.make_addplot(mv_med, width=0.9, color='C0', label='Median', ax=ax)
-        l4 = mpf.make_addplot(mv_q1, width=1, color='C1', linestyle='dashed', label='Q1 (25%)', ax=ax)
+        l4 = mpf.make_addplot(mv_q1, width=1, color='C2', linestyle='dashed', label='Q1 (25%)', ax=ax)
         l5 = mpf.make_addplot(mv_lower, width=1.3, color='C3', linestyle='dotted', label='Lower bound', ax=ax)
         list_plot.extend([l1, l2, l3, l4, l5])
 
