@@ -23,7 +23,7 @@ class StockExplorer(QMainWindow):
         super().__init__()
         self.res = res = AppRes()
 
-        icon = QIcon(os.path.join(res.dir_image, 'stock.png'))
+        icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle(self.__app_name__)
         self.setFixedSize(1200, 700)
