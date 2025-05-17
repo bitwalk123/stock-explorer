@@ -6,6 +6,7 @@ if __name__ == '__main__':
     name_excel = 'daytrader.xlsx'
     wb = xw.Book(name_excel)
     sheet = wb.sheets['Sheet1']
+
     col_code = 0
     col_name = 1
     col_date = 2
