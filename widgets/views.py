@@ -6,7 +6,11 @@ from PySide6.QtCharts import (
     QValueAxis,
 )
 from PySide6.QtCore import QTime, Qt
-from PySide6.QtGui import QPainter, QPen
+from PySide6.QtGui import (
+    QColor,
+    QPainter,
+    QPen,
+)
 
 
 class TickView(QChartView):
@@ -15,10 +19,15 @@ class TickView(QChartView):
         self.plot_started = False
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
+        chart = QChart()
+        chart.legend().hide()
+        self.setChart(chart)
+
         self.series = series = QLineSeries()
-        series.setPen(self.getPen())
+        series.setPen(self.getPenTick())
         series.setPointsVisible(True)
         series.setMarkerSize(0.75)
+        chart.addSeries(series)
 
         self.ax_x = ax_x = QDateTimeAxis()
         ax_x.setTickCount(14)
@@ -33,10 +42,6 @@ class TickView(QChartView):
         self.ax_y = ax_y = QValueAxis()
         ax_y.setRange(0, 1)
 
-        chart = QChart()
-        chart.addSeries(series)
-        chart.legend().hide()
-        self.setChart(chart)
 
         chart.addAxis(ax_x, Qt.AlignmentFlag.AlignBottom)
         series.attachAxis(ax_x)
@@ -63,7 +68,8 @@ class TickView(QChartView):
             self.plot_started = True
 
     @staticmethod
-    def getPen() -> QPen:
-        pen = QPen(Qt.GlobalColor.darkGray)
-        pen.setWidthF(0.5)
+    def getPenTick() -> QPen:
+        color = QColor(64, 64, 64)
+        pen = QPen(color)
+        pen.setWidthF(1)
         return pen
