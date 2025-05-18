@@ -14,10 +14,14 @@ class Example(QMainWindow):
         self.resize(1000, 500)
 
         toolbar = ToolBarTick(res)
+        toolbar.fileSelected.connect(self.on_file_selected)
         self.addToolBar(toolbar)
 
         view = TickView()
         self.setCentralWidget(view)
+
+    def on_file_selected(self, file_excel: str):
+        print(file_excel)
 
 
 def main():

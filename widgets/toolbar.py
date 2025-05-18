@@ -34,7 +34,6 @@ class ToolBarTick(QToolBar):
     fileSelected = Signal(str)
 
     def __init__(self, res: AppRes):
-
         super().__init__()
         self.res = res
 
