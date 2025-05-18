@@ -12,6 +12,7 @@ from PySide6.QtGui import QPainter, QPen
 class TickView(QChartView):
     def __init__(self):
         super().__init__()
+        self.plot_started = False
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.series = series = QLineSeries()
@@ -48,14 +49,18 @@ class TickView(QChartView):
         self.adjustYrange(y)
 
     def adjustYrange(self, y):
-        y_min = self.ax_y.min()
-        y_max = self.ax_y.max()
-        if y < y_min:
-            y_min = y
-            self.ax_y.setRange(y_min, y_max)
-        if y_max < y:
-            y_max = y
-            self.ax_y.setRange(y_min, y_max)
+        if self.plot_started:
+            y_min = self.ax_y.min()
+            y_max = self.ax_y.max()
+            if y < y_min:
+                y_min = y
+                self.ax_y.setRange(y_min, y_max)
+            if y_max < y:
+                y_max = y
+                self.ax_y.setRange(y_min, y_max)
+        else:
+            self.ax_y.setRange(y - 0.5, y + 0.5)
+            self.plot_started = True
 
     @staticmethod
     def getPen() -> QPen:

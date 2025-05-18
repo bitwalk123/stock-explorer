@@ -1,6 +1,7 @@
 import sys
 
 import pandas as pd
+from PySide6.QtCore import QTime
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
@@ -18,14 +19,18 @@ class Example(QMainWindow):
         toolbar.fileSelected.connect(self.on_file_selected)
         self.addToolBar(toolbar)
 
-        view = TickView()
+        self.view = view = TickView()
         self.setCentralWidget(view)
 
     def on_file_selected(self, file_excel: str):
         wb = pd.ExcelFile(file_excel)
         sheets = wb.sheet_names
         df = wb.parse(sheet_name=sheets[1])
-        print(df)
+        msec_delta = 9 * 60 * 60 * 1000
+        for t, p in zip(df['Time'], df['Price']):
+            x = QTime.fromString('%s' % t, 'H:mm:ss').msecsSinceStartOfDay() - msec_delta
+            y = float(p)
+            self.view.appendPoint(x, y)
 
 
 def main():
