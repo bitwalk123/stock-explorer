@@ -2,10 +2,12 @@
 楽天証券マーケットスピードⅡ RSS で Excel 上に取得した株価データを
 Python で読み込み株価トレンドをリアルタイムに描画するサンプル
 """
+import os
 import sys
 
 import xlwings as xw
 from PySide6.QtCore import QTime, QTimer
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
@@ -15,8 +17,11 @@ from widgets.views import TickView
 class Example(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.res = AppRes()
-        self.resize(1500, 500)
+        self.res = res = AppRes()
+        icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
+        self.setWindowIcon(icon)
+        self.setWindowTitle('Tick Data')
+        self.resize(1000, 300)
 
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
