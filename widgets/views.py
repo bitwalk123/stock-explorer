@@ -9,7 +9,7 @@ from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import QPainter, QPen
 
 
-class TradeView(QChartView):
+class TickView(QChartView):
     def __init__(self):
         super().__init__()
         self.setRenderHint(QPainter.RenderHint.Antialiasing)

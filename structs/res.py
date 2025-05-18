@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QStyle, QWidget
 
 
 class AppRes:
+    dir_excel = 'excel'
     dir_font = 'fonts'
     dir_image = 'images'
     tse = 'https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xls'

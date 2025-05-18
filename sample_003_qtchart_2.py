@@ -2,15 +2,21 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-from widgets.views import TradeView
+from structs.res import AppRes
+from widgets.toolbar import ToolBarTick
+from widgets.views import TickView
 
 
 class Example(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.res = res = AppRes()
         self.resize(1000, 500)
 
-        view = TradeView()
+        toolbar = ToolBarTick(res)
+        self.addToolBar(toolbar)
+
+        view = TickView()
         self.setCentralWidget(view)
 
 
