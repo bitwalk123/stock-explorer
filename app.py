@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 
 from funcs.conv import conv_jpx
 from structs.res import AppRes
-from uis.toolbar_main import ToolBarMain
+from widgets.toolbar import ToolBarMain
 from widgets.charts import CandleStick, ChartNavigation
 
 
