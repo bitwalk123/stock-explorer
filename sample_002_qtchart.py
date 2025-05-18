@@ -47,7 +47,6 @@ class Example(QMainWindow):
         super().__init__()
 
         self.data, headers = csv_reader('tick.csv')
-
         self.idx = 0
 
         self.series = series = QLineSeries()
