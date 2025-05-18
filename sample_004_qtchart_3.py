@@ -17,9 +17,7 @@ from widgets.views import TickView
 class Example(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.res = res = AppRes()
-        icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
-        self.setWindowIcon(icon)
+        self.res = AppRes()
         self.setWindowTitle('Tick Data')
         self.resize(1000, 300)
 
