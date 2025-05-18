@@ -1,5 +1,6 @@
 import sys
 
+import pandas as pd
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
@@ -21,7 +22,10 @@ class Example(QMainWindow):
         self.setCentralWidget(view)
 
     def on_file_selected(self, file_excel: str):
-        print(file_excel)
+        wb = pd.ExcelFile(file_excel)
+        sheets = wb.sheet_names
+        df = wb.parse(sheet_name=sheets[1])
+        print(df)
 
 
 def main():
