@@ -16,7 +16,7 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
         self.res = AppRes()
-        self.resize(1600, 400)
+        self.resize(1500, 500)
 
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
