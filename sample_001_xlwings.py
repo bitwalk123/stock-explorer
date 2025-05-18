@@ -12,6 +12,7 @@ if __name__ == '__main__':
     col_date = 2
     col_time = 3
     col_price = 4
+    col_price_prev = 5
 
     r = 0
     print(sheet[r, col_code].value)
@@ -19,6 +20,7 @@ if __name__ == '__main__':
     print(sheet[r, col_date].value)
     print(sheet[r, col_time].value)
     print(sheet[r, col_price].value)
+    print(sheet[r, col_price_prev].value)
 
     while True:
         r += 1
