@@ -1,8 +1,9 @@
-# 楽天証券マーケットスピードⅡ RSS で Excel 上に取得した株価データを
-# Python で読み込み株価トレンドをリアルタイムに描画するサンプル
+"""
+楽天証券マーケットスピードⅡ RSS で Excel 上に取得した株価データを
+Python で読み込み株価トレンドをリアルタイムに描画するサンプル
+"""
 import sys
 
-import pandas as pd
 import xlwings as xw
 from PySide6.QtCore import QTime, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -15,12 +16,7 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
         self.res = AppRes()
-
-        self.df = pd.DataFrame()
-        self.row = 0
-        self.length = 0
-        self.msec_delta = 9 * 60 * 60 * 1000
-        self.resize(1000, 500)
+        self.resize(1600, 400)
 
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
@@ -61,7 +57,9 @@ class Example(QMainWindow):
         self.timer.start()
 
     def on_update_data(self):
+        # 現在時刻
         t_current = QTime.currentTime()
+        # Excel シートから株価情報を取得
         p_current = self.sheet[1, self.col_price].value
 
         if self.t_start <= t_current <= self.t_end:
