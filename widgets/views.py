@@ -42,7 +42,6 @@ class TickView(QChartView):
         self.ax_y = ax_y = QValueAxis()
         ax_y.setRange(0, 1)
 
-
         chart.addAxis(ax_x, Qt.AlignmentFlag.AlignBottom)
         series.attachAxis(ax_x)
 
@@ -66,6 +65,9 @@ class TickView(QChartView):
         else:
             self.ax_y.setRange(y - 0.5, y + 0.5)
             self.plot_started = True
+
+    def clearPoints(self):
+        self.series.clear()
 
     @staticmethod
     def getPenTick() -> QPen:

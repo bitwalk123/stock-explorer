@@ -34,8 +34,10 @@ class Example(QMainWindow):
         wb = pd.ExcelFile(file_excel)
         sheets = wb.sheet_names
         self.df = wb.parse(sheet_name=sheets[1])
+        self.row = 0
         self.length = len(self.df)
 
+        self.view.clearPoints()
         self.timer.start()
 
     def on_update_data(self):
