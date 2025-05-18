@@ -68,6 +68,7 @@ class TickView(QChartView):
 
     def clearPoints(self):
         self.series.clear()
+        self.plot_started = False
 
     @staticmethod
     def getPenTick() -> QPen:
