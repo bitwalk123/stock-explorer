@@ -25,7 +25,7 @@ class TickView(QChartView):
         self.plot_started = False
         self.lastclose_line = False
 
-        chart = QChart()
+        self.chart = chart = QChart()
         chart.legend().hide()
         self.setChart(chart)
 
@@ -109,3 +109,6 @@ class TickView(QChartView):
 
     def lastClosePlotted(self) -> bool:
         return self.lastclose_line
+
+    def setTitle(self, title:str):
+        self.chart.setTitle(title)

@@ -51,6 +51,11 @@ class Example(QMainWindow):
         self.view = view = TickView()
         self.setCentralWidget(view)
 
+        code = self.sheet[1, self.col_code].value
+        name = self.sheet[1, self.col_name].value
+        title = '%s (%s)' % (name, code)
+        view.setTitle(title)
+
         # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # タイマー
         # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
