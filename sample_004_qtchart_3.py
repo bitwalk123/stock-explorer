@@ -60,16 +60,17 @@ class Example(QMainWindow):
         self.timer.start()
 
     def on_update_data(self):
-        # 現在時刻
-        t_current = QTime.currentTime()
         # Excel シートから株価情報を取得
         p_current = self.sheet[1, self.col_price].value
+        if p_current > 0:
+            # 現在時刻
+            t_current = QTime.currentTime()
 
-        if self.t_start <= t_current <= self.t_end:
-            # msec の数値へ変換すると UTC になってしまうため時差を調整
-            x = t_current.msecsSinceStartOfDay() - self.msec_delta
-            y = float(p_current)
-            self.view.appendPoint(x, y)
+            if self.t_start <= t_current <= self.t_end:
+                # msec の数値へ変換すると UTC になってしまうため時差を調整
+                x = t_current.msecsSinceStartOfDay() - self.msec_delta
+                y = float(p_current)
+                self.view.appendPoint(x, y)
 
 
 def main():
