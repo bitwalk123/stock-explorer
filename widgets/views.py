@@ -11,9 +11,10 @@ from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import (
     QColor,
     QPainter,
-    QPen, QFontDatabase, QFont,
+    QPen,
 )
 
+from funcs.common import get_font_monospace
 from funcs.tide import get_msec_delta_from_utc
 
 
@@ -29,9 +30,8 @@ class TickView(QChartView):
         self.plot_started = False
         self.lastclose_line = False
 
-        monospace_font = QFont('Monospace')
-        monospace_font.setPointSize(9)
-        monospace_font.setStyleHint(QFont.StyleHint.Monospace)  # モノスペースフォントを明示的に指定
+        fsize = 9
+        monospace_font = get_font_monospace(fsize)
 
         self.chart = chart = QChart()
         #chart.setTitleFont(monospace_font)
