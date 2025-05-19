@@ -2,14 +2,13 @@
 楽天証券マーケットスピードⅡ RSS で Excel 上に取得した株価データを
 Python で読み込み株価トレンドをリアルタイムに描画するサンプル
 """
-import os
 import sys
 
 import xlwings as xw
 from PySide6.QtCore import QTime, QTimer
-from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 
+from funcs.tide import get_msec_delta_from_utc
 from structs.res import AppRes
 from widgets.views import TickView
 
@@ -35,7 +34,7 @@ class Example(QMainWindow):
         self.col_lastclose = 5
 
         # 時差と市場時間
-        self.msec_delta = 9 * 60 * 60 * 1000
+        self.msec_delta = get_msec_delta_from_utc()
         self.t_start = QTime(9, 0, 0)
         self.t_end = QTime(15, 30, 0)
 
@@ -76,7 +75,8 @@ class Example(QMainWindow):
             t_current = QTime.currentTime()
 
             if self.t_start <= t_current <= self.t_end:
-                # msec の数値へ変換すると UTC になってしまうため時差を調整
+                # タイムスタンプへ変換すると UTC 基準になってしまい、チャートの
+                # 時刻軸と齟齬が出るので時差の分を調整する。
                 x = t_current.msecsSinceStartOfDay() - self.msec_delta
                 self.view.appendPoint(x, y)
 

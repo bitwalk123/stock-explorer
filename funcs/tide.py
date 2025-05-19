@@ -1,7 +1,7 @@
 import datetime as dt
 import pandas as pd
 
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, QTimeZone, QDateTime
 
 
 def get_dates(date_target: str) -> tuple[dt.datetime, dt.datetime]:
@@ -91,3 +91,17 @@ def get_time_str(dt: pd.Timestamp) -> str:
     :return:
     """
     return '{:0=2}:{:0=2}:{:0=2}'.format(dt.hour, dt.minute, dt.second)
+
+
+def get_msec_delta_from_utc():
+    # 現在のローカルタイムゾーンを取得
+    local_timezone = QTimeZone.systemTimeZone()
+
+    # 現在の日時を取得
+    current_datetime = QDateTime.currentDateTime()
+
+    # ローカルタイムゾーンでのオフセット（秒単位）
+    local_offset = local_timezone.offsetFromUtc(current_datetime)
+
+    # msec 単位で返す
+    return local_offset * 1000

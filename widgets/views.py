@@ -11,8 +11,10 @@ from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import (
     QColor,
     QPainter,
-    QPen,
+    QPen, QFontDatabase, QFont,
 )
+
+from funcs.tide import get_msec_delta_from_utc
 
 
 class TickView(QChartView):
@@ -20,14 +22,19 @@ class TickView(QChartView):
         super().__init__()
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        self.msec_delta = 9 * 60 * 60 * 1000
+        self.msec_delta = get_msec_delta_from_utc()
         self.t_start = QTime(9, 0, 0)
         self.t_end = QTime(15, 30, 0)
 
         self.plot_started = False
         self.lastclose_line = False
 
+        monospace_font = QFont('Monospace')
+        monospace_font.setPointSize(9)
+        monospace_font.setStyleHint(QFont.StyleHint.Monospace)  # モノスペースフォントを明示的に指定
+
         self.chart = chart = QChart()
+        #chart.setTitleFont(monospace_font)
         chart.legend().hide()
         self.setChart(chart)
 
@@ -43,6 +50,7 @@ class TickView(QChartView):
         chart.addSeries(series_lastclose)
 
         self.ax_x = ax_x = QDateTimeAxis()
+        ax_x.setLabelsFont(monospace_font)
         ax_x.setTickCount(14)
         ax_x.setFormat('HH:mm')
 
@@ -57,7 +65,8 @@ class TickView(QChartView):
         series_lastclose.attachAxis(ax_x)
 
         self.ax_y = ax_y = QValueAxis()
-        #ax_y.setTickCount(6)
+        ax_y.setLabelsFont(monospace_font)
+        ax_y.setTickCount(6)
         ax_y.setRange(0, 1)
 
         chart.addAxis(ax_y, Qt.AlignmentFlag.AlignLeft)
@@ -87,7 +96,10 @@ class TickView(QChartView):
                 y_max = math.ceil(y)
                 self.ax_y.setRange(y_min, y_max)
         else:
-            self.ax_y.setRange(math.floor(y - 0.5), math.ceil(y + 0.5))
+            self.ax_y.setRange(
+                math.floor(y - 0.5),
+                math.ceil(y + 0.5)
+            )
             self.plot_started = True
 
     def clearPoints(self):
@@ -113,5 +125,5 @@ class TickView(QChartView):
     def lastClosePlotted(self) -> bool:
         return self.lastclose_line
 
-    def setTitle(self, title:str):
+    def setTitle(self, title: str):
         self.chart.setTitle(title)
