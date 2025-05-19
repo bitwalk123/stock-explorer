@@ -1,17 +1,10 @@
 import os
 
+from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QPushButton, QToolButton
 
 from structs.res import AppRes
-
-
-class FolderToolButton(QToolButton):
-    def __init__(self, res: AppRes):
-        super().__init__()
-        self.setIcon(
-            QIcon(os.path.join(res.dir_image, 'folder.png'))
-        )
 
 
 class Button(QPushButton):
@@ -24,3 +17,26 @@ class ToolButton(QToolButton):
     def __init__(self, *args):
         super().__init__(*args)
         self.setStyleSheet('QToolButton {font-family: monospace;}')
+
+
+class ToolButtonImage(QToolButton):
+    def __init__(self, res: AppRes):
+        super().__init__()
+        self.res = res
+
+    def setImage(self, name_image: str):
+        icon = QIcon(os.path.join(self.res.dir_image, name_image))
+        self.setIcon(icon)
+        self.setIconSize(QSize(24, 24))
+
+
+class ToolButtonFolder(ToolButtonImage):
+    def __init__(self, res: AppRes):
+        super().__init__(res)
+        self.setImage('folder.png')
+
+
+class ToolButtonSave(ToolButtonImage):
+    def __init__(self, res: AppRes):
+        super().__init__(res)
+        self.setImage('save.png')

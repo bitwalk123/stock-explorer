@@ -3,6 +3,7 @@ import math
 from PySide6.QtCharts import QChartView
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import QPainter
+from PySide6.QtWidgets import QFileDialog
 
 from funcs.tide import get_msec_delta_from_utc
 from widgets.charts import (
@@ -17,6 +18,7 @@ from widgets.charts import (
 class TickView(QChartView):
     def __init__(self):
         super().__init__()
+        self.setMinimumSize(1000, 300)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.msec_delta = get_msec_delta_from_utc()
@@ -85,3 +87,10 @@ class TickView(QChartView):
 
     def setTitle(self, title: str):
         self.chart.setTitle(title)
+
+    def saveChart(self):
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Chart", "", "PNG Files (*.png)")
+        if file_path:
+            pixmap = self.grab()
+            pixmap.save(file_path, "png")
+            print(f"プロットを {file_path} に保存しました。")

@@ -4,10 +4,14 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QToolBar
 
 from structs.res import AppRes
-from widgets.buttons import FolderToolButton
+from widgets.buttons import ToolButtonFolder
 from widgets.combos import ComboBox
 from widgets.dialogs import FileDialogExcel
 from widgets.labels import LabelCode
+
+class ToolBar(QToolBar):
+    def __init__(self):
+        super().__init__()
 
 
 class ToolBarMain(QToolBar):
@@ -37,7 +41,7 @@ class ToolBarTick(QToolBar):
         super().__init__()
         self.res = res
 
-        but_folder = FolderToolButton(res)
+        but_folder = ToolButtonFolder(res)
         but_folder.setToolTip('ファイル選択')
         but_folder.clicked.connect(self.on_file_dialog_open)
         self.addWidget(but_folder)

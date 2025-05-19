@@ -6,10 +6,13 @@ import sys
 
 import xlwings as xw
 from PySide6.QtCore import QTime, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget, QToolBar
 
 from funcs.tide import get_msec_delta_from_utc
 from structs.res import AppRes
+from widgets.buttons import ToolButtonSave
+from widgets.layout import VBoxLayout
+from widgets.toolbar import ToolBar
 from widgets.views import TickView
 
 
@@ -18,7 +21,6 @@ class Example(QMainWindow):
         super().__init__()
         self.res = AppRes()
         self.setWindowTitle('Tick Data')
-        self.resize(1000, 300)
 
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
@@ -49,18 +51,18 @@ class Example(QMainWindow):
         """
         self.view = view = TickView()
 
-        save_button = QPushButton("Save as PNG")
-        save_button.clicked.connect(self.save_chart_as_png)
+        toolbar = ToolBar()
+        but_save = ToolButtonSave(self.res)
+        but_save.clicked.connect(view.saveChart)
+        toolbar.addWidget(but_save)
 
-        layout = QVBoxLayout()
+        layout = VBoxLayout()
+        layout.addWidget(toolbar)
         layout.addWidget(self.view)
-        layout.addWidget(save_button)
 
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
-        # self.setCentralWidget(view)
+        base = QWidget()
+        base.setLayout(layout)
+        self.setCentralWidget(base)
 
         code = self.sheet[1, self.col_code].value
         name = self.sheet[1, self.col_name].value
@@ -91,12 +93,6 @@ class Example(QMainWindow):
                 x = t_current.msecsSinceStartOfDay() - self.msec_delta
                 self.view.appendPoint(x, y)
 
-    def save_chart_as_png(self):
-        file_path, _ = QFileDialog.getSaveFileName(self, "Save Chart", "", "PNG Files (*.png)")
-        if file_path:
-            pixmap = self.view.grab()
-            pixmap.save(file_path, "png")
-            print(f"プロットを {file_path} に保存しました。")
 
 
 def main():
