@@ -32,7 +32,7 @@ class Example(QMainWindow):
         self.col_date = 2
         self.col_time = 3
         self.col_price = 4
-        self.col_price_prev = 5
+        self.col_lastclose = 5
 
         # 時差と市場時間
         self.msec_delta = 9 * 60 * 60 * 1000
@@ -60,16 +60,19 @@ class Example(QMainWindow):
         self.timer.start()
 
     def on_update_data(self):
+        if not self.view.lastClosePlotted():
+            p_lastclose = self.sheet[1, self.col_lastclose].value
+            self.view.addLastCloseLine(p_lastclose)
+
         # Excel シートから株価情報を取得
-        p_current = self.sheet[1, self.col_price].value
-        if p_current > 0:
+        y = self.sheet[1, self.col_price].value
+        if y > 0:
             # 現在時刻
             t_current = QTime.currentTime()
 
             if self.t_start <= t_current <= self.t_end:
                 # msec の数値へ変換すると UTC になってしまうため時差を調整
                 x = t_current.msecsSinceStartOfDay() - self.msec_delta
-                y = float(p_current)
                 self.view.appendPoint(x, y)
 
 
