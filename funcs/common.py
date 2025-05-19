@@ -1,4 +1,4 @@
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QPixmap
 
 
 def get_font_monospace(fsize=9):
