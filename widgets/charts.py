@@ -175,7 +175,7 @@ class Chart(QChart):
         self.setMargins(QMargins(0, 0, 0, 0))
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.setBackgroundRoundness(0)
-        self.setTitleFont(get_font_monospace())
+        # self.setTitleFont(get_font_monospace())
         self.legend().hide()
 
 
