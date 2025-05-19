@@ -6,7 +6,7 @@ import sys
 
 import xlwings as xw
 from PySide6.QtCore import QTime, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget
 
 from funcs.tide import get_msec_delta_from_utc
 from structs.res import AppRes
@@ -48,7 +48,19 @@ class Example(QMainWindow):
         Matplotlib より QChart を利用した方が簡単にできる。
         """
         self.view = view = TickView()
-        self.setCentralWidget(view)
+
+        save_button = QPushButton("Save as PNG")
+        save_button.clicked.connect(self.save_chart_as_png)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.view)
+        layout.addWidget(save_button)
+
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+        # self.setCentralWidget(view)
 
         code = self.sheet[1, self.col_code].value
         name = self.sheet[1, self.col_name].value
@@ -78,6 +90,13 @@ class Example(QMainWindow):
                 # 時刻軸と齟齬が出るので時差の分を調整する。
                 x = t_current.msecsSinceStartOfDay() - self.msec_delta
                 self.view.appendPoint(x, y)
+
+    def save_chart_as_png(self):
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Chart", "", "PNG Files (*.png)")
+        if file_path:
+            pixmap = self.view.grab()
+            pixmap.save(file_path, "png")
+            print(f"プロットを {file_path} に保存しました。")
 
 
 def main():

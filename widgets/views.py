@@ -7,11 +7,11 @@ from PySide6.QtCharts import (
     QLineSeries,
     QValueAxis,
 )
-from PySide6.QtCore import QTime, Qt
+from PySide6.QtCore import QTime, Qt, QMargins
 from PySide6.QtGui import (
     QColor,
     QPainter,
-    QPen,
+    QPen, QBrush,
 )
 
 from funcs.common import get_font_monospace
@@ -21,6 +21,9 @@ from funcs.tide import get_msec_delta_from_utc
 class TickView(QChartView):
     def __init__(self):
         super().__init__()
+        #self.setStyleSheet("""
+        #    QChartView{background-color: white;}
+        #""")
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.msec_delta = get_msec_delta_from_utc()
@@ -34,7 +37,10 @@ class TickView(QChartView):
         monospace_font = get_font_monospace(fsize)
 
         self.chart = chart = QChart()
-        #chart.setTitleFont(monospace_font)
+        chart.setMargins(QMargins(0, 0, 0, 0))
+        chart.layout().setContentsMargins(0, 0, 0, 0)
+        chart.setBackgroundRoundness(0)
+        chart.setTitleFont(monospace_font)
         chart.legend().hide()
         self.setChart(chart)
 
