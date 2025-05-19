@@ -36,7 +36,7 @@ class Example(QMainWindow):
         # 時差と市場時間
         self.msec_delta = get_msec_delta_from_utc()
         self.t_start = QTime(9, 0, 0)
-        self.t_end = QTime(15, 30, 0)
+        self.t_end = QTime(15, 25, 0)
 
         # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # ユーザー・インターフェイス
@@ -73,7 +73,6 @@ class Example(QMainWindow):
         if y > 0:
             # 現在時刻
             t_current = QTime.currentTime()
-
             if self.t_start <= t_current <= self.t_end:
                 # タイムスタンプへ変換すると UTC 基準になってしまい、チャートの
                 # 時刻軸と齟齬が出るので時差の分を調整する。
