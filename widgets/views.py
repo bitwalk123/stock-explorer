@@ -1,3 +1,5 @@
+import math
+
 from PySide6.QtCharts import (
     QChart,
     QChartView,
@@ -55,6 +57,7 @@ class TickView(QChartView):
         series_lastclose.attachAxis(ax_x)
 
         self.ax_y = ax_y = QValueAxis()
+        #ax_y.setTickCount(6)
         ax_y.setRange(0, 1)
 
         chart.addAxis(ax_y, Qt.AlignmentFlag.AlignLeft)
@@ -78,13 +81,13 @@ class TickView(QChartView):
             y_min = self.ax_y.min()
             y_max = self.ax_y.max()
             if y < y_min:
-                y_min = y
+                y_min = math.floor(y)
                 self.ax_y.setRange(y_min, y_max)
             if y_max < y:
-                y_max = y
+                y_max = math.ceil(y)
                 self.ax_y.setRange(y_min, y_max)
         else:
-            self.ax_y.setRange(y - 0.5, y + 0.5)
+            self.ax_y.setRange(math.floor(y - 0.5), math.ceil(y + 0.5))
             self.plot_started = True
 
     def clearPoints(self):
@@ -97,7 +100,7 @@ class TickView(QChartView):
     def getPenTick() -> QPen:
         color = QColor(64, 64, 64)
         pen = QPen(color)
-        pen.setWidthF(1)
+        pen.setWidthF(0.5)
         return pen
 
     @staticmethod
