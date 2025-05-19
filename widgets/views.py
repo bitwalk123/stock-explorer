@@ -1,29 +1,22 @@
 import math
 
-from PySide6.QtCharts import (
-    QChart,
-    QChartView,
-    QDateTimeAxis,
-    QLineSeries,
-    QValueAxis,
-)
-from PySide6.QtCore import QTime, Qt, QMargins
-from PySide6.QtGui import (
-    QColor,
-    QPainter,
-    QPen, QBrush,
-)
+from PySide6.QtCharts import QChartView
+from PySide6.QtCore import QTime, Qt
+from PySide6.QtGui import QPainter
 
-from funcs.common import get_font_monospace
 from funcs.tide import get_msec_delta_from_utc
+from widgets.charts import (
+    Chart,
+    LastCloseSeries,
+    MarketTimeAxis,
+    PriceAxis,
+    PriceSeries,
+)
 
 
 class TickView(QChartView):
     def __init__(self):
         super().__init__()
-        #self.setStyleSheet("""
-        #    QChartView{background-color: white;}
-        #""")
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.msec_delta = get_msec_delta_from_utc()
@@ -33,48 +26,21 @@ class TickView(QChartView):
         self.plot_started = False
         self.lastclose_line = False
 
-        fsize = 9
-        monospace_font = get_font_monospace(fsize)
-
-        self.chart = chart = QChart()
-        chart.setMargins(QMargins(0, 0, 0, 0))
-        chart.layout().setContentsMargins(0, 0, 0, 0)
-        chart.setBackgroundRoundness(0)
-        chart.setTitleFont(monospace_font)
-        chart.legend().hide()
+        self.chart = chart = Chart()
         self.setChart(chart)
 
-        self.series_tick = series_tick = QLineSeries()
-        series_tick.setPointsVisible(True)
-        series_tick.setPen(self.getPenTick())
-        series_tick.setMarkerSize(0.75)
+        self.series_tick = series_tick = PriceSeries()
         chart.addSeries(series_tick)
 
-        self.series_lastclose = series_lastclose = QLineSeries()
-        series_lastclose.setPointsVisible(False)
-        series_lastclose.setPen(self.getPenLastClose())
+        self.series_lastclose = series_lastclose = LastCloseSeries()
         chart.addSeries(series_lastclose)
 
-        self.ax_x = ax_x = QDateTimeAxis()
-        ax_x.setLabelsFont(monospace_font)
-        ax_x.setTickCount(14)
-        ax_x.setFormat('HH:mm')
-
-        self.ax_x_min = ax_x_min = ax_x.min()
-        ax_x_min.setTime(QTime.fromString('9:00:00', 'H:mm:ss'))
-        self.ax_x_max = ax_x_max = ax_x.max()
-        ax_x_max.setTime(QTime.fromString('15:30:00', 'H:mm:ss'))
-        ax_x.setRange(ax_x_min, ax_x_max)
-
+        self.ax_x = ax_x = MarketTimeAxis()
         chart.addAxis(ax_x, Qt.AlignmentFlag.AlignBottom)
         series_tick.attachAxis(ax_x)
         series_lastclose.attachAxis(ax_x)
 
-        self.ax_y = ax_y = QValueAxis()
-        ax_y.setLabelsFont(monospace_font)
-        ax_y.setTickCount(6)
-        ax_y.setRange(0, 1)
-
+        self.ax_y = ax_y = PriceAxis()
         chart.addAxis(ax_y, Qt.AlignmentFlag.AlignLeft)
         series_tick.attachAxis(ax_y)
         series_lastclose.attachAxis(ax_y)
@@ -113,20 +79,6 @@ class TickView(QChartView):
         self.series_lastclose.clear()
         self.plot_started = False
         self.lastclose_line = False
-
-    @staticmethod
-    def getPenTick() -> QPen:
-        color = QColor(64, 64, 64)
-        pen = QPen(color)
-        pen.setWidthF(0.5)
-        return pen
-
-    @staticmethod
-    def getPenLastClose() -> QPen:
-        color = QColor(255, 0, 0)
-        pen = QPen(color)
-        pen.setWidthF(0.5)
-        return pen
 
     def lastClosePlotted(self) -> bool:
         return self.lastclose_line

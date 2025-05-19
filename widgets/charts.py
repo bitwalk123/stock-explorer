@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import mplfinance as mpf
 import pandas as pd
 import yfinance as yf
+from PySide6.QtCharts import QChart, QLineSeries, QDateTimeAxis, QValueAxis
+from PySide6.QtCore import QMargins, QTime
+from PySide6.QtGui import QPen, QColor
 
 from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
@@ -13,6 +16,7 @@ from matplotlib.backends.backend_qtagg import (
 )
 from matplotlib.figure import Figure
 
+from funcs.common import get_font_monospace
 from funcs.plots import (
     clear_axes,
     draw_grid,
@@ -28,7 +32,7 @@ class CandleStick(FigureCanvas):
         super().__init__(self.fig)
 
         # 過去 1 年分のデータの分離用
-        #self.tdelta_1y = datetime.timedelta(days=366)
+        # self.tdelta_1y = datetime.timedelta(days=366)
         # 過去 約 9ヶ月分のデータの分離用
         self.tdelta_1y = datetime.timedelta(days=280)
         # for Bollinger bands
@@ -163,3 +167,64 @@ class CandleStick(FigureCanvas):
 class ChartNavigation(NavigationToolbar):
     def __init__(self, chart: FigureCanvas):
         super().__init__(chart)
+
+
+class Chart(QChart):
+    def __init__(self):
+        super().__init__()
+        self.setMargins(QMargins(0, 0, 0, 0))
+        self.layout().setContentsMargins(0, 0, 0, 0)
+        self.setBackgroundRoundness(0)
+        self.setTitleFont(get_font_monospace())
+        self.legend().hide()
+
+
+class PriceSeries(QLineSeries):
+    def __init__(self):
+        super().__init__()
+        self.setPointsVisible(True)
+        self.setPen(self.getPenTick())
+        self.setMarkerSize(0.75)
+
+    @staticmethod
+    def getPenTick() -> QPen:
+        color = QColor(64, 64, 64)
+        pen = QPen(color)
+        pen.setWidthF(0.5)
+        return pen
+
+
+class LastCloseSeries(QLineSeries):
+    def __init__(self):
+        super().__init__()
+        self.setPointsVisible(False)
+        self.setPen(self.getPenLastClose())
+
+    @staticmethod
+    def getPenLastClose() -> QPen:
+        color = QColor(255, 0, 0)
+        pen = QPen(color)
+        pen.setWidthF(0.5)
+        return pen
+
+
+class MarketTimeAxis(QDateTimeAxis):
+    def __init__(self):
+        super().__init__()
+        self.setLabelsFont(get_font_monospace())
+        self.setTickCount(14)
+        self.setFormat('HH:mm')
+
+        self.ax_x_min = ax_x_min = self.min()
+        ax_x_min.setTime(QTime.fromString('9:00:00', 'H:mm:ss'))
+        self.ax_x_max = ax_x_max = self.max()
+        ax_x_max.setTime(QTime.fromString('15:30:00', 'H:mm:ss'))
+        self.setRange(ax_x_min, ax_x_max)
+
+
+class PriceAxis(QValueAxis):
+    def __init__(self):
+        super().__init__()
+        self.setLabelsFont(get_font_monospace())
+        self.setTickCount(6)
+        self.setRange(0, 1)
