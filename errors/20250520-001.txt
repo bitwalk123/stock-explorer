@@ -1,0 +1,160 @@
+Traceback (most recent call last):
+  File "C:\Users\bitwa\MyProjects\stock-explorer\sample_004_qtchart_3.py", line 86, in on_update_data
+    y = self.sheet[1, self.col_price].value
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 2478, in value
+    return conversion.read(self, None, self._options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\__init__.py", line 84, in read
+    ctx = ConversionContext(rng=rng, value=value, engine_name=engine_name)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\framework.py", line 13, in __init__
+    self.engine = rng.sheet.book.app.engine if rng else xlwings.engines["excel"]
+                                               ^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 1993, in __len__
+    return len(self.impl)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1185, in __len__
+    return (self.xl and self.xl.Count) or 0
+            ^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1156, in xl
+    self._xl = xl_sheet.Range(
+               ~~~~~~~~~~~~~~^
+        xl_sheet.Cells(row, col),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        xl_sheet.Cells(row + nrows - 1, col + ncols - 1),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 122, in __call__
+    v = self.__method(*args, **kwargs)
+  File "C:\Users\bitwa\AppData\Local\Temp\gen_py\3.13\00020813-0000-0000-C000-000000000046x0x1x9.py", line 47491, in Range
+    ret = self._oleobj_.InvokeTypes(197, LCID, 2, (9, 0), ((12, 1), (12, 17)),Cell1
+    	, Cell2)
+pywintypes.com_error: (-2147352567, '例外が発生しました。', (0, None, None, None, 0, -2146827284), None)
+Traceback (most recent call last):
+  File "C:\Users\bitwa\MyProjects\stock-explorer\sample_004_qtchart_3.py", line 86, in on_update_data
+    y = self.sheet[1, self.col_price].value
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 2478, in value
+    return conversion.read(self, None, self._options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\__init__.py", line 84, in read
+    ctx = ConversionContext(rng=rng, value=value, engine_name=engine_name)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\framework.py", line 13, in __init__
+    self.engine = rng.sheet.book.app.engine if rng else xlwings.engines["excel"]
+                                               ^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 1993, in __len__
+    return len(self.impl)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1185, in __len__
+    return (self.xl and self.xl.Count) or 0
+            ^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1156, in xl
+    self._xl = xl_sheet.Range(
+               ~~~~~~~~~~~~~~^
+        xl_sheet.Cells(row, col),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        xl_sheet.Cells(row + nrows - 1, col + ncols - 1),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 122, in __call__
+    v = self.__method(*args, **kwargs)
+  File "C:\Users\bitwa\AppData\Local\Temp\gen_py\3.13\00020813-0000-0000-C000-000000000046x0x1x9.py", line 47491, in Range
+    ret = self._oleobj_.InvokeTypes(197, LCID, 2, (9, 0), ((12, 1), (12, 17)),Cell1
+    	, Cell2)
+pywintypes.com_error: (-2147352567, '例外が発生しました。', (0, None, None, None, 0, -2146827284), None)
+Traceback (most recent call last):
+  File "C:\Users\bitwa\MyProjects\stock-explorer\sample_004_qtchart_3.py", line 86, in on_update_data
+    y = self.sheet[1, self.col_price].value
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 2478, in value
+    return conversion.read(self, None, self._options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\__init__.py", line 84, in read
+    ctx = ConversionContext(rng=rng, value=value, engine_name=engine_name)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\framework.py", line 13, in __init__
+    self.engine = rng.sheet.book.app.engine if rng else xlwings.engines["excel"]
+                                               ^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 1993, in __len__
+    return len(self.impl)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1185, in __len__
+    return (self.xl and self.xl.Count) or 0
+            ^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1156, in xl
+    self._xl = xl_sheet.Range(
+               ~~~~~~~~~~~~~~^
+        xl_sheet.Cells(row, col),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        xl_sheet.Cells(row + nrows - 1, col + ncols - 1),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 122, in __call__
+    v = self.__method(*args, **kwargs)
+  File "C:\Users\bitwa\AppData\Local\Temp\gen_py\3.13\00020813-0000-0000-C000-000000000046x0x1x9.py", line 47491, in Range
+    ret = self._oleobj_.InvokeTypes(197, LCID, 2, (9, 0), ((12, 1), (12, 17)),Cell1
+    	, Cell2)
+pywintypes.com_error: (-2147352567, '例外が発生しました。', (0, None, None, None, 0, -2146827284), None)
+Traceback (most recent call last):
+  File "C:\Users\bitwa\MyProjects\stock-explorer\sample_004_qtchart_3.py", line 86, in on_update_data
+    y = self.sheet[1, self.col_price].value
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 2478, in value
+    return conversion.read(self, None, self._options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\__init__.py", line 84, in read
+    ctx = ConversionContext(rng=rng, value=value, engine_name=engine_name)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\framework.py", line 13, in __init__
+    self.engine = rng.sheet.book.app.engine if rng else xlwings.engines["excel"]
+                                               ^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 1993, in __len__
+    return len(self.impl)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1185, in __len__
+    return (self.xl and self.xl.Count) or 0
+            ^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1156, in xl
+    self._xl = xl_sheet.Range(
+               ~~~~~~~~~~~~~~^
+        xl_sheet.Cells(row, col),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        xl_sheet.Cells(row + nrows - 1, col + ncols - 1),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 122, in __call__
+    v = self.__method(*args, **kwargs)
+  File "C:\Users\bitwa\AppData\Local\Temp\gen_py\3.13\00020813-0000-0000-C000-000000000046x0x1x9.py", line 47491, in Range
+    ret = self._oleobj_.InvokeTypes(197, LCID, 2, (9, 0), ((12, 1), (12, 17)),Cell1
+    	, Cell2)
+pywintypes.com_error: (-2147352567, '例外が発生しました。', (0, None, None, None, 0, -2146827284), None)
+Traceback (most recent call last):
+  File "C:\Users\bitwa\MyProjects\stock-explorer\sample_004_qtchart_3.py", line 86, in on_update_data
+    y = self.sheet[1, self.col_price].value
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 2478, in value
+    return conversion.read(self, None, self._options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\__init__.py", line 84, in read
+    ctx = ConversionContext(rng=rng, value=value, engine_name=engine_name)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\conversion\framework.py", line 13, in __init__
+    self.engine = rng.sheet.book.app.engine if rng else xlwings.engines["excel"]
+                                               ^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\main.py", line 1993, in __len__
+    return len(self.impl)
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1185, in __len__
+    return (self.xl and self.xl.Count) or 0
+            ^^^^^^^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 1156, in xl
+    self._xl = xl_sheet.Range(
+               ~~~~~~~~~~~~~~^
+        xl_sheet.Cells(row, col),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        xl_sheet.Cells(row + nrows - 1, col + ncols - 1),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\bitwa\MyProjects\stock-explorer\venv\Lib\site-packages\xlwings\_xlwindows.py", line 122, in __call__
+    v = self.__method(*args, **kwargs)
+  File "C:\Users\bitwa\AppData\Local\Temp\gen_py\3.13\00020813-0000-0000-C000-000000000046x0x1x9.py", line 47491, in Range
+    ret = self._oleobj_.InvokeTypes(197, LCID, 2, (9, 0), ((12, 1), (12, 17)),Cell1
+    	, Cell2)
+pywintypes.com_error: (-2147352567, '例外が発生しました。', (0, None, None, None, 0, -2146827284), None)
