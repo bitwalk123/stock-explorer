@@ -1,6 +1,6 @@
 import math
 
-from PySide6.QtCharts import QChartView
+from PySide6.QtCharts import QChartView, QValueAxis, QLineSeries
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QFileDialog
@@ -87,6 +87,42 @@ class TickView(QChartView):
                 math.ceil(y + 0.5)
             )
             self.plot_started = True
+
+    def adjust_value_axis_ticks(self, axis: QValueAxis, series: QLineSeries):
+        """
+        Gemini にお知れてもらった軸のスケール調整の方法
+        少し無駄のある事、前日終値の横線の対応が必要なのでしばらく保留
+        """
+        points = series.points()
+        if not points:
+            return
+
+        min_val = min(point.y() for point in points)
+        max_val = max(point.y() for point in points)
+
+        # キリの良い刻み幅を計算する
+        range_val = max_val - min_val
+        if range_val == 0:
+            step = 1
+        else:
+            # 大まかな刻み幅を計算
+            rough_step = range_val / 5.0  # 例えば5分割
+            # 1, 2, 5, 10, 20, 50, ... のようなキリの良い数値に調整
+            power = 10 ** math.floor(math.log10(rough_step))
+            normalized_step = rough_step / power
+            if normalized_step < 2:
+                step = 1 * power
+            elif normalized_step < 5:
+                step = 2 * power
+            else:
+                step = 5 * power
+
+        # 最小値と最大値をキリの良い数値に調整
+        nice_min = math.floor(min_val / step) * step
+        nice_max = math.ceil(max_val / step) * step
+
+        axis.setTickInterval(step)
+        axis.setRange(nice_min, nice_max)
 
     def clearPoints(self):
         self.series_tick.clear()
