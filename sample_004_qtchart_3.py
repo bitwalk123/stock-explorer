@@ -6,7 +6,8 @@ import sys
 import time
 
 import xlwings as xw
-from pywintypes import com_error
+from pywintypes import com_error # Windows 固有のライブラリ
+
 from PySide6.QtCore import QTime, QTimer
 from PySide6.QtWidgets import (
     QApplication,
@@ -103,6 +104,7 @@ class Example(QMainWindow):
                 # ... 成功時の処理 ...
                 break
             except com_error as e:
+                # com_error は Windows 固有
                 if attempt < self.max_retries - 1:
                     print(f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})")
                     time.sleep(self.retry_delay)
