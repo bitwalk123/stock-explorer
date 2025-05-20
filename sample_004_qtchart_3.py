@@ -29,6 +29,7 @@ class Example(QMainWindow):
         self.res = AppRes()
         self.setWindowTitle('Tick Data')
 
+        # Excelシートからデータを読み込むときの試行回数
         self.max_retries = 3  # 最大リトライ回数
         self.retry_delay = 0.1 # リトライ間の遅延（秒）
 
@@ -95,10 +96,7 @@ class Example(QMainWindow):
         # Excel シートから株価情報を取得
         for attempt in range(self.max_retries):
             try:
-                # Excelとの接続を確立または取得
-                # self.sheet = xw.Book("your_excel_file.xlsx").sheets["Sheet1"] # 例
-                # 実際のシートオブジェクトは適切な方法で取得してください
-
+                # Excel シートから株価データを取得
                 y = self.sheet[1, self.col_price].value
                 # ここでデータ取得に成功したらループを抜ける
                 # ... 成功時の処理 ...
