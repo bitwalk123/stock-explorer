@@ -3,10 +3,16 @@
 Python で読み込み株価トレンドをリアルタイムに描画するサンプル
 """
 import sys
+import time
 
 import xlwings as xw
+from pywintypes import com_error
 from PySide6.QtCore import QTime, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton, QVBoxLayout, QWidget, QToolBar
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+)
 
 from funcs.tide import get_msec_delta_from_utc
 from structs.res import AppRes
@@ -21,6 +27,9 @@ class Example(QMainWindow):
         super().__init__()
         self.res = AppRes()
         self.setWindowTitle('Tick Data')
+
+        self.max_retries = 3  # 最大リトライ回数
+        self.retry_delay = 0.1 # リトライ間の遅延（秒）
 
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
@@ -83,7 +92,28 @@ class Example(QMainWindow):
             self.view.addLastCloseLine(p_lastclose)
 
         # Excel シートから株価情報を取得
-        y = self.sheet[1, self.col_price].value
+        for attempt in range(self.max_retries):
+            try:
+                # Excelとの接続を確立または取得
+                # self.sheet = xw.Book("your_excel_file.xlsx").sheets["Sheet1"] # 例
+                # 実際のシートオブジェクトは適切な方法で取得してください
+
+                y = self.sheet[1, self.col_price].value
+                # ここでデータ取得に成功したらループを抜ける
+                # ... 成功時の処理 ...
+                break
+            except com_error as e:
+                if attempt < self.max_retries - 1:
+                    print(f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})")
+                    time.sleep(self.retry_delay)
+                else:
+                    print(f"COM Error occurred after {self.max_retries} attempts. Giving up.")
+                    raise  # 最終的に失敗したら例外を再発生させる
+            except Exception as e:
+                print(f"An unexpected error occurred: {e}")
+                raise  # その他の例外はそのまま発生させる
+        # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
+
         if y > 0:
             # 現在時刻
             t_current = QTime.currentTime()
