@@ -187,6 +187,7 @@ class PriceSeries(QLineSeries):
         color = QColor(64, 64, 64)
         pen = QPen(color)
         pen.setWidthF(0.5)
+        self.setPen(pen)
         self.setMarkerSize(0.75)
 
 
@@ -194,14 +195,10 @@ class LastCloseSeries(QLineSeries):
     def __init__(self):
         super().__init__()
         self.setPointsVisible(False)
-        self.setPen(self.getPenLastClose())
-
-    @staticmethod
-    def getPenLastClose() -> QPen:
         color = QColor(255, 0, 0)
         pen = QPen(color)
         pen.setWidthF(0.5)
-        return pen
+        self.setPen(pen)
 
 
 class MarketTimeAxis(QDateTimeAxis):
@@ -222,5 +219,6 @@ class PriceAxis(QValueAxis):
     def __init__(self):
         super().__init__()
         self.setLabelsFont(get_font_monospace())
-        self.setTickCount(6)
-        self.setRange(0, 1)
+        # self.setTickCount(6)
+        # self.setRange(0, 1)
+        self.setLabelFormat("%.0f")

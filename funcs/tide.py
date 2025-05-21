@@ -108,12 +108,14 @@ def get_msec_delta_from_utc():
     return local_offset * 1000
 
 
-def get_datetime_today() -> tuple[QDateTime, QDateTime]:
+def get_datetime_today() -> dict:
+    dict_dt = dict()
     today = datetime.date.today()
-    d_today = QDate(today.year, today.month, today.day)
-    t_start = QTime(9, 0, 0)
-    t_end = QTime(15, 30, 0)
-    dt_start = QDateTime(d_today, t_start)
-    dt_end = QDateTime(d_today, t_end)
 
-    return dt_start, dt_end
+    day_today = QDate(today.year, today.month, today.day)
+    dict_dt['start'] = QDateTime(day_today, QTime(9, 0, 0))
+    dict_dt['end_1h'] = QDateTime(day_today, QTime(11, 30, 0))
+    dict_dt['start_2h'] = QDateTime(day_today, QTime(12, 30, 0))
+    dict_dt['start_ca'] = QDateTime(day_today, QTime(15, 25, 0))
+    dict_dt['end'] = QDateTime(day_today, QTime(15, 30, 0))
+    return dict_dt

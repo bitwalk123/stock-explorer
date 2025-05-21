@@ -1,11 +1,9 @@
-from PySide6.QtCharts import QChartView
-from PySide6.QtCore import Qt, QDateTime
+from PySide6.QtCore import QDateTime
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QWidget
 
 from structs.res import AppRes
 from widgets.buttons import ToolButtonSave
-from widgets.charts import PriceSeries, Chart, MarketTimeAxis, PriceAxis
 from widgets.layout import VBoxLayout
 from widgets.toolbar import ToolBar
 from widgets.views import TickView
@@ -30,8 +28,14 @@ class WidgetTicker(QWidget):
         layout.addWidget(toolbar)
         layout.addWidget(chart_view)
 
+    def addLastCloseLine(self, y: float):
+        self.chart_view.addLastCloseLine(y)
+
     def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
         self.chart_view.setTimeRange(dt_start, dt_end)
 
     def setTitle(self, title: str):
         self.chart_view.setTitle(title)
+
+    def appendPoint(self, dt: QDateTime, y: float):
+        self.chart_view.appendPoint(dt, y)
