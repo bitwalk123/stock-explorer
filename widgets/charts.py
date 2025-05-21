@@ -172,6 +172,7 @@ class ChartNavigation(NavigationToolbar):
 class Chart(QChart):
     def __init__(self):
         super().__init__()
+        self.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
         self.setMargins(QMargins(0, 0, 0, 0))
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.setBackgroundRoundness(0)
