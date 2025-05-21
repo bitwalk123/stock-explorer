@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
 from widgets.toolbar import ToolBarTick
-from widgets.views import TickView
+from widgets.views import TickViewOld
 
 
 class Example(QMainWindow):
@@ -23,7 +23,7 @@ class Example(QMainWindow):
         toolbar.fileSelected.connect(self.on_file_selected)
         self.addToolBar(toolbar)
 
-        self.view = view = TickView()
+        self.view = view = TickViewOld()
         self.setCentralWidget(view)
 
         self.timer = timer = QTimer()

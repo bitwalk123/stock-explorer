@@ -20,7 +20,7 @@ from structs.res import AppRes
 from widgets.buttons import ToolButtonSave
 from widgets.layout import VBoxLayout
 from widgets.toolbar import ToolBar
-from widgets.views import TickView
+from widgets.views import TickViewOld
 
 
 class Example(QMainWindow):
@@ -60,7 +60,7 @@ class Example(QMainWindow):
         リアルタイムでプロットを更新するには、
         Matplotlib より QChart を利用した方が簡単にできる。
         """
-        self.view = view = TickView()
+        self.view = view = TickViewOld()
 
         toolbar = ToolBar()
         but_save = ToolButtonSave(self.res)

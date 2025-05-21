@@ -1,7 +1,8 @@
+import datetime
 import datetime as dt
 import pandas as pd
 
-from PySide6.QtCore import QDate, QTimeZone, QDateTime
+from PySide6.QtCore import QDate, QTimeZone, QDateTime, QTime
 
 
 def get_dates(date_target: str) -> tuple[dt.datetime, dt.datetime]:
@@ -105,3 +106,14 @@ def get_msec_delta_from_utc():
 
     # msec 単位で返す
     return local_offset * 1000
+
+
+def get_datetime_today() -> tuple[QDateTime, QDateTime]:
+    today = datetime.date.today()
+    d_today = QDate(today.year, today.month, today.day)
+    t_start = QTime(9, 0, 0)
+    t_end = QTime(15, 30, 0)
+    dt_start = QDateTime(d_today, t_start)
+    dt_end = QDateTime(d_today, t_end)
+
+    return dt_start, dt_end

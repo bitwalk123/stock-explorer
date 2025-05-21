@@ -1,11 +1,12 @@
 import math
 
 from PySide6.QtCharts import QChartView, QValueAxis, QLineSeries, QChart
-from PySide6.QtCore import QTime, Qt
+from PySide6.QtCore import QTime, Qt, QDateTime
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QFileDialog
 
 from funcs.tide import get_msec_delta_from_utc
+from structs.res import AppRes
 from widgets.charts import (
     Chart,
     LastCloseSeries,
@@ -15,7 +16,7 @@ from widgets.charts import (
 )
 
 
-class TickView(QChartView):
+class TickViewOld(QChartView):
     def __init__(self):
         super().__init__()
         # 最低サイズ
@@ -142,6 +143,58 @@ class TickView(QChartView):
             pixmap = self.grab()
             pixmap.save(file_path, 'png')
             print(f'プロットを {file_path} に保存しました。')
+
+    def setTitle(self, title: str):
+        self.chart.setTitle(title)
+
+
+class TickView(QChartView):
+    def __init__(self, res: AppRes):
+        super().__init__()
+        self.res = res
+        self.dt_start: None | QDateTime = None
+        self.dt_end: None | QDateTime = None
+
+        # ティックデータ用 Series
+        self.series_tick = series_tick = PriceSeries()
+
+        # 前日終値用 Series
+        self.series_lastclose = series_lastclose = LastCloseSeries()
+
+        # X軸（市場時間）
+        self.axis_x = axis_x = MarketTimeAxis()
+        series_tick.attachAxis(axis_x)
+        series_lastclose.attachAxis(axis_x)
+
+        # Y軸（株価）
+        axis_y = PriceAxis()
+        series_tick.attachAxis(axis_y)
+        series_lastclose.attachAxis(axis_y)
+
+        self.chart = chart = Chart()
+        chart.setMinimumSize(1000, 300)
+        chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
+        chart.addAxis(axis_y, Qt.AlignmentFlag.AlignLeft)
+        chart.addSeries(series_tick)
+        chart.addSeries(series_lastclose)
+        self.setChart(chart)
+
+    def addLastCloseLine(self, y):
+        pass
+
+    def saveChart(self):
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, 'Save Chart', '', 'PNG Files (*.png)'
+        )
+        if file_path:
+            pixmap = self.grab()
+            pixmap.save(file_path, 'png')
+            print(f'プロットを {file_path} に保存しました。')
+
+    def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
+        self.dt_start = dt_start
+        self.dt_end = dt_end
+        self.axis_x.setRange(dt_start, dt_end)
 
     def setTitle(self, title: str):
         self.chart.setTitle(title)
