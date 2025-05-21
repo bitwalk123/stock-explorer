@@ -3,14 +3,14 @@ import sys
 import time
 
 import xlwings as xw
-from PySide6.QtCharts import QLineSeries, QChartView
+from PySide6.QtCharts import QChartView
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QPainter
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
 
 from structs.res import AppRes
 from widgets.buttons import ToolButtonSave
-from widgets.charts import Chart, MarketTimeAxis, PriceAxis
+from widgets.charts import Chart, MarketTimeAxis, PriceAxis, PriceSeries
 from widgets.layout import VBoxLayout
 from widgets.toolbar import ToolBar
 
@@ -41,7 +41,8 @@ class Example(QMainWindow):
         self.setWindowIcon(icon)
         self.setWindowTitle('DayTrader')
 
-        series = QLineSeries()
+        series = PriceSeries()
+
         chart = Chart()
         chart.setMinimumSize(1000, 300)
         chart.addSeries(series)

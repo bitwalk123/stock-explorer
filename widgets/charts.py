@@ -184,15 +184,10 @@ class PriceSeries(QLineSeries):
     def __init__(self):
         super().__init__()
         self.setPointsVisible(True)
-        self.setPen(self.getPenTick())
-        self.setMarkerSize(0.75)
-
-    @staticmethod
-    def getPenTick() -> QPen:
         color = QColor(64, 64, 64)
         pen = QPen(color)
         pen.setWidthF(0.5)
-        return pen
+        self.setMarkerSize(0.75)
 
 
 class LastCloseSeries(QLineSeries):
