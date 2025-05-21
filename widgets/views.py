@@ -1,6 +1,6 @@
 import math
 
-from PySide6.QtCharts import QChartView, QValueAxis, QLineSeries
+from PySide6.QtCharts import QChartView, QValueAxis, QLineSeries, QChart
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QFileDialog
@@ -37,6 +37,7 @@ class TickView(QChartView):
 
         # チャート
         self.chart = chart = Chart()
+        self.chart.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
         self.setChart(chart)
 
         # ティックデータ用 Series
