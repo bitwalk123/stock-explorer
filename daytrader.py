@@ -119,7 +119,9 @@ class DayTrader(QMainWindow):
                     y = self.sheet[row, self.col_price].value
                     if y > 0:
                         dt = QDateTime.currentDateTime()
-                        if self.dict_dt['start'] <= dt <= self.dict_dt['end']:
+                        if self.dict_dt['start'] <= dt <= self.dict_dt['end_1h']:
+                            ticker.appendPoint(dt, y)
+                        elif self.dict_dt['start_2h'] <= dt <= self.dict_dt['start_ca']:
                             ticker.appendPoint(dt, y)
                     break
                 except com_error as e:
