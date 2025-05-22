@@ -1,7 +1,8 @@
 import os
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QToolBar
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QToolBar, QStyle
 
 from structs.res import AppRes
 from widgets.buttons import ToolButtonFolder
@@ -65,10 +66,14 @@ class ToolBarDayTrader(QToolBar):
         super().__init__()
         self.res = res
 
-        but_folder = ToolButtonFolder(res)
-        but_folder.setToolTip('ファイル選択')
-        but_folder.clicked.connect(self.on_file_dialog_open)
-        self.addWidget(but_folder)
+        open_action = QAction(
+            self.style().standardIcon(QStyle.StandardPixmap.SP_DirOpenIcon),
+            'Excel ファイルを開く',
+            self
+        )
+        open_action.triggered.connect(self.on_file_dialog_open)
+        self.addAction(open_action)
+
 
     def on_file_dialog_open(self):
         dialog = FileDialogExcel(self.res)

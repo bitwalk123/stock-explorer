@@ -208,9 +208,9 @@ class MarketTimeAxis(QDateTimeAxis):
         self.setTickCount(14)
         self.setFormat('HH:mm')
 
-        self.ax_x_min = ax_x_min = self.min()
+        ax_x_min = self.min()
         ax_x_min.setTime(QTime.fromString('9:00:00', 'H:mm:ss'))
-        self.ax_x_max = ax_x_max = self.max()
+        ax_x_max = self.max()
         ax_x_max.setTime(QTime.fromString('15:30:00', 'H:mm:ss'))
         self.setRange(ax_x_min, ax_x_max)
 
@@ -219,6 +219,3 @@ class PriceAxis(QValueAxis):
     def __init__(self):
         super().__init__()
         self.setLabelsFont(get_font_monospace())
-        # self.setTickCount(6)
-        # self.setRange(0, 1)
-        self.setLabelFormat("%.0f")

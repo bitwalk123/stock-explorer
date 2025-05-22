@@ -5,7 +5,7 @@ import time
 
 from funcs.log import setup_logging
 from widgets.toolbar import ToolBarDayTrader
-from worker.excelloader import ExcelLoader
+from worker.xlloader import ExcelLoader
 
 if sys.platform == 'win32':
     import xlwings as xw
@@ -48,9 +48,6 @@ class DayTrader(QMainWindow):
         self.logger.info('DayTrader initialized.')
         self.res = res = AppRes()
 
-        self.excel_thread = None
-        self.excel_loader = None
-
         # ウィンドウ・タイトル
         icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
         self.setWindowIcon(icon)
@@ -63,6 +60,9 @@ class DayTrader(QMainWindow):
         base.setLayout(layout)
 
         if debug:
+            self.excel_thread = None
+            self.excel_loader = None
+
             toolbar = ToolBarDayTrader(res)
             toolbar.fileSelected.connect(self.on_load_excel)
             self.addToolBar(toolbar)
@@ -79,6 +79,11 @@ class DayTrader(QMainWindow):
 
             self.status_message_label = QLabel("準備完了", self)
             self.statusBar.addWidget(self.status_message_label)
+
+            for num in range(3):
+                row = num + 1
+                ticker = WidgetTicker(row, res)
+                layout.addWidget(ticker)
 
         else:
             # Excelシートから xlwings でデータを読み込むときの試行回数
@@ -161,23 +166,17 @@ class DayTrader(QMainWindow):
         [debug] Excel ファイルの読み込み
         :return:
         """
-        # 既存のスレッドがあれば終了させる (複数回ファイルを開く場合を考慮)
-        if self.excel_thread is not None:
-            if hasattr(self, 'excel_thread') and self.excel_thread.isRunning():
-                self.excel_thread.quit()
-                self.excel_thread.wait()
-
         self.excel_thread = QThread()
         self.excel_loader = ExcelLoader(excel_path)
         self.excel_loader.moveToThread(self.excel_thread)
 
         # シグナルとスロットの接続
         self.excel_thread.started.connect(self.excel_loader.run)
-        self.excel_loader.progress_updated.connect(self.update_progress)
-        self.excel_loader.finished_loading.connect(self.on_finished_loading)
-        self.excel_loader.error_occurred.connect(self.on_error)
-        self.excel_loader.finished_loading.connect(self.excel_thread.quit)  # 処理完了時にスレッドを終了
-        self.excel_loader.error_occurred.connect(self.excel_thread.quit)  # エラー時にもスレッドを終了
+        self.excel_loader.progressUpdated.connect(self.update_progress)
+        self.excel_loader.finishedLoading.connect(self.on_finished_loading)
+        self.excel_loader.errorOccurred.connect(self.on_error)
+        self.excel_loader.finishedLoading.connect(self.excel_thread.quit)  # 処理完了時にスレッドを終了
+        self.excel_loader.errorOccurred.connect(self.excel_thread.quit)  # エラー時にもスレッドを終了
         self.excel_thread.finished.connect(self.excel_thread.deleteLater)  # スレッドオブジェクトの削除
 
         # スレッドを開始
@@ -207,7 +206,7 @@ class DayTrader(QMainWindow):
         # Excel シートから株価情報を取得
         for attempt in range(self.max_retries):
             try:
-                # Excel シートから株価データを取得
+                # Excelシートから株価データを取得
                 y = self.sheet[row, self.col_price].value
                 if y > 0:
                     self.append_chart_data(ticker, y)
@@ -225,16 +224,16 @@ class DayTrader(QMainWindow):
                     )
                     raise  # 最終的に失敗したら例外を再発生させる
             except Exception as e:
-                self.logger.exception(
-                    f"An unexpected error occurred: {e}"
-                )
+                self.logger.exception(f"An unexpected error occurred: {e}")
                 raise  # その他の例外はそのまま発生させる
         # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
 
-    def update_progress(self, sheet_name, current_sheet_num, total_sheets):
-        progress_percentage = int((current_sheet_num / total_sheets) * 100)
-        self.progressBar.setValue(progress_percentage)
-        self.status_message_label.setText(f"読み込み中: シート '{sheet_name}' ({current_sheet_num}/{total_sheets})")
+    def update_progress(self, name_sheet, sheet_num, total_sheets):
+        progress = int((sheet_num / total_sheets) * 100)
+        self.progressBar.setValue(progress)
+        self.status_message_label.setText(
+            f"読み込み中: シート '{name_sheet}' ({sheet_num}/{total_sheets})"
+        )
 
 
 def main():
