@@ -4,6 +4,7 @@ import sys
 import time
 
 from funcs.log import setup_logging
+from widgets.pbar import ProgressBar
 from widgets.toolbar import ToolBarDayTrader
 from worker.xlloader import ExcelLoader
 
@@ -34,14 +35,18 @@ from PySide6.QtWidgets import (
 
 from funcs.tide import get_datetime_today
 from structs.res import AppRes
-from widgets.container import WidgetTicker
+from widgets.container import WidgetTicker, WidgetTickerDebug
 from widgets.layout import VBoxLayout
+
 
 class DayTrader(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.logger = logging.getLogger(__name__)  # 各クラスで専用ロガー
-        self.logger.info('DayTrader initialized.')
+        # __name__ を指定することで、このモジュール固有のロガーを取得
+        # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('MyApp initialized.')  # これがログ出力されるようになる
+
         self.res = res = AppRes()
 
         # ウィンドウ・タイトル
@@ -55,32 +60,29 @@ class DayTrader(QMainWindow):
         layout = VBoxLayout()
         base.setLayout(layout)
 
+        # ticker インスタンスを保持するリスト
+        self.list_ticker = list_ticker = list()
+
         if debug:
-            self.excel_thread = None
             self.excel_loader = None
+            self.excel_thread = None
 
             toolbar = ToolBarDayTrader(res)
             toolbar.fileSelected.connect(self.on_load_excel)
             self.addToolBar(toolbar)
 
-            self.statusBar = QStatusBar()
-            self.setStatusBar(self.statusBar)
-
-            self.progressBar = QProgressBar(self)
-            self.progressBar.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.progressBar.setTextVisible(True)
-            self.progressBar.setMaximum(100)  # プログレスバーの最大値を100に設定
-            self.progressBar.setValue(0)  # 初期値は0
-            self.statusBar.addPermanentWidget(self.progressBar)  # 永続的に表示
-
-            self.status_message_label = QLabel("準備完了", self)
-            self.statusBar.addWidget(self.status_message_label)
+            self.statusbar = statusbar = QStatusBar()
+            self.setStatusBar(statusbar)
+            self.pbar = pbar = ProgressBar()
+            statusbar.addPermanentWidget(pbar)  # 永続的に表示
+            self.lab_status = lab_status = QLabel('準備完了')
+            statusbar.addWidget(lab_status)
 
             for num in range(3):
                 row = num + 1
-                ticker = WidgetTicker(row, res)
+                ticker = WidgetTickerDebug(row, res)
                 layout.addWidget(ticker)
-
+                list_ticker.append(ticker)
         else:
             # Excelシートから xlwings でデータを読み込むときの試行回数
             self.max_retries = 3  # 最大リトライ回数
@@ -107,7 +109,6 @@ class DayTrader(QMainWindow):
             # 日付・時間情報
             self.dict_dt = dict_dt = get_datetime_today()
 
-            self.list_ticker = list_ticker = list()
             for num in range(self.num_max):
                 row = num + 1
 
@@ -152,10 +153,10 @@ class DayTrader(QMainWindow):
         return p_lastclose
 
     def on_error(self, message: str):
-        self.statusBar.showMessage("エラー: Excelファイルの読み込みに失敗しました。", 5000)
-        self.status_message_label.setText("エラー")
+        self.statusbar.showMessage("エラー: Excelファイルの読み込みに失敗しました。", 5000)
+        self.lab_status.setText("エラー")
         QMessageBox.critical(self, "エラー", message)
-        self.progressBar.setValue(0)  # エラー時はプログレスバーをリセット
+        self.pbar.setValue(0)  # エラー時はプログレスバーをリセット
 
     def on_load_excel(self, excel_path: str):
         """
@@ -179,9 +180,9 @@ class DayTrader(QMainWindow):
         self.excel_thread.start()
 
     def on_finished_loading(self, dict_sheet: dict):
-        self.progressBar.setValue(100)
-        self.statusBar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
-        self.status_message_label.setText("読み込み完了")
+        self.pbar.setValue(100)
+        self.statusbar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
+        self.lab_status.setText("読み込み完了")
 
         # 読み込んだデータの中身をターミナルに表示 (デバッグ用)
         QMessageBox.information(
@@ -195,16 +196,21 @@ class DayTrader(QMainWindow):
 
     def on_update_data(self):
         for ticker in self.list_ticker:
-            self.read_excel_value_with_xlwings(ticker)
+            self.read_excel_with_xlwings(ticker)
 
-    def read_excel_value_with_xlwings(self, ticker: WidgetTicker):
+    def read_excel_with_xlwings(self, ticker: WidgetTicker):
         row = ticker.getRow()
         # Excel シートから株価情報を取得
         for attempt in range(self.max_retries):
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+            # 楽天証券のマーケットスピード２ RSS の書き込みと重なる（衝突する）と、
+            # COM エラーが発生するためリトライできるようにしている。
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
             try:
                 # Excelシートから株価データを取得
                 y = self.sheet[row, self.col_price].value
                 if y > 0:
+                    # y = 0 の時はまだ寄っていない。
                     self.append_chart_data(ticker, y)
                 break
             except com_error as e:
@@ -226,8 +232,8 @@ class DayTrader(QMainWindow):
 
     def update_progress(self, name_sheet, sheet_num, total_sheets):
         progress = int((sheet_num / total_sheets) * 100)
-        self.progressBar.setValue(progress)
-        self.status_message_label.setText(
+        self.pbar.setValue(progress)
+        self.lab_status.setText(
             f"読み込み中: シート '{name_sheet}' ({sheet_num}/{total_sheets})"
         )
 
@@ -240,7 +246,7 @@ def main():
 
 
 if __name__ == '__main__':
-    # ... (PySide6 QApplicationの初期化など) ...
-    main_logger = setup_logging()  # ここで必ず呼び出す
-    main_logger.info("Application starting up and logging initialized.")
+    # ロギング設定を適用（ルートロガーを設定）
+    main_logger = setup_logging()
+    # main_logger.info("Application starting up and logging initialized.")
     main()

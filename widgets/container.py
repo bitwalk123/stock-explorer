@@ -46,3 +46,7 @@ class WidgetTicker(QWidget):
 
     def setTitle(self, title: str):
         self.chart_view.setTitle(title)
+
+class WidgetTickerDebug(WidgetTicker):
+    def __init__(self, row: int, res: AppRes):
+        super().__init__(row, res)
