@@ -57,3 +57,27 @@ class ToolBarTick(QToolBar):
         file_excel = dialog.selectedFiles()[0]
         if os.path.isfile(file_excel):
             self.fileSelected.emit(file_excel)
+
+class ToolBarDayTrader(QToolBar):
+    fileSelected = Signal(str)
+
+    def __init__(self, res: AppRes):
+        super().__init__()
+        self.res = res
+
+        but_folder = ToolButtonFolder(res)
+        but_folder.setToolTip('ファイル選択')
+        but_folder.clicked.connect(self.on_file_dialog_open)
+        self.addWidget(but_folder)
+
+    def on_file_dialog_open(self):
+        dialog = FileDialogExcel(self.res)
+        if not dialog.exec():
+            return
+
+        # ----------------------------------
+        # 🧿 選択されたファイルが存在して入れば通知
+        # ----------------------------------
+        file_excel = dialog.selectedFiles()[0]
+        if os.path.isfile(file_excel):
+            self.fileSelected.emit(file_excel)
