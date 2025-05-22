@@ -25,67 +25,70 @@ class Example(QMainWindow):
         super().__init__()
         self.res = res = AppRes()
 
-        # Excelシートからデータを読み込むときの試行回数
-        self.max_retries = 3  # 最大リトライ回数
-        self.retry_delay = 0.1  # リトライ間の遅延（秒）
-
-        #######################################################################
-        # 情報を取得する Excel ファイル
-        name_excel = 'daytrader.xlsx'
-        wb = xw.Book(name_excel)
-        self.sheet = wb.sheets['Sheet1']
-
-        # 列情報
-        self.col_code = 0
-        self.col_name = 1
-        self.col_date = 2
-        self.col_time = 3
-        self.col_price = 4
-        self.col_lastclose = 5
-        # 行情報
-        self.num_max = 3
-        #
-        #######################################################################
-
         # ウィンドウ・タイトル
         icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
         self.setWindowIcon(icon)
         self.setWindowTitle('DayTrader')
 
-        # 日付・時間情報
-        self.dict_dt = dict_dt = get_datetime_today()
-
-        layout = VBoxLayout()
-
-        self.list_ticker = list_ticker = list()
-        for num in range(self.num_max):
-            row = num + 1
-
-            # 指定銘柄
-            ticker = WidgetTicker(row, res)
-            # チャートのタイトル
-            title = self.get_chart_title(row)
-            ticker.setTitle(title)
-            # X軸の範囲
-            ticker.setTimeRange(dict_dt['start'], dict_dt['end'])
-            # 前日の終値の横線
-            p_lastclose = self.get_last_close(row)
-            ticker.addLastCloseLine(p_lastclose)
-
-            layout.addWidget(ticker)
-            list_ticker.append(ticker)
-
         base = QWidget()
-        base.setLayout(layout)
         self.setCentralWidget(base)
 
-        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
-        # タイマー
-        # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
-        self.timer = timer = QTimer()
-        timer.timeout.connect(self.on_update_data)
-        timer.setInterval(1000)
-        self.timer.start()
+        layout = VBoxLayout()
+        base.setLayout(layout)
+
+        if debug:
+            pass
+        else:
+            # Excelシートから xlwings でデータを読み込むときの試行回数
+            self.max_retries = 3  # 最大リトライ回数
+            self.retry_delay = 0.1  # リトライ間の遅延（秒）
+
+            #######################################################################
+            # 情報を取得する Excel ファイル
+            name_excel = 'daytrader.xlsx'
+            wb = xw.Book(name_excel)
+            self.sheet = wb.sheets['Sheet1']
+
+            # 列情報
+            self.col_code = 0
+            self.col_name = 1
+            self.col_date = 2
+            self.col_time = 3
+            self.col_price = 4
+            self.col_lastclose = 5
+            # 行情報
+            self.num_max = 3
+            #
+            #######################################################################
+
+            # 日付・時間情報
+            self.dict_dt = dict_dt = get_datetime_today()
+
+            self.list_ticker = list_ticker = list()
+            for num in range(self.num_max):
+                row = num + 1
+
+                # 指定銘柄
+                ticker = WidgetTicker(row, res)
+                # チャートのタイトル
+                title = self.get_chart_title(row)
+                ticker.setTitle(title)
+                # X軸の範囲
+                ticker.setTimeRange(dict_dt['start'], dict_dt['end'])
+                # 前日の終値の横線
+                p_lastclose = self.get_last_close(row)
+                ticker.addLastCloseLine(p_lastclose)
+
+                layout.addWidget(ticker)
+                list_ticker.append(ticker)
+
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+            # タイマー
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
+            self.timer = timer = QTimer()
+            timer.timeout.connect(self.on_update_data)
+            timer.setInterval(1000)
+            self.timer.start()
 
     def get_chart_title(self, row: int) -> str:
         code = self.sheet[row, self.col_code].value
@@ -105,8 +108,6 @@ class Example(QMainWindow):
                 try:
                     # Excel シートから株価データを取得
                     y = self.sheet[row, self.col_price].value
-                    # ここでデータ取得に成功したらループを抜ける
-                    # ... 成功時の処理 ...
                     if y > 0:
                         dt = QDateTime.currentDateTime()
                         if self.dict_dt['start'] <= dt <= self.dict_dt['end']:
