@@ -194,7 +194,6 @@ class DayTrader(QMainWindow):
         for name_tick, ticker in zip(list_tick, self.list_ticker):
             print(name_tick)
             df = dict_sheet[name_tick]
-            #print(f"行数: {len(df)}, 列数: {len(df.columns)}")
             dt_start = QDateTime(day_target, QTime(9, 0, 0))
             dt_end = QDateTime(day_target, QTime(15, 30, 0))
             ticker.setTimeRange(dt_start, dt_end)
