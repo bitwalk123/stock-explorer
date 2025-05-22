@@ -90,9 +90,9 @@ class TickView(QChartView):
             y_min = y - 1
             y_max = y + 1
         elif y < y_min:
-            y_min = y - 1
+            y_min = math.floor(y - 1)
         elif y_max < y:
-            y_max = y + 1
+            y_max = math.ceil(y + 1)
         else:
             return
 
