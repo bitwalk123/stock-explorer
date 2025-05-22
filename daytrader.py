@@ -4,7 +4,7 @@ import sys
 import time
 
 from funcs.log import setup_logging
-from widgets.pbar import ProgressBar
+from widgets.sbar import StatusBarDebug
 from widgets.toolbar import ToolBarDayTrader
 from worker.xlloader import ExcelLoader
 
@@ -20,16 +20,12 @@ from PySide6.QtCore import (
     QDateTime,
     QThread,
     QTimer,
-    Qt,
 )
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
-    QLabel,
     QMainWindow,
     QMessageBox,
-    QProgressBar,
-    QStatusBar,
     QWidget,
 )
 
@@ -40,12 +36,15 @@ from widgets.layout import VBoxLayout
 
 
 class DayTrader(QMainWindow):
+    __app_name__ = 'DayTrader'
+    __version__ = '0.1.0'
+
     def __init__(self):
         super().__init__()
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
-        self.logger.info('MyApp initialized.')  # これがログ出力されるようになる
+        self.logger.info('%s initialized.' % self.__app_name__)
 
         self.res = res = AppRes()
 
@@ -71,12 +70,8 @@ class DayTrader(QMainWindow):
             toolbar.fileSelected.connect(self.on_load_excel)
             self.addToolBar(toolbar)
 
-            self.statusbar = statusbar = QStatusBar()
+            self.statusbar = statusbar = StatusBarDebug()
             self.setStatusBar(statusbar)
-            self.pbar = pbar = ProgressBar()
-            statusbar.addPermanentWidget(pbar)  # 永続的に表示
-            self.lab_status = lab_status = QLabel('準備完了')
-            statusbar.addWidget(lab_status)
 
             for num in range(3):
                 row = num + 1
@@ -142,6 +137,10 @@ class DayTrader(QMainWindow):
         elif self.dict_dt['start_2h'] <= dt <= self.dict_dt['start_ca']:
             ticker.appendPoint(dt, y)
 
+    def closeEvent(self, event: QCloseEvent):
+        self.logger.info('%s deleted.' % self.__app_name__)
+        event.accept()
+
     def get_chart_title(self, row: int) -> str:
         code = self.sheet[row, self.col_code].value
         name = self.sheet[row, self.col_name].value
@@ -154,9 +153,9 @@ class DayTrader(QMainWindow):
 
     def on_error(self, message: str):
         self.statusbar.showMessage("エラー: Excelファイルの読み込みに失敗しました。", 5000)
-        self.lab_status.setText("エラー")
+        self.statusbar.setText("エラー")
         QMessageBox.critical(self, "エラー", message)
-        self.pbar.setValue(0)  # エラー時はプログレスバーをリセット
+        self.statusbar.setValue(0)  # エラー時はプログレスバーをリセット
 
     def on_load_excel(self, excel_path: str):
         """
@@ -180,18 +179,12 @@ class DayTrader(QMainWindow):
         self.excel_thread.start()
 
     def on_finished_loading(self, dict_sheet: dict):
-        self.pbar.setValue(100)
+        self.statusbar.setValue(100)
         self.statusbar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
-        self.lab_status.setText("読み込み完了")
+        self.statusbar.setText("読み込み完了")
 
-        # 読み込んだデータの中身をターミナルに表示 (デバッグ用)
-        QMessageBox.information(
-            self, "読み込み完了",
-            "Excelファイルの読み込みが完了しました。\n詳細をコンソールに出力します。"
-        )
-        for sheet_name, df in dict_sheet.items():
-            print(f"\n--- ワークシート: {sheet_name} ---")
-            print(df.head())  # 各データフレームの先頭5行を表示
+        for name_sheet, df in dict_sheet.items():
+            print('--- ワークシート: %s ---' % name_sheet)
             print(f"行数: {len(df)}, 列数: {len(df.columns)}")
 
     def on_update_data(self):
@@ -217,7 +210,7 @@ class DayTrader(QMainWindow):
                 # com_error は Windows 固有
                 if attempt < self.max_retries - 1:
                     self.logger.warning(
-                        f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})"
+                        f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries}) Error: {e}"
                     )
                     time.sleep(self.retry_delay)
                 else:
@@ -232,8 +225,8 @@ class DayTrader(QMainWindow):
 
     def update_progress(self, name_sheet, sheet_num, total_sheets):
         progress = int((sheet_num / total_sheets) * 100)
-        self.pbar.setValue(progress)
-        self.lab_status.setText(
+        self.statusbar.setValue(progress)
+        self.statusbar.setText(
             f"読み込み中: シート '{name_sheet}' ({sheet_num}/{total_sheets})"
         )
 
