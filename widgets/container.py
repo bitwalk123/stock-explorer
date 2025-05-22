@@ -10,9 +10,10 @@ from widgets.views import TickView
 
 
 class WidgetTicker(QWidget):
-    def __init__(self, res: AppRes):
+    def __init__(self, row: int, res: AppRes):
         super().__init__()
         self.res = res
+        self.row = row
 
         self.chart_view = chart_view = TickView(res)
         chart_view.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -31,11 +32,17 @@ class WidgetTicker(QWidget):
     def addLastCloseLine(self, y: float):
         self.chart_view.addLastCloseLine(y)
 
+    def appendPoint(self, dt: QDateTime, y: float):
+        self.chart_view.appendPoint(dt, y)
+
+    def getRow(self) -> int:
+        return self.row
+
+    def setRow(self, row: int):
+        self.row = row
+
     def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
         self.chart_view.setTimeRange(dt_start, dt_end)
 
     def setTitle(self, title: str):
         self.chart_view.setTitle(title)
-
-    def appendPoint(self, dt: QDateTime, y: float):
-        self.chart_view.appendPoint(dt, y)

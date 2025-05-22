@@ -7,11 +7,12 @@ from pywintypes import com_error  # Windows 固有のライブラリ
 
 from PySide6.QtCore import QDateTime, QTimer
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
 
 from funcs.tide import get_datetime_today
 from structs.res import AppRes
 from widgets.container import WidgetTicker
+from widgets.layout import VBoxLayout
 
 
 class Example(QMainWindow):
@@ -23,6 +24,7 @@ class Example(QMainWindow):
         self.max_retries = 3  # 最大リトライ回数
         self.retry_delay = 0.1  # リトライ間の遅延（秒）
 
+        #######################################################################
         # 情報を取得する Excel ファイル
         name_excel = 'daytrader.xlsx'
         wb = xw.Book(name_excel)
@@ -35,6 +37,10 @@ class Example(QMainWindow):
         self.col_time = 3
         self.col_price = 4
         self.col_lastclose = 5
+        # 行情報
+        self.num_max = 3
+        #
+        #######################################################################
 
         # ウィンドウ・タイトル
         icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
@@ -44,18 +50,29 @@ class Example(QMainWindow):
         # 日付・時間情報
         self.dict_dt = dict_dt = get_datetime_today()
 
-        self.row = row = 1
-        # 指定銘柄
-        self.ticker = ticker = WidgetTicker(res)
-        # チャートのタイトル
-        title = self.get_chart_title(row)
-        ticker.setTitle(title)
-        # X軸の範囲
-        ticker.setTimeRange(dict_dt['start'], dict_dt['end'])
-        # 前日の終値の横線
-        p_lastclose = self.get_last_close(row)
-        ticker.addLastCloseLine(p_lastclose)
-        self.setCentralWidget(ticker)
+        layout = VBoxLayout()
+
+        self.list_ticker = list_ticker = list()
+        for num in range(self.num_max):
+            row = num + 1
+
+            # 指定銘柄
+            ticker = WidgetTicker(row, res)
+            # チャートのタイトル
+            title = self.get_chart_title(row)
+            ticker.setTitle(title)
+            # X軸の範囲
+            ticker.setTimeRange(dict_dt['start'], dict_dt['end'])
+            # 前日の終値の横線
+            p_lastclose = self.get_last_close(row)
+            ticker.addLastCloseLine(p_lastclose)
+
+            layout.addWidget(ticker)
+            list_ticker.append(ticker)
+
+        base = QWidget()
+        base.setLayout(layout)
+        self.setCentralWidget(base)
 
         # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
         # タイマー
@@ -76,32 +93,32 @@ class Example(QMainWindow):
         return p_lastclose
 
     def on_update_data(self):
-        # Excel シートから株価情報を取得
-        for attempt in range(self.max_retries):
-            try:
-                # Excel シートから株価データを取得
-                y = self.sheet[self.row, self.col_price].value
-                # ここでデータ取得に成功したらループを抜ける
-                # ... 成功時の処理 ...
-                break
-            except com_error as e:
-                # com_error は Windows 固有
-                if attempt < self.max_retries - 1:
-                    print(f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})")
-                    time.sleep(self.retry_delay)
-                else:
-                    print(f"COM Error occurred after {self.max_retries} attempts. Giving up.")
-                    raise  # 最終的に失敗したら例外を再発生させる
-            except Exception as e:
-                print(f"An unexpected error occurred: {e}")
-                raise  # その他の例外はそのまま発生させる
-        # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
-
-        if y > 0:
-            # 現在時刻
-            dt = QDateTime.currentDateTime()
-            if self.dict_dt['start'] <= dt <= self.dict_dt['end']:
-                self.ticker.appendPoint(dt, y)
+        for ticker in self.list_ticker:
+            row = ticker.getRow()
+            # Excel シートから株価情報を取得
+            for attempt in range(self.max_retries):
+                try:
+                    # Excel シートから株価データを取得
+                    y = self.sheet[row, self.col_price].value
+                    # ここでデータ取得に成功したらループを抜ける
+                    # ... 成功時の処理 ...
+                    if y > 0:
+                        dt = QDateTime.currentDateTime()
+                        if self.dict_dt['start'] <= dt <= self.dict_dt['end']:
+                            ticker.appendPoint(dt, y)
+                    break
+                except com_error as e:
+                    # com_error は Windows 固有
+                    if attempt < self.max_retries - 1:
+                        print(f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})")
+                        time.sleep(self.retry_delay)
+                    else:
+                        print(f"COM Error occurred after {self.max_retries} attempts. Giving up.")
+                        raise  # 最終的に失敗したら例外を再発生させる
+                except Exception as e:
+                    print(f"An unexpected error occurred: {e}")
+                    raise  # その他の例外はそのまま発生させる
+            # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
 
 
 def main():

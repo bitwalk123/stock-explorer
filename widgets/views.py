@@ -156,7 +156,7 @@ class TickView(QChartView):
         self.dt_end: None | QDateTime = None
 
         self.chart = chart = Chart()
-        chart.setMinimumSize(1000, 300)
+        chart.setMinimumSize(1000, 200)
         self.setChart(chart)
 
         # ティックデータ用 Series
