@@ -155,9 +155,6 @@ class TickView(QChartView):
         self.dt_start: None | QDateTime = None
         self.dt_end: None | QDateTime = None
 
-        self._current_min_y = 0
-        self._current_max_y = 0
-
         self.chart = chart = Chart()
         chart.setMinimumSize(1000, 300)
         self.setChart(chart)
@@ -184,15 +181,12 @@ class TickView(QChartView):
 
     def appendPoint(self, dt: QDateTime, y: float):
         self.series_tick.append(dt.toMSecsSinceEpoch(), y)
-        self.update_y_axis()
+        self.update_y_axis(y)
 
     def addLastCloseLine(self, y: float):
         self.series_lastclose.append(self.dt_start.toMSecsSinceEpoch(), y)
         self.series_lastclose.append(self.dt_end.toMSecsSinceEpoch(), y)
-
-        self._current_min_y = y
-        self._current_max_y = y
-        self.update_y_axis()
+        self.update_y_axis(y)
 
     def saveChart(self):
         file_path, _ = QFileDialog.getSaveFileName(
@@ -211,49 +205,18 @@ class TickView(QChartView):
     def setTitle(self, title: str):
         self.chart.setTitle(title)
 
-    def update_y_axis(self, force_update=False):
-        min_y = self._current_min_y
-        max_y = self._current_max_y
+    def update_y_axis(self, y: float):
+        y_min = self.axis_y.min()
+        y_max = self.axis_y.max()
 
-        if max_y == min_y:
-            min_y -= 20
-            max_y += 20
+        if y_min == 0 and y_max == 1:
+            y_min = y - 1
+            y_max = y + 1
+        elif y < y_min:
+            y_min = y - 1
+        elif y_max < y:
+            y_max = y + 1
+        else:
+            return
 
-        data_range = max_y - min_y
-
-        tick_intervals = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
-        target_max_ticks = 5
-
-        chosen_interval = tick_intervals[0]
-
-        for interval in tick_intervals:
-            num_ticks = math.ceil(data_range / interval) + 1
-
-            if num_ticks <= target_max_ticks:
-                chosen_interval = interval
-                break
-            elif interval == tick_intervals[-1]:
-                chosen_interval = interval
-                break
-
-        min_y_rounded = math.floor(min_y / chosen_interval) * chosen_interval
-        max_y_rounded = math.ceil(max_y / chosen_interval) * chosen_interval
-
-        if min_y_rounded == max_y_rounded:
-            min_y_rounded -= chosen_interval
-            max_y_rounded += chosen_interval
-
-        if min_y_rounded > max_y_rounded:
-            min_y_rounded, max_y_rounded = max_y_rounded, min_y_rounded
-
-        current_axis_min = self.axis_y.min()
-        current_axis_max = self.axis_y.max()
-        current_axis_interval = self.axis_y.tickInterval()
-
-        if force_update or \
-                min_y_rounded != current_axis_min or \
-                max_y_rounded != current_axis_max or \
-                chosen_interval != current_axis_interval:
-            self.axis_y.setMin(min_y_rounded)
-            self.axis_y.setMax(max_y_rounded)
-            self.axis_y.setTickInterval(chosen_interval)
+        self.axis_y.setRange(y_min, y_max)
