@@ -15,7 +15,11 @@ else:
 
 from PySide6.QtCore import QDateTime, QTimer
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+)
 
 from funcs.tide import get_datetime_today
 from structs.res import AppRes
