@@ -1,6 +1,9 @@
+import logging
 import os
 import sys
 import time
+
+from funcs.log import setup_logging
 
 if sys.platform == 'win32':
     import xlwings as xw
@@ -19,10 +22,15 @@ from structs.res import AppRes
 from widgets.container import WidgetTicker
 from widgets.layout import VBoxLayout
 
+# アプリケーションのメイン部分でロギングを設定
+app_logger = setup_logging()
 
-class Example(QMainWindow):
+
+class DayTrader(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.logger = logging.getLogger(__name__)  # 各クラスで専用ロガー
+        self.logger.info('DayTrader initialized.')
         self.res = res = AppRes()
 
         # ウィンドウ・タイトル
@@ -89,6 +97,7 @@ class Example(QMainWindow):
             timer.timeout.connect(self.on_update_data)
             timer.setInterval(1000)
             self.timer.start()
+            self.logger.info('Data update timer started.')
 
     def get_chart_title(self, row: int) -> str:
         code = self.sheet[row, self.col_code].value
@@ -116,12 +125,21 @@ class Example(QMainWindow):
                 except com_error as e:
                     # com_error は Windows 固有
                     if attempt < self.max_retries - 1:
+                        self.logger.warning(
+                            f"COM Error occurred while reading Excel (Attempt {attempt + 1}/{self.max_retries})"
+                        )
                         print(f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries})")
                         time.sleep(self.retry_delay)
                     else:
+                        self.logger.error(
+                            f"COM Error occurred after {self.max_retries} attempts. Giving up."
+                        )
                         print(f"COM Error occurred after {self.max_retries} attempts. Giving up.")
                         raise  # 最終的に失敗したら例外を再発生させる
                 except Exception as e:
+                    self.logger.exception(
+                        f"An unexpected error occurred: {e}"
+                    )
                     print(f"An unexpected error occurred: {e}")
                     raise  # その他の例外はそのまま発生させる
             # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
@@ -129,7 +147,7 @@ class Example(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    ex = Example()
+    ex = DayTrader()
     ex.show()
     sys.exit(app.exec())
 
