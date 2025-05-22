@@ -1,8 +1,12 @@
 import datetime
 import datetime as dt
+import re
+
 import pandas as pd
 
 from PySide6.QtCore import QDate, QTimeZone, QDateTime, QTime
+
+from structs.res import YMD, HMS
 
 
 def get_dates(date_target: str) -> tuple[dt.datetime, dt.datetime]:
@@ -119,3 +123,32 @@ def get_datetime_today() -> dict:
     dict_dt['start_ca'] = QDateTime(day_today, QTime(15, 25, 0))
     dict_dt['end'] = QDateTime(day_today, QTime(15, 30, 0))
     return dict_dt
+
+
+def get_ymd(excel_path: str) -> YMD:
+    ymd = YMD()
+    pattern = re.compile(r'.+_([0-9]{4})([0-9]{2})([0-9]{2})\.xlsm')
+    m = pattern.match(excel_path)
+    if m:
+        ymd.year = int(m.group(1))
+        ymd.month = int(m.group(2))
+        ymd.day = int(m.group(3))
+    else:
+        ymd.year = 1970
+        ymd.month = 1
+        ymd.day = 1
+    return ymd
+
+def get_hms(time_str: str) -> HMS:
+    hms = HMS()
+    pattern = re.compile(r'^([0-9]{1,2}):([0-9]{2}):([0-9]{2})$')
+    m = pattern.match(time_str)
+    if m:
+        hms.hour = int(m.group(1))
+        hms.minute = int(m.group(2))
+        hms.second = int(m.group(3))
+    else:
+        hms.hour = 0
+        hms.minute = 0
+        hms.second = 0
+    return hms

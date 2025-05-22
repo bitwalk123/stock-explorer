@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 import time
 
@@ -19,7 +20,7 @@ else:
 from PySide6.QtCore import (
     QDateTime,
     QThread,
-    QTimer,
+    QTimer, QDate, QTime,
 )
 from PySide6.QtGui import QIcon, QCloseEvent
 from PySide6.QtWidgets import (
@@ -29,8 +30,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from funcs.tide import get_datetime_today
-from structs.res import AppRes
+from funcs.tide import get_datetime_today, get_hms
+from structs.res import AppRes, YMD
 from widgets.container import WidgetTicker, WidgetTickerDebug
 from widgets.layout import VBoxLayout
 
@@ -178,14 +179,42 @@ class DayTrader(QMainWindow):
         # スレッドを開始
         self.excel_thread.start()
 
-    def on_finished_loading(self, dict_sheet: dict):
+    def on_finished_loading(self, dict_sheet: dict, ymd: YMD):
         self.statusbar.setValue(100)
         self.statusbar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
         self.statusbar.setText("読み込み完了")
 
-        for name_sheet, df in dict_sheet.items():
-            print('--- ワークシート: %s ---' % name_sheet)
-            print(f"行数: {len(df)}, 列数: {len(df.columns)}")
+        day_target = QDate(ymd.year, ymd.month, ymd.day)
+        list_tick = list()
+        for name_sheet in dict_sheet.keys():
+            if name_sheet != 'Cover':
+                list_tick.append(name_sheet)
+
+        pattern = re.compile(r'^tick_(.+)$')
+        for name_tick, ticker in zip(list_tick, self.list_ticker):
+            print(name_tick)
+            df = dict_sheet[name_tick]
+            #print(f"行数: {len(df)}, 列数: {len(df.columns)}")
+            dt_start = QDateTime(day_target, QTime(9, 0, 0))
+            dt_end = QDateTime(day_target, QTime(15, 30, 0))
+            ticker.setTimeRange(dt_start, dt_end)
+
+            list_hms = [get_hms(str(t)) for t in df['Time']]
+            list_dt = list()
+            for hms in list_hms:
+                time_target = QTime(hms.hour, hms.minute, hms.second)
+                dt_target = QDateTime(day_target, time_target)
+                list_dt.append(dt_target)
+
+            m = pattern.match(name_tick)
+            if m:
+                code = m.group(1)
+            else:
+                code = 'unknown'
+            ticker.setTitle(code)
+
+            for dt, y in zip(list_dt, df['Price']):
+                ticker.appendPoint(dt, y)
 
     def on_update_data(self):
         for ticker in self.list_ticker:

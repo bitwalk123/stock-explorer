@@ -14,3 +14,14 @@ class AppRes:
 
     def getJPXTickerList(self) -> pd.DataFrame:
         return pd.read_excel(self.tse)
+
+
+class YMD:
+    year: int = 0
+    month: int = 0
+    day: int = 0
+
+class HMS:
+    hour: int = 0
+    minute: int = 0
+    second: int = 0
