@@ -2,9 +2,8 @@ import os
 import sys
 import time
 
-import xlwings as xw
-
 if sys.platform == "win32":
+    import xlwings as xw
     from pywintypes import com_error  # Windows 固有のライブラリ
 
     debug = False
