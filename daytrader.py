@@ -37,10 +37,6 @@ from structs.res import AppRes
 from widgets.container import WidgetTicker
 from widgets.layout import VBoxLayout
 
-# アプリケーションのメイン部分でロギングを設定
-app_logger = setup_logging()
-
-
 class DayTrader(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -244,4 +240,7 @@ def main():
 
 
 if __name__ == '__main__':
+    # ... (PySide6 QApplicationの初期化など) ...
+    main_logger = setup_logging()  # ここで必ず呼び出す
+    main_logger.info("Application starting up and logging initialized.")
     main()
