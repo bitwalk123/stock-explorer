@@ -3,7 +3,13 @@ import sys
 import time
 
 import xlwings as xw
-from pywintypes import com_error  # Windows 固有のライブラリ
+
+if sys.platform == "win32":
+    from pywintypes import com_error  # Windows 固有のライブラリ
+
+    debug = False
+else:
+    debug = True
 
 from PySide6.QtCore import QDateTime, QTimer
 from PySide6.QtGui import QIcon
