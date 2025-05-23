@@ -29,10 +29,10 @@ class ButtonBuy(QPushButton):
         self.setStyleSheet("""
             QPushButton {
                 font-family: monospace;
-                background-color: #ed6286;
+                background: #ed6286;
             }
             QPushButton:hover {
-                background-color: #f194a7;
+                background: #f194a7;
             }
         """)
         self.setText("買建")
@@ -44,10 +44,10 @@ class ButtonSell(QPushButton):
         self.setStyleSheet("""
             QPushButton {
                 font-family: monospace;
-                background-color: #0ba596;
+                background: #0ba596;
             }
             QPushButton:hover {
-                background-color: #7bbbb1;
+                background: #7bbbb1;
             }
         """)
         self.setText("売建")
@@ -59,10 +59,10 @@ class ButtonRepay(QPushButton):
         self.setStyleSheet("""
             QPushButton {
                 font-family: monospace;
-                background-color: #238fe7;
+                background: #238fe7;
             }
             QPushButton:hover {
-                background-color: #7eadec;
+                background: #7eadec;
             }
         """)
         self.setText("返　　済")
