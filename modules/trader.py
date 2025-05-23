@@ -1,9 +1,10 @@
 import logging
 
-from PySide6.QtCore import QDateTime
+from PySide6.QtCore import QDateTime, Qt
 from PySide6.QtWidgets import QMainWindow
 
 from structs.res import AppRes
+from widgets.docks import DockTrader
 from widgets.toolbars import ToolBarTrader
 from widgets.views import TickView
 
@@ -20,9 +21,15 @@ class TraderUnit(QMainWindow):
         self.chart_view = chart_view = TickView(res)
         self.setCentralWidget(chart_view)
 
+        """
         toolbar = ToolBarTrader(res)
         toolbar.saveClicked.connect(chart_view.saveChart)
         self.addToolBar(toolbar)
+        """
+
+        self.dock = dock = DockTrader(res)
+        dock.saveClicked.connect(chart_view.saveChart)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
 
     def addLastCloseLine(self, y: float):
         self.chart_view.addLastCloseLine(y)

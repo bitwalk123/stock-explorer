@@ -2,7 +2,7 @@ import os
 
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QPushButton, QToolButton
+from PySide6.QtWidgets import QPushButton, QToolButton, QStyle
 
 from structs.res import AppRes
 
@@ -11,6 +11,15 @@ class Button(QPushButton):
     def __init__(self, *args):
         super().__init__(*args)
         self.setStyleSheet('QPushButton {font-family: monospace;}')
+
+class ButtonSave(QPushButton):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.setIcon(
+            self.style().standardIcon(
+                QStyle.StandardPixmap.SP_DialogSaveButton
+            )
+        )
 
 
 class ToolButton(QToolButton):
