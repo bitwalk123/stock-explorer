@@ -38,12 +38,18 @@ class DayTrader(QMainWindow):
     __app_name__ = "DayTrader"
     __version__ = "0.1.0"
 
-    def __init__(self):
+    def __init__(self, options:list = None):
         super().__init__()
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"{__name__} initialized.")
+
+        if len(options) > 0:
+            for option in options:
+                if option == "debug":
+                    debug = True
+                    print("debug mode")
 
         self.res = res = AppRes()
 
@@ -231,8 +237,9 @@ class DayTrader(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    ex = DayTrader()
-    ex.show()
+    options = sys.argv[1:]
+    win = DayTrader(options)
+    win.show()
     sys.exit(app.exec())
 
 
