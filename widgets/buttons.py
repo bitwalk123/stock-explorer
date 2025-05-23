@@ -28,7 +28,6 @@ class ButtonBuy(QPushButton):
         super().__init__(*args)
         self.setStyleSheet("""
             QPushButton {
-                font-family: monospace;
                 background-color: #ed6286;
             }
             QPushButton:hover {
@@ -43,7 +42,6 @@ class ButtonSell(QPushButton):
         super().__init__(*args)
         self.setStyleSheet("""
             QPushButton {
-                font-family: monospace;
                 background-color: #0ba596;
             }
             QPushButton:hover {
@@ -58,7 +56,6 @@ class ButtonRepay(QPushButton):
         super().__init__(*args)
         self.setStyleSheet("""
             QPushButton {
-                font-family: monospace;
                 background-color: #238fe7;
             }
             QPushButton:hover {
