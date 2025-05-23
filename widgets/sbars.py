@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QStatusBar, QLabel
 
-from widgets.pbar import ProgressBar
+from widgets.pbars import ProgressBar
 
 
 class StatusBarDebug(QStatusBar):

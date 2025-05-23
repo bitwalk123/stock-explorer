@@ -28,9 +28,9 @@ from funcs.tide import get_datetime_today
 from structs.res import AppRes, YMD
 from modules.reviewer import ExcelReviewer
 from modules.trader import TraderUnit, TraderUnitDebug
-from widgets.layout import VBoxLayoutTrader
-from widgets.sbar import StatusBarDebug
-from widgets.toolbar import ToolBarDayTrader
+from widgets.layouts import VBoxLayoutTrader
+from widgets.sbars import StatusBarDebug
+from widgets.toolbars import ToolBarDayTrader
 from worker.xlloader import ExcelLoader
 
 

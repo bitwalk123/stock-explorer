@@ -1,13 +1,10 @@
 import logging
 
-from PySide6.QtCore import QDateTime, QMargins
-from PySide6.QtGui import QPainter
-from PySide6.QtWidgets import QWidget, QMainWindow
+from PySide6.QtCore import QDateTime
+from PySide6.QtWidgets import QMainWindow
 
 from structs.res import AppRes
-from widgets.buttons import ToolButtonSave
-from widgets.layout import VBoxLayout
-from widgets.toolbar import ToolBar, ToolBarTrader
+from widgets.toolbars import ToolBarTrader
 from widgets.views import TickView
 
 

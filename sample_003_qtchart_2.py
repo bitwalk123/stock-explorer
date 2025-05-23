@@ -5,7 +5,7 @@ from PySide6.QtCore import QTime, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
-from widgets.toolbar import ToolBarTick
+from widgets.toolbars import ToolBarTick
 from old.deprecated import TickViewOld
 
 

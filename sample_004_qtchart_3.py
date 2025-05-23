@@ -18,8 +18,8 @@ from PySide6.QtWidgets import (
 from funcs.tide import get_msec_delta_from_utc
 from structs.res import AppRes
 from widgets.buttons import ToolButtonSave
-from widgets.layout import VBoxLayout
-from widgets.toolbar import ToolBar
+from widgets.layouts import VBoxLayout
+from widgets.toolbars import ToolBar
 from old.deprecated import TickViewOld
 
 
