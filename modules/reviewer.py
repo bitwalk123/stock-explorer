@@ -26,7 +26,7 @@ class ExcelReviewer(QObject):
                 list_tick.append(name_sheet)
 
         for name_tick, ticker in zip(list_tick, self.list_ticker):
-            self.logger.info(f"ワークシート「{name_tick}」")
+            self.logger.info(f"ワークシート '{name_tick}'")
             df = self.dict_sheet[name_tick]
             dt_start = QDateTime(self.day_target, QTime(9, 0, 0))
             dt_end = QDateTime(self.day_target, QTime(15, 30, 0))

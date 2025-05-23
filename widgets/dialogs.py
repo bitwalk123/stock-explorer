@@ -33,3 +33,4 @@ class FileDialogExcel(QFileDialog):
                 'All files (*)',
             ]
         )
+

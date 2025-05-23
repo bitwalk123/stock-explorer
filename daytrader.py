@@ -28,7 +28,7 @@ from funcs.tide import get_datetime_today
 from structs.res import AppRes, YMD
 from modules.reviewer import ExcelReviewer
 from modules.trader import TraderUnit, TraderUnitDebug
-from widgets.layout import VBoxLayout
+from widgets.layout import VBoxLayoutTrader
 from widgets.sbar import StatusBarDebug
 from widgets.toolbar import ToolBarDayTrader
 from worker.xlloader import ExcelLoader
@@ -55,7 +55,7 @@ class DayTrader(QMainWindow):
         base = QWidget()
         self.setCentralWidget(base)
 
-        layout = VBoxLayout()
+        layout = VBoxLayoutTrader()
         base.setLayout(layout)
 
         # ticker インスタンスを保持するリスト

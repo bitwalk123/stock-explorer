@@ -10,6 +10,7 @@ from widgets.combos import ComboBox
 from widgets.dialogs import FileDialogExcel
 from widgets.labels import LabelCode
 
+
 class ToolBar(QToolBar):
     def __init__(self):
         super().__init__()
@@ -59,6 +60,7 @@ class ToolBarTick(QToolBar):
         if os.path.isfile(file_excel):
             self.fileSelected.emit(file_excel)
 
+
 class ToolBarDayTrader(QToolBar):
     fileSelected = Signal(str)
 
@@ -66,14 +68,13 @@ class ToolBarDayTrader(QToolBar):
         super().__init__()
         self.res = res
 
-        open_action = QAction(
+        action_open = QAction(
             self.style().standardIcon(QStyle.StandardPixmap.SP_DirOpenIcon),
             'Excel ファイルを開く',
             self
         )
-        open_action.triggered.connect(self.on_file_dialog_open)
-        self.addAction(open_action)
-
+        action_open.triggered.connect(self.on_file_dialog_open)
+        self.addAction(action_open)
 
     def on_file_dialog_open(self):
         dialog = FileDialogExcel(self.res)
@@ -86,3 +87,22 @@ class ToolBarDayTrader(QToolBar):
         file_excel = dialog.selectedFiles()[0]
         if os.path.isfile(file_excel):
             self.fileSelected.emit(file_excel)
+
+
+class ToolBarTrader(ToolBar):
+    saveClicked = Signal()
+
+    def __init__(self, res: AppRes):
+        super().__init__()
+        self.res = res
+
+        action_save = QAction(
+            self.style().standardIcon(QStyle.StandardPixmap.SP_DialogSaveButton),
+            'チャートを画像で保存',
+            self
+        )
+        action_save.triggered.connect(self.on_save)
+        self.addAction(action_save)
+
+    def on_save(self):
+        self.saveClicked.emit()

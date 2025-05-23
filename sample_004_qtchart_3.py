@@ -20,7 +20,7 @@ from structs.res import AppRes
 from widgets.buttons import ToolButtonSave
 from widgets.layout import VBoxLayout
 from widgets.toolbar import ToolBar
-from widgets.views import TickViewOld
+from old.deprecated import TickViewOld
 
 
 class Example(QMainWindow):

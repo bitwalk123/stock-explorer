@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 from structs.res import AppRes
 from widgets.toolbar import ToolBarTick
-from widgets.views import TickViewOld
+from old.deprecated import TickViewOld
 
 
 class Example(QMainWindow):
