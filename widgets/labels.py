@@ -17,7 +17,7 @@ class LabelCode(Label):
 class LCDNumber(QLCDNumber):
     def __init__(self, *args):
         super().__init__(*args)
-        self.setFixedWidth(180)
-        self.setFixedHeight(28)
+        self.setFixedWidth(160)
+        self.setFixedHeight(24)
         self.setDigitCount(12)
         self.display('0.0')
