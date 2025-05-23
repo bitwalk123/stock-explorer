@@ -26,8 +26,8 @@ def get_dates(date_target: str) -> tuple[dt.datetime, dt.datetime]:
 def get_range_xaxis(df: pd.DataFrame) -> tuple:
     date_str = str(df.index[0].date())
 
-    dt_left = pd.to_datetime('%s 08:50:00' % date_str)
-    dt_right = pd.to_datetime('%s 15:40:00' % date_str)
+    dt_left = pd.to_datetime(f"{date_str} 08:50:00")
+    dt_right = pd.to_datetime(f"{date_str} 15:40:00")
 
     return dt_left, dt_right
 
@@ -41,11 +41,11 @@ def get_time_breaks(df: pd.DataFrame) -> tuple:
     """
     date_str = str(df.index[0].date())
     # 前場終了時間
-    dt_lunch_1 = pd.to_datetime('%s 11:30:00' % date_str)
+    dt_lunch_1 = pd.to_datetime(f"{date_str} 11:30:00")
     # 後場開始時間
-    dt_lunch_2 = pd.to_datetime('%s 12:30:00' % date_str)
+    dt_lunch_2 = pd.to_datetime(f"{date_str} 12:30:00")
     # 後場ザラ場終了時間直前
-    dt_pre_ca = pd.to_datetime('%s 15:24:00' % date_str)
+    dt_pre_ca = pd.to_datetime(f"{date_str} 15:24:00")
 
     return dt_lunch_1, dt_lunch_2, dt_pre_ca
 
@@ -55,28 +55,30 @@ def get_yyyy_mm_dd(qdate: QDate) -> str:
     QDate オブジェクトから YYYY-MM-DD の文字列を生成
     :param qdate:
     :return:
-    """
-    str_year = '{:0=4}'.format(qdate.year())
-    str_month = '{:0=2}'.format(qdate.month())
-    str_day = '{:0=2}'.format(qdate.day())
-    date_target = '%s-%s-%s' % (str_year, str_month, str_day)
+    str_year = "{:0=4}".format(qdate.year())
+    str_month = "{:0=2}".format(qdate.month())
+    str_day = "{:0=2}".format(qdate.day())
+    date_target = f"{str_year}-{str_month}-{str_day}"
 
     return date_target
+    """
+    return f"{qdate.year():04}-{qdate.month():02}-{qdate.day():02}"
+
 
 
 def get_yyyymmdd(qdate: QDate) -> str:
     """
-    QDate オブジェクトから YYYY-MM-DD の文字列を生成
+    QDate オブジェクトから YYYYMMDD の文字列を生成
     :param qdate:
     :return:
-    """
-    str_year = '{:0=4}'.format(qdate.year())
-    str_month = '{:0=2}'.format(qdate.month())
-    str_day = '{:0=2}'.format(qdate.day())
-    date_target = '%s%s%s' % (str_year, str_month, str_day)
+    str_year = "{:0=4}".format(qdate.year())
+    str_month = "{:0=2}".format(qdate.month())
+    str_day = "{:0=2}".format(qdate.day())
+    date_target = f"{str_year}{str_month}{str_day}"
 
     return date_target
-
+    """
+    return f"{qdate.year():04}{qdate.month():02}{qdate.day():02}"
 
 def remove_tz_from_index(df: pd.DataFrame):
     """
@@ -95,7 +97,8 @@ def get_time_str(dt: pd.Timestamp) -> str:
     :param dt:
     :return:
     """
-    return '{:0=2}:{:0=2}:{:0=2}'.format(dt.hour, dt.minute, dt.second)
+    #return "{:0=2}:{:0=2}:{:0=2}".format(dt.hour, dt.minute, dt.second)
+    return f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}"
 
 
 def get_msec_delta_from_utc():
@@ -117,17 +120,17 @@ def get_datetime_today() -> dict:
     today = datetime.date.today()
 
     day_today = QDate(today.year, today.month, today.day)
-    dict_dt['start'] = QDateTime(day_today, QTime(9, 0, 0))
-    dict_dt['end_1h'] = QDateTime(day_today, QTime(11, 30, 0))
-    dict_dt['start_2h'] = QDateTime(day_today, QTime(12, 30, 0))
-    dict_dt['start_ca'] = QDateTime(day_today, QTime(15, 25, 0))
-    dict_dt['end'] = QDateTime(day_today, QTime(15, 30, 0))
+    dict_dt["start"] = QDateTime(day_today, QTime(9, 0, 0))
+    dict_dt["end_1h"] = QDateTime(day_today, QTime(11, 30, 0))
+    dict_dt["start_2h"] = QDateTime(day_today, QTime(12, 30, 0))
+    dict_dt["start_ca"] = QDateTime(day_today, QTime(15, 25, 0))
+    dict_dt["end"] = QDateTime(day_today, QTime(15, 30, 0))
     return dict_dt
 
 
 def get_ymd(excel_path: str) -> YMD:
     ymd = YMD()
-    pattern = re.compile(r'.+_([0-9]{4})([0-9]{2})([0-9]{2})\.xlsm')
+    pattern = re.compile(r".+_([0-9]{4})([0-9]{2})([0-9]{2})\.xlsm")
     m = pattern.match(excel_path)
     if m:
         ymd.year = int(m.group(1))
@@ -139,9 +142,10 @@ def get_ymd(excel_path: str) -> YMD:
         ymd.day = 1
     return ymd
 
+
 def get_hms(time_str: str) -> HMS:
     hms = HMS()
-    pattern = re.compile(r'^([0-9]{1,2}):([0-9]{2}):([0-9]{2})$')
+    pattern = re.compile(r"^([0-9]{1,2}):([0-9]{2}):([0-9]{2})$")
     m = pattern.match(time_str)
     if m:
         hms.hour = int(m.group(1))

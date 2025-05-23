@@ -67,12 +67,12 @@ class TickView(QChartView):
 
     def saveChart(self):
         file_path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Chart', '', 'PNG Files (*.png)'
+            self, "Save Chart", "", "PNG Files (*.png)"
         )
         if file_path:
             pixmap = self.grab()
-            pixmap.save(file_path, 'png')
-            print(f'プロットを {file_path} に保存しました。')
+            pixmap.save(file_path, "png")
+            print(f"プロットを {file_path} に保存しました。")
 
     def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
         self.dt_start = dt_start
@@ -220,12 +220,12 @@ class TickViewOld(QChartView):
 
     def saveChart(self):
         file_path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Chart', '', 'PNG Files (*.png)'
+            self, "Save Chart", "", "PNG Files (*.png)"
         )
         if file_path:
             pixmap = self.grab()
-            pixmap.save(file_path, 'png')
-            print(f'プロットを {file_path} に保存しました。')
+            pixmap.save(file_path, "png")
+            print(f"プロットを {file_path} に保存しました。")
 
     def setTitle(self, title: str):
         self.chart.setTitle(title)

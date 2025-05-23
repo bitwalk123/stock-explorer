@@ -9,7 +9,7 @@ from widgets.sbar import StatusBarDebug
 from widgets.toolbar import ToolBarDayTrader
 from worker.xlloader import ExcelLoader
 
-if sys.platform == 'win32':
+if sys.platform == "win32":
     import xlwings as xw
     from pywintypes import com_error  # Windows 固有のライブラリ
 
@@ -37,22 +37,22 @@ from widgets.layout import VBoxLayout
 
 
 class DayTrader(QMainWindow):
-    __app_name__ = 'DayTrader'
-    __version__ = '0.1.0'
+    __app_name__ = "DayTrader"
+    __version__ = "0.1.0"
 
     def __init__(self):
         super().__init__()
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
-        self.logger.info('%s initialized.' % self.__app_name__)
+        self.logger.info(f"{self.__app_name__} initialized.")
 
         self.res = res = AppRes()
 
         # ウィンドウ・タイトル
-        icon = QIcon(os.path.join(res.dir_image, 'trading.png'))
+        icon = QIcon(os.path.join(res.dir_image, "trading.png"))
         self.setWindowIcon(icon)
-        self.setWindowTitle('DayTrader')
+        self.setWindowTitle(self.__app_name__)
 
         base = QWidget()
         self.setCentralWidget(base)
@@ -86,9 +86,9 @@ class DayTrader(QMainWindow):
 
             #######################################################################
             # 情報を取得する Excel ファイル
-            name_excel = 'daytrader.xlsx'
+            name_excel = "daytrader.xlsx"
             wb = xw.Book(name_excel)
-            self.sheet = wb.sheets['Sheet1']
+            self.sheet = wb.sheets["Sheet1"]
 
             # 列情報
             self.col_code = 0
@@ -114,7 +114,7 @@ class DayTrader(QMainWindow):
                 title = self.get_chart_title(row)
                 ticker.setTitle(title)
                 # X軸の範囲
-                ticker.setTimeRange(dict_dt['start'], dict_dt['end'])
+                ticker.setTimeRange(dict_dt["start"], dict_dt["end"])
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
                 ticker.addLastCloseLine(p_lastclose)
@@ -129,23 +129,23 @@ class DayTrader(QMainWindow):
             timer.timeout.connect(self.on_update_data)
             timer.setInterval(1000)
             self.timer.start()
-            self.logger.info('Data update timer started.')
+            self.logger.info("Data update timer started.")
 
     def append_chart_data(self, ticker: WidgetTicker, y: float):
         dt = QDateTime.currentDateTime()
-        if self.dict_dt['start'] <= dt <= self.dict_dt['end_1h']:
+        if self.dict_dt["start"] <= dt <= self.dict_dt["end_1h"]:
             ticker.appendPoint(dt, y)
-        elif self.dict_dt['start_2h'] <= dt <= self.dict_dt['start_ca']:
+        elif self.dict_dt["start_2h"] <= dt <= self.dict_dt["start_ca"]:
             ticker.appendPoint(dt, y)
 
     def closeEvent(self, event: QCloseEvent):
-        self.logger.info('%s deleted.' % self.__app_name__)
+        self.logger.info(f"{self.__app_name__} stopped and closed.")
         event.accept()
 
     def get_chart_title(self, row: int) -> str:
         code = self.sheet[row, self.col_code].value
         name = self.sheet[row, self.col_name].value
-        title = '%s (%s)' % (name, code)
+        title = f"{name} ({code})"
         return title
 
     def get_last_close(self, row: int) -> float:
@@ -187,10 +187,10 @@ class DayTrader(QMainWindow):
         day_target = QDate(ymd.year, ymd.month, ymd.day)
         list_tick = list()
         for name_sheet in dict_sheet.keys():
-            if name_sheet != 'Cover':
+            if name_sheet != "Cover":
                 list_tick.append(name_sheet)
 
-        pattern = re.compile(r'^tick_(.+)$')
+        pattern = re.compile(r"^tick_(.+)$")
         for name_tick, ticker in zip(list_tick, self.list_ticker):
             print(name_tick)
             df = dict_sheet[name_tick]
@@ -198,7 +198,7 @@ class DayTrader(QMainWindow):
             dt_end = QDateTime(day_target, QTime(15, 30, 0))
             ticker.setTimeRange(dt_start, dt_end)
 
-            list_hms = [get_hms(str(t)) for t in df['Time']]
+            list_hms = [get_hms(str(t)) for t in df["Time"]]
             list_dt = list()
             for hms in list_hms:
                 time_target = QTime(hms.hour, hms.minute, hms.second)
@@ -209,10 +209,10 @@ class DayTrader(QMainWindow):
             if m:
                 code = m.group(1)
             else:
-                code = 'unknown'
+                code = "Unknown"
             ticker.setTitle(code)
 
-            for dt, y in zip(list_dt, df['Price']):
+            for dt, y in zip(list_dt, df["Price"]):
                 ticker.appendPoint(dt, y)
 
     def on_update_data(self):
@@ -266,7 +266,7 @@ def main():
     sys.exit(app.exec())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # ロギング設定を適用（ルートロガーを設定）
     main_logger = setup_logging()
     # main_logger.info("Application starting up and logging initialized.")
