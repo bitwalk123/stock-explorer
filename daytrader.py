@@ -40,6 +40,7 @@ class DayTrader(QMainWindow):
 
     def __init__(self, options:list = None):
         super().__init__()
+        global debug
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
