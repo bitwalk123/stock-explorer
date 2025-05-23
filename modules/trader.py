@@ -21,12 +21,6 @@ class TraderUnit(QMainWindow):
         self.chart_view = chart_view = TickView(res)
         self.setCentralWidget(chart_view)
 
-        """
-        toolbar = ToolBarTrader(res)
-        toolbar.saveClicked.connect(chart_view.saveChart)
-        self.addToolBar(toolbar)
-        """
-
         self.dock = dock = DockTrader(res)
         dock.saveClicked.connect(chart_view.saveChart)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
@@ -36,6 +30,7 @@ class TraderUnit(QMainWindow):
 
     def appendPoint(self, dt: QDateTime, y: float):
         self.chart_view.appendPoint(dt, y)
+        self.dock.setPrice(y)
 
     def getRow(self) -> int:
         return self.row

@@ -1,5 +1,5 @@
 from PySide6.QtCore import QMargins
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QLabel, QLCDNumber
 
 
 class Label(QLabel):
@@ -12,3 +12,12 @@ class LabelCode(Label):
     def __init__(self, *args):
         super().__init__(*args)
         self.setContentsMargins(QMargins(0, 0, 5, 0))
+
+
+class LCDNumber(QLCDNumber):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.setFixedWidth(200)
+        self.setFixedHeight(30)
+        self.setDigitCount(10)
+        self.display('0.0')

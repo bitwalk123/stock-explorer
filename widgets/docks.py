@@ -1,13 +1,13 @@
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import (
     QDockWidget,
-    QLCDNumber,
     QWidget,
 )
 
 from structs.res import AppRes
 from widgets.buttons import ButtonSave
 from widgets.container import Widget, PadH
+from widgets.labels import LCDNumber
 from widgets.layouts import HBoxLayout, VBoxLayout
 
 
@@ -22,7 +22,6 @@ class DockTrader(QDockWidget):
             QDockWidget.DockWidgetFeature.NoDockWidgetFeatures
         )
 
-
         base = QWidget()
         self.setWidget(base)
 
@@ -33,12 +32,14 @@ class DockTrader(QDockWidget):
 
         base.setLayout(layout)
 
-        self.lcd = lcd=QLCDNumber(self)
-        lcd.setFixedWidth(200)
-        lcd.setFixedHeight(30)
-        lcd.setDigitCount(8)
-        lcd.display('0.0')
-        layout.addWidget(lcd)
+        self.lcd_price = lcd_price = LCDNumber(self)
+        layout.addWidget(lcd_price)
+
+        self.lcd_profit = lcd_profit = LCDNumber(self)
+        layout.addWidget(lcd_profit)
+
+        self.lcd_total = lcd_total = LCDNumber(self)
+        layout.addWidget(lcd_total)
 
         row_tool = Widget()
         layout.addWidget(row_tool)
@@ -58,3 +59,6 @@ class DockTrader(QDockWidget):
         # 🧿 保存ボタンがクリックされたことを通知
         # ---------------------------------
         self.saveClicked.emit()
+
+    def setPrice(self, price: float):
+        self.lcd_price.display(f"{price:.1f}")

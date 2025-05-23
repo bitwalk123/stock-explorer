@@ -63,6 +63,7 @@ class DayTrader(QMainWindow):
         self.setCentralWidget(base)
 
         layout = VBoxLayoutTrader()
+        layout.setSpacing(1)
         base.setLayout(layout)
 
         # ticker インスタンスを保持するリスト
