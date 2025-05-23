@@ -43,7 +43,7 @@ class ButtonRepay(QPushButton):
                 background-color: #238fe7;
             }
         """)
-        self.setText("返　済")
+        self.setText("返　　済")
 
 class ButtonSell(QPushButton):
     def __init__(self, *args):
