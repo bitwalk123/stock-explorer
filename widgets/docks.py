@@ -35,7 +35,7 @@ class DockTrader(QDockWidget):
 
         self.lcd = lcd=QLCDNumber(self)
         lcd.setFixedWidth(200)
-        lcd.setFixedHeight(40)
+        lcd.setFixedHeight(30)
         lcd.setDigitCount(8)
         lcd.display('12345678')
         layout.addWidget(lcd)
