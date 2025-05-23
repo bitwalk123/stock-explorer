@@ -57,7 +57,10 @@ class DayTrader(QMainWindow):
         # ウィンドウ・タイトル
         icon = QIcon(os.path.join(res.dir_image, "trading.png"))
         self.setWindowIcon(icon)
-        self.setWindowTitle(self.__app_name__)
+        if debug:
+            self.setWindowTitle(f"{self.__app_name__} (debug mode)")
+        else:
+            self.setWindowTitle(self.__app_name__)
 
         base = QWidget()
         self.setCentralWidget(base)
