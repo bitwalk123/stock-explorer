@@ -11,7 +11,7 @@ from widgets.buttons import (
     ButtonSave,
     ButtonSell,
 )
-from widgets.container import Widget, PadH
+from widgets.container import Widget, PadH, Frame
 from widgets.labels import LCDNumber
 from widgets.layouts import HBoxLayout, VBoxLayout
 
@@ -64,7 +64,7 @@ class DockTrader(QDockWidget):
         self.lcd_total = lcd_total = LCDNumber(self)
         layout.addWidget(lcd_total)
 
-        row_tool = Widget()
+        row_tool = Frame()
         layout.addWidget(row_tool)
 
         layout_tool = HBoxLayout()
