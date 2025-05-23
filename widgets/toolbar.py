@@ -67,6 +67,8 @@ class ToolBarDayTrader(QToolBar):
     def __init__(self, res: AppRes):
         super().__init__()
         self.res = res
+        self.setFloatable(False)
+        self.setMovable(False)
 
         action_open = QAction(
             self.style().standardIcon(QStyle.StandardPixmap.SP_DirOpenIcon),
@@ -95,6 +97,9 @@ class ToolBarTrader(ToolBar):
     def __init__(self, res: AppRes):
         super().__init__()
         self.res = res
+        self.setStyleSheet("QToolBar {margin: 1}")
+        self.setFloatable(False)
+        self.setMovable(False)
 
         action_save = QAction(
             self.style().standardIcon(QStyle.StandardPixmap.SP_DialogSaveButton),
@@ -105,4 +110,7 @@ class ToolBarTrader(ToolBar):
         self.addAction(action_save)
 
     def on_save(self):
+        # ---------------------------------
+        # 🧿 保存ボタンがクリックされたことを通知
+        # ---------------------------------
         self.saveClicked.emit()
