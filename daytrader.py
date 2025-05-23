@@ -49,7 +49,7 @@ class DayTrader(QMainWindow):
             for option in options:
                 if option == "debug":
                     debug = True
-                    print("debug mode")
+                    self.logger.info(f"{__name__} is executed as DEBUG mode!")
 
         self.res = res = AppRes()
 
