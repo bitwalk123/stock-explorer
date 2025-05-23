@@ -13,18 +13,6 @@ class Button(QPushButton):
         self.setStyleSheet('QPushButton {font-family: monospace;}')
 
 
-class ButtonBuy(QPushButton):
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.setStyleSheet("""
-            QPushButton {
-                font-family: monospace;
-                background-color: #ed6286;
-            }
-        """)
-        self.setText("買建")
-
-
 class ButtonSave(QPushButton):
     def __init__(self, *args):
         super().__init__(*args)
@@ -34,16 +22,21 @@ class ButtonSave(QPushButton):
             )
         )
 
-class ButtonRepay(QPushButton):
+
+class ButtonBuy(QPushButton):
     def __init__(self, *args):
         super().__init__(*args)
         self.setStyleSheet("""
             QPushButton {
                 font-family: monospace;
-                background-color: #238fe7;
+                background-color: #ed6286;
+            }
+            QPushButton:hover {
+                background-color: #f194a7;
             }
         """)
-        self.setText("返　　済")
+        self.setText("買建")
+
 
 class ButtonSell(QPushButton):
     def __init__(self, *args):
@@ -53,8 +46,27 @@ class ButtonSell(QPushButton):
                 font-family: monospace;
                 background-color: #0ba596;
             }
+            QPushButton:hover {
+                background-color: #7bbbb1;
+            }
         """)
         self.setText("売建")
+
+
+class ButtonRepay(QPushButton):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.setStyleSheet("""
+            QPushButton {
+                font-family: monospace;
+                background-color: #238fe7;
+            }
+            QPushButton:hover {
+                background-color: #7eadec;
+            }
+        """)
+        self.setText("返　　済")
+
 
 class ToolButton(QToolButton):
     def __init__(self, *args):
