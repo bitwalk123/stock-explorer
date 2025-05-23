@@ -1,11 +1,16 @@
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import (
     QDockWidget,
-    QWidget, QPushButton,
+    QWidget,
 )
 
 from structs.res import AppRes
-from widgets.buttons import ButtonSave
+from widgets.buttons import (
+    ButtonBuy,
+    ButtonRepay,
+    ButtonSave,
+    ButtonSell,
+)
 from widgets.container import Widget, PadH
 from widgets.labels import LCDNumber
 from widgets.layouts import HBoxLayout, VBoxLayout
@@ -41,19 +46,19 @@ class DockTrader(QDockWidget):
         layout_buysell = HBoxLayout()
         row_buysell.setLayout(layout_buysell)
 
-        but_sell = QPushButton("売建")
+        but_sell = ButtonSell()
         layout_buysell.addWidget(but_sell)
 
         pad = PadH()
         layout_buysell.addWidget(pad)
 
-        but_buy = QPushButton("買建")
+        but_buy = ButtonBuy()
         layout_buysell.addWidget(but_buy)
 
         self.lcd_profit = lcd_profit = LCDNumber(self)
         layout.addWidget(lcd_profit)
 
-        but_repay = QPushButton("返済")
+        but_repay = ButtonRepay()
         layout.addWidget(but_repay)
 
         self.lcd_total = lcd_total = LCDNumber(self)
