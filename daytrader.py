@@ -1,13 +1,7 @@
 import logging
 import os
-import re
 import sys
 import time
-
-from funcs.log import setup_logging
-from widgets.sbar import StatusBarDebug
-from widgets.toolbar import ToolBarDayTrader
-from worker.xlloader import ExcelLoader
 
 if sys.platform == "win32":
     import xlwings as xw
@@ -20,8 +14,7 @@ else:
 from PySide6.QtCore import (
     QDateTime,
     QThread,
-    QTimer, QDate, QTime,
-)
+    QTimer, )
 from PySide6.QtGui import QIcon, QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -30,10 +23,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from funcs.tide import get_datetime_today, get_hms
+from funcs.log import setup_logging
+from funcs.tide import get_datetime_today
 from structs.res import AppRes, YMD
-from widgets.container import WidgetTicker, WidgetTickerDebug
+from modules.reviewer import ExcelReviewer
+from modules.trader import TraderUnit, TraderUnitDebug
 from widgets.layout import VBoxLayout
+from widgets.sbar import StatusBarDebug
+from widgets.toolbar import ToolBarDayTrader
+from worker.xlloader import ExcelLoader
 
 
 class DayTrader(QMainWindow):
@@ -45,7 +43,7 @@ class DayTrader(QMainWindow):
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
-        self.logger.info(f"{self.__app_name__} initialized.")
+        self.logger.info(f"{__name__} initialized.")
 
         self.res = res = AppRes()
 
@@ -76,7 +74,7 @@ class DayTrader(QMainWindow):
 
             for num in range(3):
                 row = num + 1
-                ticker = WidgetTickerDebug(row, res)
+                ticker = TraderUnitDebug(row, res)
                 layout.addWidget(ticker)
                 list_ticker.append(ticker)
         else:
@@ -109,7 +107,7 @@ class DayTrader(QMainWindow):
                 row = num + 1
 
                 # 指定銘柄
-                ticker = WidgetTicker(row, res)
+                ticker = TraderUnit(row, res)
                 # チャートのタイトル
                 title = self.get_chart_title(row)
                 ticker.setTitle(title)
@@ -131,7 +129,7 @@ class DayTrader(QMainWindow):
             self.timer.start()
             self.logger.info("Data update timer started.")
 
-    def append_chart_data(self, ticker: WidgetTicker, y: float):
+    def append_chart_data(self, ticker: TraderUnit, y: float):
         dt = QDateTime.currentDateTime()
         if self.dict_dt["start"] <= dt <= self.dict_dt["end_1h"]:
             ticker.appendPoint(dt, y)
@@ -184,42 +182,14 @@ class DayTrader(QMainWindow):
         self.statusbar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
         self.statusbar.setText("読み込み完了")
 
-        day_target = QDate(ymd.year, ymd.month, ymd.day)
-        list_tick = list()
-        for name_sheet in dict_sheet.keys():
-            if name_sheet != "Cover":
-                list_tick.append(name_sheet)
-
-        pattern = re.compile(r"^tick_(.+)$")
-        for name_tick, ticker in zip(list_tick, self.list_ticker):
-            print(name_tick)
-            df = dict_sheet[name_tick]
-            dt_start = QDateTime(day_target, QTime(9, 0, 0))
-            dt_end = QDateTime(day_target, QTime(15, 30, 0))
-            ticker.setTimeRange(dt_start, dt_end)
-
-            list_hms = [get_hms(str(t)) for t in df["Time"]]
-            list_dt = list()
-            for hms in list_hms:
-                time_target = QTime(hms.hour, hms.minute, hms.second)
-                dt_target = QDateTime(day_target, time_target)
-                list_dt.append(dt_target)
-
-            m = pattern.match(name_tick)
-            if m:
-                code = m.group(1)
-            else:
-                code = "Unknown"
-            ticker.setTitle(code)
-
-            for dt, y in zip(list_dt, df["Price"]):
-                ticker.appendPoint(dt, y)
+        review = ExcelReviewer(self.list_ticker, dict_sheet, ymd)
+        review.plot()
 
     def on_update_data(self):
         for ticker in self.list_ticker:
             self.read_excel_with_xlwings(ticker)
 
-    def read_excel_with_xlwings(self, ticker: WidgetTicker):
+    def read_excel_with_xlwings(self, ticker: TraderUnit):
         row = ticker.getRow()
         # Excel シートから株価情報を取得
         for attempt in range(self.max_retries):

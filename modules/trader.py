@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtCore import QDateTime
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QWidget
@@ -9,9 +11,12 @@ from widgets.toolbar import ToolBar
 from widgets.views import TickView
 
 
-class WidgetTicker(QWidget):
+class TraderUnit(QWidget):
     def __init__(self, row: int, res: AppRes):
         super().__init__()
+        self.logger = logging.getLogger(__name__)
+        # self.logger.info(f"{__name__} initialized.")
+
         self.res = res
         self.row = row
 
@@ -47,6 +52,7 @@ class WidgetTicker(QWidget):
     def setTitle(self, title: str):
         self.chart_view.setTitle(title)
 
-class WidgetTickerDebug(WidgetTicker):
+
+class TraderUnitDebug(TraderUnit):
     def __init__(self, row: int, res: AppRes):
         super().__init__(row, res)
