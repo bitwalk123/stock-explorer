@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QMargins
 from PySide6.QtWidgets import (
     QDockWidget,
     QWidget,
@@ -34,6 +34,7 @@ class DockTrader(QDockWidget):
         layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
+        layout.setSpacing(5)
 
         base.setLayout(layout)
 

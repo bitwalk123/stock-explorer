@@ -4,8 +4,6 @@ import re
 import sys
 import time
 
-import numpy as np
-
 if sys.platform == "win32":
     import xlwings as xw
     from pywintypes import com_error  # Windows 固有のライブラリ
@@ -15,15 +13,19 @@ else:
     debug = True
 
 from PySide6.QtCore import (
+    QDate,
     QDateTime,
     QThread,
-    QTimer, QDate, QTime, )
+    QTime,
+    QTimer,
+)
 from PySide6.QtGui import QIcon, QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
+    QFileDialog,
     QMainWindow,
     QMessageBox,
-    QWidget, QFileDialog,
+    QWidget,
 )
 
 from funcs.log import setup_logging
@@ -213,11 +215,14 @@ class DayTrader(QMainWindow):
             if name_sheet != "Cover":
                 list_tick.append(name_sheet)
 
+        for trader in self.list_trader:
+            # データをクリア
+            trader.clear()
+        QApplication.processEvents()
+
         for name_tick, trader in zip(list_tick, self.list_trader):
             self.logger.info(f"ワークシート '{name_tick}'")
 
-            # データをクリア
-            trader.clear()
 
             m = pattern.match(name_tick)
             if m:
@@ -244,6 +249,8 @@ class DayTrader(QMainWindow):
             # チャートへデータを一つづつプロット
             for dt, y in zip(list_dt, df['Price']):
                 trader.appendPoint(dt, y)
+
+            QApplication.processEvents()
 
     def on_update_data(self):
         for ticker in self.list_trader:
