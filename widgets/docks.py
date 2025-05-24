@@ -34,7 +34,7 @@ class DockTrader(QDockWidget):
         layout.setAlignment(
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
-        layout.setSpacing(5)
+        layout.setSpacing(2)
 
         base.setLayout(layout)
 
