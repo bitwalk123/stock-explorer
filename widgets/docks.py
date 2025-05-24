@@ -26,6 +26,7 @@ class DockTrader(QDockWidget):
         self.setFeatures(
             QDockWidget.DockWidgetFeature.NoDockWidgetFeatures
         )
+        self.setTitleBarWidget(QWidget())
 
         base = QWidget()
         self.setWidget(base)
