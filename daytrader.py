@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import sys
 import time
 
@@ -14,7 +15,7 @@ else:
 from PySide6.QtCore import (
     QDateTime,
     QThread,
-    QTimer, )
+    QTimer, QDate, QTime, )
 from PySide6.QtGui import QIcon, QCloseEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -24,9 +25,8 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.log import setup_logging
-from funcs.tide import get_datetime_today
+from funcs.tide import get_datetime_today, get_hms
 from structs.res import AppRes, YMD
-from modules.reviewer import ExcelReviewer
 from modules.trader import TraderUnit, TraderUnitDebug
 from widgets.layouts import VBoxLayoutTrader
 from widgets.sbars import StatusBarDebug
@@ -202,8 +202,33 @@ class DayTrader(QMainWindow):
         self.statusbar.showMessage("Excelファイルの読み込みが完了しました！", 5000)  # 5秒間表示
         self.statusbar.setText("読み込み完了")
 
-        review = ExcelReviewer(self.list_ticker, dict_sheet, ymd)
-        review.plot()
+        pattern = re.compile(r"^tick_(.+)$")
+        day_target = QDate(ymd.year, ymd.month, ymd.day)
+
+        list_tick = list()
+        for name_sheet in dict_sheet.keys():
+            if name_sheet != "Cover":
+                list_tick.append(name_sheet)
+
+        for name_tick, ticker in zip(list_tick, self.list_ticker):
+            self.logger.info(f"ワークシート '{name_tick}'")
+            df = dict_sheet[name_tick]
+            dt_start = QDateTime(day_target, QTime(9, 0, 0))
+            dt_end = QDateTime(day_target, QTime(15, 30, 0))
+            ticker.setTimeRange(dt_start, dt_end)
+
+            list_hms = [get_hms(str(t)) for t in df["Time"]]
+            list_dt = [QDateTime(day_target, QTime(hms.hour, hms.minute, hms.second)) for hms in list_hms]
+
+            m = pattern.match(name_tick)
+            if m:
+                code = m.group(1)
+            else:
+                code = "Unknown"
+            ticker.setTitle(code)
+
+            for dt, y in zip(list_dt, df["Price"]):
+                ticker.appendPoint(dt, y)
 
     def on_update_data(self):
         for ticker in self.list_ticker:
