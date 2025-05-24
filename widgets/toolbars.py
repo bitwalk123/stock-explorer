@@ -2,7 +2,7 @@ import os
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QToolBar, QStyle
+from PySide6.QtWidgets import QToolBar, QStyle, QFileDialog
 
 from structs.res import AppRes
 from widgets.buttons import ToolButtonFolder
@@ -79,16 +79,16 @@ class ToolBarDayTrader(QToolBar):
         self.addAction(action_open)
 
     def on_file_dialog_open(self):
-        dialog = FileDialogExcel(self.res)
-        if not dialog.exec():
-            return
-
+        file_excel = QFileDialog.getOpenFileName(
+            self,
+            "Open File",
+            self.res.dir_excel,
+            "Excel Files (*.xlsx *.xlsm)"
+        )
         # ----------------------------------
-        # 🧿 選択されたファイルが存在して入れば通知
+        # 🧿 選択されたファイルを通知
         # ----------------------------------
-        file_excel = dialog.selectedFiles()[0]
-        if os.path.isfile(file_excel):
-            self.fileSelected.emit(file_excel)
+        self.fileSelected.emit(file_excel[0])
 
 
 class ToolBarTrader(ToolBar):
