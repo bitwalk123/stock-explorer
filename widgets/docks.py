@@ -44,7 +44,6 @@ class DockTrader(QDockWidget):
         # 売買用ボタンの行
         row_buysell = Widget()
         layout.addWidget(row_buysell)
-
         layout_buysell = HBoxLayout()
         row_buysell.setLayout(layout_buysell)
 
@@ -75,7 +74,6 @@ class DockTrader(QDockWidget):
         # その他ツール用フレーム
         row_tool = Frame()
         layout.addWidget(row_tool)
-
         layout_tool = HBoxLayout()
         row_tool.setLayout(layout_tool)
 

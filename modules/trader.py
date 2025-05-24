@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QMainWindow
 
 from structs.res import AppRes
 from widgets.docks import DockTrader
-from widgets.toolbars import ToolBarTrader
 from widgets.views import TickView
 
 

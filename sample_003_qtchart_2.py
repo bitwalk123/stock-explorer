@@ -20,7 +20,7 @@ class Example(QMainWindow):
         self.resize(1000, 500)
 
         toolbar = ToolBarTick(res)
-        toolbar.fileSelected.connect(self.on_file_selected)
+        toolbar.excelSelected.connect(self.on_file_selected)
         self.addToolBar(toolbar)
 
         self.view = view = TickViewOld()

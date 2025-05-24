@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QMessageBox,
-    QWidget,
+    QWidget, QFileDialog,
 )
 
 from funcs.log import setup_logging
@@ -31,14 +31,14 @@ from modules.trader import TraderUnit, TraderUnitDebug
 from widgets.layouts import VBoxLayoutTrader
 from widgets.sbars import StatusBarDebug
 from widgets.toolbars import ToolBarDayTrader
-from worker.xlloader import ExcelLoader
+from modules.xlloader import ExcelLoader
 
 
 class DayTrader(QMainWindow):
     __app_name__ = "DayTrader"
     __version__ = "0.1.0"
 
-    def __init__(self, options:list = None):
+    def __init__(self, options: list = None):
         super().__init__()
         global debug
         # __name__ を指定することで、このモジュール固有のロガーを取得
@@ -73,11 +73,11 @@ class DayTrader(QMainWindow):
         self.list_ticker = list_ticker = list()
 
         if debug:
-            self.excel_loader = None
-            self.excel_thread = None
+            self.xl_loader = None
+            self.xl_thread = None
 
             toolbar = ToolBarDayTrader(res)
-            toolbar.fileSelected.connect(self.on_load_excel)
+            toolbar.openClicked.connect(self.on_load_excel)
             self.addToolBar(toolbar)
 
             self.statusbar = statusbar = StatusBarDebug()
@@ -167,26 +167,35 @@ class DayTrader(QMainWindow):
         QMessageBox.critical(self, "エラー", message)
         self.statusbar.setValue(0)  # エラー時はプログレスバーをリセット
 
-    def on_load_excel(self, excel_path: str):
+    def on_load_excel(self):
         """
         [debug] Excel ファイルの読み込み
-        :return:
         """
-        self.excel_thread = QThread()
-        self.excel_loader = ExcelLoader(excel_path)
-        self.excel_loader.moveToThread(self.excel_thread)
+        excel_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Open File",
+            self.res.dir_excel,
+            "Excel Files (*.xlsx *.xlsm)"
+        )
+        if excel_path == "":
+            return
+
+        # Excel を読み込むスレッド処理
+        self.xl_thread = QThread()
+        self.xl_loader = ExcelLoader(excel_path)
+        self.xl_loader.moveToThread(self.xl_thread)
 
         # シグナルとスロットの接続
-        self.excel_thread.started.connect(self.excel_loader.run)
-        self.excel_loader.progressUpdated.connect(self.update_progress)
-        self.excel_loader.finishedLoading.connect(self.on_finished_loading)
-        self.excel_loader.errorOccurred.connect(self.on_error)
-        self.excel_loader.finishedLoading.connect(self.excel_thread.quit)  # 処理完了時にスレッドを終了
-        self.excel_loader.errorOccurred.connect(self.excel_thread.quit)  # エラー時にもスレッドを終了
-        self.excel_thread.finished.connect(self.excel_thread.deleteLater)  # スレッドオブジェクトの削除
+        self.xl_thread.started.connect(self.xl_loader.run)
+        self.xl_loader.progressUpdated.connect(self.update_progress)
+        self.xl_loader.finishedLoading.connect(self.on_finished_loading)
+        self.xl_loader.errorOccurred.connect(self.on_error)
+        self.xl_loader.finishedLoading.connect(self.xl_thread.quit)  # 処理完了時にスレッドを終了
+        self.xl_loader.errorOccurred.connect(self.xl_thread.quit)  # エラー時にもスレッドを終了
+        self.xl_thread.finished.connect(self.xl_thread.deleteLater)  # スレッドオブジェクトの削除
 
         # スレッドを開始
-        self.excel_thread.start()
+        self.xl_thread.start()
 
     def on_finished_loading(self, dict_sheet: dict, ymd: YMD):
         self.statusbar.setValue(100)

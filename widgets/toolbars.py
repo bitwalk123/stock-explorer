@@ -37,7 +37,7 @@ class ToolBarMain(QToolBar):
 
 
 class ToolBarTick(QToolBar):
-    fileSelected = Signal(str)
+    excelSelected = Signal()
 
     def __init__(self, res: AppRes):
         super().__init__()
@@ -58,11 +58,11 @@ class ToolBarTick(QToolBar):
         # ----------------------------------
         file_excel = dialog.selectedFiles()[0]
         if os.path.isfile(file_excel):
-            self.fileSelected.emit(file_excel)
+            self.excelSelected.emit(file_excel)
 
 
 class ToolBarDayTrader(QToolBar):
-    fileSelected = Signal(str)
+    openClicked = Signal()
 
     def __init__(self, res: AppRes):
         super().__init__()
@@ -79,38 +79,15 @@ class ToolBarDayTrader(QToolBar):
         self.addAction(action_open)
 
     def on_file_dialog_open(self):
+        """
         file_excel = QFileDialog.getOpenFileName(
             self,
             "Open File",
             self.res.dir_excel,
             "Excel Files (*.xlsx *.xlsm)"
         )
+        """
         # ----------------------------------
         # 🧿 選択されたファイルを通知
         # ----------------------------------
-        self.fileSelected.emit(file_excel[0])
-
-
-class ToolBarTrader(ToolBar):
-    saveClicked = Signal()
-
-    def __init__(self, res: AppRes):
-        super().__init__()
-        self.res = res
-        self.setStyleSheet("QToolBar {margin: 1}")
-        self.setFloatable(False)
-        self.setMovable(False)
-
-        action_save = QAction(
-            self.style().standardIcon(QStyle.StandardPixmap.SP_DialogSaveButton),
-            'チャートを画像で保存',
-            self
-        )
-        action_save.triggered.connect(self.on_save)
-        self.addAction(action_save)
-
-    def on_save(self):
-        # ---------------------------------
-        # 🧿 保存ボタンがクリックされたことを通知
-        # ---------------------------------
-        self.saveClicked.emit()
+        self.openClicked.emit()
