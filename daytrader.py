@@ -252,6 +252,9 @@ class DayTrader(QMainWindow):
 
             QApplication.processEvents()
 
+        self.statusbar.setValue(0)
+        self.statusbar.setText("プロット完了")
+
     def on_update_data(self):
         for ticker in self.list_trader:
             self.read_excel_with_xlwings(ticker)
