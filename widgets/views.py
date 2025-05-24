@@ -2,6 +2,7 @@ import logging
 import math
 import os
 
+import numpy as np
 from PySide6.QtCharts import (
     QChartView,
 )
@@ -63,10 +64,21 @@ class TickView(QChartView):
         self.series_tick.append(dt.toMSecsSinceEpoch(), y)
         self.update_y_axis(y)
 
+    def appendPoints(self, array_x: np.array, array_y: np.array):
+        self.series_tick.appendNp(array_x, array_y)
+        y_min = np.min(array_y)
+        y_max = np.max(array_y)
+        self.axis_y.setRange(y_min, y_max)
+
     def addLastCloseLine(self, y: float):
         self.series_lastclose.append(self.dt_start.toMSecsSinceEpoch(), y)
         self.series_lastclose.append(self.dt_end.toMSecsSinceEpoch(), y)
         self.update_y_axis(y)
+
+    def clear(self):
+        self.series_tick.clear()
+        self.series_lastclose.clear()
+        self.axis_y.setRange(0, 1)
 
     def getDateYMD(self) -> str:
         try:

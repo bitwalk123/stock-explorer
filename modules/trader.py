@@ -1,5 +1,6 @@
 import logging
 
+import numpy as np
 from PySide6.QtCore import QDateTime, Qt
 from PySide6.QtWidgets import QMainWindow
 
@@ -30,6 +31,12 @@ class TraderUnit(QMainWindow):
     def appendPoint(self, dt: QDateTime, y: float):
         self.chart_view.appendPoint(dt, y)
         self.dock.setPrice(y)
+
+    def appendPoints(self, array_x: np.array, array_y: np.array):
+        self.chart_view.appendPoints(array_x, array_y)
+
+    def clear(self):
+        self.chart_view.clear()
 
     def getRow(self) -> int:
         return self.row

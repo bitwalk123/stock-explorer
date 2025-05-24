@@ -4,6 +4,8 @@ import re
 import sys
 import time
 
+import numpy as np
+
 if sys.platform == "win32":
     import xlwings as xw
     from pywintypes import com_error  # Windows 固有のライブラリ
@@ -25,7 +27,7 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.log import setup_logging
-from funcs.tide import get_datetime_today, get_hms
+from funcs.tide import get_datetime_today, get_hms, get_yyyy_mm_dd
 from structs.res import AppRes, YMD
 from modules.trader import TraderUnit, TraderUnitDebug
 from widgets.layouts import VBoxLayoutTrader
@@ -70,7 +72,7 @@ class DayTrader(QMainWindow):
         base.setLayout(layout)
 
         # ticker インスタンスを保持するリスト
-        self.list_ticker = list_ticker = list()
+        self.list_trader = list_trader = list()
 
         if debug:
             self.xl_loader = None
@@ -85,9 +87,9 @@ class DayTrader(QMainWindow):
 
             for num in range(3):
                 row = num + 1
-                ticker = TraderUnitDebug(row, res)
-                layout.addWidget(ticker)
-                list_ticker.append(ticker)
+                trader = TraderUnitDebug(row, res)
+                layout.addWidget(trader)
+                list_trader.append(trader)
         else:
             # Excelシートから xlwings でデータを読み込むときの試行回数
             self.max_retries = 3  # 最大リトライ回数
@@ -118,18 +120,18 @@ class DayTrader(QMainWindow):
                 row = num + 1
 
                 # 指定銘柄
-                ticker = TraderUnit(row, res)
+                trader = TraderUnit(row, res)
                 # チャートのタイトル
                 title = self.get_chart_title(row)
-                ticker.setTitle(title)
+                trader.setTitle(title)
                 # X軸の範囲
-                ticker.setTimeRange(dict_dt["start"], dict_dt["end"])
+                trader.setTimeRange(dict_dt["start"], dict_dt["end"])
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
-                ticker.addLastCloseLine(p_lastclose)
+                trader.addLastCloseLine(p_lastclose)
 
-                layout.addWidget(ticker)
-                list_ticker.append(ticker)
+                layout.addWidget(trader)
+                list_trader.append(trader)
 
             # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_
             # タイマー
@@ -204,34 +206,47 @@ class DayTrader(QMainWindow):
 
         pattern = re.compile(r"^tick_(.+)$")
         day_target = QDate(ymd.year, ymd.month, ymd.day)
+        self.logger.info(f"取引日: {get_yyyy_mm_dd(day_target)}")
 
         list_tick = list()
         for name_sheet in dict_sheet.keys():
             if name_sheet != "Cover":
                 list_tick.append(name_sheet)
 
-        for name_tick, ticker in zip(list_tick, self.list_ticker):
+        for name_tick, trader in zip(list_tick, self.list_trader):
             self.logger.info(f"ワークシート '{name_tick}'")
-            df = dict_sheet[name_tick]
-            dt_start = QDateTime(day_target, QTime(9, 0, 0))
-            dt_end = QDateTime(day_target, QTime(15, 30, 0))
-            ticker.setTimeRange(dt_start, dt_end)
 
-            list_hms = [get_hms(str(t)) for t in df["Time"]]
-            list_dt = [QDateTime(day_target, QTime(hms.hour, hms.minute, hms.second)) for hms in list_hms]
+            # データをクリア
+            trader.clear()
 
             m = pattern.match(name_tick)
             if m:
                 code = m.group(1)
             else:
                 code = "Unknown"
-            ticker.setTitle(code)
+            trader.setTitle(code)
 
-            for dt, y in zip(list_dt, df["Price"]):
-                ticker.appendPoint(dt, y)
+            # ティックデータのデータフレーム
+            df = dict_sheet[name_tick]
+
+            # x軸（時間軸）の範囲（市場の開場時間）
+            dt_start = QDateTime(day_target, QTime(9, 0, 0))
+            dt_end = QDateTime(day_target, QTime(15, 30, 0))
+            trader.setTimeRange(dt_start, dt_end)
+
+            # 時間データを日付付きの QDateTime 型データへ変換
+            list_hms = [get_hms(str(t)) for t in df["Time"]]
+            list_dt = [
+                QDateTime(day_target, QTime(hms.hour, hms.minute, hms.second))
+                for hms in list_hms
+            ]
+
+            # チャートへデータを一つづつプロット
+            for dt, y in zip(list_dt, df['Price']):
+                trader.appendPoint(dt, y)
 
     def on_update_data(self):
-        for ticker in self.list_ticker:
+        for ticker in self.list_trader:
             self.read_excel_with_xlwings(ticker)
 
     def read_excel_with_xlwings(self, ticker: TraderUnit):
