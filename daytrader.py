@@ -175,7 +175,7 @@ class DayTrader(QMainWindow):
             self.tick_data_not_saved = False
 
     def save_tick_data(self):
-        name_excel = os.path.join(self.res.dir_excel, f"trader_{self.dict_dt["date_str"].xlsx}")
+        name_excel = os.path.join(self.res.dir_excel, f"trader_{self.dict_dt["date_str"]}.xlsx")
         with pd.ExcelWriter(name_excel) as writer:
             for trader in self.list_trader:
                 trader: TraderUnit
