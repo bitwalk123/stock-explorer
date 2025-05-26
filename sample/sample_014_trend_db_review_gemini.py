@@ -235,7 +235,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # データを読み込むデータベースファイル名
-    db_file = "trading_data.db"
+    db_file = "../trading_data.db"
 
     # アプリケーションウィンドウの作成と表示
     window = ChartReviewApp(db_file_path=db_file)

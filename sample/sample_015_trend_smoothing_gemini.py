@@ -117,7 +117,7 @@ class RealtimeTrendChart(QMainWindow):
         self.x_axis_end_msec = self.x_axis_end_datetime.toMSecsSinceEpoch()
 
         # CSVデータの読み込みをこれらの属性が初期化された後に行う
-        self.load_csv_data("sample.csv")
+        self.load_csv_data("../sample.csv")
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_chart)
@@ -309,7 +309,7 @@ class RealtimeTrendChart(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    csv_filename = "sample.csv"
+    csv_filename = "../sample.csv"
     if not os.path.exists(csv_filename):
         print(f"'{csv_filename}' が見つかりません。テストデータを生成します。")
         with open(csv_filename, 'w', newline='') as f:

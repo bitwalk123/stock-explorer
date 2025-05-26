@@ -65,7 +65,6 @@ def get_yyyy_mm_dd(qdate: QDate) -> str:
     return f"{qdate.year():04}-{qdate.month():02}-{qdate.day():02}"
 
 
-
 def get_yyyymmdd(qdate: QDate) -> str:
     """
     QDate オブジェクトから YYYYMMDD の文字列を生成
@@ -79,6 +78,7 @@ def get_yyyymmdd(qdate: QDate) -> str:
     return date_target
     """
     return f"{qdate.year():04}{qdate.month():02}{qdate.day():02}"
+
 
 def remove_tz_from_index(df: pd.DataFrame):
     """
@@ -97,7 +97,7 @@ def get_time_str(dt: pd.Timestamp) -> str:
     :param dt:
     :return:
     """
-    #return "{:0=2}:{:0=2}:{:0=2}".format(dt.hour, dt.minute, dt.second)
+    # return "{:0=2}:{:0=2}:{:0=2}".format(dt.hour, dt.minute, dt.second)
     return f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}"
 
 
@@ -156,3 +156,38 @@ def get_hms(time_str: str) -> HMS:
         hms.minute = 0
         hms.second = 0
     return hms
+
+
+def create_qdatetime_and_get_timestamp_ms(date_str: str, time_str: str) -> int:
+    """
+    指定された日付文字列と時刻文字列から QDateTime インスタンスを生成し、
+    そのミリ秒単位のタイムスタンプ (Unix epoch からのミリ秒数) を int で返します。
+    この関数は、ローカルタイムゾーンでパースします。
+
+    created by Google Gemini
+
+    Args:
+        date_str (str): 日付を表す文字列 (例: "2025-04-01")
+        time_str (str): 時刻を表す文字列 (例: "09:00:01")
+
+    Returns:
+        int: 生成された QDateTime インスタンスのミリ秒単位のタイムスタンプ (Unix epoch からのミリ秒数)
+    """
+    # 日付と時刻の文字列を結合
+    datetime_str = f"{date_str} {time_str}"
+
+    # QDateTime.fromString() を使用して QDateTime インスタンスを生成
+    # タイムゾーンを明示しない場合、システムのローカルタイムゾーンが使用されます。
+    qdatetime_instance = QDateTime.fromString(datetime_str, "yyyy-MM-dd HH:mm:ss")
+
+    # 正しくパースできたかを確認
+    if not qdatetime_instance.isValid():
+        print(f"エラー: 日付/時刻文字列 '{datetime_str}' のパースに失敗しました。")
+        # int を返すので、エラー時は通常 -1 などとします。
+        return -1
+
+    # タイムスタンプをミリ秒で取得
+    # toMSecsSinceEpoch() は Unix epoch (1970-01-01 00:00:00 UTC) からのミリ秒数を qint64 (Pythonではint) で返します。
+    timestamp_ms = qdatetime_instance.toMSecsSinceEpoch()
+
+    return timestamp_ms

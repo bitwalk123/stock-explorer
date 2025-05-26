@@ -1,7 +1,11 @@
 backports.tarfile
+fqdn
 importlib-metadata
 inflect
+isoduration
 jaraco.collections
+jsonpointer
+jupyterlab
 mplfinance
 odfpy
 openpyxl
@@ -9,7 +13,10 @@ pip-chill
 pip-review
 pyside6
 scipy
+tinycss2
 tomli
+uri-template
+webcolors
 xlrd
 xlwings
 yfinance

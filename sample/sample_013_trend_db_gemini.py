@@ -393,8 +393,8 @@ class RealtimeTrendChart(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    csv_file = "sample.csv"
-    db_file = "trading_data.db"
+    csv_file = "../sample.csv"
+    db_file = "../trading_data.db"
 
     window = RealtimeTrendChart(csv_file_path=csv_file, db_file_path=db_file)
     window.show()
