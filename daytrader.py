@@ -21,7 +21,7 @@ from PySide6.QtCore import (
     QTime,
     QTimer,
 )
-from PySide6.QtGui import QIcon, QCloseEvent
+from PySide6.QtGui import QCloseEvent, QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -63,7 +63,7 @@ class DayTrader(QMainWindow):
             for option in options:
                 if option == "debug":
                     debug = True
-                    self.logger.info(f"{__name__} is executed as DEBUG mode!")
+                    self.logger.info(f"{__name__} executed as DEBUG mode!")
 
         self.res = res = AppRes()
         self.dict_dt = dict()
@@ -87,7 +87,7 @@ class DayTrader(QMainWindow):
         self.list_trader = list_trader = list()
 
         if debug:
-            self.logger.info(f"{__name__} is executed as DEBUG mode on Non-Windows platform!")
+            self.logger.info(f"{__name__} executed as DEBUG mode on Non-Windows platform!")
             self.xl_loader = None
             self.xl_thread = None
 
@@ -167,7 +167,7 @@ class DayTrader(QMainWindow):
             timer.timeout.connect(self.on_update_data)
             timer.setInterval(1000)
             self.timer.start()
-            self.logger.info("Data update timer started.")
+            self.logger.info(f"{__name__} data update timer started.")
 
     def append_chart_data(self, ticker: TraderUnit, y: float):
         dt = QDateTime.currentDateTime()
@@ -187,7 +187,7 @@ class DayTrader(QMainWindow):
         for trader in self.list_trader:
             df = trader.getDataSet()
             if len(df) == 0:
-                self.logger.info("no tick data!")
+                self.logger.info(f"{__name__} no tick data!")
                 return False
             name_sheet = trader.getSheetName()
             dict_df[name_sheet] = df
@@ -200,9 +200,9 @@ class DayTrader(QMainWindow):
                 for name_sheet in dict_df.keys():
                     df = dict_df[name_sheet]
                     df.to_excel(writer, sheet_name=name_sheet, index=False)
-            self.logger.info(f"データが {name_excel} に保存されました。")
+            self.logger.info(f"{__name__} データが {name_excel} に保存されました。")
         except ValueError as e:
-            self.logger.error(f"Error occured!: {e}")
+            self.logger.error(f"{__name__} error occured!: {e}")
 
     def closeEvent(self, event: QCloseEvent):
         msg = "終了前にデータを保存しますか？"
@@ -210,14 +210,14 @@ class DayTrader(QMainWindow):
         ret = dialog.exec()
 
         if ret == QMessageBox.StandardButton.Yes:
-            self.logger.info("終了前にデータを保存します。")
+            self.logger.info(f"{__name__} 終了前にデータを保存します。")
             flag_success = True
 
             dict_df = dict()
             for trader in self.list_trader:
                 df = trader.getDataSet()
                 if len(df) == 0:
-                    self.logger.info("no tick data!")
+                    self.logger.info(f"{__name__} no tick data!")
                     flag_success = False
                     break
                 name_sheet = trader.getSheetName()
@@ -234,13 +234,13 @@ class DayTrader(QMainWindow):
                     "Excel file (*.xlsx)"
                 )
                 if name_excel == "":
-                    self.logger.info("データの保存はキャンセルされました。")
+                    self.logger.info(f"{__name__} データの保存はキャンセルされました。")
                 else:
                     self.save_tick_data(name_excel, dict_df)
         else:
-            self.logger.info("データを保存せずに終了します。")
+            self.logger.info(f"{__name__} データを保存せずに終了します。")
 
-        self.logger.info(f"{self.__app_name__} stopped and closed.")
+        self.logger.info(f"{__name__} stopped and closed.")
         event.accept()
 
     def get_last_close(self, row: int) -> float:
@@ -261,7 +261,7 @@ class DayTrader(QMainWindow):
             self,
             "Open File",
             self.res.dir_excel,
-            "Excel Files (*.xlsx *.xlsm)"
+            "Excel File (*.xlsx)"
         )
         if excel_path == "":
             return
@@ -353,16 +353,16 @@ class DayTrader(QMainWindow):
                 # com_error は Windows 固有
                 if attempt < self.max_retries - 1:
                     self.logger.warning(
-                        f"COM Error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries}) Error: {e}"
+                        f"{__name__} COM error occurred, retrying... (Attempt {attempt + 1}/{self.max_retries}) Error: {e}"
                     )
                     time.sleep(self.retry_delay)
                 else:
                     self.logger.error(
-                        f"COM Error occurred after {self.max_retries} attempts. Giving up."
+                        f"{__name__} COM error occurred after {self.max_retries} attempts. Giving up."
                     )
                     raise  # 最終的に失敗したら例外を再発生させる
             except Exception as e:
-                self.logger.exception(f"An unexpected error occurred: {e}")
+                self.logger.exception(f"{__name__} an unexpected error occurred: {e}")
                 raise  # その他の例外はそのまま発生させる
         # ... (読み込んだ株価を使ったトレンドチャート作成の処理) ...
 
