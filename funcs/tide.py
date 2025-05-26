@@ -197,3 +197,4 @@ def create_qdatetime_and_get_timestamp_ms(date_str: str, time_str: str) -> int:
     timestamp_ms = qdatetime_instance.toMSecsSinceEpoch()
 
     return timestamp_ms
+
