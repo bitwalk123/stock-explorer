@@ -130,7 +130,7 @@ def get_datetime_today() -> dict:
 
 def get_ymd(excel_path: str) -> YMD:
     ymd = YMD()
-    pattern = re.compile(r".+_([0-9]{4})([0-9]{2})([0-9]{2})\.xlsm")
+    pattern = re.compile(r".+_([0-9]{4})([0-9]{2})([0-9]{2})\.xlsx")
     m = pattern.match(excel_path)
     if m:
         ymd.year = int(m.group(1))

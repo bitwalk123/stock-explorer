@@ -19,4 +19,5 @@ uri-template
 webcolors
 xlrd
 xlwings
+xlwt
 yfinance

@@ -45,11 +45,13 @@ class DayTrader(QMainWindow):
     def __init__(self, options: list = None):
         super().__init__()
         global debug
+
         # __name__ を指定することで、このモジュール固有のロガーを取得
         # これはルートロガーの子として扱われ、ルートロガーのハンドラを継承する
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"{__name__} initialized.")
 
+        # コンソールから起動した際のオプション・チェック
         if len(options) > 0:
             for option in options:
                 if option == "debug":
@@ -77,6 +79,7 @@ class DayTrader(QMainWindow):
         self.list_trader = list_trader = list()
 
         if debug:
+            self.logger.info(f"{__name__} is executed as DEBUG mode on Non-Windows platform!")
             self.xl_loader = None
             self.xl_thread = None
 
@@ -218,12 +221,9 @@ class DayTrader(QMainWindow):
         for trader in self.list_trader:
             # データをクリア
             trader.clear()
-        QApplication.processEvents()
 
         for name_tick, trader in zip(list_tick, self.list_trader):
-            self.logger.info(f"ワークシート '{name_tick}'")
-
-
+            # self.logger.info(f"ワークシート '{name_tick}'")
             m = pattern.match(name_tick)
             if m:
                 code = m.group(1)
@@ -239,17 +239,10 @@ class DayTrader(QMainWindow):
             dt_end = QDateTime(day_target, QTime(15, 30, 0))
             trader.setTimeRange(dt_start, dt_end)
 
-            # 時間データを日付付きの QDateTime 型データへ変換
-            list_hms = [get_hms(str(t)) for t in df["Time"]]
-            list_dt = [
-                QDateTime(day_target, QTime(hms.hour, hms.minute, hms.second))
-                for hms in list_hms
-            ]
-
             # チャートへデータを一つづつプロット
-            for dt, y in zip(list_dt, df['Price']):
-                trader.appendPoint(dt, y)
-
+            for x, y in zip(df['Time'], df['Price']):
+                # ログデータの時刻はミリ秒単位のタイムスタンプ
+                trader.appendPointTimestamp(x, y)
             QApplication.processEvents()
 
         self.statusbar.setValue(0)

@@ -32,6 +32,10 @@ class TraderUnit(QMainWindow):
         self.chart_view.appendPoint(dt, y)
         self.dock.setPrice(y)
 
+    def appendPointTimestamp(self, x: int, y: float):
+        self.chart_view.appendPointTimestamp(x, y)
+        self.dock.setPrice(y)
+
     def appendPoints(self, array_x: np.array, array_y: np.array):
         self.chart_view.appendPoints(array_x, array_y)
 

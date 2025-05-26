@@ -64,6 +64,10 @@ class TickView(QChartView):
         self.series_tick.append(dt.toMSecsSinceEpoch(), y)
         self.update_y_axis(y)
 
+    def appendPointTimestamp(self, x: int, y: float):
+        self.series_tick.append(x, y)
+        self.update_y_axis(y)
+
     def appendPoints(self, array_x: np.array, array_y: np.array):
         self.series_tick.appendNp(array_x, array_y)
         y_min = np.min(array_y)
