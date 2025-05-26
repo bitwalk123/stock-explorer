@@ -3,6 +3,7 @@ import math
 import os
 
 import numpy as np
+import pandas as pd
 from PySide6.QtCharts import (
     QChartView,
 )
@@ -23,7 +24,7 @@ from widgets.charts import (
 )
 
 
-class TickView(QChartView):
+class ChartView(QChartView):
     def __init__(self, res: AppRes):
         super().__init__()
         self.logger = logging.getLogger(__name__)
@@ -91,6 +92,16 @@ class TickView(QChartView):
         except AttributeError as e:
             self.logger.error(e)
             return "00000000"
+
+    def getDataSet(self) -> pd.DataFrame:
+        list_x = list()
+        list_y = list()
+
+        for point in self.series_tick.points():
+            list_x.append(point.x())
+            list_y.append(point.y())
+
+        return pd.DataFrame({"Time": list_x, "Price": list_y})
 
     def getTitle(self) -> str:
         return self.title

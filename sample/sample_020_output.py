@@ -44,22 +44,22 @@ class TrendChartApp(QMainWindow):
         self.chart.addSeries(self.series)
         self.chart.setTitle("株価トレンド")
         self.chart.legend().setVisible(True)
-        self.chart.legend().setAlignment(Qt.AlignBottom)
+        self.chart.legend().setAlignment(Qt.AlignmentFlag.AlignBottom)
 
         axisX = QDateTimeAxis()
         axisX.setFormat("yyyy/MM/dd hh:mm:ss")
         axisX.setTitleText("時刻")
-        self.chart.addAxis(axisX, Qt.AlignBottom)
+        self.chart.addAxis(axisX, Qt.AlignmentFlag.AlignBottom)
         self.series.attachAxis(axisX)
 
         axisY = QValueAxis()
         axisY.setLabelFormat("%.2f")
         axisY.setTitleText("価格")
-        self.chart.addAxis(axisY, Qt.AlignLeft)
+        self.chart.addAxis(axisY, Qt.AlignmentFlag.AlignLeft)
         self.series.attachAxis(axisY)
 
         chart_view = QChartView(self.chart)
-        chart_view.setRenderHint(QPainter.Antialiasing)
+        chart_view.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         save_button = QPushButton("XLSX形式でデータを保存")
         save_button.clicked.connect(self.save_data_to_xlsx)

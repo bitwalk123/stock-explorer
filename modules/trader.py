@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QMainWindow
 
 from structs.res import AppRes
 from widgets.docks import DockTrader
-from widgets.views import TickView
+from widgets.views import ChartView
 
 
 class TraderUnit(QMainWindow):
@@ -15,10 +15,12 @@ class TraderUnit(QMainWindow):
         self.logger = logging.getLogger(__name__)
         # self.logger.info(f"{__name__} initialized.")
 
+        self.ticker_code = ""
+        self.name_sheet = ""
         self.res = res
         self.row = row
 
-        self.chart_view = chart_view = TickView(res)
+        self.chart_view = chart_view = ChartView(res)
         self.setCentralWidget(chart_view)
 
         self.dock = dock = DockTrader(res)
@@ -42,14 +44,29 @@ class TraderUnit(QMainWindow):
     def clear(self):
         self.chart_view.clear()
 
+    def getDataSet(self):
+        return self.chart_view.getDataSet()
+
     def getRow(self) -> int:
         return self.row
+
+    def getTickerCode(self) -> str:
+        return self.ticker_code
 
     def setRow(self, row: int):
         self.row = row
 
+    def setTickerCode(self, ticker_code: str):
+        self.ticker_code = ticker_code
+
     def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
         self.chart_view.setTimeRange(dt_start, dt_end)
+
+    def getSheetName(self) -> str:
+        return self.name_sheet
+
+    def setSheetName(self, name_sheet: str):
+        self.name_sheet = name_sheet
 
     def setTitle(self, title: str):
         self.chart_view.setTitle(title)

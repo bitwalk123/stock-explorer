@@ -4,6 +4,8 @@ import re
 import sys
 import time
 
+import pandas as pd
+
 if sys.platform == "win32":
     import xlwings as xw
     from pywintypes import com_error  # Windows 固有のライブラリ
@@ -29,7 +31,7 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.log import setup_logging
-from funcs.tide import get_datetime_today, get_hms, get_yyyy_mm_dd
+from funcs.tide import get_datetime_today, get_hms, get_yyyy_mm_dd, get_yyyymmdd
 from structs.res import AppRes, YMD
 from modules.trader import TraderUnit, TraderUnitDebug
 from widgets.layouts import VBoxLayoutTrader
@@ -59,6 +61,7 @@ class DayTrader(QMainWindow):
                     self.logger.info(f"{__name__} is executed as DEBUG mode!")
 
         self.res = res = AppRes()
+        self.dict_dt = dict()
 
         # ウィンドウ・タイトル
         icon = QIcon(os.path.join(res.dir_image, "trading.png"))
@@ -96,6 +99,9 @@ class DayTrader(QMainWindow):
                 layout.addWidget(trader)
                 list_trader.append(trader)
         else:
+            # ティックデータ保存フラグ
+            self.tick_data_not_saved = True
+
             # Excelシートから xlwings でデータを読み込むときの試行回数
             self.max_retries = 3  # 最大リトライ回数
             self.retry_delay = 0.1  # リトライ間の遅延（秒）
@@ -126,11 +132,22 @@ class DayTrader(QMainWindow):
 
                 # 指定銘柄
                 trader = TraderUnit(row, res)
+
+                # 銘柄コード
+                code = self.sheet[row, self.col_code].value
+                trader.setTickerCode(code)
+
+                # シート名（データ保存用）
+                trader.setSheetName(f"tick_{code}")
+
                 # チャートのタイトル
-                title = self.get_chart_title(row)
+                name = self.sheet[row, self.col_name].value
+                title = f"{name} ({code})"
                 trader.setTitle(title)
+
                 # X軸の範囲
                 trader.setTimeRange(dict_dt["start"], dict_dt["end"])
+
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
                 trader.addLastCloseLine(p_lastclose)
@@ -153,16 +170,30 @@ class DayTrader(QMainWindow):
             ticker.appendPoint(dt, y)
         elif self.dict_dt["start_2h"] <= dt <= self.dict_dt["start_ca"]:
             ticker.appendPoint(dt, y)
+        elif self.dict_dt["end"] < dt and self.tick_data_not_saved:
+            self.save_tick_data()
+            self.tick_data_not_saved = False
+
+    def save_tick_data(self):
+        name_excel = os.path.join(self.res.dir_excel, f"trader_{self.dict_dt["date_str"].xlsx}")
+        with pd.ExcelWriter(name_excel) as writer:
+            for trader in self.list_trader:
+                trader: TraderUnit
+                name_sheet = trader.getSheetName()
+                df = trader.getDataSet()
+                df.to_excel(writer, sheet_name=name_sheet, index=False)
 
     def closeEvent(self, event: QCloseEvent):
+        for trader in self.list_trader:
+            trader:TraderUnit
+            ticker_code = trader.getTickerCode()
+            if ticker_code != "":
+                print(self.dict_dt["date_str"])
+                print(ticker_code)
+                print(trader.getDataSet())
+
         self.logger.info(f"{self.__app_name__} stopped and closed.")
         event.accept()
-
-    def get_chart_title(self, row: int) -> str:
-        code = self.sheet[row, self.col_code].value
-        name = self.sheet[row, self.col_name].value
-        title = f"{name} ({code})"
-        return title
 
     def get_last_close(self, row: int) -> float:
         p_lastclose = self.sheet[row, self.col_lastclose].value
@@ -211,28 +242,31 @@ class DayTrader(QMainWindow):
 
         pattern = re.compile(r"^tick_(.+)$")
         day_target = QDate(ymd.year, ymd.month, ymd.day)
+        self.dict_dt["date_str"] = get_yyyymmdd(day_target)
         self.logger.info(f"取引日: {get_yyyy_mm_dd(day_target)}")
 
-        list_tick = list()
+        list_sheet = list()
         for name_sheet in dict_sheet.keys():
             if name_sheet != "Cover":
-                list_tick.append(name_sheet)
+                list_sheet.append(name_sheet)
 
         for trader in self.list_trader:
             # データをクリア
             trader.clear()
 
-        for name_tick, trader in zip(list_tick, self.list_trader):
-            # self.logger.info(f"ワークシート '{name_tick}'")
-            m = pattern.match(name_tick)
+        for name_sheet, trader in zip(list_sheet, self.list_trader):
+            trader: TraderUnit
+            trader.setSheetName(name_sheet)
+            m = pattern.match(name_sheet)
             if m:
-                code = m.group(1)
+                ticker_code = m.group(1)
             else:
-                code = "Unknown"
-            trader.setTitle(code)
+                ticker_code = "Unknown"
+            trader.setTickerCode(ticker_code)
+            trader.setTitle(ticker_code)
 
             # ティックデータのデータフレーム
-            df = dict_sheet[name_tick]
+            df = dict_sheet[name_sheet]
 
             # x軸（時間軸）の範囲（市場の開場時間）
             dt_start = QDateTime(day_target, QTime(9, 0, 0))

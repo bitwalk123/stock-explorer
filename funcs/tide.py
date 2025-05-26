@@ -4,7 +4,12 @@ import re
 
 import pandas as pd
 
-from PySide6.QtCore import QDate, QTimeZone, QDateTime, QTime
+from PySide6.QtCore import (
+    QDate,
+    QDateTime,
+    QTime,
+    QTimeZone,
+)
 
 from structs.res import YMD, HMS
 
@@ -125,6 +130,7 @@ def get_datetime_today() -> dict:
     dict_dt["start_2h"] = QDateTime(day_today, QTime(12, 30, 0))
     dict_dt["start_ca"] = QDateTime(day_today, QTime(15, 25, 0))
     dict_dt["end"] = QDateTime(day_today, QTime(15, 30, 0))
+    dict_dt["date_str"] = get_yyyymmdd(day_today)
     return dict_dt
 
 
