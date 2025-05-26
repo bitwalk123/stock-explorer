@@ -3,6 +3,7 @@ importlib-metadata
 inflect
 jaraco.collections
 mplfinance
+odfpy
 openpyxl
 pip-chill
 pip-review
