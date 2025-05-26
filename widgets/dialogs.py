@@ -34,3 +34,14 @@ class FileDialogExcel(QFileDialog):
             ]
         )
 
+
+class MsgBoxYesNo(QMessageBox):
+    def __init__(self, msg: str):
+        super().__init__()
+        self.setWindowTitle("警告")
+        self.setText("警告")
+        self.setInformativeText(msg)
+        self.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        self.setDefaultButton(QMessageBox.StandardButton.No)

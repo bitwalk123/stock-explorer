@@ -31,13 +31,18 @@ from PySide6.QtWidgets import (
 )
 
 from funcs.log import setup_logging
-from funcs.tide import get_datetime_today, get_hms, get_yyyy_mm_dd, get_yyyymmdd
+from funcs.tide import (
+    get_datetime_today,
+    get_yyyy_mm_dd,
+    get_yyyymmdd,
+)
 from structs.res import AppRes, YMD
 from modules.trader import TraderUnit, TraderUnitDebug
+from modules.xlloader import ExcelLoader
+from widgets.dialogs import MsgBoxYesNo
 from widgets.layouts import VBoxLayoutTrader
 from widgets.sbars import StatusBarDebug
 from widgets.toolbars import ToolBarDayTrader
-from modules.xlloader import ExcelLoader
 
 
 class DayTrader(QMainWindow):
@@ -100,7 +105,7 @@ class DayTrader(QMainWindow):
                 list_trader.append(trader)
         else:
             # ティックデータ保存フラグ
-            self.tick_data_not_saved = True
+            self.is_tick_data_saved = False
 
             # Excelシートから xlwings でデータを読み込むときの試行回数
             self.max_retries = 3  # 最大リトライ回数
@@ -170,27 +175,70 @@ class DayTrader(QMainWindow):
             ticker.appendPoint(dt, y)
         elif self.dict_dt["start_2h"] <= dt <= self.dict_dt["start_ca"]:
             ticker.appendPoint(dt, y)
-        elif self.dict_dt["end"] < dt and self.tick_data_not_saved:
-            self.save_tick_data()
-            self.tick_data_not_saved = False
+        elif self.dict_dt["end"] < dt and not self.is_tick_data_saved:
+            self.is_tick_data_saved = self.save_regular_tick_data()
 
-    def save_tick_data(self):
-        name_excel = os.path.join(self.res.dir_excel, f"trader_{self.dict_dt["date_str"]}.xlsx")
-        with pd.ExcelWriter(name_excel) as writer:
-            for trader in self.list_trader:
-                trader: TraderUnit
-                name_sheet = trader.getSheetName()
-                df = trader.getDataSet()
-                df.to_excel(writer, sheet_name=name_sheet, index=False)
+    def save_regular_tick_data(self):
+        name_excel = os.path.join(
+            self.res.dir_excel,
+            f"trader_{self.dict_dt["date_str"]}.xlsx"
+        )
+        dict_df = dict()
+        for trader in self.list_trader:
+            df = trader.getDataSet()
+            if len(df) == 0:
+                self.logger.info("no tick data!")
+                return False
+            name_sheet = trader.getSheetName()
+            dict_df[name_sheet] = df
+        self.save_tick_data(name_excel, dict_df)
+        return True
+
+    def save_tick_data(self, name_excel: str, dict_df: dict):
+        try:
+            with pd.ExcelWriter(name_excel) as writer:
+                for name_sheet in dict_df.keys():
+                    df = dict_df[name_sheet]
+                    df.to_excel(writer, sheet_name=name_sheet, index=False)
+            self.logger.info(f"データが {name_excel} に保存されました。")
+        except ValueError as e:
+            self.logger.error(f"Error occured!: {e}")
 
     def closeEvent(self, event: QCloseEvent):
-        for trader in self.list_trader:
-            trader:TraderUnit
-            ticker_code = trader.getTickerCode()
-            if ticker_code != "":
-                print(self.dict_dt["date_str"])
-                print(ticker_code)
-                print(trader.getDataSet())
+        msg = "終了前にデータを保存しますか？"
+        dialog = MsgBoxYesNo(msg)
+        ret = dialog.exec()
+
+        if ret == QMessageBox.StandardButton.Yes:
+            self.logger.info("終了前にデータを保存します。")
+            flag_success = True
+
+            dict_df = dict()
+            for trader in self.list_trader:
+                df = trader.getDataSet()
+                if len(df) == 0:
+                    self.logger.info("no tick data!")
+                    flag_success = False
+                    break
+                name_sheet = trader.getSheetName()
+                dict_df[name_sheet] = df
+
+            if flag_success:
+                # 保存ファイルの指定
+                name_excel = f"trader_{self.dict_dt["date_str"]}.xlsx"
+                name_excel, _ = QFileDialog.getSaveFileName(
+                    self,
+                    "Save File",
+                    "",
+                    name_excel,
+                    "Excel file (*.xlsx)"
+                )
+                if name_excel == "":
+                    self.logger.info("データの保存はキャンセルされました。")
+                else:
+                    self.save_tick_data(name_excel, dict_df)
+        else:
+            self.logger.info("データを保存せずに終了します。")
 
         self.logger.info(f"{self.__app_name__} stopped and closed.")
         event.accept()
