@@ -177,10 +177,10 @@ class ChartView(QChartView):
         y_min = self.axis_y.min()
         y_max = self.axis_y.max()
         if y_min == 0 and y_max == 1:
-            y_min = w_min - 1
-            y_max = w_max + 1
+            y_min = w_min - 5
+            y_max = w_max + 5
         elif w_min < y_min:
-            y_min = math.floor(w_min / 5) * 5
+            y_min = math.floor(w_min / 10) * 10
         elif y_max < w_max:
-            y_max = math.ceil(w_max / 5) * 5
+            y_max = math.ceil(w_max / 10) * 10
         self.axis_y.setRange(y_min, y_max)

@@ -204,7 +204,7 @@ class PSARSeries(QScatterSeries):
         super().__init__()
         # Parabolic SAR Series
         self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
-        self.setMarkerSize(5)  # 点のサイズ
+        self.setMarkerSize(2)  # 点のサイズ
         self.setPen(QPen(Qt.PenStyle.NoPen))
 
 
