@@ -20,7 +20,7 @@ from widgets.charts import (
     LastCloseSeries,
     MarketTimeAxis,
     PriceAxis,
-    PriceSeries,
+    PriceSeries, PSARBearSeries, PSARBullSeries,
 )
 
 
@@ -49,17 +49,29 @@ class ChartView(QChartView):
         self.series_lastclose = series_lastclose = LastCloseSeries()
         chart.addSeries(series_lastclose)
 
+        # Parabolic SAR Series（上昇トレンド用: 赤の点）
+        self.series_bull = series_bull = PSARBullSeries()
+        chart.addSeries(series_bull)
+
+        # Parabolic SAR Series（下降トレンド用: 青の点）
+        self.series_bear = series_bear = PSARBearSeries()
+        chart.addSeries(series_bear)
+
         # X軸（市場時間）
         self.axis_x = axis_x = MarketTimeAxis()
         chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
         series_tick.attachAxis(axis_x)
         series_lastclose.attachAxis(axis_x)
+        series_bull.attachAxis(axis_x)
+        series_bear.attachAxis(axis_x)
 
         # Y軸（株価）
         self.axis_y = axis_y = PriceAxis()
         chart.addAxis(axis_y, Qt.AlignmentFlag.AlignLeft)
         series_tick.attachAxis(axis_y)
         series_lastclose.attachAxis(axis_y)
+        series_bull.attachAxis(axis_y)
+        series_bear.attachAxis(axis_y)
 
     def appendPoint(self, dt: QDateTime, y: float):
         self.series_tick.append(dt.toMSecsSinceEpoch(), y)

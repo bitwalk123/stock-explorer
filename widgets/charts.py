@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import mplfinance as mpf
 import pandas as pd
 import yfinance as yf
-from PySide6.QtCharts import QChart, QLineSeries, QDateTimeAxis, QValueAxis
-from PySide6.QtCore import QMargins, QTime
+from PySide6.QtCharts import QChart, QLineSeries, QDateTimeAxis, QValueAxis, QScatterSeries
+from PySide6.QtCore import QMargins, QTime, Qt
 from PySide6.QtGui import QPen, QColor
 
 from matplotlib.backends.backend_qtagg import (
@@ -199,6 +199,26 @@ class LastCloseSeries(QLineSeries):
         pen = QPen(color)
         pen.setWidthF(0.5)
         self.setPen(pen)
+
+
+class PSARBullSeries(QScatterSeries):
+    def __init__(self):
+        super().__init__()
+        # Parabolic SAR Series （上昇トレンド用: 赤点）
+        self.setName("Up trend")
+        self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
+        self.setMarkerSize(5)  # 点のサイズ
+        self.setColor(QColor(Qt.GlobalColor.red))  # 赤色
+
+
+class PSARBearSeries(QScatterSeries):
+    def __init__(self):
+        super().__init__()
+        # Parabolic SAR Series （下降トレンド用: 青点）
+        self.setName("Down trend")
+        self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
+        self.setMarkerSize(5)  # 点のサイズ
+        self.setColor(QColor(Qt.GlobalColor.blue))  # 青色
 
 
 class MarketTimeAxis(QDateTimeAxis):
