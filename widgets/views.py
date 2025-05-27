@@ -159,22 +159,28 @@ class ChartView(QChartView):
         if flag_psar:
             # Parabolic SAR
             ret = self.psar.add(y)
+            y_psar = ret.psar
             if 0 < ret.trend:
-                self.series_bull.append(QPointF(x, ret.psar))
+                self.series_bull.append(QPointF(x, y_psar))
             elif ret.trend < 0:
-                self.series_bear.append(QPointF(x, ret.psar))
+                self.series_bear.append(QPointF(x, y_psar))
+        else:
+            y_psar = 0
+
+        if y_psar == 0:
+            w_min = y
+            w_max = y
+        else:
+            w_min = min(y, y_psar)
+            w_max = max(y, y_psar)
 
         y_min = self.axis_y.min()
         y_max = self.axis_y.max()
-
         if y_min == 0 and y_max == 1:
-            y_min = y - 1
-            y_max = y + 1
-        elif y < y_min:
-            y_min = math.floor(y - 1)
-        elif y_max < y:
-            y_max = math.ceil(y + 1)
-        else:
-            return
-
+            y_min = w_min - 1
+            y_max = w_max + 1
+        elif w_min < y_min:
+            y_min = math.floor(w_min / 5) * 5
+        elif y_max < w_max:
+            y_max = math.ceil(w_max / 5) * 5
         self.axis_y.setRange(y_min, y_max)

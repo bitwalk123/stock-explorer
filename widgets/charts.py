@@ -184,8 +184,7 @@ class PriceSeries(QLineSeries):
     def __init__(self):
         super().__init__()
         self.setPointsVisible(True)
-        color = QColor(64, 64, 64)
-        pen = QPen(color)
+        pen = QPen(QColor(Qt.GlobalColor.darkGray))
         pen.setWidthF(0.5)
         self.setPen(pen)
         self.setMarkerSize(0.75)
@@ -195,8 +194,7 @@ class LastCloseSeries(QLineSeries):
     def __init__(self):
         super().__init__()
         self.setPointsVisible(False)
-        color = QColor(255, 0, 0)
-        pen = QPen(color)
+        pen = QPen(QColor(Qt.GlobalColor.red))
         pen.setWidthF(0.5)
         self.setPen(pen)
 

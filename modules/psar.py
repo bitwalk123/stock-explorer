@@ -1,10 +1,10 @@
 class PSARObject:
     def __init__(self):
-        self.price = 0
-        self.trend = 0
-        self.ep = 0
-        self.af = -1  # AF は 0 以上の実数
-        self.psar = 0
+        self.price: float = 0.
+        self.trend: int = 0
+        self.ep: float = 0.
+        self.af: float = -1.  # AF は 0 以上の実数
+        self.psar: float = 0.
 
 
 class RealtimePSAR:
