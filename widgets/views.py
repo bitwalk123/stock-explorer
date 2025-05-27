@@ -9,18 +9,21 @@ from PySide6.QtCharts import (
 )
 from PySide6.QtCore import (
     QDateTime,
-    Qt,
+    Qt, QPointF,
 )
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QFileDialog
 
+from modules.psar import RealtimePSAR
 from structs.res import AppRes
 from widgets.charts import (
     Chart,
     LastCloseSeries,
     MarketTimeAxis,
     PriceAxis,
-    PriceSeries, PSARBearSeries, PSARBullSeries,
+    PriceSeries,
+    PSARBearSeries,
+    PSARBullSeries,
 )
 
 
@@ -31,6 +34,7 @@ class ChartView(QChartView):
         # self.logger.info(f"{__name__} initialized.")
 
         self.res = res
+        self.psar = RealtimePSAR()
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.title: None | str = None
@@ -74,12 +78,13 @@ class ChartView(QChartView):
         series_bear.attachAxis(axis_y)
 
     def appendPoint(self, dt: QDateTime, y: float):
-        self.series_tick.append(dt.toMSecsSinceEpoch(), y)
-        self.update_y_axis(y)
+        x = dt.toMSecsSinceEpoch()
+        self.series_tick.append(x, y)
+        self.update_y_axis(x, y)
 
     def appendPointTimestamp(self, x: int, y: float):
         self.series_tick.append(x, y)
-        self.update_y_axis(y)
+        self.update_y_axis(x, y)
 
     def appendPoints(self, array_x: np.array, array_y: np.array):
         self.series_tick.appendNp(array_x, array_y)
@@ -88,9 +93,11 @@ class ChartView(QChartView):
         self.axis_y.setRange(y_min, y_max)
 
     def addLastCloseLine(self, y: float):
-        self.series_lastclose.append(self.dt_start.toMSecsSinceEpoch(), y)
-        self.series_lastclose.append(self.dt_end.toMSecsSinceEpoch(), y)
-        self.update_y_axis(y)
+        x1 = self.dt_start.toMSecsSinceEpoch()
+        x2 = self.dt_end.toMSecsSinceEpoch()
+        self.series_lastclose.append(x1, y)
+        self.series_lastclose.append(x2, y)
+        self.update_y_axis(x1, y, False)
 
     def clear(self):
         self.series_tick.clear()
@@ -148,7 +155,15 @@ class ChartView(QChartView):
         self.title = title
         self.chart.setTitle(title)
 
-    def update_y_axis(self, y: float):
+    def update_y_axis(self, x: int, y: float, flag_psar=True):
+        if flag_psar:
+            # Parabolic SAR
+            ret = self.psar.add(y)
+            if 0 < ret.trend:
+                self.series_bull.append(QPointF(x, ret.psar))
+            elif ret.trend < 0:
+                self.series_bear.append(QPointF(x, ret.psar))
+
         y_min = self.axis_y.min()
         y_max = self.axis_y.max()
 

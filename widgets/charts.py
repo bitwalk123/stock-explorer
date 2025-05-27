@@ -201,23 +201,28 @@ class LastCloseSeries(QLineSeries):
         self.setPen(pen)
 
 
-class PSARBullSeries(QScatterSeries):
+class PSARSeries(QScatterSeries):
+    def __init__(self):
+        super().__init__()
+        # Parabolic SAR Series
+        self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
+        self.setMarkerSize(5)  # 点のサイズ
+        self.setPen(QPen(Qt.PenStyle.NoPen))
+
+
+class PSARBullSeries(PSARSeries):
     def __init__(self):
         super().__init__()
         # Parabolic SAR Series （上昇トレンド用: 赤点）
         self.setName("Up trend")
-        self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
-        self.setMarkerSize(5)  # 点のサイズ
         self.setColor(QColor(Qt.GlobalColor.red))  # 赤色
 
 
-class PSARBearSeries(QScatterSeries):
+class PSARBearSeries(PSARSeries):
     def __init__(self):
         super().__init__()
         # Parabolic SAR Series （下降トレンド用: 青点）
         self.setName("Down trend")
-        self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
-        self.setMarkerSize(5)  # 点のサイズ
         self.setColor(QColor(Qt.GlobalColor.blue))  # 青色
 
 
