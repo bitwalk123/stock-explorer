@@ -6,12 +6,19 @@ import time
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QVBoxLayout,
-    QWidget,
 )
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, Qt
 import pyqtgraph as pg
 from pyqtgraph import DateAxisItem
+
+
+class TrendGraph(pg.PlotWidget):
+    def __init__(self):
+        super().__init__(
+            axisItems={'bottom': DateAxisItem(orientation='bottom')}
+        )
+
+        self.showGrid(x=True, y=True, alpha=0.5)
 
 
 class Example(QMainWindow):
@@ -20,30 +27,30 @@ class Example(QMainWindow):
         self.setWindowTitle("リアルタイム風トレンドグラフ (PyQtGraph + PySide6)")
         self.setFixedSize(800, 600)
 
-        base = QWidget()
-        self.setCentralWidget(base)
-        layout = QVBoxLayout(base)
-
-        # DateAxisItem を使用 (変更なし)
-        self.chart = chart = pg.PlotWidget(
-            axisItems={'bottom': DateAxisItem(orientation='bottom')}
-        )
-        layout.addWidget(chart)
+        self.chart = chart = TrendGraph()
+        self.setCentralWidget(chart)
 
         self.start_time = time.time()  # time.time() は既にミリ秒精度を含むfloat
         self.end_time = self.start_time + 60  # 60秒後
-        self.chart.setXRange(self.start_time, self.end_time)
+        chart.setXRange(self.start_time, self.end_time)
 
-        self.chart.showGrid(x=True, y=True, alpha=0.5)
-
-        self.trend_line = self.chart.plot(pen=pg.mkPen(color=(0, 0, 0), width=1))
-        self.point_latest = self.chart.plot(
-            symbol='o',
-            symbolBrush=(255, 0, 0),
-            symbolPen=(128, 0, 0),
-            symbolSize=10,
-            pxMode=True
+        self.lastclose_line = pg.InfiniteLine(
+            pos=65,
+            angle=0,
+            pen=pg.mkPen(color=(255, 0, 0), width=1)
         )
+        self.chart.addItem(self.lastclose_line)
+
+        # self.trend_line = chart.plot(pen=pg.mkPen(color=(0, 0, 0), width=1))
+        self.trend_line = chart.plot(pen=pg.mkPen(width=0.5))
+        # self.point_latest = chart.plot(
+        #    symbol='o',
+        #    symbolBrush=(255, 0, 0),
+        #    symbolPen=(128, 0, 0),
+        #    symbolSize=10,
+        #    pxMode=True
+        # )
+        self.point_latest = chart.plot(symbol='o', symbolSize=5, pxMode=True)
 
         self.x_data = []  # 秒単位のUNIXタイムスタンプ (float) を格納
         self.y_data = []
@@ -97,9 +104,8 @@ class Example(QMainWindow):
 
 
 if __name__ == "__main__":
-    pg.setConfigOption('background', 'w')
-    pg.setConfigOption('foreground', 'k')
-
+    # pg.setConfigOption('background', 'w')
+    # pg.setConfigOption('foreground', 'k')
     app = QApplication(sys.argv)
     window = Example()
     window.show()
