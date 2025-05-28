@@ -11,6 +11,7 @@ odfpy
 openpyxl
 pip-chill
 pip-review
+pyqtgraph
 pyside6
 scipy
 tinycss2
