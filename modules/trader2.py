@@ -82,6 +82,7 @@ class TraderUnit(QMainWindow):
 
         self.trend_line.setData(self.x_data, self.y_data)
         self.point_latest.setData([x], [y])
+        self.dock.setPrice(y)
 
     def updateTrendLine(self, df: pd.DataFrame):
         self.x_data = df['Time']
