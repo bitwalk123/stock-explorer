@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 import re
@@ -130,7 +131,7 @@ class DayTrader(QMainWindow):
             #######################################################################
 
             # 日付・時間情報
-            self.dict_dt = dict_dt = get_datetime_today()
+            # self.dict_dt = dict_dt = get_datetime_today()
 
             for num in range(self.num_max):
                 row = num + 1
@@ -151,7 +152,16 @@ class DayTrader(QMainWindow):
                 trader.setTitle(title)
 
                 # X軸の範囲
-                #trader.setTimeRange(dict_dt["start"], dict_dt["end"])
+                # 現在の日付を取得
+                today = datetime.date.today()
+
+                today_start = datetime.datetime.combine(today, datetime.time(9, 0, 0))
+                ts_start = today_start.timestamp()
+
+                today_end = datetime.datetime.combine(today, datetime.time(15, 30, 0))
+                ts_end = today_end.timestamp()
+
+                trader.setTimeRange(ts_start, ts_end)
 
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
@@ -166,11 +176,11 @@ class DayTrader(QMainWindow):
             self.timer = timer = QTimer()
             timer.timeout.connect(self.on_update_data)
             timer.setInterval(1000)
-            #self.timer.start()
-            #self.logger.info(f"{__name__} data update timer started.")
+            self.timer.start()
+            self.logger.info(f"{__name__} data update timer started.")
 
     def append_chart_data(self, ticker: TraderUnit, y: float):
-        #dt = QDateTime.currentDateTime()
+        # dt = QDateTime.currentDateTime()
         ts = time.time()
         ticker.updateTrend(ts, y)
 
@@ -315,7 +325,7 @@ class DayTrader(QMainWindow):
             # x軸（時間軸）の範囲（市場の開場時間）
             ts_start = QDateTime(day_target, QTime(9, 0, 0)).toSecsSinceEpoch()
             ts_end = QDateTime(day_target, QTime(15, 30, 0)).toSecsSinceEpoch()
-            #print(ts_start, ts_end)
+            # print(ts_start, ts_end)
             trader.setTimeRange(ts_start, ts_end)
 
             # チャートへデータをプロット
