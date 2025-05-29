@@ -132,6 +132,28 @@ class DayTrader(QMainWindow):
 
             # 日付・時間情報
             # self.dict_dt = dict_dt = get_datetime_today()
+            # 現在の日付を取得
+            today = datetime.date.today()
+
+            # 9:00
+            today_start = datetime.datetime.combine(today, datetime.time(9, 0, 0))
+            self.ts_start = ts_start = today_start.timestamp()
+
+            # 前場引け
+            today_1h_end = datetime.datetime.combine(today, datetime.time(11, 30, 0))
+            self.ts_1h_end = today_1h_end.timestamp()
+
+            # 後場寄付
+            today_2h_start = datetime.datetime.combine(today, datetime.time(12, 30, 0))
+            self.ts_2h_start = today_2h_start.timestamp()
+
+            # Closing Auction
+            today_ca = datetime.datetime.combine(today, datetime.time(15, 25, 0))
+            self.ts_ca = today_ca.timestamp()
+
+            # 15:30
+            today_end = datetime.datetime.combine(today, datetime.time(15, 30, 0))
+            self.ts_end = ts_end = today_end.timestamp()
 
             for num in range(self.num_max):
                 row = num + 1
@@ -152,15 +174,6 @@ class DayTrader(QMainWindow):
                 trader.setTitle(title)
 
                 # X軸の範囲
-                # 現在の日付を取得
-                today = datetime.date.today()
-
-                today_start = datetime.datetime.combine(today, datetime.time(9, 0, 0))
-                ts_start = today_start.timestamp()
-
-                today_end = datetime.datetime.combine(today, datetime.time(15, 30, 0))
-                ts_end = today_end.timestamp()
-
                 trader.setTimeRange(ts_start, ts_end)
 
                 # 前日の終値の横線
@@ -183,6 +196,13 @@ class DayTrader(QMainWindow):
         # dt = QDateTime.currentDateTime()
         ts = time.time()
         ticker.updateTrend(ts, y)
+        if self.ts_start <= ts <= self.ts_1h_end:
+            ticker.updateTrend(ts, y)
+        elif self.ts_2h_start <= ts <= self.ts_ca:
+            ticker.updateTrend(ts, y)
+        elif self.ts_end < ts and not self.is_tick_data_saved:
+            #self.is_tick_data_saved = self.save_regular_tick_data()
+            print("要保存処理")
 
     def save_regular_tick_data(self):
         name_excel = os.path.join(
