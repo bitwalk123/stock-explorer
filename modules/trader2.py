@@ -25,17 +25,28 @@ class TraderUnit(QMainWindow):
         self.y_data = []
 
         # PyQtGraph インスタンス
-        self.trend_graph = trend_graph = TrendGraph()
-        self.setCentralWidget(trend_graph)
+        self.chart = chart = TrendGraph()
+        self.setCentralWidget(chart)
 
         # 株価トレンドライン
-        self.trend_line = trend_graph.plot(pen=pg.mkPen(width=1))
+        self.trend_line = chart.plot(pen=pg.mkPen(width=1))
         # 最新株価
-        self.point_latest = trend_graph.plot(symbol='o', symbolSize=5, pxMode=True)
+        self.point_latest = chart.plot(symbol='o', symbolSize=5, pxMode=True)
+
+        # 前日終値
+        self.lastclose_line: pg.InfiniteLine | None = None
 
         self.dock = dock = DockTrader(res)
         # dock.saveClicked.connect(trend_graph.saveChart)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
+
+    def addLastCloseLine(self, value: float):
+        self.lastclose_line = pg.InfiniteLine(
+            pos=value,
+            angle=0,
+            pen=pg.mkPen(color=(255, 0, 0), width=1)
+        )
+        self.chart.addItem(self.lastclose_line)
 
     def clear(self):
         pass
@@ -57,7 +68,10 @@ class TraderUnit(QMainWindow):
         self.ticker_code = ticker_code
 
     def setTimeRange(self, ts_start, ts_end):
-        self.trend_graph.setXRange(ts_start, ts_end)
+        self.chart.setXRange(ts_start, ts_end)
+
+    def setTitle(self, title: str):
+        self.chart.setTitle(title)
 
     def setSheetName(self, name_sheet: str):
         self.name_sheet = name_sheet

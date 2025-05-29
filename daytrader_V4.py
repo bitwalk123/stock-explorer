@@ -151,7 +151,7 @@ class DayTrader(QMainWindow):
                 trader.setTitle(title)
 
                 # X軸の範囲
-                trader.setTimeRange(dict_dt["start"], dict_dt["end"])
+                #trader.setTimeRange(dict_dt["start"], dict_dt["end"])
 
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
@@ -166,17 +166,13 @@ class DayTrader(QMainWindow):
             self.timer = timer = QTimer()
             timer.timeout.connect(self.on_update_data)
             timer.setInterval(1000)
-            self.timer.start()
-            self.logger.info(f"{__name__} data update timer started.")
+            #self.timer.start()
+            #self.logger.info(f"{__name__} data update timer started.")
 
     def append_chart_data(self, ticker: TraderUnit, y: float):
-        dt = QDateTime.currentDateTime()
-        if self.dict_dt["start"] <= dt <= self.dict_dt["end_1h"]:
-            ticker.appendPoint(dt, y)
-        elif self.dict_dt["start_2h"] <= dt <= self.dict_dt["start_ca"]:
-            ticker.appendPoint(dt, y)
-        elif self.dict_dt["end"] < dt and not self.is_tick_data_saved:
-            self.is_tick_data_saved = self.save_regular_tick_data()
+        #dt = QDateTime.currentDateTime()
+        ts = time.time()
+        ticker.updateTrend(ts, y)
 
     def save_regular_tick_data(self):
         name_excel = os.path.join(

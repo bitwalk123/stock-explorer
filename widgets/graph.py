@@ -7,5 +7,10 @@ class TrendGraph(pg.PlotWidget):
         super().__init__(
             axisItems={'bottom': DateAxisItem(orientation='bottom')}
         )
-
+        self.setFixedSize(1000, 200)
         self.showGrid(x=True, y=True, alpha=0.5)
+        self.setStyleSheet("""
+            TrendGraph {
+                font-family: monospace;
+            }
+        """)
