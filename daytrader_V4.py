@@ -191,13 +191,13 @@ class DayTrader(QMainWindow):
     def append_chart_data(self, ticker: TraderUnit, y: float):
         # dt = QDateTime.currentDateTime()
         ts = time.time()
-        ticker.updateTrend(ts, y)
+        ticker.appendData(ts, y)
         if self.ts_start <= ts <= self.ts_1h_end:
-            ticker.updateTrend(ts, y)
+            ticker.appendData(ts, y)
         elif self.ts_2h_start <= ts <= self.ts_ca:
-            ticker.updateTrend(ts, y)
+            ticker.appendData(ts, y)
         elif self.ts_end < ts and not self.is_tick_data_saved:
-            #self.is_tick_data_saved = self.save_regular_tick_data()
+            # self.is_tick_data_saved = self.save_regular_tick_data()
             print("要保存処理")
 
     def save_regular_tick_data(self):
@@ -343,11 +343,12 @@ class DayTrader(QMainWindow):
             # x軸（時間軸）の範囲（市場の開場時間）
             ts_start = QDateTime(day_target, QTime(9, 0, 0)).toSecsSinceEpoch()
             ts_end = QDateTime(day_target, QTime(15, 30, 0)).toSecsSinceEpoch()
-            # print(ts_start, ts_end)
             trader.setTimeRange(ts_start, ts_end)
 
-            # チャートへデータをプロット
-            trader.updateTrendLine(df)
+            # チャートへデータをひとつづつプロット
+            for x, y in zip(df['Time'], df['Price']):
+                trader.appendData(x, y)
+            print('completed', name_sheet, 'size', trader.getDataSize())
             QApplication.processEvents()
 
         self.statusbar.setValue(0)

@@ -1,10 +1,12 @@
 import logging
 
+import numpy as np
 import pandas as pd
 import pyqtgraph as pg
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow
 
+from modules.psar import RealtimePSAR
 from structs.res import AppRes
 from widgets.docks import DockTrader
 from widgets.graph import TrendGraph
@@ -21,8 +23,8 @@ class TraderUnit(QMainWindow):
         self.res = res
         self.row = row
 
-        self.x_data = []  # 秒単位のUNIXタイムスタンプ (float) を格納
-        self.y_data = []
+        # Parabolic SAR
+        self.psar = RealtimePSAR()
 
         # PyQtGraph インスタンス
         self.chart = chart = TrendGraph()
@@ -30,14 +32,41 @@ class TraderUnit(QMainWindow):
 
         # 株価トレンドライン
         self.trend_line: pg.PlotDataItem = chart.plot(pen=pg.mkPen(width=1))
-        self.trend_line.setDownsampling()
-        self.trend_line.setSkipFiniteCheck(True)
+        # self.trend_line.setDownsampling()
+        # self.trend_line.setSkipFiniteCheck(True)
+
+        # 最初のデータ点が追加されたか確認するフラグ
+        self.trend_line_added = False
 
         # 最新株価
         self.point_latest: pg.PlotDataItem = chart.plot(symbol='o', symbolSize=5, pxMode=True)
 
         # 前日終値
         self.lastclose_line: pg.InfiniteLine | None = None
+
+        # 上昇トレンド
+        self.trend_bull: pg.PlotDataItem = chart.plot(
+            pen=None,
+            symbol='o',
+            symbolPen=(255, 0, 255),
+            symbolSize=2,
+            pxMode=True,
+        )
+        self.trend_bull.setDownsampling()
+        self.trend_bull.setSkipFiniteCheck(True)
+        self.trend_bull_added = False
+
+        # 下降トレンド
+        self.trend_bear: pg.PlotDataItem = chart.plot(
+            pen=None,
+            symbol='o',
+            symbolPen=(0, 139, 139),
+            symbolSize=2,
+            pxMode=True,
+        )
+        self.trend_bear.setDownsampling()
+        self.trend_bear.setSkipFiniteCheck(True)
+        self.trend_bear_added = False
 
         self.dock = dock = DockTrader(res)
         # dock.saveClicked.connect(trend_graph.saveChart)
@@ -51,9 +80,48 @@ class TraderUnit(QMainWindow):
         )
         self.chart.addItem(self.lastclose_line)
 
+    def appendData(self, x, y):
+        if self.trend_line_added:
+            arr_x = np.append(self.trend_line.xData, x)
+            arr_y = np.append(self.trend_line.yData, y)
+        else:
+            arr_x = [x]
+            arr_y = [y]
+            self.trend_line_added = True
+        self.trend_line.setData(arr_x, arr_y)
+
+        self.point_latest.setData([x], [y])
+
+        # Parabolic SAR
+        ret = self.psar.add(y)
+        y_psar = ret.psar
+        if 0 < ret.trend:
+            if self.trend_bull_added:
+                arr_bull_x = np.append(self.trend_bull.xData, x)
+                arr_bull_y = np.append(self.trend_bull.yData, y_psar)
+            else:
+                arr_bull_x = [x]
+                arr_bull_y = [y_psar]
+                self.trend_bull_added = True
+            self.trend_bull.setData(arr_bull_x, arr_bull_y)
+        elif ret.trend < 0:
+            if self.trend_bear_added:
+                arr_bear_x = np.append(self.trend_bear.xData, x)
+                arr_bear_y = np.append(self.trend_bear.yData, y_psar)
+            else:
+                arr_bear_x = [x]
+                arr_bear_y = [y_psar]
+                self.trend_bear_added = True
+            self.trend_bear.setData(arr_bear_x, arr_bear_y)
+
+        self.dock.setPrice(y)
+
     def clear(self):
         pass
         # self.trend_graph.clear()
+
+    def getDataSize(self) -> int:
+        return len(self.trend_line.xData)
 
     def getRow(self) -> int:
         return self.row
@@ -78,20 +146,6 @@ class TraderUnit(QMainWindow):
 
     def setSheetName(self, name_sheet: str):
         self.name_sheet = name_sheet
-
-    def updateTrend(self, x, y):
-        self.x_data.append(x)
-        self.y_data.append(y)
-
-        self.trend_line.setData(self.x_data, self.y_data)
-        self.point_latest.setData([x], [y])
-        self.dock.setPrice(y)
-
-    def updateTrendLine(self, df: pd.DataFrame):
-        self.x_data = df['Time']
-        self.y_data = df['Price']
-
-        self.trend_line.setData(self.x_data, self.y_data)
 
 
 class TraderUnitDebug(TraderUnit):
