@@ -38,7 +38,7 @@ from funcs.tide import (
     get_yyyymmdd,
 )
 from structs.res import AppRes, YMD
-from modules.trader2 import TraderUnit, TraderUnitDebug
+from modules.trader import TraderUnit, TraderUnitDebug
 from modules.xlloader import ExcelLoader
 from widgets.dialogs import MsgBoxYesNo
 from widgets.layouts import VBoxLayoutTrader
@@ -227,6 +227,7 @@ class DayTrader(QMainWindow):
             self.logger.error(f"{__name__} error occured!: {e}")
 
     def closeEvent(self, event: QCloseEvent):
+        '''
         msg = "終了前にデータを保存しますか？"
         dialog = MsgBoxYesNo(msg)
         ret = dialog.exec()
@@ -261,6 +262,7 @@ class DayTrader(QMainWindow):
                     self.save_tick_data(name_excel, dict_df)
         else:
             self.logger.info(f"{__name__} データを保存せずに終了します。")
+        '''
 
         self.logger.info(f"{__name__} stopped and closed.")
         event.accept()
@@ -333,7 +335,7 @@ class DayTrader(QMainWindow):
             else:
                 ticker_code = "Unknown"
             trader.setTickerCode(ticker_code)
-            # trader.setTitle(ticker_code)
+            trader.setTitle(ticker_code)
 
             # ティックデータのデータフレーム
             df = dict_sheet[name_sheet]
@@ -346,6 +348,7 @@ class DayTrader(QMainWindow):
 
             # チャートへデータをプロット
             trader.updateTrendLine(df)
+            QApplication.processEvents()
 
         self.statusbar.setValue(0)
         self.statusbar.setText("プロット完了")

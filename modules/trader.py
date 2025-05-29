@@ -1,12 +1,13 @@
 import logging
 
-import numpy as np
-from PySide6.QtCore import QDateTime, Qt
+import pandas as pd
+import pyqtgraph as pg
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow
 
 from structs.res import AppRes
 from widgets.docks import DockTrader
-from widgets.views import ChartView
+from widgets.graph import TrendGraph
 
 
 class TraderUnit(QMainWindow):
@@ -20,35 +21,45 @@ class TraderUnit(QMainWindow):
         self.res = res
         self.row = row
 
-        self.chart_view = chart_view = ChartView(res)
-        self.setCentralWidget(chart_view)
+        self.x_data = []  # 秒単位のUNIXタイムスタンプ (float) を格納
+        self.y_data = []
+
+        # PyQtGraph インスタンス
+        self.chart = chart = TrendGraph()
+        self.setCentralWidget(chart)
+
+        # 株価トレンドライン
+        self.trend_line: pg.PlotDataItem = chart.plot(pen=pg.mkPen(width=1))
+        self.trend_line.setDownsampling()
+        self.trend_line.setSkipFiniteCheck(True)
+
+        # 最新株価
+        self.point_latest: pg.PlotDataItem = chart.plot(symbol='o', symbolSize=5, pxMode=True)
+
+        # 前日終値
+        self.lastclose_line: pg.InfiniteLine | None = None
 
         self.dock = dock = DockTrader(res)
-        dock.saveClicked.connect(chart_view.saveChart)
+        # dock.saveClicked.connect(trend_graph.saveChart)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
 
-    def addLastCloseLine(self, y: float):
-        self.chart_view.addLastCloseLine(y)
-
-    def appendPoint(self, dt: QDateTime, y: float):
-        self.chart_view.appendPoint(dt, y)
-        self.dock.setPrice(y)
-
-    def appendPointTimestamp(self, x: int, y: float):
-        self.chart_view.appendPointTimestamp(x, y)
-        self.dock.setPrice(y)
-
-    def appendPoints(self, array_x: np.array, array_y: np.array):
-        self.chart_view.appendPoints(array_x, array_y)
+    def addLastCloseLine(self, value: float):
+        self.lastclose_line = pg.InfiniteLine(
+            pos=value,
+            angle=0,
+            pen=pg.mkPen(color=(255, 0, 0), width=1)
+        )
+        self.chart.addItem(self.lastclose_line)
 
     def clear(self):
-        self.chart_view.clear()
-
-    def getDataSet(self):
-        return self.chart_view.getDataSet()
+        pass
+        # self.trend_graph.clear()
 
     def getRow(self) -> int:
         return self.row
+
+    def getSheetName(self) -> str:
+        return self.name_sheet
 
     def getTickerCode(self) -> str:
         return self.ticker_code
@@ -59,17 +70,28 @@ class TraderUnit(QMainWindow):
     def setTickerCode(self, ticker_code: str):
         self.ticker_code = ticker_code
 
-    def setTimeRange(self, dt_start: QDateTime, dt_end: QDateTime):
-        self.chart_view.setTimeRange(dt_start, dt_end)
+    def setTimeRange(self, ts_start, ts_end):
+        self.chart.setXRange(ts_start, ts_end)
 
-    def getSheetName(self) -> str:
-        return self.name_sheet
+    def setTitle(self, title: str):
+        self.chart.setTitle(title)
 
     def setSheetName(self, name_sheet: str):
         self.name_sheet = name_sheet
 
-    def setTitle(self, title: str):
-        self.chart_view.setTitle(title)
+    def updateTrend(self, x, y):
+        self.x_data.append(x)
+        self.y_data.append(y)
+
+        self.trend_line.setData(self.x_data, self.y_data)
+        self.point_latest.setData([x], [y])
+        self.dock.setPrice(y)
+
+    def updateTrendLine(self, df: pd.DataFrame):
+        self.x_data = df['Time']
+        self.y_data = df['Price']
+
+        self.trend_line.setData(self.x_data, self.y_data)
 
 
 class TraderUnitDebug(TraderUnit):
