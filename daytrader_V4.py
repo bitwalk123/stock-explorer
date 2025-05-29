@@ -135,23 +135,19 @@ class DayTrader(QMainWindow):
             # 現在の日付を取得
             today = datetime.date.today()
 
-            # 9:00
+            # 前場開始
             today_start = datetime.datetime.combine(today, datetime.time(9, 0, 0))
             self.ts_start = ts_start = today_start.timestamp()
-
             # 前場引け
             today_1h_end = datetime.datetime.combine(today, datetime.time(11, 30, 0))
             self.ts_1h_end = today_1h_end.timestamp()
-
-            # 後場寄付
+            # 後場開始
             today_2h_start = datetime.datetime.combine(today, datetime.time(12, 30, 0))
             self.ts_2h_start = today_2h_start.timestamp()
-
-            # Closing Auction
+            # クロージング・オークション
             today_ca = datetime.datetime.combine(today, datetime.time(15, 25, 0))
             self.ts_ca = today_ca.timestamp()
-
-            # 15:30
+            # 大引け
             today_end = datetime.datetime.combine(today, datetime.time(15, 30, 0))
             self.ts_end = ts_end = today_end.timestamp()
 
