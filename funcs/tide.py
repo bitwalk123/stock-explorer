@@ -125,6 +125,7 @@ def get_datetime_today() -> dict:
     today = datetime.date.today()
 
     day_today = QDate(today.year, today.month, today.day)
+    dict_dt["pre"] = QDateTime(day_today, QTime(8, 45, 0))
     dict_dt["start"] = QDateTime(day_today, QTime(9, 0, 0))
     dict_dt["end_1h"] = QDateTime(day_today, QTime(11, 30, 0))
     dict_dt["start_2h"] = QDateTime(day_today, QTime(12, 30, 0))

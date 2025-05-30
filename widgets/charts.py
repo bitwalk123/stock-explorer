@@ -172,6 +172,7 @@ class ChartNavigation(NavigationToolbar):
 class Chart(QChart):
     def __init__(self):
         super().__init__()
+        self.setTheme(QChart.ChartTheme.ChartThemeDark)
         self.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
         self.setMargins(QMargins(0, 0, 0, 0))
         self.layout().setContentsMargins(0, 0, 0, 0)
@@ -184,7 +185,7 @@ class PriceSeries(QLineSeries):
     def __init__(self):
         super().__init__()
         self.setPointsVisible(True)
-        pen = QPen(QColor(Qt.GlobalColor.black))
+        pen = QPen(QColor(192, 192, 192))
         pen.setWidthF(0.25)
         self.setPen(pen)
         self.setMarkerSize(0.5)
@@ -204,7 +205,7 @@ class PSARSeries(QScatterSeries):
         super().__init__()
         # Parabolic SAR Series
         self.setMarkerShape(QScatterSeries.MarkerShape.MarkerShapeCircle)  # 円形
-        self.setMarkerSize(2)  # 点のサイズ
+        self.setMarkerSize(5)  # 点のサイズ
         self.setPen(QPen(Qt.PenStyle.NoPen))
 
 
@@ -213,7 +214,7 @@ class PSARBullSeries(PSARSeries):
         super().__init__()
         # Parabolic SAR Series （上昇トレンド用: 赤点）
         self.setName("Up trend")
-        self.setColor(QColor(Qt.GlobalColor.red))  # 赤色
+        self.setColor(QColor(255, 0, 128))  # 赤色
 
 
 class PSARBearSeries(PSARSeries):
@@ -221,18 +222,22 @@ class PSARBearSeries(PSARSeries):
         super().__init__()
         # Parabolic SAR Series （下降トレンド用: 青点）
         self.setName("Down trend")
-        self.setColor(QColor(Qt.GlobalColor.blue))  # 青色
+        self.setColor(QColor(0, 128, 255))  # 青色
 
 
 class MarketTimeAxis(QDateTimeAxis):
     def __init__(self):
         super().__init__()
         self.setLabelsFont(get_font_monospace())
-        self.setTickCount(14)
+        self.setTickCount(28)
         self.setFormat("HH:mm")
 
+        font = self.labelsFont()
+        font.setPixelSize(10)
+        self.setLabelsFont(font)
+
         ax_x_min = self.min()
-        ax_x_min.setTime(QTime.fromString("9:00:00", "H:mm:ss"))
+        ax_x_min.setTime(QTime.fromString("8:45:00", "H:mm:ss"))
         ax_x_max = self.max()
         ax_x_max.setTime(QTime.fromString("15:30:00", "H:mm:ss"))
         self.setRange(ax_x_min, ax_x_max)
@@ -242,3 +247,7 @@ class PriceAxis(QValueAxis):
     def __init__(self):
         super().__init__()
         self.setLabelsFont(get_font_monospace())
+
+        font = self.labelsFont()
+        font.setPixelSize(10)
+        self.setLabelsFont(font)

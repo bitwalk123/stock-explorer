@@ -38,7 +38,7 @@ from funcs.tide import (
     get_yyyymmdd,
 )
 from structs.res import AppRes, YMD
-from modules.trader import TraderUnit, TraderUnitDebug
+from modules.trader_pyqtgraph import TraderUnit, TraderUnitDebug
 from modules.xlloader import ExcelLoader
 from widgets.dialogs import MsgBoxYesNo
 from widgets.layouts import VBoxLayoutTrader

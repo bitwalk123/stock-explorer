@@ -37,7 +37,7 @@ from funcs.tide import (
     get_yyyymmdd,
 )
 from structs.res import AppRes, YMD
-from old.trader import TraderUnit, TraderUnitDebug
+from modules.trader import TraderUnit, TraderUnitDebug
 from modules.xlloader import ExcelLoader
 from widgets.dialogs import MsgBoxYesNo
 from widgets.layouts import VBoxLayoutTrader
@@ -103,6 +103,9 @@ class DayTrader(QMainWindow):
                 trader = TraderUnitDebug(row, res)
                 layout.addWidget(trader)
                 list_trader.append(trader)
+
+            # ティックデータ保存フラグ
+            self.is_tick_data_saved = True
         else:
             # ティックデータ保存フラグ
             self.is_tick_data_saved = False
@@ -151,7 +154,7 @@ class DayTrader(QMainWindow):
                 trader.setTitle(title)
 
                 # X軸の範囲
-                trader.setTimeRange(dict_dt["start"], dict_dt["end"])
+                trader.setTimeRange(dict_dt["pre"], dict_dt["end"])
 
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
@@ -192,6 +195,7 @@ class DayTrader(QMainWindow):
             name_sheet = trader.getSheetName()
             dict_df[name_sheet] = df
         self.save_tick_data(name_excel, dict_df)
+
         return True
 
     def save_tick_data(self, name_excel: str, dict_df: dict):
@@ -205,10 +209,16 @@ class DayTrader(QMainWindow):
             self.logger.error(f"{__name__} error occured!: {e}")
 
     def closeEvent(self, event: QCloseEvent):
+        if not self.is_tick_data_saved:
+            self.process_save_data()
+
+        self.logger.info(f"{__name__} stopped and closed.")
+        event.accept()
+
+    def process_save_data(self):
         msg = "終了前にデータを保存しますか？"
         dialog = MsgBoxYesNo(msg)
         ret = dialog.exec()
-
         if ret == QMessageBox.StandardButton.Yes:
             self.logger.info(f"{__name__} 終了前にデータを保存します。")
             flag_success = True
@@ -239,9 +249,6 @@ class DayTrader(QMainWindow):
                     self.save_tick_data(name_excel, dict_df)
         else:
             self.logger.info(f"{__name__} データを保存せずに終了します。")
-
-        self.logger.info(f"{__name__} stopped and closed.")
-        event.accept()
 
     def get_last_close(self, row: int) -> float:
         p_lastclose = self.sheet[row, self.col_lastclose].value
@@ -317,7 +324,7 @@ class DayTrader(QMainWindow):
             df = dict_sheet[name_sheet]
 
             # x軸（時間軸）の範囲（市場の開場時間）
-            dt_start = QDateTime(day_target, QTime(9, 0, 0))
+            dt_start = QDateTime(day_target, QTime(8, 45, 0))
             dt_end = QDateTime(day_target, QTime(15, 30, 0))
             trader.setTimeRange(dt_start, dt_end)
 
