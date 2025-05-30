@@ -151,6 +151,12 @@ class DayTrader(QMainWindow):
             today_end = datetime.datetime.combine(today, datetime.time(15, 30, 0))
             self.ts_end = ts_end = today_end.timestamp()
 
+            today_test_1 = datetime.datetime.combine(today, datetime.time(16, 00, 0))
+            self.ts_test_1 = ts_test_1 = today_end.timestamp()
+
+            today_test_2 = datetime.datetime.combine(today, datetime.time(23, 30, 0))
+            self.ts_test_2 = ts_test_2 = today_end.timestamp()
+
             for num in range(self.num_max):
                 row = num + 1
 
@@ -170,7 +176,8 @@ class DayTrader(QMainWindow):
                 trader.setTitle(title)
 
                 # X軸の範囲
-                trader.setTimeRange(ts_start, ts_end)
+                #trader.setTimeRange(ts_start, ts_end)
+                trader.setTimeRange(ts_test_1, ts_test_2)
 
                 # 前日の終値の横線
                 p_lastclose = self.get_last_close(row)
@@ -192,13 +199,15 @@ class DayTrader(QMainWindow):
         # dt = QDateTime.currentDateTime()
         ts = time.time()
         ticker.appendData(ts, y)
+        """
         if self.ts_start <= ts <= self.ts_1h_end:
             ticker.appendData(ts, y)
         elif self.ts_2h_start <= ts <= self.ts_ca:
             ticker.appendData(ts, y)
         elif self.ts_end < ts and not self.is_tick_data_saved:
-            # self.is_tick_data_saved = self.save_regular_tick_data()
+            #self.is_tick_data_saved = self.save_regular_tick_data()
             print("要保存処理")
+        """
 
     def save_regular_tick_data(self):
         name_excel = os.path.join(
